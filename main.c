@@ -8,7 +8,7 @@
  *
  * Authors:
  *      Aitor Conde <aitorconde@gmail.com>
- *      Ramón García <ramongarciaalarcia@gmail.com>
+ *      Ramï¿½n Garcï¿½a <ramongarciaalarcia@gmail.com>
  *
  */
 
@@ -78,30 +78,32 @@
 #include <msp430.h> 
 #include <stdint.h>
 
-#define LED_ON      (P1OUT |= BIT0)
-#define LED_OFF     (P1OUT &= ~BIT0)
-#define LED_TOGGLE  (P1OUT ^= BIT0)
+#define LED_ON          (P1OUT |= BIT0)
+#define LED_OFF         (P1OUT &= ~BIT0)
+#define LED_TOGGLE      (P1OUT ^= BIT0)
 
-#define CAMERA01_OFF     (P4OUT |=  BIT6)
-#define CAMERA01_ON      (P4OUT &= ~BIT6)
-#define CAMERA01_TOGGLE  (P4OUT ^=  BIT6)
+#define MUX_OFF         (P2OUT |=  BIT3)
+#define MUX_ON          (P2OUT &= ~BIT3)
 
-#define CAMERA02_OFF     (P4OUT |=  BIT5)
-#define CAMERA02_ON      (P4OUT &= ~BIT5)
-#define CAMERA02_TOGGLE  (P4OUT ^=  BIT5)
+#define MUX_CAM3        (P2OUT |=  BIT4)
+#define MUX_CAM4        (P2OUT &= ~BIT4)
 
-#define CAMERA03_OFF     (P4OUT |=  BIT4)
-#define CAMERA03_ON      (P4OUT &= ~BIT4)
-#define CAMERA03_TOGGLE  (P4OUT ^=  BIT4)
+#define CAMERA01_OFF    (P4OUT |=  BIT6)
+#define CAMERA01_ON     (P4OUT &= ~BIT6)
 
-#define CAMERA04_OFF     (P2OUT |=  BIT7)
-#define CAMERA04_ON      (P2OUT &= ~BIT7)
-#define CAMERA04_TOGGLE  (P2OUT ^=  BIT7)
+#define CAMERA02_OFF    (P4OUT |=  BIT5)
+#define CAMERA02_ON     (P4OUT &= ~BIT5)
 
-#define FLASH_CS1_OFF    (P5OUT |=  BIT3)
-#define FLASH_CS1_ON     (P5OUT &= ~BIT3)
-#define FLASH_CS2_OFF    (P3OUT |=  BIT6)
-#define FLASH_CS2_ON     (P3OUT &= ~BIT6)
+#define CAMERA03_OFF    (P4OUT |=  BIT4)
+#define CAMERA03_ON     (P4OUT &= ~BIT4)
+
+#define CAMERA04_OFF    (P2OUT |=  BIT7)
+#define CAMERA04_ON     (P2OUT &= ~BIT7)
+
+#define FLASH_CS1_OFF   (P5OUT |=  BIT3)
+#define FLASH_CS1_ON    (P5OUT &= ~BIT3)
+#define FLASH_CS2_OFF   (P3OUT |=  BIT6)
+#define FLASH_CS2_ON    (P3OUT &= ~BIT6)
 
 /*
  * Init all GPIO and MCU subsystems
@@ -114,11 +116,16 @@ void init_board()
     CAMERA02_OFF;
     CAMERA03_OFF;
     CAMERA04_OFF;
+    MUX_OFF;
 
     //Configure the pinout
 
     //Configure LED on P1.0
     P1DIR |= BIT0;
+
+    //Mux contollers for CAMs 3 and 4
+    P2DIR |= BIT3;
+    P2DIR |= BIT4;
 
     //Configure power pins
     P4DIR |= BIT4;
@@ -146,6 +153,10 @@ void init_board()
 
     //TODO
 
+    //Disable the GPIO Power-on default high-impedance mode to activate
+    //previously configured port settings:
+    PM5CTL0 &= ~LOCKLPM5;
+
     //Init clock to 8MHz using internal DCO
     CSCTL0_H = CSKEY_H;                     // Unlock CS registers
     CSCTL1 = DCOFSEL_3 | DCORSEL;           // Set DCO to 8MHz
@@ -161,10 +172,6 @@ void init_board()
 
     //Init UARTs
     //TODO
-
-    //Disable the GPIO Power-on default high-impedance mode to activate
-    //previously configured port settings:
-    PM5CTL0 &= ~LOCKLPM5;
 
     uint8_t i;
     for(i = 0; i < 10; i++)
