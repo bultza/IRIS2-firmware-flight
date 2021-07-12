@@ -77,16 +77,15 @@
 
 #include <msp430.h> 
 #include <stdint.h>
+#include "uart.h"
+#include "clock.h"
+//#include "i2c.h"
 
 #define LED_ON          (P1OUT |= BIT0)
 #define LED_OFF         (P1OUT &= ~BIT0)
 #define LED_TOGGLE      (P1OUT ^= BIT0)
 
 #define MUX_OFF         (P2OUT |=  BIT3)
-#define MUX_ON          (P2OUT &= ~BIT3)
-
-#define MUX_CAM3        (P2OUT |=  BIT4)
-#define MUX_CAM4        (P2OUT &= ~BIT4)
 
 #define CAMERA01_OFF    (P4OUT |=  BIT6)
 #define CAMERA01_ON     (P4OUT &= ~BIT6)
@@ -157,12 +156,8 @@ void init_board()
     //previously configured port settings:
     PM5CTL0 &= ~LOCKLPM5;
 
-    //Init clock to 8MHz using internal DCO
-    CSCTL0_H = CSKEY_H;                     // Unlock CS registers
-    CSCTL1 = DCOFSEL_3 | DCORSEL;           // Set DCO to 8MHz
-    CSCTL2 = SELA__VLOCLK | SELS__DCOCLK | SELM__DCOCLK;
-    CSCTL3 = DIVA__1 | DIVS__1 | DIVM__1;   // Set all dividers
-    CSCTL0_H = 0;                           // Lock CS registers
+    //Init clock to 8MHz using internal DCO, millis etc
+    clock_init();
 
     //Init I2C
     //init_I2C();
@@ -170,7 +165,9 @@ void init_board()
     //Init SPI
     //init_SPI();
 
-    //Init UARTs
+    //Open UART_DEBUG
+    uart_init(UART_DEBUG, BR_9600);
+
     //TODO
 
     uint8_t i;
@@ -180,6 +177,9 @@ void init_board()
         __delay_cycles(400000);
     }
     LED_OFF;
+
+    //Enable Interrupts
+    _BIS_SR(GIE);
 }
 
 /**
@@ -193,9 +193,30 @@ int main(void)
 	//Init board hardware
 	init_board();
 
+	//Print reboot message on UART debug
+	uart_print(UART_DEBUG, "IRIS2 is rebooting...\n");
+
 	while(1)
 	{
+	    //Read Uptime:
+	    uint64_t uptime = millis();
+
+	    //Read UART Debug:
+	    if(uart_available(UART_DEBUG) != 0)
+	    {
+	        uint8_t character = uart_read(UART_DEBUG);
+	        if(character == 'a')
+	            uart_print(UART_DEBUG, "Good!\n");
+	        else
+	            uart_print(UART_DEBUG, "Wrong command!\n");
+	    }
 	    //TODO
+
+	    //Blink LED
+	    if(uptime % 1000 > 100)
+	        LED_OFF;
+	    else
+	        LED_ON;
 	}
 	
 	return 0;
