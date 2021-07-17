@@ -43,7 +43,7 @@ int16_t i2c_TMP75_getTemperature(uint8_t selectedBus, uint8_t i2cAddress)
         result = result >> 4;   //As per datasheet
     }
     else
-        result = 32767;   //Valor disuasorio
+        result = 32767;   //Deterrent value
 
     return result;
 }

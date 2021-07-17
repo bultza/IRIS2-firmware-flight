@@ -81,6 +81,7 @@
 #include "uart.h"
 #include "i2c.h"
 #include "i2c_TMP75C.h"
+#include "i2c_INA.h"
 
 #define LED_ON          (P1OUT |= BIT0)
 #define LED_OFF         (P1OUT &= ~BIT0)
@@ -176,7 +177,7 @@ void init_board()
     //TODO
 
     //Init INA
-    //TODO
+    i2c_INA_init();
 
     //Init NOR Memory
     //TODO
@@ -216,7 +217,9 @@ int main(void)
 
 	//Debug, keep this commented on flight
 	int16_t temperatures[6];
+	struct INAData inaData;
 	i2c_TMP75_getTemperatures(temperatures);
+
 	uint64_t lastTime = 0;
 	//END OF DEBUG
 
@@ -239,6 +242,7 @@ int main(void)
 	    if(uptime > lastTime + 1000)
 	    {
 	        i2c_TMP75_getTemperatures(temperatures);
+	        i2c_INA_read(&inaData);
 	        lastTime = uptime;
 	    }
 	    //TODO
