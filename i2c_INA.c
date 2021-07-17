@@ -3,7 +3,7 @@
 /**
  * Configure the INA with the PCB and resistor details
  */
-int8_t i2c_INA_init()
+int8_t i2c_INA_init(void)
 {
     uint8_t buffer[3];
 

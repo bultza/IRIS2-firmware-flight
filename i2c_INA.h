@@ -34,7 +34,7 @@ struct INAData
 //******************************************************************************
 //* PUBLIC FUNCTION DECLARATIONS :                                             *
 //******************************************************************************
-int8_t i2c_INA_init();
+int8_t i2c_INA_init(void);
 int8_t i2c_INA_read(struct INAData *data);
 
 

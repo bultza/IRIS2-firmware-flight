@@ -24,7 +24,7 @@
 #define TMP75_REG_TLOW  0x02
 #define TMP75_REG_THIGH 0x03
 
-int8_t i2c_TMP75_init();
+int8_t i2c_TMP75_init(void);
 int8_t i2c_TMP75_getTemperatures(int16_t *temperatures);
 
 #endif /* I2C_TMP75C_H_ */

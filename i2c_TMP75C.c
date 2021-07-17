@@ -3,7 +3,7 @@
 /**
  * Init sensor(s)
  */
-int8_t i2c_TMP75_init()
+int8_t i2c_TMP75_init(void)
 {
     uint8_t buffer[2];
     buffer[0] = TMP75_REG_CONF;

@@ -77,6 +77,7 @@
 
 #include <msp430.h> 
 #include <stdint.h>
+#include "configuration.h"
 #include "clock.h"
 #include "uart.h"
 #include "i2c.h"
@@ -173,6 +174,9 @@ void init_board()
     //Init RTC
     //TODO
 
+    //Init Accelerometer
+    //TODO
+
     //Init Barometer
     //TODO
 
@@ -183,7 +187,7 @@ void init_board()
     //TODO
 
     //Init configuration
-    //TODO
+    configuration_init();
 
     //Open UART_DEBUG externally
     uart_init(UART_DEBUG, BR_9600);
