@@ -79,7 +79,7 @@
 #include <stdint.h>
 #include "uart.h"
 #include "clock.h"
-//#include "i2c.h"
+#include "i2c.h"
 
 #define LED_ON          (P1OUT |= BIT0)
 #define LED_OFF         (P1OUT &= ~BIT0)
@@ -160,16 +160,33 @@ void init_board()
     clock_init();
 
     //Init I2C
-    //init_I2C();
+    i2c_master_init();
 
     //Init SPI
-    //init_SPI();
-
-    //Open UART_DEBUG
-    uart_init(UART_DEBUG, BR_9600);
-
     //TODO
 
+    //Init Temperature sensor
+    //TODO
+
+    //Init RTC
+    //TODO
+
+    //Init Barometer
+    //TODO
+
+    //Init INA
+    //TODO
+
+    //Init NOR Memory
+    //TODO
+
+    //Init configuration
+    //TODO
+
+    //Open UART_DEBUG externally
+    uart_init(UART_DEBUG, BR_9600);
+
+    //Make 5 blinks to recognize the boot process:
     uint8_t i;
     for(i = 0; i < 10; i++)
     {
