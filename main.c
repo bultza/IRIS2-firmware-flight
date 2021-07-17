@@ -8,7 +8,7 @@
  *
  * Authors:
  *      Aitor Conde <aitorconde@gmail.com>
- *      Ram�n Garc�a <ramongarciaalarcia@gmail.com>
+ *      Ramon Garcia <ramongarciaalarcia@gmail.com>
  *
  */
 
@@ -77,9 +77,12 @@
 
 #include <msp430.h> 
 #include <stdint.h>
-#include "uart.h"
+#include "configuration.h"
 #include "clock.h"
-//#include "i2c.h"
+#include "uart.h"
+#include "i2c.h"
+#include "i2c_TMP75C.h"
+#include "i2c_INA.h"
 
 #define LED_ON          (P1OUT |= BIT0)
 #define LED_OFF         (P1OUT &= ~BIT0)
@@ -160,16 +163,36 @@ void init_board()
     clock_init();
 
     //Init I2C
-    //init_I2C();
+    i2c_master_init();
 
     //Init SPI
-    //init_SPI();
-
-    //Open UART_DEBUG
-    uart_init(UART_DEBUG, BR_9600);
-
     //TODO
 
+    //Init Temperature sensor
+    i2c_TMP75_init();
+
+    //Init RTC
+    //TODO
+
+    //Init Accelerometer
+    //TODO
+
+    //Init Barometer
+    //TODO
+
+    //Init INA
+    i2c_INA_init();
+
+    //Init NOR Memory
+    //TODO
+
+    //Init configuration
+    configuration_init();
+
+    //Open UART_DEBUG externally
+    uart_init(UART_DEBUG, BR_9600);
+
+    //Make 5 blinks to recognize the boot process:
     uint8_t i;
     for(i = 0; i < 10; i++)
     {
@@ -194,7 +217,15 @@ int main(void)
 	init_board();
 
 	//Print reboot message on UART debug
-	uart_print(UART_DEBUG, "IRIS2 is rebooting...\n");
+	//uart_print(UART_DEBUG, "IRIS2 is rebooting...\n");
+
+	//Debug, keep this commented on flight
+	int16_t temperatures[6];
+	struct INAData inaData;
+	i2c_TMP75_getTemperatures(temperatures);
+
+	uint64_t lastTime = 0;
+	//END OF DEBUG
 
 	while(1)
 	{
@@ -209,6 +240,14 @@ int main(void)
 	            uart_print(UART_DEBUG, "Good!\n");
 	        else
 	            uart_print(UART_DEBUG, "Wrong command!\n");
+	    }
+
+	    //Read once per second
+	    if(uptime > lastTime + 1000)
+	    {
+	        i2c_TMP75_getTemperatures(temperatures);
+	        i2c_INA_read(&inaData);
+	        lastTime = uptime;
 	    }
 	    //TODO
 
