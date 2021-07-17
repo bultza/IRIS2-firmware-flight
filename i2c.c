@@ -1,5 +1,15 @@
 #include "i2c.h"
 
+struct I2cPort
+{
+    uint16_t baseAddress;
+    uint8_t name;
+    uint8_t isOnError;
+    uint8_t inRepeatedStartCondition;
+    uint8_t pointerAddress;
+    uint8_t repeatedStart;
+};
+
 struct I2cPort i2cPorts[2];
 
 
@@ -154,10 +164,14 @@ int8_t i2c_write_firstbyte(uint8_t busSelect, uint8_t *buffer)
 }
 
 /**
- * function to begin the transmission to the selected bus and write a byte and receive ACK or NACK
+ * Function to begin the transmission to the selected bus and write a byte and
+ * receive ACK or NACK
  */
-int8_t sat_i2c_write(uint8_t busSelect, uint8_t address, uint8_t *buffer,
-                     uint16_t length, uint8_t repeatedStart)
+int8_t i2c_write(uint8_t busSelect,
+                 uint8_t address,
+                 uint8_t *buffer,
+                 uint16_t length,
+                 uint8_t repeatedStart)
 {
     if(busSelect > 1)
         return -4;  //Bus does not exist
@@ -259,7 +273,7 @@ int8_t sat_i2c_write(uint8_t busSelect, uint8_t address, uint8_t *buffer,
 /**
  * Read two bytes of the selected bus and address with the temperature read in the sensor
  */
-int8_t sat_i2c_requestFrom(uint8_t busSelect, uint8_t address, uint8_t *buffer,
+int8_t i2c_requestFrom(uint8_t busSelect, uint8_t address, uint8_t *buffer,
                            uint16_t length, uint8_t repeatedStart)
 {
     if(busSelect > 1)
