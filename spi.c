@@ -26,14 +26,15 @@ void spi_init(double clockrate)
     P5SEL1 &= ~BIT2;        // P5.2 is CLK
     P5SEL0 |= BIT2;
 
+    //No need to Configure the CS GPIOs at this stage
+    //because they have been already configured on board_init()
+/*
     P5SEL1 &= ~BIT3;        // P5.3 is CS1 (Flash 1)
     P5SEL0 |= BIT3;
 
     P3SEL1 &= ~BIT6;        // P3.7 is CS2 (Flash 2)
-    P3SEL0 = BIT6;
-
-    PM5CTL0 &= ~LOCKLPM5;   // Disable power mode
-                            // Turn on I/O
+    P3SEL0 |= BIT6;
+*/
 
     UCB1CTLW0 &= ~UCSWRST;    // Take B1 out of SW Reset
 

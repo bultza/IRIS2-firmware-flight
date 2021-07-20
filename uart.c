@@ -425,7 +425,7 @@ int8_t uart_print(uint8_t uart_name, char *buffer)
             break;
         }
 
-    uart_write(uart_name, (uint8_t *) buffer, lenght);
+    return uart_write(uart_name, (uint8_t *) buffer, lenght);
 }
 
 //////////////////////////////////////////////////////////////////////////////

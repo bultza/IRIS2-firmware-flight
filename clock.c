@@ -19,7 +19,7 @@ static volatile uint16_t clock_internal_count_value = 40000u;        // 40k = 10
 static volatile uint16_t clock_sync_measured_intosc_ticks = 0u;
 static volatile bool clock_sync_measurement_ready = false;
 static volatile uint8_t clock_sync_timer_a1_overflow_count = 0u;
-static uint8_t clock_sync_measurement_count = 0u;
+//static uint8_t clock_sync_measurement_count = 0u;
 
 
 //Private functions:

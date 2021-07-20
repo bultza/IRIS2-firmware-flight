@@ -147,10 +147,10 @@ void init_board()
     P5SEL0 |= (BIT0 | BIT1 | BIT2);         // STE, and MISO pin
     PJSEL0 |= BIT4 | BIT5;// For XT1
     //CS1
-    P5DIR |= BIT3;
+    FLASH_CS1_OFF;
     P5OUT |= BIT3;
     //CS2
-    P3DIR |= BIT6;
+    FLASH_CS2_OFF;
     P3OUT |= BIT6;
 
     //TODO
