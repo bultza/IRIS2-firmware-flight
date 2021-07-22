@@ -18,10 +18,6 @@
 #define CR_100KHZ 10
 #define CR_50KHZ 20
 
-// Commands
-
-#define RES 0xAB
-
 void spi_init(double clockrate);
 void spi_send(uint8_t command);
 uint8_t spi_receive();

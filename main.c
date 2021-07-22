@@ -77,11 +77,13 @@
 
 #include <msp430.h> 
 #include <stdint.h>
+#include <stdio.h>
 #include "configuration.h"
 #include "clock.h"
 #include "uart.h"
 #include "i2c.h"
 #include "i2c_TMP75C.h"
+#include "i2c_ADXL345.h"
 #include "i2c_INA.h"
 
 #define LED_ON          (P1OUT |= BIT0)
@@ -221,6 +223,7 @@ int main(void)
 
 	//Debug, keep this commented on flight
 	int16_t temperatures[6];
+	int16_t accelerations[3];
 	struct INAData inaData;
 	i2c_TMP75_getTemperatures(temperatures);
 
@@ -237,16 +240,34 @@ int main(void)
 	    {
 	        uint8_t character = uart_read(UART_DEBUG);
 	        if(character == 'a')
-	            uart_print(UART_DEBUG, "Good!\n");
+	            uart_print(UART_DEBUG, "Good!\r\n");
 	        else
-	            uart_print(UART_DEBUG, "Wrong command!\n");
+	            uart_print(UART_DEBUG, "Wrong command!\r\n");
 	    }
 
 	    //Read once per second
 	    if(uptime > lastTime + 1000)
 	    {
 	        i2c_TMP75_getTemperatures(temperatures);
+	        //i2c_ADXL345_getAccelerations(accelerations);
 	        i2c_INA_read(&inaData);
+
+	        char strToPrint[50];
+	        sprintf(strToPrint, "Temperature: %d\r\n", temperatures[0]);
+	        uart_print(UART_DEBUG, strToPrint);
+	        sprintf(strToPrint, "Voltage: %d\r\n", inaData.voltage);
+            uart_print(UART_DEBUG, strToPrint);
+            sprintf(strToPrint, "Current: %d\r\n", inaData.current);
+            uart_print(UART_DEBUG, strToPrint);
+            /*
+            sprintf(strToPrint, "Acceleration X-Axis: %d\r\n", accelerations[0]);
+            uart_print(UART_DEBUG, strToPrint);
+            sprintf(strToPrint, "Acceleration Y-Axis: %d\r\n", accelerations[1]);
+            uart_print(UART_DEBUG, strToPrint);
+            sprintf(strToPrint, "Acceleration Z-Axis: %d\r\n", accelerations[2]);
+            uart_print(UART_DEBUG, strToPrint);*/
+
+
 	        lastTime = uptime;
 	    }
 	    //TODO

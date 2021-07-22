@@ -10,7 +10,7 @@ void spi_init(double clockrate)
     UCB1CTLW0 |= UCSWRST;       // Put B1 into SW Reset
 
     UCB1CTLW0 |= UCSSEL__SMCLK; // Choose SMCLK
-    UCB1BRW = clockrate;        // Set prescaler to 10 to get SCLK = 1M/10 = 100 kHz
+    UCB1BRW = clockrate;        // Set prescaler
 
     UCB1CTLW0 |= UCSYNC;        // Put B1 into SPI mode
     UCB1CTLW0 |= UCMST;         // Put into SPI master
@@ -42,7 +42,7 @@ void spi_init(double clockrate)
 
 void spi_send(uint8_t command)
 {
-    UCB1TXBUF = command;       // Send x4D out over SPI
+    UCB1TXBUF = command;       // Send out over SPI
 }
 
 uint8_t spi_receive()
