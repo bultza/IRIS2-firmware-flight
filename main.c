@@ -83,6 +83,7 @@
 #include "uart.h"
 #include "i2c.h"
 #include "i2c_TMP75C.h"
+#include "i2c_DS1338Z.h"
 #include "i2c_ADXL345.h"
 #include "i2c_INA.h"
 
@@ -223,6 +224,7 @@ int main(void)
 
 	//Debug, keep this commented on flight
 	int16_t temperatures[6];
+	struct RTCDateTime dateTime;
 	int16_t accelerations[3];
 	struct INAData inaData;
 	i2c_TMP75_getTemperatures(temperatures);
@@ -249,6 +251,7 @@ int main(void)
 	    if(uptime > lastTime + 1000)
 	    {
 	        i2c_TMP75_getTemperatures(temperatures);
+	        i2c_DS1338Z_getClockData(&dateTime);
 	        //i2c_ADXL345_getAccelerations(accelerations);
 	        i2c_INA_read(&inaData);
 
@@ -259,6 +262,19 @@ int main(void)
             uart_print(UART_DEBUG, strToPrint);
             sprintf(strToPrint, "Current: %d\r\n", inaData.current);
             uart_print(UART_DEBUG, strToPrint);
+
+            sprintf(strToPrint, "Second: %d\r\n", dateTime.seconds);
+            uart_print(UART_DEBUG, strToPrint);
+            sprintf(strToPrint, "Minute: %d\r\n", dateTime.minutes);
+            uart_print(UART_DEBUG, strToPrint);
+            sprintf(strToPrint, "Hour: %d\r\n", dateTime.hours);
+            uart_print(UART_DEBUG, strToPrint);
+            sprintf(strToPrint, "Day: %d\r\n", dateTime.date);
+            uart_print(UART_DEBUG, strToPrint);
+            sprintf(strToPrint, "Month: %d\r\n", dateTime.month);
+            uart_print(UART_DEBUG, strToPrint);
+            sprintf(strToPrint, "Year: %d\r\n", dateTime.year);
+            uart_print(UART_DEBUG, strToPrint);
             /*
             sprintf(strToPrint, "Acceleration X-Axis: %d\r\n", accelerations[0]);
             uart_print(UART_DEBUG, strToPrint);
@@ -267,7 +283,7 @@ int main(void)
             sprintf(strToPrint, "Acceleration Z-Axis: %d\r\n", accelerations[2]);
             uart_print(UART_DEBUG, strToPrint);*/
 
-
+            uart_print(UART_DEBUG, "\r\n");
 	        lastTime = uptime;
 	    }
 	    //TODO
