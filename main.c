@@ -228,6 +228,7 @@ int main(void)
 	int16_t accelerations[3];
 	struct INAData inaData;
 	i2c_TMP75_getTemperatures(temperatures);
+	//i2c_DS1338Z_setClockData(&dateTime);
 
 	uint64_t lastTime = 0;
 	//END OF DEBUG

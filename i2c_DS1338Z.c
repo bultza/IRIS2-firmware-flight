@@ -6,53 +6,49 @@
 
 #include "i2c_DS1338Z.h"
 
-
+/**
+ * Add description
+ */
 int8_t i2c_DS1338Z_getClockData(struct RTCDateTime *dateTime)
 {
-    uint8_t rtcData[6];
-    uint8_t rtcRegisters[6] = {DS1338Z_SECONDS, DS1338Z_MINUTES, DS1338Z_HOURS, DS1338Z_DATE, DS1338Z_MONTH, DS1338Z_YEAR};
+    uint8_t rtcData[7];
+    rtcData[0] = DS1338Z_SECONDS;
+    //uint8_t rtcRegisters[6] = {DS1338Z_SECONDS, DS1338Z_MINUTES, DS1338Z_HOURS, DS1338Z_DATE, DS1338Z_MONTH, DS1338Z_YEAR};
+    int8_t ack = i2c_write(I2C_BUS00, DS1338Z_ADDRESS, rtcData, 1, 0);
+    if (ack == 0)
+        ack = i2c_requestFrom(I2C_BUS00, DS1338Z_ADDRESS, rtcData, 7, 0);
 
-    uint8_t i;
-    for(i = 0; i < 6; i = i + 1)
+    if (ack == 0)
     {
-        uint8_t datum;
-        int8_t ack = i2c_write(I2C_BUS00, DS1338Z_ADDRESS, &rtcRegisters[i], 1, 0);
-        if (ack == 0)
-            ack = i2c_requestFrom(I2C_BUS00, DS1338Z_ADDRESS, &datum, 1, 0);
-
-        if (ack == 0)
-        {
-            if (i == 0 | i == 1) // Formatting of Seconds, Minutes
-            {
-                rtcData[i] = ((uint8_t) ((datum & 0b01110000) >> 4)) * 10 + ((uint8_t) (datum & 0x0F));
-            }
-            else if (i == 2) // Formatting of Hours
-            {
-                rtcData[i] = ((uint8_t) ((datum & 0b00100000) >> 4)) * 20 + ((uint8_t) ((datum & 0b00010000) >> 4)) * 10 + ((uint8_t) (datum & 0x0F));
-            }
-            else if (i == 3) // Formatting of Date
-            {
-                rtcData[i] = ((uint8_t) ((datum & 0b00110000) >> 4)) * 10 + ((uint8_t) (datum & 0x0F));
-            }
-            else if (i == 4) // Formatting of Month
-            {
-                rtcData[i] = ((uint8_t) ((datum & 0b00010000) >> 4)) * 10 + ((uint8_t) (datum & 0x0F));
-            }
-            else if (i == 5) // Formatting of Year
-            {
-                rtcData[i] = ((uint8_t) ((datum & 0b11110000) >> 4)) * 10 + ((uint8_t) (datum & 0x0F));
-            }
-        }
-        else
-            rtcData[i] = 32767; // Deterrent value
+        dateTime->seconds = ((uint8_t) ((rtcData[DS1338Z_SECONDS] & 0b01110000) >> 4)) * 10
+                + ((uint8_t) (rtcData[DS1338Z_SECONDS] & 0x0F));
+        dateTime->minutes = ((uint8_t) ((rtcData[DS1338Z_MINUTES] & 0b01110000) >> 4)) * 10
+                + ((uint8_t) (rtcData[DS1338Z_MINUTES] & 0x0F));
+        dateTime->hours =   ((uint8_t) ((rtcData[DS1338Z_HOURS] & 0b00100000) >> 4)) * 20
+                + ((uint8_t) ((rtcData[DS1338Z_HOURS] & 0b00010000) >> 4)) * 10
+                + ((uint8_t) (rtcData[DS1338Z_HOURS] & 0x0F));
+        dateTime->date =    ((uint8_t) ((rtcData[DS1338Z_DATE] & 0b00110000) >> 4)) * 10
+                + ((uint8_t) (rtcData[DS1338Z_DATE] & 0x0F));
+        dateTime->month =   ((uint8_t) ((rtcData[DS1338Z_MONTH] & 0b00010000) >> 4)) * 10
+                + ((uint8_t) (rtcData[DS1338Z_MONTH] & 0x0F));
+        dateTime->year =    ((uint8_t) ((rtcData[DS1338Z_YEAR] & 0b11110000) >> 4)) * 10
+                + ((uint8_t) (rtcData[DS1338Z_YEAR] & 0x0F));
+    }
+    else
+    {
+        dateTime->year = 0;
     }
 
-    dateTime->seconds = rtcData[0];
-    dateTime->minutes = rtcData[1];
-    dateTime->hours = rtcData[2];
-    dateTime->date = rtcData[3];
-    dateTime->month = rtcData[4];
-    dateTime->year = rtcData[5];
-
     return 0;
+}
+
+/**
+ * Set Time to the RTC
+ */
+int8_t i2c_DS1338Z_setClockData(struct RTCDateTime *dateTime)
+{
+    //TODO Change from fixed value to the configured value
+    uint8_t buffer[8] = {0x00, 0x00, 0x43, 0x00, 0x06, 0x24, 0x07, 0x21};
+    int8_t ack = i2c_write(I2C_BUS00, DS1338Z_ADDRESS, buffer, 8, 0);
+    return ack;
 }

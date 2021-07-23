@@ -35,6 +35,7 @@ struct RTCDateTime
 
 int8_t i2c_DS1338Z_init(void);
 int8_t i2c_DS1338Z_getClockData(struct RTCDateTime *dateTime);
+int8_t i2c_DS1338Z_setClockData(struct RTCDateTime *dateTime);
 
 
 #endif /* I2C_DS1338Z_H_ */
