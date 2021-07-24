@@ -224,11 +224,11 @@ int main(void)
 
 	//Debug, keep this commented on flight
 	int16_t temperatures[6];
-	struct RTCDateTime dateTime;
+	struct RTCDateTime dateTime = {15, 30, 10, 24, 7, 21}; // Seconds, minute, hours, day, month, year
 	int16_t accelerations[3];
 	struct INAData inaData;
 	i2c_TMP75_getTemperatures(temperatures);
-	//i2c_DS1338Z_setClockData(&dateTime);
+	i2c_DS1338Z_setClockData(&dateTime);
 
 	uint64_t lastTime = 0;
 	//END OF DEBUG
@@ -260,31 +260,32 @@ int main(void)
 	        sprintf(strToPrint, "Temperature: %d\r\n", temperatures[0]);
 	        uart_print(UART_DEBUG, strToPrint);
 	        sprintf(strToPrint, "Voltage: %d\r\n", inaData.voltage);
-            uart_print(UART_DEBUG, strToPrint);
-            sprintf(strToPrint, "Current: %d\r\n", inaData.current);
-            uart_print(UART_DEBUG, strToPrint);
+	        uart_print(UART_DEBUG, strToPrint);
+	        sprintf(strToPrint, "Current: %d\r\n", inaData.current);
+	        uart_print(UART_DEBUG, strToPrint);
 
-            sprintf(strToPrint, "Second: %d\r\n", dateTime.seconds);
-            uart_print(UART_DEBUG, strToPrint);
-            sprintf(strToPrint, "Minute: %d\r\n", dateTime.minutes);
-            uart_print(UART_DEBUG, strToPrint);
-            sprintf(strToPrint, "Hour: %d\r\n", dateTime.hours);
-            uart_print(UART_DEBUG, strToPrint);
-            sprintf(strToPrint, "Day: %d\r\n", dateTime.date);
-            uart_print(UART_DEBUG, strToPrint);
-            sprintf(strToPrint, "Month: %d\r\n", dateTime.month);
-            uart_print(UART_DEBUG, strToPrint);
-            sprintf(strToPrint, "Year: %d\r\n", dateTime.year);
-            uart_print(UART_DEBUG, strToPrint);
-            /*
-            sprintf(strToPrint, "Acceleration X-Axis: %d\r\n", accelerations[0]);
-            uart_print(UART_DEBUG, strToPrint);
-            sprintf(strToPrint, "Acceleration Y-Axis: %d\r\n", accelerations[1]);
-            uart_print(UART_DEBUG, strToPrint);
-            sprintf(strToPrint, "Acceleration Z-Axis: %d\r\n", accelerations[2]);
-            uart_print(UART_DEBUG, strToPrint);*/
+	        sprintf(strToPrint, "Second: %d\r\n", dateTime.seconds);
+	        uart_print(UART_DEBUG, strToPrint);
+	        sprintf(strToPrint, "Minute: %d\r\n", dateTime.minutes);
+	        uart_print(UART_DEBUG, strToPrint);
+	        sprintf(strToPrint, "Hour: %d\r\n", dateTime.hours);
+	        uart_print(UART_DEBUG, strToPrint);
+	        sprintf(strToPrint, "Day: %d\r\n", dateTime.date);
+	        uart_print(UART_DEBUG, strToPrint);
+	        sprintf(strToPrint, "Month: %d\r\n", dateTime.month);
+	        uart_print(UART_DEBUG, strToPrint);
+	        sprintf(strToPrint, "Year: %d\r\n", dateTime.year);
+	        uart_print(UART_DEBUG, strToPrint);
+	        /*
+	         * sprintf(strToPrint, "Acceleration X-Axis: %d\r\n", accelerations[0]);
+	         * uart_print(UART_DEBUG, strToPrint);
+	         * sprintf(strToPrint, "Acceleration Y-Axis: %d\r\n", accelerations[1]);
+	         * uart_print(UART_DEBUG, strToPrint);
+	         * sprintf(strToPrint, "Acceleration Z-Axis: %d\r\n", accelerations[2]);
+	         * uart_print(UART_DEBUG, strToPrint);
+	         * */
 
-            uart_print(UART_DEBUG, "\r\n");
+	        uart_print(UART_DEBUG, "\r\n");
 	        lastTime = uptime;
 	    }
 	    //TODO

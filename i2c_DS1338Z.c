@@ -5,9 +5,64 @@
  */
 
 #include "i2c_DS1338Z.h"
+#include "utils_time.h"
 
 /**
- * Add description
+ * Initializes the RTC
+ */
+int8_t i2c_DS1336Z_init(void)
+{
+    // Nothing to see here... for now
+    return 0;
+}
+
+/**
+ * Sets the DateTime in the RTC
+ */
+int8_t i2c_DS1338Z_setClockData(struct RTCDateTime *dateTime)
+{
+    uint8_t rtcRegister = DS1338Z_SECONDS;
+
+    uint8_t weekday = utils_time_getWeekdayFromDate(dateTime);
+    uint8_t rtcValues[7] = {dateTime->seconds, dateTime->minutes, dateTime->hours, weekday, dateTime->date, dateTime->month, dateTime->year};
+
+    uint8_t txBuffer[8];
+    txBuffer[0] = rtcRegister;
+
+    uint8_t i;
+    for (i = 0; i < 6; i = i + 1) // Formatting of the date...
+    {
+        uint8_t datum;
+        if (i == 0 | i == 1 | i == 5) // Formatting of Seconds, Minutes, Year
+        {
+            datum = ((((rtcValues[i] / 10) & 0x0F) << 4) | (rtcValues[i] % 10));
+        }
+        else if (i == 2) // Formatting of Hours, note: 24-hour format is enforced
+        {
+            datum = (((((rtcValues[i] / 20) & 0x0F) << 5) | (((rtcValues[i] / 10) & 0x0F) << 4) | (rtcValues[i] % 10))) | 0b00000000;
+        }
+        else if (i == 3) // Formatting of Date
+        {
+            datum = ((((rtcValues[i] / 10) &  0x0F) << 6) | (rtcValues[i] % 10));
+        }
+        else if (i == 4) // Formatting of Month
+        {
+            datum = ((((rtcValues[i] / 10) &  0x0F) << 7) | (rtcValues[i] % 10));
+        }
+        txBuffer[i + 1] = datum;
+    }
+
+    int8_t ack = i2c_write(I2C_BUS00, DS1338Z_ADDRESS, txBuffer, 7, 0);
+    return ack;
+
+    //TODO Change from fixed value to the configured value
+    //uint8_t buffer[8] = {0x00, 0x00, 0x43, 0x00, 0x06, 0x24, 0x07, 0x21};
+    //int8_t ack = i2c_write(I2C_BUS00, DS1338Z_ADDRESS, buffer, 8, 0);
+    //return ack;
+}
+
+/**
+ * Gets the current DateTime from the RTC
  */
 int8_t i2c_DS1338Z_getClockData(struct RTCDateTime *dateTime)
 {
@@ -40,15 +95,4 @@ int8_t i2c_DS1338Z_getClockData(struct RTCDateTime *dateTime)
     }
 
     return 0;
-}
-
-/**
- * Set Time to the RTC
- */
-int8_t i2c_DS1338Z_setClockData(struct RTCDateTime *dateTime)
-{
-    //TODO Change from fixed value to the configured value
-    uint8_t buffer[8] = {0x00, 0x00, 0x43, 0x00, 0x06, 0x24, 0x07, 0x21};
-    int8_t ack = i2c_write(I2C_BUS00, DS1338Z_ADDRESS, buffer, 8, 0);
-    return ack;
 }

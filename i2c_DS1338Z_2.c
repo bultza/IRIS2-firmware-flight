@@ -42,7 +42,7 @@ int8_t i2c_DS1338Z_setDateTime(struct RTCDateTime *dateTime) // Initialize the R
         }
 
         uint8_t setOfWords[2] = {rtcRegisters[i], datum};
-        int8_t ack = i2c_write(I2C_BUS00, DS1338Z_ADDRESS, &setOfWords, 2, 0);
+        int8_t ack = i2c_write(I2C_BUS00, DS1338Z_ADDRESS, setOfWords, 2, 0);
 
         if (ack != 0) // Failed setting some configuration
             status = -1;
