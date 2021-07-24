@@ -86,6 +86,7 @@
 #include "i2c_DS1338Z.h"
 #include "i2c_ADXL345.h"
 #include "i2c_INA.h"
+#include "spi.h"
 
 #define LED_ON          (P1OUT |= BIT0)
 #define LED_OFF         (P1OUT &= ~BIT0)
@@ -105,10 +106,6 @@
 #define CAMERA04_OFF    (P2OUT |=  BIT7)
 #define CAMERA04_ON     (P2OUT &= ~BIT7)
 
-#define FLASH_CS1_OFF   (P5OUT |=  BIT3)
-#define FLASH_CS1_ON    (P5OUT &= ~BIT3)
-#define FLASH_CS2_OFF   (P3OUT |=  BIT6)
-#define FLASH_CS2_ON    (P3OUT &= ~BIT6)
 
 /*
  * Init all GPIO and MCU subsystems
@@ -148,7 +145,8 @@ void init_board()
     //SPI pins
     P5SEL1 &= ~(BIT0 | BIT1 | BIT2);        // USCI_B1 SCLK, MOSI,
     P5SEL0 |= (BIT0 | BIT1 | BIT2);         // STE, and MISO pin
-    PJSEL0 |= BIT4 | BIT5;// For XT1
+    // For XT1
+    PJSEL0 |= BIT4 | BIT5;
     //CS1
     FLASH_CS1_OFF;
     P5OUT |= BIT3;
@@ -169,7 +167,7 @@ void init_board()
     i2c_master_init();
 
     //Init SPI
-    //TODO
+    spi_init(CR_1MHZ);
 
     //Init Temperature sensor
     i2c_TMP75_init();

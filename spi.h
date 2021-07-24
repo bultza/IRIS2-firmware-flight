@@ -18,8 +18,16 @@
 #define CR_100KHZ 10
 #define CR_50KHZ 20
 
-void spi_init(double clockrate);
-void spi_send(uint8_t command);
-uint8_t spi_receive();
+#define FLASH_CS1_OFF   (P5OUT |=  BIT3)
+#define FLASH_CS1_ON    (P5OUT &= ~BIT3)
+#define FLASH_CS2_OFF   (P3OUT |=  BIT6)
+#define FLASH_CS2_ON    (P3OUT &= ~BIT6)
+
+void spi_init(uint8_t clockrate);
+int8_t spi_write_instruction(uint8_t instruction);
+int8_t spi_write_read(uint8_t *bufferOut,
+                      unsigned int bufferOutLenght,
+                      uint8_t *bufferIn,
+                      unsigned int bufferInLenght);
 
 #endif /* SPI_H_ */

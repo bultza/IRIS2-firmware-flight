@@ -2,59 +2,104 @@
 
 uint8_t rxdata;
 
-void spi_init(double clockrate)
+void spi_init(uint8_t clockrate)
 {
 
     //-- Setup SPI B1
 
     UCB1CTLW0 |= UCSWRST;       // Put B1 into SW Reset
 
-    UCB1CTLW0 |= UCSSEL__SMCLK; // Choose SMCLK
-    UCB1BRW = clockrate;        // Set prescaler
+    //UCB1CTLW0 |= UCSSEL__SMCLK; // Choose SMCLK
+    //UCB1BRW = clockrate;        // Set prescaler
 
-    UCB1CTLW0 |= UCSYNC;        // Put B1 into SPI mode
-    UCB1CTLW0 |= UCMST;         // Put into SPI master
-                                // Flash memory is slave
+    //UCB1CTLW0 |= UCSYNC;        // Put B1 into SPI mode
+    //UCB1CTLW0 |= UCMST;         // Put into SPI master
+
+    // 3-pin, 8-bit SPI master
+    UCB1CTLW0 |= UCMST | UCSYNC | UCCKPH | UCMSB;
+    // Clock polarity high, MSB
+
+    // SMCLK
+    UCB1CTLW0 |= UCSSEL__SMCLK;
+
+    UCB1BRW = clockrate;
+    // No modulation
 
     //-- Configure the ports
-    P5SEL1 &= ~BIT0;        // P5.0 is MOSI
-    P5SEL0 |= BIT0;
+    P5SEL1 &= ~(BIT0 | BIT1 | BIT2);
+    P5SEL0 |= (BIT0 | BIT1 | BIT2);
 
-    P5SEL1 &= ~BIT1;        // P5.1 is MISO
-    P5SEL0 |= BIT1;
-
-    P5SEL1 &= ~BIT2;        // P5.2 is CLK
-    P5SEL0 |= BIT2;
-
-    //No need to Configure the CS GPIOs at this stage
-    //because they have been already configured on board_init()
-/*
-    P5SEL1 &= ~BIT3;        // P5.3 is CS1 (Flash 1)
-    P5SEL0 |= BIT3;
-
-    P3SEL1 &= ~BIT6;        // P3.7 is CS2 (Flash 2)
-    P3SEL0 |= BIT6;
-*/
+    //CS1
+    FLASH_CS1_OFF;
+    P5OUT |= BIT3;
+    //CS2
+    FLASH_CS2_OFF;
+    P3OUT |= BIT6;
 
     UCB1CTLW0 &= ~UCSWRST;    // Take B1 out of SW Reset
 
 }
 
-void spi_send(uint8_t command)
+/**
+ * Send a single byte and do not expect any answer
+ */
+int8_t spi_write_instruction(uint8_t instruction)
 {
-    UCB1TXBUF = command;       // Send out over SPI
+    // Wait for TXBUF ready
+    while (!(UCB1IFG & UCTXIFG));
+    UCB1TXBUF = instruction;
+
+    // Wait for TX complete
+    while (UCB1STAT & UCBUSY);
+
+    return 0;
 }
 
-uint8_t spi_receive()
+/**
+ * Write x bytes and read x bytes consecutively
+ */
+int8_t spi_write_read(uint8_t *bufferOut,
+                      unsigned int bufferOutLenght,
+                      uint8_t *bufferIn,
+                      unsigned int bufferInLenght)
 {
-    UCB1IE |= UCRXIE;           // Enable SPI Rx IRQ
-    UCB1IFG &= ~UCRXIFG;        // Clear flag
-    __enable_interrupt();
-    return rxdata;
+    //First we send:
+    while(bufferOutLenght)
+    {
+        // Wait for TXBUF ready
+        while (!(UCB1IFG & UCTXIFG));
+        //Fill buffer
+        UCB1TXBUF = *bufferOut;
+
+        bufferOutLenght--;
+        if(bufferOutLenght != 0)
+            *bufferOut++;
+    }
+    // Wait for TX complete
+    while (UCB1STAT & UCBUSY);
+
+    //Empty the RX buffer:
+    uint8_t dummy = UCB1RXBUF;
+
+    //Then we read
+    while(bufferInLenght)
+    {
+        //Send dummy byte to keep the clock running
+        UCB1TXBUF = 0;
+
+        // Wait for RX to finish
+        while (!(UCB1IFG & UCRXIFG));
+
+        // Store data from last data RX
+        *bufferIn = UCB1RXBUF;
+
+        bufferInLenght--;
+        if(bufferInLenght != 0)
+            *bufferIn++;
+    }
+
+    //Return without errors
+    return 0;
 }
 
-#pragma vector = EUSCI_B1_VECTOR    // Data is in B1 SPI buffer
-__interrupt void ISR_EUSCI_B1(void)
-{
-    rxdata = UCB1RXBUF;
-}
+
