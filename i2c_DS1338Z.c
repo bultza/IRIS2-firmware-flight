@@ -21,7 +21,7 @@ int8_t i2c_DS1336Z_init(void)
  */
 int8_t i2c_DS1338Z_setClockData(struct RTCDateTime *dateTime)
 {
-    uint8_t rtcRegister = DS1338Z_SECONDS;
+    uint8_t const rtcRegister = DS1338Z_SECONDS;
 
     uint8_t weekday = utils_time_getWeekdayFromDate(dateTime);
     uint8_t rtcValues[7] = {dateTime->seconds, dateTime->minutes, dateTime->hours, weekday, dateTime->date, dateTime->month, dateTime->year};
@@ -32,31 +32,10 @@ int8_t i2c_DS1338Z_setClockData(struct RTCDateTime *dateTime)
     uint8_t i;
     for (i = 0; i < 6; i = i + 1) // Formatting of the date...
     {
-        uint8_t datum;
-        if (i == 0 | i == 1 | i == 6) // Formatting of Seconds, Minutes, Year
-        {
-            datum = ((((rtcValues[i] / 10) & 0x0F) << 4) | (rtcValues[i] % 10));
-        }
-        else if (i == 2) // Formatting of Hours, note: 24-hour format is enforced
-        {
-            datum = (((((rtcValues[i] / 20) & 0x0F) << 5) | (((rtcValues[i] / 10) & 0x0F) << 4) | (rtcValues[i] % 10))) | 0b00000000;
-        }
-        else if (i == 3) // Formatting of Day (weekday, 1-7)
-        {
-            datum = (rtcValues[i] & 0b00000111);
-        }
-        else if (i == 4) // Formatting of Date
-        {
-            datum = ((((rtcValues[i] / 10) &  0x0F) << 6) | (rtcValues[i] % 10));
-        }
-        else if (i == 5) // Formatting of Month
-        {
-            datum = ((((rtcValues[i] / 10) &  0x0F) << 7) | (rtcValues[i] % 10));
-        }
-        txBuffer[i + 1] = datum;
+        txBuffer[i + 1] = ((((rtcValues[i] / 10) & 0x0F) << 4) | (rtcValues[i] % 10));
     }
 
-    int8_t ack = i2c_write(I2C_BUS00, DS1338Z_ADDRESS, txBuffer, 7, 0);
+    int8_t ack = i2c_write(I2C_BUS00, DS1338Z_ADDRESS, txBuffer, 8, 0);
     return ack;
 }
 
