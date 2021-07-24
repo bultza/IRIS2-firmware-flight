@@ -30,9 +30,9 @@ int8_t i2c_DS1338Z_setClockData(struct RTCDateTime *dateTime)
     txBuffer[0] = rtcRegister;
 
     uint8_t i;
-    for (i = 0; i < 6; i = i + 1) // Formatting of the date...
+    for (i = 0; i < 7; i++) // Formatting of the date...
     {
-        txBuffer[i + 1] = ((((rtcValues[i] / 10) & 0x0F) << 4) | (rtcValues[i] % 10));
+        txBuffer[i+1] = ((((rtcValues[i] / 10) & 0x0F) << 4) | (rtcValues[i] % 10));
     }
 
     int8_t ack = i2c_write(I2C_BUS00, DS1338Z_ADDRESS, txBuffer, 8, 0);
