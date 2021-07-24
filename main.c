@@ -175,7 +175,7 @@ void init_board()
     i2c_TMP75_init();
 
     //Init RTC
-    //TODO
+    i2c_RTC_init();
 
     //Init Accelerometer
     //TODO
@@ -222,21 +222,26 @@ int main(void)
 	//Print reboot message on UART debug
 	//uart_print(UART_DEBUG, "IRIS2 is rebooting...\n");
 
-	//Debug, keep this commented on flight
+	///////////////////////////////////////////////////////////////////////////
+	//DEBUG, KEEP THIS COMMENTED ON FLIGHT
 	int16_t temperatures[6];
-	struct RTCDateTime dateTime = {15, 30, 10, 24, 7, 21}; // Seconds, minute, hours, day, month, year
+	struct RTCDateTime dateTime/* = {30, 07, 23, 24, 07, 21}*/; // Seconds, minute, hours, day, month, year
 	int16_t accelerations[3];
 	struct INAData inaData;
 	i2c_TMP75_getTemperatures(temperatures);
-	i2c_DS1338Z_setClockData(&dateTime);
+	//i2c_RTC_setClockData(&dateTime);
+	//END OF DEBUG
+    ///////////////////////////////////////////////////////////////////////////
 
 	uint64_t lastTime = 0;
-	//END OF DEBUG
 
 	while(1)
 	{
 	    //Read Uptime:
-	    uint64_t uptime = millis();
+	    uint64_t uptime = millis_uptime();
+
+	    //UnixTime now:
+	    uint32_t unixtTimeNow = i2c_RTC_unixTime_now();
 
 	    //Read UART Debug:
 	    if(uart_available(UART_DEBUG) != 0)
@@ -252,7 +257,7 @@ int main(void)
 	    if(uptime > lastTime + 1000)
 	    {
 	        i2c_TMP75_getTemperatures(temperatures);
-	        i2c_DS1338Z_getClockData(&dateTime);
+	        i2c_RTC_getClockData(&dateTime);
 	        //i2c_ADXL345_getAccelerations(accelerations);
 	        i2c_INA_read(&inaData);
 
@@ -276,6 +281,9 @@ int main(void)
 	        uart_print(UART_DEBUG, strToPrint);
 	        sprintf(strToPrint, "Year: %d\r\n", dateTime.year);
 	        uart_print(UART_DEBUG, strToPrint);
+
+	        sprintf(strToPrint, "UNIXTIME: %d\r\n", unixtTimeNow);
+            uart_print(UART_DEBUG, strToPrint);
 	        /*
 	         * sprintf(strToPrint, "Acceleration X-Axis: %d\r\n", accelerations[0]);
 	         * uart_print(UART_DEBUG, strToPrint);

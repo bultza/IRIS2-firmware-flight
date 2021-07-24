@@ -6,7 +6,8 @@
 #include <stdbool.h>
 #include "clock.h"
 
-volatile uint64_t elapsedSeconds = 0;
+//Number of seconds elapsed since boot
+volatile uint32_t elapsedSeconds = 0;
 
 #define CLOCK_LOCK_VALID_KEY    0xA5
 #define CLOCK_LOCK_INVALID_KEY  0xBB // Any key except the valid one
@@ -127,7 +128,7 @@ void millis_init(void)
  * It returns the elapsed time in millis since millis_init was called
  * (hopefully since the MCU booted up).
  */
-uint64_t millis(void)
+uint64_t millis_uptime(void)
 {
     //Wait until we manage to read the value accurately (read twice the register
     //and it has the same number)
@@ -139,9 +140,17 @@ uint64_t millis(void)
         x = TA3R;
 
     if (x > 32735U)
-        return (elapsedSeconds * 1000UL + 999UL);
+        return ((uint64_t)elapsedSeconds * 1000UL + 999UL);
     else
-        return (elapsedSeconds * 1000UL + ((uint32_t) (x) * 1000UL / 32768UL));
+        return ((uint64_t)elapsedSeconds * 1000UL + ((uint32_t) (x) * 1000UL / 32768UL));
+}
+
+/**
+ * Number of seconds since we booted up
+ */
+uint32_t seconds_uptime(void)
+{
+    return elapsedSeconds;
 }
 
 /**

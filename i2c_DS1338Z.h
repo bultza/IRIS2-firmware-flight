@@ -11,6 +11,7 @@
 #include <msp430.h>
 #include <stdint.h>
 #include "i2c.h"
+#include "clock.h"
 
 #define DS1338Z_ADDRESS 0x68
 #define DS1338Z_SECONDS 0x00
@@ -21,6 +22,8 @@
 #define DS1338Z_MONTH 0x05
 #define DS1338Z_YEAR 0x06
 #define DS1338Z_CONTROL 0x07
+
+#define RTC_READ_PERIOD 300     //Sync with RTC every 300s
 
 
 struct RTCDateTime
@@ -33,9 +36,20 @@ struct RTCDateTime
     uint8_t year;
 };
 
-int8_t i2c_DS1338Z_init(void);
-int8_t i2c_DS1338Z_setClockData(struct RTCDateTime *dateTime);
-int8_t i2c_DS1338Z_getClockData(struct RTCDateTime *dateTime);
+struct RTCUnixtime
+{
+    uint32_t uptime;
+    uint32_t unixtime;
+};
+
+int8_t   i2c_RTC_init(void);
+int8_t   i2c_RTC_setClockData(struct RTCDateTime *dateTime);
+int8_t   i2c_RTC_getClockData(struct RTCDateTime *dateTime);
+
+uint32_t i2c_RTC_unixTime_now();
+int8_t   i2c_RTC_set_unixTime(uint32_t unixtime);
+
+
 
 
 #endif /* I2C_DS1338Z_H_ */
