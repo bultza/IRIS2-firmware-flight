@@ -6,40 +6,56 @@
 
 #include "i2c_ADXL345.h"
 
-
-int8_t i2c_ADXL345_getAccelerations(int16_t *accelerations)
+int8_t i2c_ADXL345_init(void)
 {
-    uint8_t buffer[1];
+    // Take accelerometer out of Sleep mode, start measuring
+    uint8_t powerControl[2] = {ADXL345_REG_POWERCTL, ADXL345_INITIALIZE};
+    // Set format of measurements: full resolution (13-bit), full resolution
+    uint8_t dataFormat[2] = {ADXL345_REG_DATAFMT, ADXL345_FORMAT};
 
-    buffer[0] = 0x32;   //X-Axis Data 0
-    buffer[1] = 0x33;   //X-Axis Data 1
-    buffer[2] = 0x34;   //Y-Axis Data 0
-    buffer[3] = 0x35;   //Y-Axis Data 1
-    buffer[4] = 0x36;   //Z-Axis Data 0
-    buffer[5] = 0x37;   //Z-Axis Data 1
+    int8_t ack = i2c_write(I2C_BUS00, ADXL345_ADDRESS, powerControl, 2, 0);
 
-    // Read 3-axes acceleration
-    int8_t ack = i2c_write(I2C_BUS00, ADXL345_ADDRESS, buffer, 6, 0);
+    if (ack == 0)
+        ack = i2c_write(I2C_BUS00, ADXL345_ADDRESS, dataFormat, 2, 0);
 
-    if (ack == 0)   //Request OK
-        ack = i2c_requestFrom(I2C_BUS00, ADXL345_ADDRESS, buffer, 6, 0);
-
-    if (ack == 0)   //Retrieval OK
-    {
-        accelerations[0] = (((int)buffer[1]) << 8) | buffer[0];    //X-Axis
-        accelerations[1] = (((int)buffer[3]) << 8) | buffer[2];    //Y-Axis
-        accelerations[2] = (((int)buffer[5]) << 8) | buffer[4];    //Z-Axis
-    }
-    else    //Deterrent values
-    {
-        accelerations[0] = 32767;
-        accelerations[1] = 32767;
-        accelerations[2] = 32767;
-    }
-
-    return 0;
+    return ack;
 }
 
+int8_t i2c_ADXL345_getAccelerations(struct Accelerations *accData)
+{
+    uint8_t adxlRegister = ADXL345_REG_XAXIS0;
+    uint8_t adxlData[6];
+
+    int8_t ack = i2c_write(I2C_BUS00, ADXL345_ADDRESS, &adxlRegister, 1, 0);
+
+    if (ack == 0) // Retrieve XAXIS0, XAXIS1, YAXIS0, YAXIS1, ZAXIS0, ZAXIS1
+        ack = i2c_requestFrom(I2C_BUS00, ADXL345_ADDRESS, adxlData, 6, 0);
+
+    if (ack == 0) // Process obtained values
+    {
+        accData->XAxis = (float) ((int16_t) ((adxlData[1] << 8) | adxlData[0])) * (32.0/(2^13));
+        accData->YAxis = (float) ((int16_t) ((adxlData[3] << 8) | adxlData[2])) * (32.0/(2^13));
+        accData->ZAxis = (float) ((int16_t) ((adxlData[5] << 8) | adxlData[4])) * (32.0/(2^13));
+    }
+    else // Error: return deterrent values
+    {
+        accData->XAxis = 32767;
+        accData->YAxis = 32767;
+        accData->ZAxis = 32767;
+    }
+
+    return ack;
+}
+
+int8_t i2c_ADXL345_setAxesOffsets(int16_t xAxisOffset, int16_t yAxisOffset, int16_t zAxisOffset)
+{
+    uint8_t const adxlRegister = ADXL345_REG_XAXISOFF;
+    uint8_t adxlData[4] = {adxlRegister, xAxisOffset, yAxisOffset, zAxisOffset};
+
+    int8_t ack = i2c_write(I2C_BUS00, ADXL345_ADDRESS, adxlData, 4, 0);
+
+    return ack;
+}
 
 
 
