@@ -10,7 +10,9 @@
 
 #include <msp430.h>
 #include <stdint.h>
+#include <math.h>
 #include "i2c.h"
+#include "clock.h"
 
 #define MS5611_ADDRESS 0x77
 #define MS5611_RESET 0x1E

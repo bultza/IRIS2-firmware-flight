@@ -7,14 +7,17 @@
 
 #include "i2c_MS5611.h"
 #include <math.h>
+#include "clock.h"
 
 //Private functions:
-int8_t ms5611_readCalibrationData(uint16_t * C_coefficients);
-int8_t ms5611_readDigitalPresAndTempData(uint32_t * D_coefficients);
-int8_t ms5611_calculateTemperature(uint16_t * C_coefficients, uint32_t * D_coefficients, int32_t * dT, int32_t * TEMP);
-int8_t ms5611_secondOrderTemperatureCompensation(int32_t * dT, int32_t * TEMP, int64_t * OFF2, int64_t * SENS2, int64_t * P2);
-int8_t ms5611_calculateTempAndCompensatedPres(int64_t * OFF, int64_t * SENS, int32_t * P);
+int8_t ms5611_readCalibrationData(void);
+int8_t ms5611_readDigitalPresAndTempData(uint32_t * dCoefficients);
+int8_t ms5611_calculateTemperature(uint32_t * dCoefficients, int32_t * dT, int32_t * temp);
+int8_t ms5611_secondOrderTemperatureCompensation(int32_t * dT, int32_t * temp, int64_t * off2, int64_t * sens2, int64_t * p2);
+int8_t ms5611_calculateTempAndCompensatedPres(int64_t * off, int64_t * sens, int32_t * p);
 
+// Constant
+uint16_t C_COEFFICIENTS[6];
 
 /**
  * Initializes the barometer.
@@ -24,19 +27,22 @@ int8_t i2c_MS5611_init(void)
     // Reset MS5611 device
     uint8_t cmd = MS5611_RESET;
     int8_t ack = i2c_write(I2C_BUS00, MS5611_ADDRESS, &cmd, 1, 0);
+    __delay_cycles(72000);
+    ms5611_readCalibrationData();
+
     return ack;
 }
 
-int8_t ms5611_readCalibrationData(uint16_t * C_coefficients)
+int8_t ms5611_readCalibrationData(void)
 {
     int8_t status;
 
-    // C1: Pressure sensitivity (C_coefficients[0])
-    // C2: Pressure offset (C_coefficients[1])
-    // C3: Temp. coefficient of pres. sensitivity (C_coefficients[2])
-    // C4: Temp. coefficient of pres. offset (C_coefficients[3])
-    // C5: Reference temp. (C_coefficients[4])
-    // C6: Temp. coefficient of the temp. (C_coefficients[5])
+    // C1: Pressure sensitivity (C_COEFFICIENTS[0])
+    // C2: Pressure offset (C_COEFFICIENTS[1])
+    // C3: Temp. coefficient of pres. sensitivity (C_COEFFICIENTS[2])
+    // C4: Temp. coefficient of pres. offset (C_COEFFICIENTS[3])
+    // C5: Reference temp. (C_COEFFICIENTS[4])
+    // C6: Temp. coefficient of the temp. (C_COEFFICIENTS[5])
 
     uint8_t coeffAddresses[6] = {MS5611_REG_C1, MS5611_REG_C2, MS5611_REG_C3, MS5611_REG_C4, MS5611_REG_C5, MS5611_REG_C6};
 
@@ -46,9 +52,9 @@ int8_t ms5611_readCalibrationData(uint16_t * C_coefficients)
         int8_t ack = i2c_write(I2C_BUS00, MS5611_ADDRESS, &coeffAddresses[i], 1, 0);
         if (ack == 0)
         {
-            uint8_t coeff_parts[2];
-            ack = i2c_requestFrom(I2C_BUS00, MS5611_ADDRESS, coeff_parts, 2, 0);
-            C_coefficients[i] = ((uint16_t) coeff_parts[0] << 8) | ((uint16_t) coeff_parts[1]);
+            uint8_t coeffParts[2];
+            ack = i2c_requestFrom(I2C_BUS00, MS5611_ADDRESS, coeffParts, 2, 0);
+            C_COEFFICIENTS[i] = ((uint16_t) coeffParts[0] << 8) | ((uint16_t) coeffParts[1]);
         }
 
         if (ack != 0)
@@ -58,7 +64,7 @@ int8_t ms5611_readCalibrationData(uint16_t * C_coefficients)
     return status;
 }
 
-int8_t ms5611_readDigitalPresAndTempData(uint32_t * D_coefficients)
+int8_t ms5611_readDigitalPresAndTempData(uint32_t * dCoefficients)
 {
     // D1: Digital pressure value (D_coefficients[0])
     // D2: Digital temperature value (D_coefficients[1])
@@ -77,9 +83,9 @@ int8_t ms5611_readDigitalPresAndTempData(uint32_t * D_coefficients)
         ack = i2c_write(I2C_BUS00, MS5611_ADDRESS, &cmd, 1, 0);
         if (ack == 0)
         {
-            uint8_t coeff_parts[3];
-            ack = i2c_requestFrom(I2C_BUS00, MS5611_ADDRESS, coeff_parts, 3, 0);
-            D_coefficients[0] = (((uint32_t) coeff_parts[0] << 16) | ((uint32_t) coeff_parts[1] << 8)) | ((uint32_t) coeff_parts[2]);
+            uint8_t coeffParts[3];
+            ack = i2c_requestFrom(I2C_BUS00, MS5611_ADDRESS, coeffParts, 3, 0);
+            dCoefficients[0] = (((uint32_t) coeffParts[0] << 16) | ((uint32_t) coeffParts[1] << 8)) | ((uint32_t) coeffParts[2]);
         }
     }
 
@@ -97,75 +103,73 @@ int8_t ms5611_readDigitalPresAndTempData(uint32_t * D_coefficients)
         ack = i2c_write(I2C_BUS00, MS5611_ADDRESS, &cmd, 1, 0);
         if (ack == 0)
         {
-            uint8_t coeff_parts2[3];
-            ack = i2c_requestFrom(I2C_BUS00, MS5611_ADDRESS, coeff_parts2, 3, 0);
-            D_coefficients[1] = (((uint32_t) coeff_parts2[0] << 16) | ((uint32_t) coeff_parts2[1] << 8)) | ((uint32_t) coeff_parts2[2]);
+            uint8_t coeffParts2[3];
+            ack = i2c_requestFrom(I2C_BUS00, MS5611_ADDRESS, coeffParts2, 3, 0);
+            dCoefficients[1] = (((uint32_t) coeffParts2[0] << 16) | ((uint32_t) coeffParts2[1] << 8)) | ((uint32_t) coeffParts2[2]);
         }
     }
 
     return ack;
 }
 
-int8_t ms5611_calculateTemperature(uint16_t * C_coefficients, uint32_t * D_coefficients, int32_t * dT, int32_t * TEMP)
+int8_t ms5611_calculateTemperature(uint32_t * dCoefficients, int32_t * dT, int32_t * temp)
 {
-    ms5611_readCalibrationData(C_coefficients);
-    ms5611_readDigitalPresAndTempData(D_coefficients);
+    ms5611_readDigitalPresAndTempData(dCoefficients);
 
     // Difference between actual and reference temperature
-    *dT = (int32_t)D_coefficients[1] - (int32_t)C_coefficients[4] * 256;
+    *dT = (int32_t)dCoefficients[1] - (int32_t)C_COEFFICIENTS[4] * 256;
 
     // Actual temperature (-40 deg C ... 85 deg C with 0.01 deg C resolution)
-    *TEMP = (int64_t) 2000 + (int64_t) (*dT) * (int64_t) C_coefficients[5] / 8388608;
+    *temp = (int64_t) 2000 + (int64_t) (*dT) * (int64_t) C_COEFFICIENTS[5] / 8388608;
 
     return 0;
 }
 
-int8_t ms5611_secondOrderTemperatureCompensation(int32_t * dT, int32_t * TEMP, int64_t * T2, int64_t * OFF2, int64_t * SENS2)
+int8_t ms5611_secondOrderTemperatureCompensation(int32_t * dT, int32_t * temp, int64_t * t2, int64_t * off2, int64_t * sens2)
 {
-    if (*TEMP < 2000)
+    if (*temp < 2000)
     {
-        *T2 = ((int64_t)(*dT) * (int64_t)(*dT)) / 2147483648;
-        *OFF2 = 5 * (((int64_t)(*TEMP) - 2000)*((int64_t)(*TEMP) - 2000)) / 2;
-        *SENS2 = 5 * (((int64_t)(*TEMP) - 2000)*((int64_t)(*TEMP) - 2000)) / 4;
+        *t2 = ((int64_t)(*dT) * (int64_t)(*dT)) / 2147483648;
+        *off2 = 5 * (((int64_t)(*temp) - 2000)*((int64_t)(*temp) - 2000)) / 2;
+        *sens2 = 5 * (((int64_t)(*temp) - 2000)*((int64_t)(*temp) - 2000)) / 4;
 
-        if (*TEMP < -1500)
+        if (*temp < -1500)
         {
-            *OFF2 = *OFF2 + 7 * (((int64_t)(*TEMP) + 1500)*((int64_t)(*TEMP) + 1500));
-            *SENS2 = *SENS2 + 11 * (((int64_t)(*TEMP) + 1500)*((int64_t)(*TEMP) + 1500)) / 2;
+            *off2 = *off2 + 7 * (((int64_t)(*temp) + 1500)*((int64_t)(*temp) + 1500));
+            *sens2 = *sens2 + 11 * (((int64_t)(*temp) + 1500)*((int64_t)(*temp) + 1500)) / 2;
         }
     }
     else
     {
-        *T2 = 0;
-        *OFF2 = 0;
-        *SENS2 = 0;
+        *t2 = 0;
+        *off2 = 0;
+        *sens2 = 0;
     }
 
     return 0;
 }
 
-int8_t ms5611_calculateTempAndCompensatedPres(int64_t * OFF, int64_t * SENS, int32_t * P)
+int8_t ms5611_calculateTempAndCompensatedPres(int64_t * off, int64_t * sens, int32_t * p)
 {
-    uint16_t C_coefficients[6];
-    uint32_t D_coefficients[2];
-    int32_t dT, TEMP;
-    ms5611_calculateTemperature(C_coefficients, D_coefficients, &dT, &TEMP);
+    uint32_t dCoefficients[2];
+    int32_t dT, temp;
+    ms5611_calculateTemperature(dCoefficients, &dT, &temp);
 
-    int64_t T2, OFF2, SENS2;
-    ms5611_secondOrderTemperatureCompensation(&dT, &TEMP, &T2, &OFF2, &SENS2);
+    int64_t t2, off2, sens2;
+    ms5611_secondOrderTemperatureCompensation(&dT, &temp, &t2, &off2, &sens2);
 
-    TEMP = TEMP - T2;
+    temp = temp - t2;
 
     // Offset at actual temperature
-    *OFF = (int64_t)C_coefficients[1] * 65536 + ((int64_t)C_coefficients[3] * dT) / 128;
-    *OFF = *OFF - OFF2;
+    *off = (int64_t)C_COEFFICIENTS[1] * 65536 + ((int64_t)C_COEFFICIENTS[3] * dT) / 128;
+    *off = *off - off2;
 
     // Sensitivity at actual temperature
-    *SENS = (int64_t)C_coefficients[0] * 32768 + ((int64_t)C_coefficients[2] * dT) / 256;
-    *SENS = *SENS - SENS2;
+    *sens = (int64_t)C_COEFFICIENTS[0] * 32768 + ((int64_t)C_COEFFICIENTS[2] * dT) / 256;
+    *sens = *sens - sens2;
 
     // Temperature compensated pressure (10 ... 1200 mbar with 0.01 mbar resolution)
-    *P = ((int64_t)D_coefficients[0] * (int64_t)(*SENS) / 2097152 - (int64_t)(*OFF)) / 32768;
+    *p = ((int64_t)dCoefficients[0] * (int64_t)(*sens) / 2097152 - (int64_t)(*off)) / 32768;
 
     return 0;
 }
@@ -182,11 +186,11 @@ int8_t i2c_MS5611_getPressure(int32_t * pressure)
     uint8_t numOfSamples = 10;
     for (i; i < numOfSamples; i++)
     {
-        int64_t OFF, SENS;
-        int32_t P;
+        int64_t off, sens;
+        int32_t p;
 
-        ms5611_calculateTempAndCompensatedPres(&OFF, &SENS, &P);
-        pressTotal += P;
+        ms5611_calculateTempAndCompensatedPres(&off, &sens, &p);
+        pressTotal += p;
     }
 
     *pressure = pressTotal / numOfSamples;
