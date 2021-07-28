@@ -16,6 +16,9 @@ int8_t ms5611_secondOrderTemperatureCompensation(int32_t * dT, int32_t * TEMP, i
 int8_t ms5611_calculateTempAndCompensatedPres(int64_t * OFF, int64_t * SENS, int32_t * P);
 
 
+/**
+ * Initializes the barometer.
+ */
 int8_t i2c_MS5611_init(void)
 {
     // Reset MS5611 device
@@ -167,6 +170,9 @@ int8_t ms5611_calculateTempAndCompensatedPres(int64_t * OFF, int64_t * SENS, int
     return 0;
 }
 
+/**
+ * Returns the pressure in hundredths of mbar (10^-2 mbar).
+ */
 int8_t i2c_MS5611_getPressure(int32_t * pressure)
 {
     int64_t OFF, SENS;
@@ -178,6 +184,9 @@ int8_t i2c_MS5611_getPressure(int32_t * pressure)
     return 0;
 }
 
+/**
+ * Returns the altitude in cm.
+ */
 int8_t i2c_MS5611_getAltitude(int32_t *altitude)
 {
     /*
@@ -207,22 +216,22 @@ int8_t i2c_MS5611_getAltitude(int32_t *altitude)
     {
       //We are at troposphere
       //Z=(T0/L)*[(P/P0)^(-R*L/g)-1];
-      *altitude = (-44331 * (pow(pressure / 101325., 0.190163) - 1));
+      *altitude = (-4433080 * (pow(pressure / 101325., 0.190163) - 1.));
     }
     else if(pressure > 2481)  //25km??
     {
       //We are at stratosphere
       //Z=11000-(R*T11k/g)*ln(P/P11k)
-      *altitude = (11000 - (6338.282 * log(pressure / 22552.)));
+      *altitude = (1100000 - (6338.282 * log(pressure / 22552.)));
     }
     else if(pressure > 111)  //47km
     {
       //We are at high stratosphere
       //Z=25000+(T25k/L)*[(P/P25k)^(-R*L/g)-1]
-      *altitude = (25000 + (-33330.8 * (pow(pressure/2481., 0.190163) - 1)));
+      *altitude = (2500000 + (-33330.8 * (pow(pressure/2481., 0.190163) - 1.)));
     }
     else
-      *altitude = 50000;  //Return a veeery high altitude
+      *altitude = 5000000;  //Return a veeery high altitude
 
     return 0;
 }
