@@ -285,7 +285,7 @@ int main(void)
 	        sprintf(strToPrint, "Year: %d\r\n", dateTime.year);
 	        uart_print(UART_DEBUG, strToPrint);
 
-	        sprintf(strToPrint, "UNIXTIME: %d\r\n", unixtTimeNow);
+	        sprintf(strToPrint, "UNIXTIME: %ld\r\n", unixtTimeNow);
             uart_print(UART_DEBUG, strToPrint);
 	        /*
 	         * sprintf(strToPrint, "Acceleration X-Axis: %d\r\n", accelerations[0]);
