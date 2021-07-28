@@ -175,11 +175,21 @@ int8_t ms5611_calculateTempAndCompensatedPres(int64_t * OFF, int64_t * SENS, int
  */
 int8_t i2c_MS5611_getPressure(int32_t * pressure)
 {
-    int64_t OFF, SENS;
-    int32_t P;
 
-    ms5611_calculateTempAndCompensatedPres(&OFF, &SENS, &P);
-    *pressure = P;
+    uint32_t pressTotal = 0;
+
+    uint8_t i = 0;
+    uint8_t numOfSamples = 10;
+    for (i; i < numOfSamples; i++)
+    {
+        int64_t OFF, SENS;
+        int32_t P;
+
+        ms5611_calculateTempAndCompensatedPres(&OFF, &SENS, &P);
+        pressTotal += P;
+    }
+
+    *pressure = pressTotal / numOfSamples;
 
     return 0;
 }
