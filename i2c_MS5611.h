@@ -32,5 +32,6 @@
 
 int8_t i2c_MS5611_init(void);
 int8_t i2c_MS5611_getPressure(int32_t *pressure);
+int8_t i2c_MS5611_getAltitude(int32_t *altitude);
 
 #endif /* I2C_MS5611_H_ */
