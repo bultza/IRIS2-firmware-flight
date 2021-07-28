@@ -85,6 +85,7 @@
 #include "i2c_TMP75C.h"
 #include "i2c_DS1338Z.h"
 #include "i2c_ADXL345.h"
+#include "i2c_MS5611.h"
 #include "i2c_INA.h"
 #include "spi.h"
 
@@ -176,10 +177,10 @@ void init_board()
     i2c_RTC_init();
 
     //Init Accelerometer
-    //TODO
+    //i2c_ADXL345_init();
 
     //Init Barometer
-    //TODO
+    i2c_MS5611_init();
 
     //Init INA
     i2c_INA_init();
@@ -225,6 +226,8 @@ int main(void)
 	int16_t temperatures[6];
 	struct RTCDateTime dateTime/* = {30, 07, 23, 24, 07, 21}*/; // Seconds, minute, hours, day, month, year
 	int16_t accelerations[3];
+	int32_t pressure;
+    int32_t altitude;
 	struct INAData inaData;
 	i2c_TMP75_getTemperatures(temperatures);
 	//i2c_RTC_setClockData(&dateTime);
@@ -257,6 +260,8 @@ int main(void)
 	        i2c_TMP75_getTemperatures(temperatures);
 	        i2c_RTC_getClockData(&dateTime);
 	        //i2c_ADXL345_getAccelerations(accelerations);
+	        i2c_MS5611_getPressure(&pressure);
+            i2c_MS5611_getAltitude(&altitude);
 	        i2c_INA_read(&inaData);
 
 	        char strToPrint[50];
@@ -290,6 +295,10 @@ int main(void)
 	         * sprintf(strToPrint, "Acceleration Z-Axis: %d\r\n", accelerations[2]);
 	         * uart_print(UART_DEBUG, strToPrint);
 	         * */
+            sprintf(strToPrint, "Pressure: %ld\r\n", pressure);
+            uart_print(UART_DEBUG, strToPrint);
+            sprintf(strToPrint, "Altitude: %d\r\n", altitude);
+            uart_print(UART_DEBUG, strToPrint);
 
 	        uart_print(UART_DEBUG, "\r\n");
 	        lastTime = uptime;
