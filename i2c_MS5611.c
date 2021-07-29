@@ -6,8 +6,6 @@
 
 
 #include "i2c_MS5611.h"
-#include <math.h>
-#include "clock.h"
 
 //Private functions:
 int8_t ms5611_readCalibrationData(void);
@@ -27,7 +25,11 @@ int8_t i2c_MS5611_init(void)
     // Reset MS5611 device
     uint8_t cmd = MS5611_RESET;
     int8_t ack = i2c_write(I2C_BUS00, MS5611_ADDRESS, &cmd, 1, 0);
-    __delay_cycles(72000);
+
+    // Wait 9 milliseconds  (conversion time is 8.22 ms according to datasheet)
+    sleep_ms(9);
+
+    // Read calibration coefficients (C coefficients)
     ms5611_readCalibrationData();
 
     return ack;
@@ -74,7 +76,7 @@ int8_t ms5611_readDigitalPresAndTempData(uint32_t * dCoefficients)
     int8_t ack = i2c_write(I2C_BUS00, MS5611_ADDRESS, &cmd, 1, 0);
 
     // Wait 9 milliseconds  (conversion time is 8.22 ms according to datasheet)
-    __delay_cycles(72000);
+    sleep_ms(9);
 
     // Read D1
     if (ack == 0)
@@ -94,7 +96,7 @@ int8_t ms5611_readDigitalPresAndTempData(uint32_t * dCoefficients)
     ack = i2c_write(I2C_BUS00, MS5611_ADDRESS, &cmd, 1, 0);
 
     // Wait 9 milliseconds (conversion time is 8.22 ms according to datasheet)
-    __delay_cycles(72000);
+    sleep_ms(9);
 
     // Read D2
     if (ack == 0)
@@ -179,21 +181,11 @@ int8_t ms5611_calculateTempAndCompensatedPres(int64_t * off, int64_t * sens, int
  */
 int8_t i2c_MS5611_getPressure(int32_t * pressure)
 {
+    int64_t off, sens;
+    int32_t p;
 
-    uint32_t pressTotal = 0;
-
-    uint8_t i = 0;
-    uint8_t numOfSamples = 10;
-    for (i; i < numOfSamples; i++)
-    {
-        int64_t off, sens;
-        int32_t p;
-
-        ms5611_calculateTempAndCompensatedPres(&off, &sens, &p);
-        pressTotal += p;
-    }
-
-    *pressure = pressTotal / numOfSamples;
+    ms5611_calculateTempAndCompensatedPres(&off, &sens, &p);
+    *pressure = p;
 
     return 0;
 }
@@ -201,7 +193,7 @@ int8_t i2c_MS5611_getPressure(int32_t * pressure)
 /**
  * Returns the altitude in cm.
  */
-int8_t i2c_MS5611_getAltitude(int32_t *altitude)
+int8_t i2c_MS5611_getAltitude(int32_t * pressure, int32_t * altitude)
 {
     /*
      - Troposfera: Z=(T0/L)*[(P/P0)^(-R*L/g)-1]
@@ -222,27 +214,23 @@ int8_t i2c_MS5611_getAltitude(int32_t *altitude)
 
      Con ln=Logaritmo Neperiano, las presiones en Pascales, las Temperaturas en Kelvin, y P la presion medida.*/
 
-    int32_t pressure;
-
-    i2c_MS5611_getPressure(&pressure);
-
-    if(pressure > 22632)  //11km
+    if(*pressure > 22632)  //11km
     {
       //We are at troposphere
       //Z=(T0/L)*[(P/P0)^(-R*L/g)-1];
-      *altitude = (-4433080 * (pow(pressure / 101325., 0.190163) - 1.));
+      *altitude = (-4433080 * (pow(*pressure / 101325., 0.190163) - 1.));
     }
-    else if(pressure > 2481)  //25km??
+    else if(*pressure > 2481)  //25km??
     {
       //We are at stratosphere
       //Z=11000-(R*T11k/g)*ln(P/P11k)
-      *altitude = (1100000 - (6338.282 * log(pressure / 22552.)));
+      *altitude = (1100000 - (6338.282 * log(*pressure / 22552.)));
     }
-    else if(pressure > 111)  //47km
+    else if(*pressure > 111)  //47km
     {
       //We are at high stratosphere
       //Z=25000+(T25k/L)*[(P/P25k)^(-R*L/g)-1]
-      *altitude = (2500000 + (-33330.8 * (pow(pressure/2481., 0.190163) - 1.)));
+      *altitude = (2500000 + (-33330.8 * (pow(*pressure/2481., 0.190163) - 1.)));
     }
     else
       *altitude = 5000000;  //Return a veeery high altitude

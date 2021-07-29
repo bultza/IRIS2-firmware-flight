@@ -227,7 +227,7 @@ int main(void)
 	struct RTCDateTime dateTime/* = {30, 07, 23, 24, 07, 21}*/; // Seconds, minute, hours, day, month, year
 	int16_t accelerations[3];
 	int32_t pressure;
-    int32_t altitude;
+	int32_t altitude;
 	struct INAData inaData;
 	i2c_TMP75_getTemperatures(temperatures);
 	//i2c_RTC_setClockData(&dateTime);
@@ -235,6 +235,8 @@ int main(void)
     ///////////////////////////////////////////////////////////////////////////
 
 	uint64_t lastTime = 0;
+	uint64_t uptime1 = 0;
+	uint64_t uptime2 = 0;
 
 	while(1)
 	{
@@ -260,11 +262,15 @@ int main(void)
 	        i2c_TMP75_getTemperatures(temperatures);
 	        i2c_RTC_getClockData(&dateTime);
 	        //i2c_ADXL345_getAccelerations(accelerations);
+	        uptime1 = millis_uptime();
 	        i2c_MS5611_getPressure(&pressure);
-            i2c_MS5611_getAltitude(&altitude);
+	        uptime2 = millis_uptime();
+	        i2c_MS5611_getAltitude(&pressure, &altitude);
 	        i2c_INA_read(&inaData);
 
 	        char strToPrint[50];
+	        sprintf(strToPrint, "Measuring pressure took %lld ms\r\n", uptime2-uptime1);
+	        uart_print(UART_DEBUG, strToPrint);
 	        sprintf(strToPrint, "Temperature: %d\r\n", temperatures[0]);
 	        uart_print(UART_DEBUG, strToPrint);
 	        sprintf(strToPrint, "Voltage: %d\r\n", inaData.voltage);
@@ -300,8 +306,8 @@ int main(void)
             sprintf(strToPrint, "Altitude: %d\r\n", altitude);
             uart_print(UART_DEBUG, strToPrint);
 
-	        uart_print(UART_DEBUG, "\r\n");
-	        lastTime = uptime;
+            uart_print(UART_DEBUG, "\r\n");
+            lastTime = uptime;
 	    }
 	    //TODO
 
