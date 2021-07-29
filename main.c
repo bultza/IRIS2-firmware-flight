@@ -232,7 +232,7 @@ int main(void)
 	i2c_TMP75_getTemperatures(temperatures);
 	//i2c_RTC_setClockData(&dateTime);
 	//END OF DEBUG
-    ///////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////
 
 	uint64_t lastTime = 0;
 	uint64_t uptime1 = 0;
@@ -292,22 +292,22 @@ int main(void)
 	        uart_print(UART_DEBUG, strToPrint);
 
 	        sprintf(strToPrint, "UNIXTIME: %ld\r\n", unixtTimeNow);
-            uart_print(UART_DEBUG, strToPrint);
+	        uart_print(UART_DEBUG, strToPrint);
 	        /*
-	         * sprintf(strToPrint, "Acceleration X-Axis: %d\r\n", accelerations[0]);
-	         * uart_print(UART_DEBUG, strToPrint);
-	         * sprintf(strToPrint, "Acceleration Y-Axis: %d\r\n", accelerations[1]);
-	         * uart_print(UART_DEBUG, strToPrint);
-	         * sprintf(strToPrint, "Acceleration Z-Axis: %d\r\n", accelerations[2]);
-	         * uart_print(UART_DEBUG, strToPrint);
-	         * */
-            sprintf(strToPrint, "Pressure: %ld\r\n", pressure);
-            uart_print(UART_DEBUG, strToPrint);
-            sprintf(strToPrint, "Altitude: %d\r\n", altitude);
-            uart_print(UART_DEBUG, strToPrint);
+	         * * sprintf(strToPrint, "Acceleration X-Axis: %d\r\n", accelerations[0]);
+	         * * uart_print(UART_DEBUG, strToPrint);
+	         * * sprintf(strToPrint, "Acceleration Y-Axis: %d\r\n", accelerations[1]);
+	         * * uart_print(UART_DEBUG, strToPrint);
+	         * * sprintf(strToPrint, "Acceleration Z-Axis: %d\r\n", accelerations[2]);
+	         * * uart_print(UART_DEBUG, strToPrint);
+	         * * */
+	        sprintf(strToPrint, "Pressure: %ld\r\n", pressure);
+	        uart_print(UART_DEBUG, strToPrint);
+	        sprintf(strToPrint, "Altitude: %d\r\n", altitude);
+	        uart_print(UART_DEBUG, strToPrint);
 
-            uart_print(UART_DEBUG, "\r\n");
-            lastTime = uptime;
+	        uart_print(UART_DEBUG, "\r\n");
+	        lastTime = uptime;
 	    }
 	    //TODO
 
