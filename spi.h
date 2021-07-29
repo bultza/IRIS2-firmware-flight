@@ -11,12 +11,14 @@
 
 // Clock max. on MSP430 is 16 MHz
 
-#define CR_1MHZ 1
-#define CR_500KHZ 2
-#define CR_250KHZ 4
-#define CR_200KHZ 5
-#define CR_100KHZ 10
-#define CR_50KHZ 20
+#define CR_8MHZ 1
+#define CR_4MHZ 2
+#define CR_2MHZ 4
+#define CR_1600KHZ 5
+#define CR_800KHZ 10
+#define CR_400KHZ 20
+#define CR_200KHZ 40
+#define CR_100KHZ 80
 
 #define FLASH_CS1_OFF   (P5OUT |=  BIT3)
 #define FLASH_CS1_ON    (P5OUT &= ~BIT3)
