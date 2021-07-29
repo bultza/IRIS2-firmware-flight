@@ -178,6 +178,7 @@ int8_t ms5611_calculateTempAndCompensatedPres(int64_t * off, int64_t * sens, int
 
 /**
  * Returns the pressure in hundredths of mbar (10^-2 mbar).
+ * Function takes between 27-28 ms to compute pressure.
  */
 int8_t i2c_MS5611_getPressure(int32_t * pressure)
 {
