@@ -7,7 +7,7 @@ void spi_init(uint8_t clockrate)
 
     //-- Setup SPI B1
 
-    UCB1CTLW0 |= UCSWRST;       // Put B1 into SW Reset
+    UCB1CTLW0 = UCSWRST; //UCB1CTLW0 |= UCSWRST;       // Put B1 into SW Reset
 
     //UCB1CTLW0 |= UCSSEL__SMCLK; // Choose SMCLK
     //UCB1BRW = clockrate;        // Set prescaler

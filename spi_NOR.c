@@ -6,35 +6,25 @@
 
 #include "spi_NOR.h"
 
-// Private functions
-int8_t NOR_selectDevice(uint8_t deviceSelect);
-
-int8_t NOR_selectDevice(uint8_t deviceSelect)
-{
-    // By default, unselect the two NOR memories
-    FLASH_CS1_OFF;
-    FLASH_CS2_OFF;
-
-    // Now select the requested one
-    if (deviceSelect == CS_FLASH1)
-        FLASH_CS1_ON;
-    else if (deviceSelect == CS_FLASH2)
-        FLASH_CS2_ON;
-
-    return 0;
-}
-
 /**
  * Requests the Identification of the NOR memory.
  */
 int8_t spi_NOR_getRDID(struct RDIDInfo *idInformation, uint8_t deviceSelect)
 {
-    NOR_selectDevice(deviceSelect);
+    if (deviceSelect == CS_FLASH1)
+        FLASH_CS1_ON;
+    else if (deviceSelect == CS_FLASH2)
+        FLASH_CS2_ON;
 
     uint8_t bufferOut[1] = {NOR_RDID};
     uint8_t bufferIn[8];
 
     spi_write_read(bufferOut, 1, bufferIn, 8);
+
+    if (deviceSelect == CS_FLASH1)
+        FLASH_CS1_OFF;
+    else if (deviceSelect == CS_FLASH2)
+        FLASH_CS2_OFF;
 
     idInformation->manufacturerID = bufferIn[0];
     idInformation->memoryInterfaceType = bufferIn[1];

@@ -169,7 +169,7 @@ void init_board()
     i2c_master_init();
 
     //Init SPI
-    spi_init(CR_8MHZ);
+    spi_init(CR_100KHZ);
 
     //Init Temperature sensor
     i2c_TMP75_init();
