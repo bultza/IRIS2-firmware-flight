@@ -226,7 +226,7 @@ int main(void)
 	//DEBUG, KEEP THIS COMMENTED ON FLIGHT
 	int16_t temperatures[6];
 	struct RTCDateTime dateTime/* = {30, 07, 23, 24, 07, 21}*/; // Seconds, minute, hours, day, month, year
-	int16_t accelerations[3];
+	//int16_t accelerations[3];
 	int32_t pressure;
 	int32_t altitude;
 	struct INAData inaData;
@@ -306,7 +306,7 @@ int main(void)
 	         * * */
 	        sprintf(strToPrint, "Pressure: %ld\r\n", pressure);
 	        uart_print(UART_DEBUG, strToPrint);
-	        sprintf(strToPrint, "Altitude: %d\r\n", altitude);
+	        sprintf(strToPrint, "Altitude: %ld\r\n", altitude);
 	        uart_print(UART_DEBUG, strToPrint);
 
 	        uart_print(UART_DEBUG, "\r\n");
