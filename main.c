@@ -88,6 +88,7 @@
 #include "i2c_MS5611.h"
 #include "i2c_INA.h"
 #include "spi.h"
+#include "spi_NOR.h"
 
 #define LED_ON          (P1OUT |= BIT0)
 #define LED_OFF         (P1OUT &= ~BIT0)
@@ -168,7 +169,7 @@ void init_board()
     i2c_master_init();
 
     //Init SPI
-    spi_init(CR_1MHZ);
+    spi_init(CR_8MHZ);
 
     //Init Temperature sensor
     i2c_TMP75_init();
@@ -230,6 +231,7 @@ int main(void)
 	int32_t altitude;
 	struct INAData inaData;
 	i2c_TMP75_getTemperatures(temperatures);
+	struct RDIDInfo dataRDID;
 	//i2c_RTC_setClockData(&dateTime);
 	//END OF DEBUG
 	///////////////////////////////////////////////////////////////////////////
@@ -267,6 +269,7 @@ int main(void)
 	        uptime2 = millis_uptime();
 	        i2c_MS5611_getAltitude(&pressure, &altitude);
 	        i2c_INA_read(&inaData);
+	        spi_NOR_getRDID(&dataRDID, CS_FLASH1);
 
 	        char strToPrint[50];
 	        sprintf(strToPrint, "Measuring pressure took %lld ms\r\n", uptime2-uptime1);

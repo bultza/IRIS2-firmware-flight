@@ -15,6 +15,7 @@
 #define CR_4MHZ 2
 #define CR_2MHZ 4
 #define CR_1600KHZ 5
+#define CR_1MHZ 8
 #define CR_800KHZ 10
 #define CR_400KHZ 20
 #define CR_200KHZ 40
