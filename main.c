@@ -40,9 +40,9 @@
  * P7.6 POWERCAM02_BUTTON
  * P7.7 POWERCAM03_BUTTON
  *
- * P8.1 LED_R
- * P8.2 LED_G
- * P8.3 LED_B
+ * P3.6 LED_R
+ * P3.5 LED_G
+ * P3.4 LED_B
  *
  *
  * UCA0TXD  UCA0TXD     //External UART
@@ -62,7 +62,7 @@
  * UCB0SCL  UCB0SCL     //I2C internal sensors
  *
  * P5.3 FLASH_CS1       //NOR Flash
- * P3.6 FLASH_CS2       //NOR Flash
+ * P8.3 FLASH_CS2       //NOR Flash
  * UCB1SIMO UCB1SIMO    //NOR Flash
  * UCB1SOMI UCB1SOMI    //NOR Flash
  * UCB1CLK  UCB1CLK
@@ -270,6 +270,7 @@ int main(void)
 	        i2c_MS5611_getAltitude(&pressure, &altitude);
 	        i2c_INA_read(&inaData);
 	        spi_NOR_getRDID(&dataRDID, CS_FLASH1);
+	        spi_NOR_getRDID(&dataRDID, CS_FLASH2);
 
 	        char strToPrint[50];
 	        sprintf(strToPrint, "Measuring pressure took %lld ms\r\n", uptime2-uptime1);

@@ -23,8 +23,8 @@
 
 #define FLASH_CS1_OFF   (P5OUT |=  BIT3)
 #define FLASH_CS1_ON    (P5OUT &= ~BIT3)
-#define FLASH_CS2_OFF   (P3OUT |=  BIT6)
-#define FLASH_CS2_ON    (P3OUT &= ~BIT6)
+#define FLASH_CS2_OFF   (P8OUT |=  BIT3)
+#define FLASH_CS2_ON    (P8OUT &= ~BIT3)
 
 void spi_init(uint8_t clockrate);
 int8_t spi_write_instruction(uint8_t instruction);

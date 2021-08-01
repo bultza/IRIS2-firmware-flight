@@ -19,12 +19,12 @@ int8_t spi_NOR_getRDID(struct RDIDInfo *idInformation, uint8_t deviceSelect)
     uint8_t bufferOut[1] = {NOR_RDID};
     uint8_t bufferIn[8];
 
+    //__delay_cycles(500);
     spi_write_read(bufferOut, 1, bufferIn, 8);
+    //__delay_cycles(500);
 
-    if (deviceSelect == CS_FLASH1)
-        FLASH_CS1_OFF;
-    else if (deviceSelect == CS_FLASH2)
-        FLASH_CS2_OFF;
+    FLASH_CS1_OFF;
+    FLASH_CS2_OFF;
 
     idInformation->manufacturerID = bufferIn[0];
     idInformation->memoryInterfaceType = bufferIn[1];

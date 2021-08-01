@@ -31,10 +31,10 @@ void spi_init(uint8_t clockrate)
 
     //CS1
     FLASH_CS1_OFF;
-    P5OUT |= BIT3;
+    P5DIR |= BIT3;
     //CS2
     FLASH_CS2_OFF;
-    P3OUT |= BIT6;
+    P8DIR |= BIT3;
 
     UCB1CTLW0 &= ~UCSWRST;    // Take B1 out of SW Reset
 
