@@ -29,6 +29,10 @@
 #define NOR_SE 0xD8     // Sector Erase a 3-bit address (only one sector)
 #define NOR_FOURSE 0xDC    // Sector Erase a 4-bit address (only one sector)
 #define NOR_BE 0x60     // Bulk Erase (entire flash memory array)
+#define NOR_RDSR1 0x05  // Read Status Register 1
+
+// Constants
+#define NOR_BYTES_PAGE 512  //512 Bytes per page
 
 // Structures
 struct RDIDInfo
@@ -46,8 +50,8 @@ struct RDIDInfo
 // Functions
 int8_t spi_NOR_init(uint8_t deviceSelect);
 int8_t spi_NOR_getRDID(struct RDIDInfo *idInformation, uint8_t deviceSelect);
-int8_t spi_NOR_readFromAddress(uint32_t address, uint8_t * buffer, uint8_t numOfBytes, uint8_t deviceSelect);
-int8_t spi_NOR_writeToAddress(uint32_t address, uint8_t * buffer, uint8_t numOfBytes, uint8_t deviceSelect);
+int8_t spi_NOR_readFromAddress(uint32_t readAddress, uint8_t * buffer, uint8_t numOfBytes, uint8_t deviceSelect);
+int8_t spi_NOR_writeToAddress(uint32_t writeAddress, uint8_t * buffer, uint8_t numOfBytes, uint8_t deviceSelect);
 int8_t spi_NOR_eraseSector(uint32_t sectorAddress, uint8_t deviceSelect);
 int8_t spi_NOR_bulkErase(uint8_t deviceSelect);
 

@@ -233,6 +233,18 @@ int main(void)
 	i2c_TMP75_getTemperatures(temperatures);
 	struct RDIDInfo dataRDID;
 	//i2c_RTC_setClockData(&dateTime);
+
+	// Test of the NOR memory
+	static const uint32_t addressToReadAndWrite = (uint32_t) 0x00040000;
+	uint8_t bufferToSaveRead1[5];
+	uint8_t bufferToSaveRead2[5];
+	uint8_t sentence[5] = {'G','o','d','b','y'};
+	spi_NOR_readFromAddress(addressToReadAndWrite, bufferToSaveRead1, 5, CS_FLASH1);
+	sleep_ms(5);
+	spi_NOR_writeToAddress(addressToReadAndWrite, sentence, 5, CS_FLASH1);
+    sleep_ms(5);
+    spi_NOR_readFromAddress(addressToReadAndWrite, bufferToSaveRead2, 5, CS_FLASH1);
+
 	//END OF DEBUG
 	///////////////////////////////////////////////////////////////////////////
 
@@ -261,6 +273,8 @@ int main(void)
 	    //Read once per second
 	    if(uptime > lastTime + 1000)
 	    {
+	        char strToPrint[100];
+
 	        i2c_TMP75_getTemperatures(temperatures);
 	        i2c_RTC_getClockData(&dateTime);
 	        //i2c_ADXL345_getAccelerations(accelerations);
@@ -270,9 +284,8 @@ int main(void)
 	        i2c_MS5611_getAltitude(&pressure, &altitude);
 	        i2c_INA_read(&inaData);
 	        spi_NOR_getRDID(&dataRDID, CS_FLASH1);
-	        spi_NOR_getRDID(&dataRDID, CS_FLASH2);
+	        //spi_NOR_getRDID(&dataRDID, CS_FLASH2);
 
-	        char strToPrint[50];
 	        sprintf(strToPrint, "Measuring pressure took %lld ms\r\n", uptime2-uptime1);
 	        uart_print(UART_DEBUG, strToPrint);
 	        sprintf(strToPrint, "Temperature: %d\r\n", temperatures[0]);
