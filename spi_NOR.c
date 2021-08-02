@@ -162,6 +162,9 @@ int8_t spi_NOR_writeToAddress(uint32_t writeAddress, uint8_t * buffer, uint8_t n
     return 0;
 }
 
+/**
+ * Erases (sets bits to 1) a whole sector (512 bytes) given its address.
+ */
 int8_t spi_NOR_eraseSector(uint32_t sectorAddress, uint8_t deviceSelect)
 {
     // Check that no write operation is in progress
@@ -200,6 +203,9 @@ int8_t spi_NOR_eraseSector(uint32_t sectorAddress, uint8_t deviceSelect)
     return 0;
 }
 
+/**
+ * Erases (sets bits to 1) the whole flash memory, takes about 120 seconds.
+ */
 int8_t spi_NOR_bulkErase(uint8_t deviceSelect)
 {
     // Check that no write operation is in progress
