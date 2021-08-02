@@ -24,10 +24,10 @@
 #define NOR_FOURREAD 0x13  // Read from 4-bit address
 #define NOR_WREN 0x06   // Write Enable
 #define NOR_WRDI 0x04   // Write Disable
-#define NOR_PP 0x02     // Write to 3-bit address
-#define NOR_FOURPP 0x12    // Write to 4-bit address
-#define NOR_SE 0xD8     // Sector Erase a 3-bit address (only one sector)
-#define NOR_FOURSE 0xDC    // Sector Erase a 4-bit address (only one sector)
+#define NOR_PP 0x02     // Write to 3-byte address
+#define NOR_FOURPP 0x12    // Write to 4-byte address
+#define NOR_SE 0xD8     // Sector Erase a 3-byte address (only one sector)
+#define NOR_FOURSE 0xDC    // Sector Erase a 4-byte address (only one sector)
 #define NOR_BE 0x60     // Bulk Erase (entire flash memory array)
 #define NOR_RDSR1 0x05  // Read Status Register 1
 

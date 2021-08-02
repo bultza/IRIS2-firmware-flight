@@ -169,7 +169,7 @@ void init_board()
     i2c_master_init();
 
     //Init SPI
-    spi_init(CR_100KHZ);
+    spi_init(CR_8MHZ);
 
     //Init Temperature sensor
     i2c_TMP75_init();
@@ -235,16 +235,41 @@ int main(void)
 	//i2c_RTC_setClockData(&dateTime);
 
 	// Test of the NOR memory
-	static const uint32_t addressToReadAndWrite = (uint32_t) 0x00040000;
-	uint8_t bufferToSaveRead1[5];
-	uint8_t bufferToSaveRead2[5];
-	uint8_t sentence[5] = {'G','o','d','b','y'};
-	spi_NOR_readFromAddress(addressToReadAndWrite, bufferToSaveRead1, 5, CS_FLASH1);
-	sleep_ms(5);
-	spi_NOR_writeToAddress(addressToReadAndWrite, sentence, 5, CS_FLASH1);
-    sleep_ms(5);
-    spi_NOR_readFromAddress(addressToReadAndWrite, bufferToSaveRead2, 5, CS_FLASH1);
+	/*
+	// Bulk erase the whole memory
+	spi_NOR_bulkErase(CS_FLASH1);
 
+	// Read 5 bytes from the beginning of the second sector (0x40000)
+    static const uint32_t addressForOperations0 = (uint32_t) 0x00040000;
+    uint8_t bufferToSaveRead0[5];
+    spi_NOR_readFromAddress(addressForOperations0, bufferToSaveRead0, 5, CS_FLASH1);
+
+    // Read 5 bytes from the beginning of the third sector (0x80000)
+    static const uint32_t addressForOperations1 = (uint32_t) 0x00080000;
+    uint8_t bufferToSaveRead1[5];
+    spi_NOR_readFromAddress(addressForOperations1, bufferToSaveRead1, 5, CS_FLASH1);
+
+	// Save AITOR at the beginning of the second sector (0x40000), then read
+    uint8_t sentence0[5] = {'A','I','T','O','R'};
+    spi_NOR_writeToAddress(addressForOperations0, sentence0, 5, CS_FLASH1);
+    uint8_t bufferToSaveRead2[5];
+    spi_NOR_readFromAddress(addressForOperations0, bufferToSaveRead2, 5, CS_FLASH1);
+
+	// Now delete the sector, then read, then write RAMON, then read
+    spi_NOR_eraseSector(addressForOperations0, CS_FLASH1);
+    uint8_t bufferToSaveRead3[5];
+    spi_NOR_readFromAddress(addressForOperations0, bufferToSaveRead3, 5, CS_FLASH1);
+    uint8_t sentence1[5] = {'R','A','M','O','N'};
+    spi_NOR_writeToAddress(addressForOperations0, sentence1, 5, CS_FLASH1);
+    uint8_t bufferToSaveRead4[5];
+    spi_NOR_readFromAddress(addressForOperations0, bufferToSaveRead4, 5, CS_FLASH1);
+
+    // Write HELLO to the beginning of the third sector (0x8000), then read
+    uint8_t sentence2[5] = {'H','E','L','L','O'};
+    spi_NOR_writeToAddress(addressForOperations1, sentence2, 5, CS_FLASH1);
+    uint8_t bufferToSaveRead5[5];
+    spi_NOR_readFromAddress(addressForOperations1, bufferToSaveRead5, 5, CS_FLASH1);
+    */
 	//END OF DEBUG
 	///////////////////////////////////////////////////////////////////////////
 

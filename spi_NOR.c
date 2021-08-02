@@ -161,3 +161,71 @@ int8_t spi_NOR_writeToAddress(uint32_t writeAddress, uint8_t * buffer, uint8_t n
 
     return 0;
 }
+
+int8_t spi_NOR_eraseSector(uint32_t sectorAddress, uint8_t deviceSelect)
+{
+    // Check that no write operation is in progress
+    while(NOR_checkWriteInProgress(deviceSelect));
+
+    // Enable Write Operations
+    NOR_writeEnableDisable(1, deviceSelect);
+
+    // Chip Select ON
+    if (deviceSelect == CS_FLASH1)
+        FLASH_CS1_ON;
+    else if (deviceSelect == CS_FLASH2)
+        FLASH_CS2_ON;
+
+    // Build bufferOut of bytes to send
+    uint8_t bufferOut[5];
+    bufferOut[0] = NOR_FOURSE;
+    bufferOut[1] = (uint8_t) (((sectorAddress & 0b11111111000000000000000000000000) >> 24) & 0xFF);
+    bufferOut[2] = (uint8_t) (((sectorAddress & 0b00000000111111110000000000000000) >> 16) & 0xFF);
+    bufferOut[3] = (uint8_t) (((sectorAddress & 0b00000000000000001111111100000000) >> 8) & 0xFF);
+    bufferOut[4] = (uint8_t) ((sectorAddress & 0b00000000000000000000000011111111) & 0xFF);
+
+    // Send bufferOut, do not expect any answer in return (buffer variable used as placeholder)
+    spi_write_read(bufferOut, 5, bufferOut, 0);
+
+    // Chip Select OFF
+    FLASH_CS1_OFF;
+    FLASH_CS2_OFF;
+
+    // Wait until Sector Erase has finished
+    while(NOR_checkWriteInProgress(deviceSelect));
+
+    // Disable Write Operations
+    NOR_writeEnableDisable(0, deviceSelect);
+
+    return 0;
+}
+
+int8_t spi_NOR_bulkErase(uint8_t deviceSelect)
+{
+    // Check that no write operation is in progress
+    while(NOR_checkWriteInProgress(deviceSelect));
+
+    // Enable Write Operations
+    NOR_writeEnableDisable(1, deviceSelect);
+
+    // Chip Select ON
+    if (deviceSelect == CS_FLASH1)
+        FLASH_CS1_ON;
+    else if (deviceSelect == CS_FLASH2)
+        FLASH_CS2_ON;
+
+    // Build bufferOut of bytes to send
+    spi_write_instruction(NOR_BE);
+
+    // Chip Select OFF
+    FLASH_CS1_OFF;
+    FLASH_CS2_OFF;
+
+    // Wait until Sector Erase has finished
+    while(NOR_checkWriteInProgress(deviceSelect));
+
+    // Disable Write Operations
+    NOR_writeEnableDisable(0, deviceSelect);
+
+    return 0;
+}
