@@ -225,7 +225,7 @@ int main(void)
 	///////////////////////////////////////////////////////////////////////////
 	//DEBUG, KEEP THIS COMMENTED ON FLIGHT
 	int16_t temperatures[6];
-	struct RTCDateTime dateTime/* = {30, 07, 23, 24, 07, 21}*/; // Seconds, minute, hours, day, month, year
+	struct RTCDateTime dateTime; //= {0, 42, 17, 3, 8, 21}; // Seconds, minute, hours, day, month, year
 	//int16_t accelerations[3];
 	int32_t pressure;
 	int32_t altitude;
@@ -235,8 +235,8 @@ int main(void)
 	//i2c_RTC_setClockData(&dateTime);
 
 	// Test of the NOR memory
-	/*
 	// Bulk erase the whole memory
+	/*
 	spi_NOR_bulkErase(CS_FLASH1);
 
 	// Read 5 bytes from the beginning of the second sector (0x40000)
@@ -320,18 +320,9 @@ int main(void)
 	        sprintf(strToPrint, "Current: %d\r\n", inaData.current);
 	        uart_print(UART_DEBUG, strToPrint);
 
-	        sprintf(strToPrint, "Second: %d\r\n", dateTime.seconds);
-	        uart_print(UART_DEBUG, strToPrint);
-	        sprintf(strToPrint, "Minute: %d\r\n", dateTime.minutes);
-	        uart_print(UART_DEBUG, strToPrint);
-	        sprintf(strToPrint, "Hour: %d\r\n", dateTime.hours);
-	        uart_print(UART_DEBUG, strToPrint);
-	        sprintf(strToPrint, "Day: %d\r\n", dateTime.date);
-	        uart_print(UART_DEBUG, strToPrint);
-	        sprintf(strToPrint, "Month: %d\r\n", dateTime.month);
-	        uart_print(UART_DEBUG, strToPrint);
-	        sprintf(strToPrint, "Year: %d\r\n", dateTime.year);
-	        uart_print(UART_DEBUG, strToPrint);
+	        sprintf(strToPrint, "Date and time: %d/%d/%d %d:%d:%d\r\n", dateTime.date, dateTime.month, dateTime.year,
+	                dateTime.hours, dateTime.minutes, dateTime.seconds);
+            uart_print(UART_DEBUG, strToPrint);
 
 	        sprintf(strToPrint, "UNIXTIME: %ld\r\n", unixtTimeNow);
 	        uart_print(UART_DEBUG, strToPrint);

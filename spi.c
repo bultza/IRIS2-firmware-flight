@@ -1,3 +1,9 @@
+/*
+ * This file is part of the Supervisor on IRIS2 Flight Firmware
+ * Proyecto Daedalus - 2021
+ *
+ */
+
 #include <spi.h>
 
 uint8_t rxdata;
