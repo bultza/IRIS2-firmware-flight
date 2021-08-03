@@ -55,7 +55,7 @@ int8_t i2c_INA_read(struct INAData *data)
     data->error = 0;
 
     // Order to read the Current Register (0x04)
-    // it gives the value on amperes * 10000
+    // it gives the value in amperes * 10000
     buffer[0] = INA_CURRENT;
     int8_t ack = i2c_write(I2C_BUS00, INA_ADDRESS, buffer, 1, 0);
     if (ack != -1)
@@ -71,16 +71,17 @@ int8_t i2c_INA_read(struct INAData *data)
         data->error = -1;
     }
 
-    // Order to read the Bus Voltage Register (0x01)
-    // Multiply the result by 0.00125 which is the 1.25 mV/bit described on the INA226 datasheet
+    // Order to read the Bus Voltage Register (0x02)
+    // it gives the value in volts * 100
     buffer[0] = INA_VBUS;
     ack = i2c_write(I2C_BUS00, INA_ADDRESS, buffer, 1, 0);
     if (ack != -1)
     {
         i2c_requestFrom(I2C_BUS00, INA_ADDRESS, buffer, 2, 0);
-        //Make conversion
-        data->voltage = (0xFF00 & ((uint16_t) buffer[0] << 8))
-                | ((uint16_t) (0x00FF & buffer[1]));
+        //Make conversion to number of bits
+        data->voltage = (uint16_t) ((uint32_t) ((0xFF00 & ((uint16_t) buffer[0] << 8))
+                | ((uint16_t) (0x00FF & buffer[1]))) * 125 / 1000);
+
     }
     else
     {
