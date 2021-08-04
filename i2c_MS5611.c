@@ -49,7 +49,7 @@ int8_t ms5611_readCalibrationData(void)
     uint8_t coeffAddresses[6] = {MS5611_REG_C1, MS5611_REG_C2, MS5611_REG_C3, MS5611_REG_C4, MS5611_REG_C5, MS5611_REG_C6};
 
     uint8_t i;
-    for (i = 0; i < 7; i++)
+    for (i = 0; i < 6; i++)
     {
         int8_t ack = i2c_write(I2C_BUS00, MS5611_ADDRESS, &coeffAddresses[i], 1, 0);
         if (ack == 0)

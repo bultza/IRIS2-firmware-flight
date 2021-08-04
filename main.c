@@ -156,8 +156,6 @@ void init_board()
     FLASH_CS2_OFF;
     P3OUT |= BIT6;
 
-    //TODO
-
     //Disable the GPIO Power-on default high-impedance mode to activate
     //previously configured port settings:
     PM5CTL0 &= ~LOCKLPM5;
