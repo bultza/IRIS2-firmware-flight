@@ -7,24 +7,27 @@
 #ifndef DATALOGGER_H_
 #define DATALOGGER_H_
 
+#include <stdint.h>
+#include <msp430.h>
+
 #define TELEMETRYSAVEPERIOD     30  //[s]
 #define ADDRESS_NOR_TELEMETRY   0
 #define ADDRESS_NOR_EVENTS      0x030D4000 //200*500*512 = 0x030D4000
 
 
 // Mission: 10 days -> 10*24*60*60 = 864 000 seconds
-// Proposing saving 1 Telemetry Line per second --> 27.648 MB of telemetry
+// Proposing saving 1 Telemetry Line every 30 s --> 1.84 MB of telemetry
 // (NOR memory has 64 MB)
 
 // Proposed sector (256 kB, 500 pages)  partition:
 // SECTOR 00 to SECTOR 199: Telemetry Lines (up to 51.2 MB of storage
-//                          possible, 27.7 MB needed)
+//                          possible, 1.84 MB needed)
 // SECTOR 200 to 255: Event Lines (up to 12.8 MB of storage possible)
 
 // 64 Bytes per Telemetry Line
 // 512 B per page, 64 B per line: 8 TM lines per page -->  4000 TM
-//  lines per sector --> 1 600 000 TM lines possible
-// (theoretically, up to 9.25 days of telemetry can be saved)
+//  lines per sector --> 800 000 TM lines possible
+// (theoretically, about 30 days of telemetry can be saved)
 #define TEMPERATURESENSORS_COUNT 5
 
 struct TelemetryLine
@@ -71,7 +74,7 @@ struct TelemetryLine
     uint8_t padding[4]          // 4B - Padding to reach 64 bits
 };
 
-// 14 Bytes per Event Line
+// 16 Bytes per Event Line
 // 512 B per page, 16 B per line: 32 EV lines per page --> 16000 EV lines
 // per sector --> 896 000 EV lines possible
 // (assuming 10 days trip, about 1 event per second can be saved)

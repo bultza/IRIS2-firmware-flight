@@ -156,7 +156,7 @@ uint32_t seconds_uptime(void)
 /**
  * It stops execution until time reached
  */
-void sleep_ms(const uint8_t ms)
+void sleep_ms(const uint16_t ms)
 {
     uint32_t timeStart = millis_uptime();
     while(timeStart + ms > millis_uptime())

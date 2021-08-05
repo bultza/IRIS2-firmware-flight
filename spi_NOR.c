@@ -138,10 +138,10 @@ int8_t spi_NOR_writeToAddress(uint32_t writeAddress, uint8_t * buffer, uint8_t n
     uint8_t bufferTotalLength = 5 + numOfBytes; // 5 bytes required for fixed part
     uint8_t bufferOut[NOR_BYTES_PAGE];
     bufferOut[0] = NOR_FOURPP;
-    bufferOut[1] = (uint8_t) (((writeAddress & 0b11111111000000000000000000000000) >> 24) & 0xFF);
-    bufferOut[2] = (uint8_t) (((writeAddress & 0b00000000111111110000000000000000) >> 16) & 0xFF);
-    bufferOut[3] = (uint8_t) (((writeAddress & 0b00000000000000001111111100000000) >> 8) & 0xFF);
-    bufferOut[4] = (uint8_t) ((writeAddress & 0b00000000000000000000000011111111) & 0xFF);
+    bufferOut[1] = (uint8_t) (((writeAddress & 0xFF000000) >> 24) & 0xFF);
+    bufferOut[2] = (uint8_t) (((writeAddress & 0x00FF0000) >> 16) & 0xFF);
+    bufferOut[3] = (uint8_t) (((writeAddress & 0x0000FF00) >> 8) & 0xFF);
+    bufferOut[4] = (uint8_t) ((writeAddress & 0x000000FF) & 0xFF);
 
     uint8_t i;
     for (i = 5; i < bufferTotalLength; i++)
@@ -182,10 +182,10 @@ int8_t spi_NOR_eraseSector(uint32_t sectorAddress, uint8_t deviceSelect)
     // Build bufferOut of bytes to send
     uint8_t bufferOut[5];
     bufferOut[0] = NOR_FOURSE;
-    bufferOut[1] = (uint8_t) (((sectorAddress & 0b11111111000000000000000000000000) >> 24) & 0xFF);
-    bufferOut[2] = (uint8_t) (((sectorAddress & 0b00000000111111110000000000000000) >> 16) & 0xFF);
-    bufferOut[3] = (uint8_t) (((sectorAddress & 0b00000000000000001111111100000000) >> 8) & 0xFF);
-    bufferOut[4] = (uint8_t) ((sectorAddress & 0b00000000000000000000000011111111) & 0xFF);
+    bufferOut[1] = (uint8_t) (((sectorAddress & 0xFF000000) >> 24) & 0xFF);
+    bufferOut[2] = (uint8_t) (((sectorAddress & 0x00FF0000) >> 16) & 0xFF);
+    bufferOut[3] = (uint8_t) (((sectorAddress & 0x0000FF00) >> 8) & 0xFF);
+    bufferOut[4] = (uint8_t) ((sectorAddress & 0x000000FF) & 0xFF);
 
     // Send bufferOut, do not expect any answer in return (buffer variable used as placeholder)
     spi_write_read(bufferOut, 5, bufferOut, 0);

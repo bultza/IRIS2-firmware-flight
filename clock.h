@@ -19,6 +19,6 @@
 int8_t clock_init(void);
 uint64_t millis_uptime(void);
 uint32_t seconds_uptime(void);
-void sleep_ms(const uint8_t ms);
+void sleep_ms(const uint16_t ms);
 
 #endif

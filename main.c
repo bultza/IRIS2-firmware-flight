@@ -82,6 +82,7 @@
 #include "clock.h"
 #include "uart.h"
 #include "i2c.h"
+#include "gopros.h"
 #include "i2c_TMP75C.h"
 #include "i2c_DS1338Z.h"
 #include "i2c_ADXL345.h"
@@ -93,21 +94,6 @@
 #define LED_ON          (P1OUT |= BIT0)
 #define LED_OFF         (P1OUT &= ~BIT0)
 #define LED_TOGGLE      (P1OUT ^= BIT0)
-
-#define MUX_OFF         (P2OUT |=  BIT3)
-
-#define CAMERA01_OFF    (P4OUT |=  BIT6)
-#define CAMERA01_ON     (P4OUT &= ~BIT6)
-
-#define CAMERA02_OFF    (P4OUT |=  BIT5)
-#define CAMERA02_ON     (P4OUT &= ~BIT5)
-
-#define CAMERA03_OFF    (P4OUT |=  BIT4)
-#define CAMERA03_ON     (P4OUT &= ~BIT4)
-
-#define CAMERA04_OFF    (P2OUT |=  BIT7)
-#define CAMERA04_ON     (P2OUT &= ~BIT7)
-
 
 /*
  * Init all GPIO and MCU subsystems
@@ -268,6 +254,10 @@ int main(void)
     uint8_t bufferToSaveRead5[5];
     spi_NOR_readFromAddress(addressForOperations1, bufferToSaveRead5, 5, CS_FLASH1);
     */
+
+	// GoPro debug
+	cameraRawPowerOn(CAMERA01);
+
 	//END OF DEBUG
 	///////////////////////////////////////////////////////////////////////////
 
