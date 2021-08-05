@@ -15,14 +15,14 @@ uint8_t cameraRawPowerOn(uint8_t selectedCamera)
     {
         // INITIAL STATE
         CAMERA01_ON;
-        sleep_ms(5000);
+        sleep_ms(CAM_WAIT_POWER);
         P7DIR &= ~BIT5;      // Define button as input - high impedance
 
         // PRESS BUTTON
         P7OUT &= ~BIT5;     // Put output bit to 0
         P7DIR |= BIT5;      // Define button as output
 
-        sleep_ms(1000);     // Wait for 1 second
+        sleep_ms(CAM_WAIT_BUTTON);     // Wait for 1 second
 
         // RETURN TO INITIAL STATE - "UNPRESS BUTTON"
         P7DIR &= ~BIT5;      // Define button as input - high impedance
@@ -31,14 +31,14 @@ uint8_t cameraRawPowerOn(uint8_t selectedCamera)
     {
         // INITIAL STATE
         CAMERA02_ON;
-        sleep_ms(5000);
+        sleep_ms(CAM_WAIT_POWER);
         P7DIR &= ~BIT6;      // Define button as input - high impedance
 
         // PRESS BUTTON
         P7OUT &= ~BIT6;     // Put output bit to 0
         P7DIR |= BIT6;      // Define button as output
 
-        sleep_ms(1000);     // Wait for 1 second
+        sleep_ms(CAM_WAIT_BUTTON);     // Wait for 1 second
 
         // RETURN TO INITIAL STATE - "UNPRESS BUTTON"
         P7DIR &= ~BIT6;      // Define button as input - high impedance
@@ -48,14 +48,14 @@ uint8_t cameraRawPowerOn(uint8_t selectedCamera)
     {
         // INITIAL STATE
         CAMERA03_ON;
-        sleep_ms(5000);
+        sleep_ms(CAM_WAIT_POWER);
         P7DIR &= ~BIT7;      // Define button as input - high impedance
 
         // PRESS BUTTON
         P7OUT &= ~BIT7;     // Put output bit to 0
         P7DIR |= BIT7;      // Define button as output
 
-        sleep_ms(1000);     // Wait for 1 second
+        sleep_ms(CAM_WAIT_BUTTON);     // Wait for 1 second
 
         // RETURN TO INITIAL STATE - "UNPRESS BUTTON"
         P7DIR &= ~BIT7;      // Define button as input - high impedance
@@ -64,14 +64,14 @@ uint8_t cameraRawPowerOn(uint8_t selectedCamera)
     {
         // INITIAL STATE
         CAMERA04_ON;
-        sleep_ms(5000);
+        sleep_ms(CAM_WAIT_POWER);
         P5DIR &= ~BIT6;      // Define button as input - high impedance
 
         // PRESS BUTTON
         P5OUT &= ~BIT6;     // Put output bit to 0
         P5DIR |= BIT6;      // Define button as output
 
-        sleep_ms(1000);     // Wait for 1 second
+        sleep_ms(CAM_WAIT_BUTTON);     // Wait for 1 second
 
         // RETURN TO INITIAL STATE - "UNPRESS BUTTON"
         P5DIR &= ~BIT6;      // Define button as input - high impedance

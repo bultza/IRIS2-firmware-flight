@@ -26,6 +26,9 @@
 #define CAMERA04_OFF    (P2OUT |=  BIT7)
 #define CAMERA04_ON     (P2OUT &= ~BIT7)
 
+#define CAM_WAIT_POWER 5000
+#define CAM_WAIT_BUTTON 1000
+
 // Functions
 uint8_t cameraRawPowerOn(uint8_t selectedCamera);
 
