@@ -28,9 +28,9 @@ struct ConfigurationRegister
     uint16_t fram_tlmSavePeriod;
 
     //Put here all the current execution status
-    uint32_t nor_logAddress;
+    uint32_t nor_eventAddress;
     uint32_t nor_telemetryAddress;
-    uint32_t fram_logAddress;
+    uint32_t fram_eventAddress;
     uint32_t fram_telemetryAddress;
     //TODO
     uint8_t simulatorEnabled;

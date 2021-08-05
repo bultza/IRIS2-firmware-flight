@@ -17,7 +17,7 @@ void configuration_init(void)
         confRegister_.swVersion = FWVERSION;
 
         confRegister_.fram_telemetryAddress = FRAM_TLM_ADDRESS;
-        confRegister_.fram_logAddress = FRAM_EVENTS_ADDRESS;
+        confRegister_.fram_eventAddress = FRAM_EVENTS_ADDRESS;
         confRegister_.nor_tlmSavePeriod = NOR_TLM_SAVEPERIOD;
         confRegister_.fram_tlmSavePeriod = FRAM_TLM_SAVEPERIOD;
 

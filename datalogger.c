@@ -3,29 +3,40 @@
 /**
  * It saves an event on the FRAM and NOR memories
  */
-int8_t saveEvent(struct EventLine *savedEvent)
+int8_t saveEvent(struct EventLine newEvent)
 {
     //First save on the FRAM which is much faster:
-    //TODO
+    addEventFRAM(newEvent, &confRegister_.fram_eventAddress);
 
     //Now save on the NOR that it is a little bit slower
     //TODO
 }
 
-uint64_t lastTimeTelemetrySavedNOR_ = 0;
-uint64_t lastTimeTelemetrySavedFRAM_ = 0;
+uint32_t lastTimeTelemetrySavedNOR_ = 0;
+uint32_t lastTimeTelemetrySavedFRAM_ = 0;
 
 /**
  * It saves a telemetry on the FRAM and on the NOR memories
  */
-int8_t saveTelemetry(struct TelemetryLine *savedEvent)
+int8_t saveTelemetry(struct TelemetryLine newTelemetry)
 {
+    uint32_t elapsedSeconds = seconds_uptime();
     //First save on the FRAM which is much faster
     //Save it only once every x seconds, otherwise we fill it!
-    //TODO
+    if(lastTimeTelemetrySavedFRAM_ + confRegister_.fram_tlmSavePeriod < elapsedSeconds)
+    {
+        //Time to save
+        addTelemetryFRAM(newTelemetry, &confRegister_.fram_telemetryAddress);
+        lastTimeTelemetrySavedFRAM_ = elapsedSeconds;
+    }
 
-    //Now save on the NOR that it is a little bit slower
-    //TODO
+    //Now save on the NOR which is a little bit slower
+    if(lastTimeTelemetrySavedNOR_ + confRegister_.nor_tlmSavePeriod < elapsedSeconds)
+    {
+        //Time to save
+        //TODO
+        lastTimeTelemetrySavedNOR_ = elapsedSeconds;
+    }
 }
 
 /**

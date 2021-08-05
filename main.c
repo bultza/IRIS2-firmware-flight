@@ -181,6 +181,20 @@ void init_board()
     //Open UART_DEBUG externally
     uart_init(UART_DEBUG, BR_9600);
 
+    //Register that a boot happened just now:
+    struct EventLine newEvent = {0};
+    newEvent.upTime = (uint32_t) millis_uptime();
+    newEvent.unixTime = i2c_RTC_unixTime_now();
+    //newEvent.state = 0;
+    //newEvent.sub_state = 0;
+    newEvent.event = EVENT_BOOT;
+    //Save the hardware reboot reason cause
+    newEvent.payload[0] = SYSRSTIV_L;
+    newEvent.payload[1] = SYSRSTIV_H;
+    //Clear system reset interrupt vector
+    SYSRSTIV = 0;
+    saveEvent(newEvent);
+
     //Make 5 blinks to recognize the boot process:
     uint8_t i;
     for(i = 0; i < 10; i++)
@@ -334,6 +348,7 @@ int main(void)
 	        uart_print(UART_DEBUG, "\r\n");*/
 	        lastTime = uptime;
 	        struct TelemetryLine newTelemetry = {0};
+	        struct EventLine newEvent;
 	        newTelemetry.upTime = uptime;
 	        newTelemetry.unixTime = unixtTimeNow;
 	        newTelemetry.altitude = altitude;
@@ -345,6 +360,10 @@ int main(void)
 	        getTelemetryFRAM(3, &newTelemetry);
 	        getTelemetryFRAM(1, &newTelemetry);
 	        getTelemetryFRAM(0, &newTelemetry);
+
+	        getEventFRAM(0, &newEvent);
+	        getEventFRAM(1, &newEvent);
+	        getEventFRAM(2, &newEvent);
 	    }
 	    //TODO
 

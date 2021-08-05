@@ -10,6 +10,7 @@
 #include <stdint.h>
 #include <msp430.h>
 #include "configuration.h"
+#include "clock.h"
 
 #define TELEMETRYSAVEPERIOD     30  //[s]
 #define NOR_TELEMETRY_ADDRESS   0
@@ -19,6 +20,11 @@
 #define FRAM_TLM_SIZE           0x19000  //this is 1600 telemetry lines at 64 bytes each
 #define FRAM_EVENTS_ADDRESS     0x42FFC
 #define FRAM_EVENTS_SIZE        0x00FFC  //this is 255 event lines at 16 bytes each
+
+//Define all the events that we want to store on the memories
+#define EVENT_BOOT                          69
+#define EVENT_CONFIGURATION_CHANGED         1
+#define EVENT_NOR_CLEAN                     2
 
 
 // Mission: 10 days -> 10*24*60*60 = 864 000 seconds
@@ -97,8 +103,8 @@ struct EventLine
 };
 
 //Public Functions to save data permanently
-int8_t saveEvent(struct EventLine *savedEvent);
-int8_t saveTelemetry(struct TelemetryLine *savedEvent);
+int8_t saveEvent(struct EventLine newEvent);
+int8_t saveTelemetry(struct TelemetryLine newTelemetry);
 
 //Public Functions to get Saved data on the FRAM memory
 int8_t addEventFRAM(struct EventLine newEvent, uint32_t *address);
