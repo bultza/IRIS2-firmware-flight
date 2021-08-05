@@ -272,7 +272,10 @@ int main(void)
     */
 
 	// GoPro debug
-	cameraRawPowerOn(CAMERA01);
+	//cameraRawPowerOn(CAMERA01);
+
+	uint64_t cameraStepLastTime = 0;
+	uint8_t cameraStep= 0;
 
 	//END OF DEBUG
 	///////////////////////////////////////////////////////////////////////////
@@ -297,6 +300,24 @@ int main(void)
 	            uart_print(UART_DEBUG, "Good!\r\n");
 	        else
 	            uart_print(UART_DEBUG, "Wrong command!\r\n");
+	    }
+
+	    //Run camera FSM continiously
+	    cameraFSMcheck();
+
+	    //Do something with the camera only once every 10s
+	    if(uptime > cameraStepLastTime + 10000)
+	    {
+	        //Do something with the camera only once every 10s
+	        if(cameraStep == 0)
+	            cameraPowerOn(CAMERA01);
+	        else if(cameraStep == 1)
+	            cameraPowerOff(CAMERA01);
+
+	        cameraStep++;
+	        if(cameraStep > 1)
+	            cameraStep = 0;
+	        cameraStepLastTime = uptime;
 	    }
 
 	    //Read once per second
