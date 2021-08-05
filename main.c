@@ -353,7 +353,7 @@ int main(void)
 	        newTelemetry.unixTime = unixtTimeNow;
 	        newTelemetry.altitude = altitude;
 	        newTelemetry.temperatures[0] = temperatures[0];
-	        addTelemetryFRAM(newTelemetry, &confRegister_.fram_telemetryAddress);
+	        saveTelemetry(newTelemetry);
 
 	        //Try getting some of the already stored telemetry
 	        getTelemetryFRAM(2, &newTelemetry);
