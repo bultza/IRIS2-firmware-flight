@@ -90,6 +90,8 @@
 #include "i2c_INA.h"
 #include "spi.h"
 #include "spi_NOR.h"
+#include "datalogger.h"
+
 
 #define LED_ON          (P1OUT |= BIT0)
 #define LED_OFF         (P1OUT &= ~BIT0)
@@ -299,7 +301,7 @@ int main(void)
 	        spi_NOR_getRDID(&dataRDID, CS_FLASH1);
 	        //spi_NOR_getRDID(&dataRDID, CS_FLASH2);
 
-	        sprintf(strToPrint, "Measuring pressure took %lld ms\r\n", uptime2-uptime1);
+	        /*sprintf(strToPrint, "Measuring pressure took %lld ms\r\n", uptime2-uptime1);
 	        uart_print(UART_DEBUG, strToPrint);
 	        sprintf(strToPrint, "Temperature: %d\r\n", temperatures[0]);
 	        uart_print(UART_DEBUG, strToPrint);
@@ -314,6 +316,8 @@ int main(void)
 
 	        sprintf(strToPrint, "UNIXTIME: %ld\r\n", unixtTimeNow);
 	        uart_print(UART_DEBUG, strToPrint);
+	        */
+
 	        /*
 	         * * sprintf(strToPrint, "Acceleration X-Axis: %d\r\n", accelerations[0]);
 	         * * uart_print(UART_DEBUG, strToPrint);
@@ -322,13 +326,18 @@ int main(void)
 	         * * sprintf(strToPrint, "Acceleration Z-Axis: %d\r\n", accelerations[2]);
 	         * * uart_print(UART_DEBUG, strToPrint);
 	         * * */
-	        sprintf(strToPrint, "Pressure: %ld\r\n", pressure);
+	        /*sprintf(strToPrint, "Pressure: %ld\r\n", pressure);
 	        uart_print(UART_DEBUG, strToPrint);
 	        sprintf(strToPrint, "Altitude: %ld\r\n", altitude);
 	        uart_print(UART_DEBUG, strToPrint);
 
-	        uart_print(UART_DEBUG, "\r\n");
+	        uart_print(UART_DEBUG, "\r\n");*/
 	        lastTime = uptime;
+	        struct TelemetryLine newTelemetry;
+	        newTelemetry.upTime = uptime;
+	        newTelemetry.unixTime = unixtTimeNow;
+	        newTelemetry.altitude = altitude;
+	        addTelemetryFRAM(newTelemetry, &confRegister_.fram_telemetryAddress);
 	    }
 	    //TODO
 

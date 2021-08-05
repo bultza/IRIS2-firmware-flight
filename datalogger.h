@@ -9,10 +9,16 @@
 
 #include <stdint.h>
 #include <msp430.h>
+#include "configuration.h"
 
 #define TELEMETRYSAVEPERIOD     30  //[s]
-#define ADDRESS_NOR_TELEMETRY   0
-#define ADDRESS_NOR_EVENTS      0x030D4000 //200*500*512 = 0x030D4000
+#define NOR_TELEMETRY_ADDRESS   0
+#define NOR_EVENTS_ADDRESS      0x030D4000 //200*500*512 = 0x030D4000
+
+#define FRAM_TLM_ADDRESS        0x29FFC
+#define FRAM_TLM_SIZE           0x19000  //this is 1600 telemetry lines at 64 bytes each
+#define FRAM_EVENTS_ADDRESS     0x42FFC
+#define FRAM_EVENTS_SIZE        0x00FFC  //this is 255 event lines at 16 bytes each
 
 
 // Mission: 10 days -> 10*24*60*60 = 864 000 seconds
@@ -71,7 +77,7 @@ struct TelemetryLine
                                 //      i.e. launch, making video
     uint8_t sub_state;          // 1B - Current mission sub-state.
                                 //      i.e. launch, powering off camera 2
-    uint8_t padding[4]          // 4B - Padding to reach 64 bits
+    uint8_t padding[4];         // 4B - Padding to reach 64 bits
 };
 
 // 16 Bytes per Event Line
@@ -89,5 +95,13 @@ struct EventLine
     uint8_t event;              // 1B - Event code
     uint8_t payload[5];         // 5B - Extra information of the event
 };
+
+
+//Public Functions to get Saved data on the FRAM memory
+int8_t addEventFRAM(struct EventLine newEvent, uint32_t *address);
+int8_t getEventFRAM(uint16_t pointer, struct EventLine *savedEvent);
+
+int8_t addTelemetryFRAM(struct TelemetryLine newTelemetry, uint32_t *address);
+int8_t getTelemetryFRAM(uint16_t pointer, struct TelemetryLine *savedTelemetry);
 
 #endif /* DATALOGGER_H_ */

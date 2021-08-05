@@ -9,9 +9,10 @@
 
 #include <stdint.h>
 #include <msp430.h>
+#include "datalogger.h"
 
 #define MAGICWORD   0xBABE
-#define FWVERSION   1
+#define FWVERSION   2
 
 
 struct ConfigurationRegister
@@ -25,6 +26,8 @@ struct ConfigurationRegister
     //Put here all the current execution status
     uint32_t nor_logAddress;
     uint32_t nor_telemetryAddress;
+    uint32_t fram_logAddress;
+    uint32_t fram_telemetryAddress;
     //TODO
     uint8_t simulatorEnabled;
 };

@@ -16,6 +16,9 @@ void configuration_init(void)
         confRegister_.simulatorEnabled = 0;
         confRegister_.swVersion = FWVERSION;
 
+        confRegister_.fram_telemetryAddress = FRAM_TLM_ADDRESS;
+        confRegister_.fram_logAddress = FRAM_EVENTS_ADDRESS;
+
         //TODO
     }
 
