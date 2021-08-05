@@ -10,6 +10,8 @@ int8_t saveEvent(struct EventLine newEvent)
 
     //Now save on the NOR that it is a little bit slower
     //TODO
+
+    return 0;
 }
 
 uint32_t lastTimeTelemetrySavedNOR_ = 0;
@@ -37,6 +39,8 @@ int8_t saveTelemetry(struct TelemetryLine newTelemetry)
         //TODO
         lastTimeTelemetrySavedNOR_ = elapsedSeconds;
     }
+
+    return 0;
 }
 
 /**
