@@ -333,11 +333,18 @@ int main(void)
 
 	        uart_print(UART_DEBUG, "\r\n");*/
 	        lastTime = uptime;
-	        struct TelemetryLine newTelemetry;
+	        struct TelemetryLine newTelemetry = {0};
 	        newTelemetry.upTime = uptime;
 	        newTelemetry.unixTime = unixtTimeNow;
 	        newTelemetry.altitude = altitude;
+	        newTelemetry.temperatures[0] = temperatures[0];
 	        addTelemetryFRAM(newTelemetry, &confRegister_.fram_telemetryAddress);
+
+	        //Try getting some of the already stored telemetry
+	        getTelemetryFRAM(2, &newTelemetry);
+	        getTelemetryFRAM(3, &newTelemetry);
+	        getTelemetryFRAM(1, &newTelemetry);
+	        getTelemetryFRAM(0, &newTelemetry);
 	    }
 	    //TODO
 

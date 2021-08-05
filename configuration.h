@@ -13,6 +13,8 @@
 
 #define MAGICWORD   0xBABE
 #define FWVERSION   2
+#define FRAM_TLM_SAVEPERIOD 600     //seconds period to save on FRAM
+#define NOR_TLM_SAVEPERIOD 10       //seconds period to save on NOR Flash
 
 
 struct ConfigurationRegister
@@ -22,6 +24,8 @@ struct ConfigurationRegister
     uint16_t swVersion;
     //Put here all the configuration parameters
     //TODO
+    uint16_t nor_tlmSavePeriod;
+    uint16_t fram_tlmSavePeriod;
 
     //Put here all the current execution status
     uint32_t nor_logAddress;

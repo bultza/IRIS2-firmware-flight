@@ -96,6 +96,9 @@ struct EventLine
     uint8_t payload[5];         // 5B - Extra information of the event
 };
 
+//Public Functions to save data permanently
+int8_t saveEvent(struct EventLine *savedEvent);
+int8_t saveTelemetry(struct TelemetryLine *savedEvent);
 
 //Public Functions to get Saved data on the FRAM memory
 int8_t addEventFRAM(struct EventLine newEvent, uint32_t *address);

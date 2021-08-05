@@ -1,20 +1,97 @@
 #include "datalogger.h"
 
+/**
+ * It saves an event on the FRAM and NOR memories
+ */
+int8_t saveEvent(struct EventLine *savedEvent)
+{
+    //First save on the FRAM which is much faster:
+    //TODO
 
+    //Now save on the NOR that it is a little bit slower
+    //TODO
+}
 
+uint64_t lastTimeTelemetrySavedNOR_ = 0;
+uint64_t lastTimeTelemetrySavedFRAM_ = 0;
+
+/**
+ * It saves a telemetry on the FRAM and on the NOR memories
+ */
+int8_t saveTelemetry(struct TelemetryLine *savedEvent)
+{
+    //First save on the FRAM which is much faster
+    //Save it only once every x seconds, otherwise we fill it!
+    //TODO
+
+    //Now save on the NOR that it is a little bit slower
+    //TODO
+}
+
+/**
+ * It saves a new event in the FRAM memory
+ */
 int8_t addEventFRAM(struct EventLine newEvent, uint32_t *address)
 {
-    //TODO
-    return -1;
+    //Sanity check:
+    if(*address < FRAM_EVENTS_ADDRESS ||
+            (*address + sizeof(newEvent)) > (FRAM_EVENTS_ADDRESS + FRAM_EVENTS_SIZE))
+        //memory overflow, protect exiting from here!
+        return -1;
+
+    volatile uint8_t *framPointerWrite;
+    volatile uint8_t *ramPointerRead;
+
+    framPointerWrite = (uint8_t *)*address;
+    ramPointerRead = (uint8_t *)&newEvent;
+
+    *address += sizeof(newEvent);
+
+    //Enable write on FRAM
+    MPUCTL0 = MPUPW;
+
+    uint8_t i;
+    //Copy each byte to the FRAM
+    for(i = 0; i < sizeof(newEvent); i++)
+    {
+        *framPointerWrite = *ramPointerRead;
+        framPointerWrite++;
+        ramPointerRead++;
+    }
+    //Put back protection flags to FRAM code area
+    MPUCTL0 = MPUPW | MPUENA;
+
+    return 0;
 }
 
-
+/**
+ * It returns a stored event line from the FRAM, the pointer is the event
+ * number, being 0 the first event and 255 the last one.
+ */
 int8_t getEventFRAM(uint16_t pointer, struct EventLine *savedEvent)
 {
-    //TODO
-    return -1;
+    uint32_t address = FRAM_EVENTS_ADDRESS + pointer * sizeof(struct EventLine);
+    volatile uint8_t *framPointerRead;
+    volatile uint8_t *ramPointerWrite;
+
+    framPointerRead = (uint8_t *)address;
+    ramPointerWrite = (uint8_t *)savedEvent;
+
+    uint8_t i;
+   //Copy each byte to the FRAM
+   for(i = 0; i < sizeof(struct EventLine); i++)
+   {
+       *ramPointerWrite = *framPointerRead;
+       framPointerRead++;
+       ramPointerWrite++;
+   }
+
+   return 0;
 }
 
+/**
+ * It saves the telemetry struct in the selected address in the FRAM.
+ */
 int8_t addTelemetryFRAM(struct TelemetryLine newTelemetry, uint32_t *address)
 {
     //Sanity check:
@@ -48,11 +125,30 @@ int8_t addTelemetryFRAM(struct TelemetryLine newTelemetry, uint32_t *address)
     return 0;
 }
 
-
+/**
+ * It returns a stored telemetry line from the FRAM, the pointer is the telemetry
+ * number, being 0 the first telemetry and 1600 the last one.
+ */
 int8_t getTelemetryFRAM(uint16_t pointer, struct TelemetryLine *savedTelemetry)
 {
-    //TODO
-    return -1;
+
+    uint32_t address = FRAM_TLM_ADDRESS + pointer * sizeof(struct TelemetryLine);
+    volatile uint8_t *framPointerRead;
+    volatile uint8_t *ramPointerWrite;
+
+    framPointerRead = (uint8_t *)address;
+    ramPointerWrite = (uint8_t *)savedTelemetry;
+
+    uint8_t i;
+   //Copy each byte to the FRAM
+   for(i = 0; i < sizeof(struct TelemetryLine); i++)
+   {
+       *ramPointerWrite = *framPointerRead;
+       framPointerRead++;
+       ramPointerWrite++;
+   }
+
+   return 0;
 }
 
 
