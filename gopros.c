@@ -15,6 +15,7 @@ uint8_t cameraRawPowerOn(uint8_t selectedCamera)
     {
         // INITIAL STATE
         CAMERA01_ON;
+        sleep_ms(5000);
         P7DIR &= ~BIT5;      // Define button as input - high impedance
 
         // PRESS BUTTON
@@ -30,6 +31,7 @@ uint8_t cameraRawPowerOn(uint8_t selectedCamera)
     {
         // INITIAL STATE
         CAMERA02_ON;
+        sleep_ms(5000);
         P7DIR &= ~BIT6;      // Define button as input - high impedance
 
         // PRESS BUTTON
@@ -46,6 +48,7 @@ uint8_t cameraRawPowerOn(uint8_t selectedCamera)
     {
         // INITIAL STATE
         CAMERA03_ON;
+        sleep_ms(5000);
         P7DIR &= ~BIT7;      // Define button as input - high impedance
 
         // PRESS BUTTON
@@ -61,6 +64,7 @@ uint8_t cameraRawPowerOn(uint8_t selectedCamera)
     {
         // INITIAL STATE
         CAMERA04_ON;
+        sleep_ms(5000);
         P5DIR &= ~BIT6;      // Define button as input - high impedance
 
         // PRESS BUTTON
