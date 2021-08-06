@@ -8,11 +8,6 @@
 
 struct CameraStatus cameraStatus_[4] = {0};
 
-uint8_t camera01Started = 0;
-uint8_t camera02Started = 0;
-uint8_t camera03Started = 0;
-uint8_t camera04Started = 0;
-
 uint8_t cameraHasStarted[4] = {0};
 
 /*
