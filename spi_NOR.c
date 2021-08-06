@@ -99,10 +99,10 @@ int8_t spi_NOR_readFromAddress(uint32_t readAddress, uint8_t * buffer, uint8_t n
     // Build bufferOut of bytes to send
     uint8_t bufferOut[5];
     bufferOut[0] = NOR_FOURREAD;
-    bufferOut[1] = (uint8_t) (((readAddress & 0b11111111000000000000000000000000) >> 24) & 0xFF);
-    bufferOut[2] = (uint8_t) (((readAddress & 0b00000000111111110000000000000000) >> 16) & 0xFF);
-    bufferOut[3] = (uint8_t) (((readAddress & 0b00000000000000001111111100000000) >> 8) & 0xFF);
-    bufferOut[4] = (uint8_t) ((readAddress & 0b00000000000000000000000011111111) & 0xFF);
+    bufferOut[1] = (uint8_t) (((readAddress & 0xFF000000) >> 24) & 0xFF);
+    bufferOut[2] = (uint8_t) (((readAddress & 0x00FF0000) >> 16) & 0xFF);
+    bufferOut[3] = (uint8_t) (((readAddress & 0x0000FF00) >> 8) & 0xFF);
+    bufferOut[4] = (uint8_t) ((readAddress & 0x000000FF) & 0xFF);
 
     // Send bufferOut, collect bytres read
     spi_write_read(bufferOut, 5, buffer, numOfBytes);

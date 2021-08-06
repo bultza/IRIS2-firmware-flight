@@ -27,7 +27,7 @@
 #define CAMERA04_ON     (P2OUT &= ~BIT7)
 
 #define CAM_WAIT_POWER 5000
-#define CAM_WAIT_BUTTON 1000
+#define CAM_WAIT_BUTTON 50
 
 #define FSM_CAM_DONOTHING           0
 #define FSM_CAM_POWERON             1

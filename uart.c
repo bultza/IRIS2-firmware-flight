@@ -571,7 +571,7 @@ __interrupt void USCI_A1_ISR(void)
 
 //////////////////////////////////////////////////////////////////////////////
 /**
- * Interrupt for UART_CAM1
+ * Interrupt for UART_CAM2
  */
 #pragma vector=USCI_A2_VECTOR
 __interrupt void USCI_A2_ISR(void)

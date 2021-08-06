@@ -91,6 +91,7 @@
 #include "spi.h"
 #include "spi_NOR.h"
 #include "datalogger.h"
+#include "terminal.h"
 
 
 #define LED_ON          (P1OUT |= BIT0)
@@ -179,7 +180,7 @@ void init_board()
     configuration_init();
 
     //Open UART_DEBUG externally
-    uart_init(UART_DEBUG, BR_9600);
+    uart_init(UART_DEBUG, BR_115200);
 
     //Register that a boot happened just now:
     struct EventLine newEvent = {0};
@@ -293,6 +294,8 @@ int main(void)
 	    uint32_t unixtTimeNow = i2c_RTC_unixTime_now();
 
 	    //Read UART Debug:
+	    terminal_readAndProcessCommands();
+	    /*
 	    if(uart_available(UART_DEBUG) != 0)
 	    {
 	        uint8_t character = uart_read(UART_DEBUG);
@@ -301,7 +304,9 @@ int main(void)
 	        else
 	            uart_print(UART_DEBUG, "Wrong command!\r\n");
 	    }
+	    */
 
+	    /* TODO: CHECK FSM (RAMON)
 	    //Run camera FSM continiously
 	    cameraFSMcheck();
 
@@ -319,6 +324,7 @@ int main(void)
 	            cameraStep = 0;
 	        cameraStepLastTime = uptime;
 	    }
+	    */
 
 	    //Read once per second
 	    if(uptime > lastTime + 1000)
