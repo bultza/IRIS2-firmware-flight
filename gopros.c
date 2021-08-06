@@ -8,10 +8,32 @@
 
 struct CameraStatus cameraStatus_[4] = {0};
 
+uint8_t camera01Started = 0;
+uint8_t camera02Started = 0;
+uint8_t camera03Started = 0;
+uint8_t camera04Started = 0;
+
+uint8_t cameraHasStarted[4] = {0};
+
 /*
- * Sends power to camera and boots it
+ * Begins an UART communication with the selected camera.
  */
-int8_t cameraRawPowerOn(uint8_t selectedCamera)
+int8_t gopros_cameraInit(uint8_t selectedCamera)
+{
+
+    if (!cameraHasStarted[selectedCamera])
+    {
+        uart_init(selectedCamera + 1, BR_57600);
+        cameraHasStarted[selectedCamera] = 1;
+    }
+
+    return 0;
+}
+
+/*
+ * Sends power to camera and boots it. UART communication not needed.
+ */
+int8_t gopros_cameraRawPowerOn(uint8_t selectedCamera)
 {
     if (selectedCamera == CAMERA01)
     {
@@ -82,6 +104,64 @@ int8_t cameraRawPowerOn(uint8_t selectedCamera)
         // RETURN TO INITIAL STATE - "UNPRESS BUTTON"
         P5DIR &= ~BIT6;      // Define button as input - high impedance
     }
+
+    return 0;
+}
+
+/*
+ * Sends power off command and removes power. UART communication required.
+ */
+int8_t gopros_cameraRawSafePowerOff(uint8_t selectedCamera)
+{
+    uart_print(selectedCamera + 1, CAM_POWEROFF);
+    sleep_ms(CAM_WAIT_POWER);
+
+    if (selectedCamera == CAMERA01)
+        CAMERA01_OFF;
+    else if (selectedCamera == CAMERA02)
+        CAMERA02_OFF;
+    else if (selectedCamera == CAMERA03)
+        CAMERA03_OFF;
+    else if (selectedCamera == CAMERA04)
+        CAMERA04_OFF;
+
+    cameraHasStarted[selectedCamera] = 0;
+
+    return 0;
+}
+
+/*
+ * Takes a picture with selected camera.
+ */
+int8_t gopros_cameraRawTakePicture(uint8_t selectedCamera)
+{
+    uart_print(selectedCamera + 1, CAM_SET_PHOTO_MODE);
+    sleep_ms(CAM_WAIT_CONF_CHANGE);
+    uart_print(selectedCamera + 1, CAM_PHOTO_TAKE_PIC);
+
+    return 0;
+}
+
+/*
+ * Starts recording video with selected camera.
+ */
+int8_t gopros_cameraRawStartRecordingVideo(uint8_t selectedCamera)
+{
+    uart_print(selectedCamera + 1, CAM_SET_VIDEO_MODE);
+    sleep_ms(CAM_WAIT_CONF_CHANGE);
+    uart_print(selectedCamera + 1, CAM_VIDEO_START_REC);
+
+    return 0;
+}
+
+/*
+ * End video recording in selected camera.
+ */
+int8_t gopros_cameraRawStopRecordingVideo(uint8_t selectedCamera)
+{
+    uart_print(selectedCamera + 1, CAM_SET_VIDEO_MODE);
+    sleep_ms(CAM_WAIT_CONF_CHANGE);
+    uart_print(selectedCamera + 1, CAM_VIDEO_STOP_REC);
 
     return 0;
 }

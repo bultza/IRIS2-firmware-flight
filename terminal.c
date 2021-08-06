@@ -22,10 +22,11 @@
  * voltage --> Returns INA voltage from batteries
  * current --> Returns INA current consumed
  * ...Cameras:
- * camera 1 start --> Powers on and boots camera 1
- * camera 2 start --> Powers on and boots camera 2
- * camera 3 start --> Powers on and boots camera 3
- * camera 4 start --> Powers on and boots camera 4
+ * camera x on --> Powers on and boots camera x (where x in [1,2,3,4])
+ * camera x pic --> Takes a picture with camera x using default configuration
+ * camera x video_start --> Starts recording video with camera x
+ * camera x video_off --> Stops video recording with camera x
+ * camera x off --> Safely powers off camera x
  */
 
 /*
@@ -173,28 +174,69 @@ int8_t terminal_readAndProcessCommands(void)
             sprintf(strToPrint, "%d\r\n", inaData.current);
             uart_print(UART_DEBUG, strToPrint);
         }
-        else if (strcmp("camera 1 start", command) == 0)
+        // This is a camera control command
+        else if (strncmp("camera", command, 6) == 0)
         {
-            cameraRawPowerOn(CAMERA01);
-            sprintf(strToPrint, "Camera 1 booting...\r\n");
-            uart_print(UART_DEBUG, strToPrint);
-        }
-        else if (strcmp("camera 2 start", command) == 0)
-        {
-            cameraRawPowerOn(CAMERA02);
-            sprintf(strToPrint, "Camera 2 booting...\r\n");
-            uart_print(UART_DEBUG, strToPrint);
-        }
-        else if (strcmp("camera 3 start", command) == 0)
-        {
-            cameraRawPowerOn(CAMERA03);
-            sprintf(strToPrint, "Camera 3 booting...\r\n");
-            uart_print(UART_DEBUG, strToPrint);
-        }
-        else if (strcmp("camera 4 start", command) == 0)
-        {
-            cameraRawPowerOn(CAMERA04);
-            sprintf(strToPrint, "Camera 4 booting...\r\n");
+            // Process the selected camera
+            uint8_t selectedCamera;
+            switch (command[7])
+            {
+                case '1':
+                    selectedCamera = CAMERA01;
+                    break;
+
+                case '2':
+                    selectedCamera = CAMERA02;
+                    break;
+
+                case '3':
+                    selectedCamera = CAMERA03;
+                    break;
+
+                case '4':
+                    selectedCamera = CAMERA04;
+                    break;
+            }
+
+            // Initialised UART comms with camera
+            gopros_cameraInit(selectedCamera);
+
+            // Extract the subcommand from camera control command
+            char subcommand[CMD_MAX_LEN] = {0};
+            uint8_t i;
+            for (i = 9; i < CMD_MAX_LEN; i++)
+            {
+                subcommand[i-9] = command[i];
+            }
+
+            if (strcmp("on", subcommand) == 0)
+            {
+                gopros_cameraRawPowerOn(selectedCamera);
+                sprintf(strToPrint, "Camera %c booting...\r\n", command[7]);
+            }
+            else if (strcmp("pic", subcommand) == 0)
+            {
+                gopros_cameraRawTakePicture(selectedCamera);
+                sprintf(strToPrint, "Camera %c took a picture.\r\n", command[7]);
+            }
+            else if (strcmp("video_start", subcommand) == 0)
+            {
+                gopros_cameraRawStartRecordingVideo(selectedCamera);
+                sprintf(strToPrint, "Camera %c started recording video.\r\n", command[7]);
+            }
+            else if (strcmp("video_end", subcommand) == 0)
+            {
+                gopros_cameraRawSafePowerOff(selectedCamera);
+                sprintf(strToPrint, "Camera %c stopped recording video.\r\n", command[7]);
+            }
+            else if (strcmp("off", subcommand) == 0)
+            {
+                gopros_cameraRawSafePowerOff(selectedCamera);
+                sprintf(strToPrint, "Camera %c powered off.\r\n", command[7]);
+            }
+            else
+                sprintf(strToPrint, "Camera subcommand %s not recognised...\r\n", subcommand);
+
             uart_print(UART_DEBUG, strToPrint);
         }
         else if (strcmp("terminal count", command) == 0)

@@ -15,7 +15,8 @@
 //Baudrates
 #define BR_9600 0
 #define BR_38400 1
-#define BR_115200 2
+#define BR_57600 2
+#define BR_115200 3
 
 //Base Address (from datasheet)
 #define DEBUG_BASE 0x05C0  //Eusci_A0
@@ -40,7 +41,7 @@ void uart_close(uint8_t uart_name);
 
 int8_t uart_write(uint8_t uart_name,
                   uint8_t *buffer,
-                  uint16_t lenght);
+                  uint16_t length);
 
 int8_t uart_print(uint8_t uart_name,
                   char *buffer);

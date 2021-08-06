@@ -275,8 +275,8 @@ int main(void)
 	// GoPro debug
 	//cameraRawPowerOn(CAMERA01);
 
-	uint64_t cameraStepLastTime = 0;
-	uint8_t cameraStep= 0;
+	//uint64_t cameraStepLastTime = 0;
+	//uint8_t cameraStep= 0;
 
 	//END OF DEBUG
 	///////////////////////////////////////////////////////////////////////////
@@ -307,7 +307,7 @@ int main(void)
 	    */
 
 	    /* TODO: CHECK FSM (RAMON)
-	    //Run camera FSM continiously
+	    //Run camera FSM continuously
 	    cameraFSMcheck();
 
 	    //Do something with the camera only once every 10s
@@ -329,7 +329,7 @@ int main(void)
 	    //Read once per second
 	    if(uptime > lastTime + 1000)
 	    {
-	        char strToPrint[100];
+	        //char strToPrint[100];
 
 	        i2c_TMP75_getTemperatures(temperatures);
 	        i2c_RTC_getClockData(&dateTime);

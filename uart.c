@@ -1,3 +1,9 @@
+/*
+ * This file is part of the Supervisor on IRIS2 Flight Firmware
+ * Proyecto Daedalus - 2021
+ *
+ */
+
 #include "uart.h"
 #include "libhal.h"
 
@@ -119,16 +125,22 @@ int8_t uart_init(uint8_t uart_name, uint8_t baudrate)
     // Put eUSCI in reset
     HWREG16(baseAddress[uart_name] + OFS_UCAxCTLW0) |= UCSWRST;
     HWREG16(baseAddress[uart_name] + OFS_UCAxCTLW0) |= UCSSEL__SMCLK;
+
     //Baud rates for 8 MHz clock SMCLK, see table at page 782 in users guide
-    if(baudrate == BR_38400)
-    {
-        HWREG16(baseAddress[uart_name] + OFS_UCAxBR0) = 13;
-        HWREG16(baseAddress[uart_name] + OFS_UCAxMCTLW) = (0x8400 | UCOS16 | UCBRF_0);
-    }
-    else if(baudrate == BR_9600)
+    if(baudrate == BR_9600)
     {
         HWREG16(baseAddress[uart_name] + OFS_UCAxBR0) = 52;
         HWREG16(baseAddress[uart_name] + OFS_UCAxMCTLW) = 0x4900 | UCOS16 | UCBRF_1;
+    }
+    else if(baudrate == BR_38400)
+    {
+        HWREG16(baseAddress[uart_name] + OFS_UCAxBR0) = 13;
+        HWREG16(baseAddress[uart_name] + OFS_UCAxMCTLW) = 0x8400 | UCOS16 | UCBRF_0;
+    }
+    else if(baudrate == BR_57600)
+    {
+        HWREG16(baseAddress[uart_name] + OFS_UCAxBR0) = 8;
+        HWREG16(baseAddress[uart_name] + OFS_UCAxMCTLW) = 0xF700 | UCOS16 | UCBRF_10;
     }
     else if(baudrate == BR_115200)
     {
@@ -387,7 +399,7 @@ int8_t uart_write_internal(uint8_t uart_name, uint8_t *buffer, uint16_t lenght)
 /*
  * Writes a buffer to the port.
  */
-int8_t uart_write(uint8_t uart_name, uint8_t *buffer, uint16_t lenght)
+int8_t uart_write(uint8_t uart_name, uint8_t *buffer, uint16_t length)
 {
     //Is the port open??
     if(uart_device[uart_name].isOpen == 0)
@@ -404,7 +416,7 @@ int8_t uart_write(uint8_t uart_name, uint8_t *buffer, uint16_t lenght)
     //Enable TX interrupt
     HWREG16(baseAddress[uart_name]+ OFS_UCAxIE) |= UCTXIE;
 
-    uart_write_internal(uart_name, buffer, lenght);
+    uart_write_internal(uart_name, buffer, length);
 
 
     uart_device[uart_name].noDisableTXInterrupt = 0;
