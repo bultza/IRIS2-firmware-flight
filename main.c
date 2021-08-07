@@ -221,7 +221,7 @@ int main(void)
 	init_board();
 
 	//Print reboot message on UART debug
-	//uart_print(UART_DEBUG, "IRIS2 is rebooting...\n");
+	uart_print(UART_DEBUG, "IRIS2 is booting up...\r\n");
 
 	///////////////////////////////////////////////////////////////////////////
 	//DEBUG, KEEP THIS COMMENTED ON FLIGHT
@@ -306,10 +306,11 @@ int main(void)
 	    }
 	    */
 
-	    /* TODO: CHECK FSM (RAMON)
+
 	    //Run camera FSM continuously
 	    cameraFSMcheck();
 
+	    /* TODO: CHECK FSM (RAMON)
 	    //Do something with the camera only once every 10s
 	    if(uptime > cameraStepLastTime + 10000)
 	    {

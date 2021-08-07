@@ -64,7 +64,7 @@ int8_t terminal_start(void)
 
     uint32_t uptime = seconds_uptime();
 
-    uart_print(UART_DEBUG, "\rIRIS 2 (Image Recorder Instrument for Sunrise) terminal.\r\n");
+    uart_print(UART_DEBUG, "IRIS 2 (Image Recorder Instrument for Sunrise) terminal.\r\n");
     uart_print(UART_DEBUG, "Made with passion and hard work by:\r\n");
     uart_print(UART_DEBUG, "...Aitor Conde <aitorconde@gmail.com>. Senior Engineer. Electronics. Software.\r\n");
     uart_print(UART_DEBUG, "...Ramon Garcia <ramongarciaalarcia@gmail.com>. Project Management. Software.\r\n");
@@ -77,56 +77,96 @@ int8_t terminal_start(void)
     return 0;
 }
 
+uint8_t bufferSizeNow = 0;
+uint8_t bufferSizeTotal = 0;
+char command[CMD_MAX_LEN] = {0};
+
+/**
+ *
+ */
 int8_t terminal_readAndProcessCommands(void)
 {
     uint8_t commandArrived = 0;
 
-    // Check the size of the UART Debug buffer
-    uint8_t bufferSizeNow = 0;
-    uint8_t bufferSizeTotal = 0;
-    char command[CMD_MAX_LEN] = {0};
-
     // If there is something in the buffer
-    while (bufferSizeNow = uart_available(UART_DEBUG) > 0)
+    bufferSizeNow = uart_available(UART_DEBUG);
+    if (bufferSizeNow > 0)
     {
         // Let's retrieve char by char
         uint8_t i;
-        char charRead;
+        char charRead = uart_read(UART_DEBUG);
 
-        for (i = bufferSizeTotal; i < bufferSizeTotal+bufferSizeNow; i++)
+        // Filter out for only ASCII chars
+        if ((uint8_t) charRead >= 32 && (uint8_t) charRead < 127)
         {
-            charRead = uart_read(UART_DEBUG);
-
-            // Filter out for only ASCII chars
-            if ((uint8_t) charRead >= 32 && (uint8_t) charRead <= 127)
+            // Build command
+            command[bufferSizeTotal] = charRead;
+            bufferSizeTotal++;
+            uart_write(UART_DEBUG, &charRead, 1); //print echo
+        }
+        else if(charRead == 0x08 || charRead == 127)   //Backspace!!
+        {
+            //Delete the last character
+            if(bufferSizeTotal != 0)
             {
-                commandArrived = 1;
-
-                // Build command
-                command[i] = charRead;
+                bufferSizeTotal--;
+                uart_write(UART_DEBUG, &charRead, 1); //print echo
             }
         }
-
-        bufferSizeTotal += bufferSizeNow;
+        else if(charRead == '\n' || charRead == '\r')
+        {
+            commandArrived = 1;
+            command[bufferSizeTotal] = '\0';  //End of string
+            strToPrint[0] = '\r';
+            strToPrint[1] = '\n';
+            strToPrint[2] = '\0';
+            uart_print(UART_DEBUG, strToPrint); //print echo
+        }
     }
 
     // If a command arrived and was composed
     if (commandArrived && beginFlag == 1)
     {
-        sprintf(strToPrint, "%s\r\n", command);
-        uart_print(UART_DEBUG, strToPrint);
+        //sprintf(strToPrint, "%s\r\n", command);
+        //uart_print(UART_DEBUG, strToPrint);
 
         // Interpret command
-        if (strcmp("uptime", command) == 0)
+        if (command[0] == 0)
+        {
+            //Empty command, nothing to do, print again the commandline
+        }
+        else if (strcmp("reboot", command) == 0)
+        {
+            strcpy(strToPrint, "System will reboot...\r\n");
+            uart_print(UART_DEBUG, strToPrint);
+            sleep_ms(500);
+            //Perform a PUC reboot
+            WDTCTL = 0xDEAD;
+        }
+        else if (strcmp("uptime", command) == 0)
         {
             uint32_t uptime = seconds_uptime();
-            sprintf(strToPrint, "%ld\r\n", uptime);
+            sprintf(strToPrint, "%ld s\r\n", uptime);
             uart_print(UART_DEBUG, strToPrint);
         }
         else if (strcmp("unixtime", command) == 0)
         {
             uint32_t unixtTimeNow = i2c_RTC_unixTime_now();
             sprintf(strToPrint, "%ld\r\n", unixtTimeNow);
+            uart_print(UART_DEBUG, strToPrint);
+        }
+        else if (strcmp("date", command) == 0)
+        {
+            uint32_t unixtTimeNow = i2c_RTC_unixTime_now();
+            struct RTCDateTime dateTime;
+            convert_from_unixTime(unixtTimeNow, &dateTime);
+            sprintf(strToPrint, "20%.2d/%.2d/%.2d %.2d:%.2d:%.2d\r\n",
+                    dateTime.year,
+                    dateTime.month,
+                    dateTime.date,
+                    dateTime.hours,
+                    dateTime.minutes,
+                    dateTime.seconds);
             uart_print(UART_DEBUG, strToPrint);
         }
         else if (strcmp("datetime", command) == 0)
@@ -211,7 +251,7 @@ int8_t terminal_readAndProcessCommands(void)
 
             if (strcmp("on", subcommand) == 0)
             {
-                gopros_cameraRawPowerOn(selectedCamera);
+                cameraPowerOn(selectedCamera);
                 sprintf(strToPrint, "Camera %c booting...\r\n", command[7]);
             }
             else if (strcmp("pic", subcommand) == 0)
@@ -258,7 +298,7 @@ int8_t terminal_readAndProcessCommands(void)
             {
                 lastIssuedCommand[i] = 0;
             }
-            sprintf(strToPrint, "Terminal session was ended by user.\r\n", command);
+            sprintf(strToPrint, "Terminal session was ended by user.\r\n");
             uart_print(UART_DEBUG, strToPrint);
         }
         else
@@ -278,10 +318,20 @@ int8_t terminal_readAndProcessCommands(void)
                 lastIssuedCommand[i] = command[i];
             }
         }
+        bufferSizeNow = 0;
+        bufferSizeTotal = 0;
     }
-    else if(commandArrived && beginFlag == 0 && strcmp("terminal begin", command) == 0)
+    else if(commandArrived && beginFlag == 0)
     {
-        terminal_start();
+        if(strcmp("terminal begin", command) == 0)
+            terminal_start();
+        else
+        {
+            strcpy(strToPrint, "Incorrect password...\r\n");
+            uart_print(UART_DEBUG, strToPrint);
+        }
+        bufferSizeNow = 0;
+        bufferSizeTotal = 0;
     }
 
     return 0;

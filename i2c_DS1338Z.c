@@ -12,7 +12,7 @@ struct RTCUnixtime unixTimeStatus_;
 
 //Private functions:
 uint32_t convert_to_unixTime(struct RTCDateTime dateTime);
-void convert_from_unixTime(uint32_t unixtime, struct RTCDateTime *dateTime);
+//void convert_from_unixTime(uint32_t unixtime, struct RTCDateTime *dateTime);
 uint8_t utils_time_getWeekdayFromDate(struct RTCDateTime *dateTime);
 
 /**

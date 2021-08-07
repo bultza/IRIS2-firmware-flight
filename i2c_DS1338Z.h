@@ -49,6 +49,8 @@ int8_t   i2c_RTC_getClockData(struct RTCDateTime *dateTime);
 uint32_t i2c_RTC_unixTime_now();
 int8_t   i2c_RTC_set_unixTime(uint32_t unixtime);
 
+void convert_from_unixTime(uint32_t unixtime, struct RTCDateTime *dateTime);
+
 
 
 
