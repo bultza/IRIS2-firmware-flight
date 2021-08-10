@@ -246,7 +246,7 @@ int main(void)
 	    //Read all sensors
 	    sensors_read();
 
-	    //Read once per second
+	    //Fligh sequence
 	    //TODO
 
 	    //Blink LED
