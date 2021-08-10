@@ -225,73 +225,9 @@ int main(void)
 
 	///////////////////////////////////////////////////////////////////////////
 	//DEBUG, KEEP THIS COMMENTED ON FLIGHT
-
-	// UART Camera 1 Pin Test - P2.5
-	/*
-    P2OUT |= BIT5;
-	P2DIR |= BIT5;
-	sleep_ms(2000);
-	P2OUT &= ~BIT5;*/
-
-	int16_t temperatures[6];
-	struct RTCDateTime dateTime;// = {0, 33, 0, 9, 8, 21}; // Seconds, minute, hours, day, month, year
-	//int16_t accelerations[3];
-	int32_t pressure;
-	int32_t altitude;
-	struct INAData inaData;
-	i2c_TMP75_getTemperatures(temperatures);
-	struct RDIDInfo dataRDID;
-	//i2c_RTC_setClockData(&dateTime);
-
-	// Test of the NOR memory
-	// Bulk erase the whole memory
-	/*
-	spi_NOR_bulkErase(CS_FLASH1);
-
-	// Read 5 bytes from the beginning of the second sector (0x40000)
-    static const uint32_t addressForOperations0 = (uint32_t) 0x00040000;
-    uint8_t bufferToSaveRead0[5];
-    spi_NOR_readFromAddress(addressForOperations0, bufferToSaveRead0, 5, CS_FLASH1);
-
-    // Read 5 bytes from the beginning of the third sector (0x80000)
-    static const uint32_t addressForOperations1 = (uint32_t) 0x00080000;
-    uint8_t bufferToSaveRead1[5];
-    spi_NOR_readFromAddress(addressForOperations1, bufferToSaveRead1, 5, CS_FLASH1);
-
-	// Save AITOR at the beginning of the second sector (0x40000), then read
-    uint8_t sentence0[5] = {'A','I','T','O','R'};
-    spi_NOR_writeToAddress(addressForOperations0, sentence0, 5, CS_FLASH1);
-    uint8_t bufferToSaveRead2[5];
-    spi_NOR_readFromAddress(addressForOperations0, bufferToSaveRead2, 5, CS_FLASH1);
-
-	// Now delete the sector, then read, then write RAMON, then read
-    spi_NOR_eraseSector(addressForOperations0, CS_FLASH1);
-    uint8_t bufferToSaveRead3[5];
-    spi_NOR_readFromAddress(addressForOperations0, bufferToSaveRead3, 5, CS_FLASH1);
-    uint8_t sentence1[5] = {'R','A','M','O','N'};
-    spi_NOR_writeToAddress(addressForOperations0, sentence1, 5, CS_FLASH1);
-    uint8_t bufferToSaveRead4[5];
-    spi_NOR_readFromAddress(addressForOperations0, bufferToSaveRead4, 5, CS_FLASH1);
-
-    // Write HELLO to the beginning of the third sector (0x8000), then read
-    uint8_t sentence2[5] = {'H','E','L','L','O'};
-    spi_NOR_writeToAddress(addressForOperations1, sentence2, 5, CS_FLASH1);
-    uint8_t bufferToSaveRead5[5];
-    spi_NOR_readFromAddress(addressForOperations1, bufferToSaveRead5, 5, CS_FLASH1);
-    */
-
-	// GoPro debug
-	//cameraRawPowerOn(CAMERA01);
-
-	//uint64_t cameraStepLastTime = 0;
-	//uint8_t cameraStep= 0;
-
+	//TODO
 	//END OF DEBUG
 	///////////////////////////////////////////////////////////////////////////
-
-	uint64_t lastTime = 0;
-	uint64_t uptime1 = 0;
-	uint64_t uptime2 = 0;
 
 	while(1)
 	{
@@ -303,104 +239,14 @@ int main(void)
 
 	    //Read UART Debug:
 	    terminal_readAndProcessCommands();
-	    /*
-	    if(uart_available(UART_DEBUG) != 0)
-	    {
-	        uint8_t character = uart_read(UART_DEBUG);
-	        if(character == 'a')
-	            uart_print(UART_DEBUG, "Good!\r\n");
-	        else
-	            uart_print(UART_DEBUG, "Wrong command!\r\n");
-	    }
-	    */
-
 
 	    //Run camera FSM continuously
 	    cameraFSMcheck();
 
-	    /* TODO: CHECK FSM (RAMON)
-	    //Do something with the camera only once every 10s
-	    if(uptime > cameraStepLastTime + 10000)
-	    {
-	        //Do something with the camera only once every 10s
-	        if(cameraStep == 0)
-	            cameraPowerOn(CAMERA01);
-	        else if(cameraStep == 1)
-	            cameraPowerOff(CAMERA01);
-
-	        cameraStep++;
-	        if(cameraStep > 1)
-	            cameraStep = 0;
-	        cameraStepLastTime = uptime;
-	    }
-	    */
+	    //Read all sensors
+	    sensors_read();
 
 	    //Read once per second
-	    if(uptime > lastTime + 1000)
-	    {
-	        //char strToPrint[100];
-
-	        i2c_TMP75_getTemperatures(temperatures);
-	        i2c_RTC_getClockData(&dateTime);
-	        //i2c_ADXL345_getAccelerations(accelerations);
-	        uptime1 = millis_uptime();
-	        i2c_MS5611_getPressure(&pressure);
-	        uptime2 = millis_uptime();
-	        i2c_MS5611_getAltitude(&pressure, &altitude);
-	        i2c_INA_read(&inaData);
-	        spi_NOR_getRDID(&dataRDID, CS_FLASH1);
-	        //spi_NOR_getRDID(&dataRDID, CS_FLASH2);
-
-	        /*sprintf(strToPrint, "Measuring pressure took %lld ms\r\n", uptime2-uptime1);
-	        uart_print(UART_DEBUG, strToPrint);
-	        sprintf(strToPrint, "Temperature: %d\r\n", temperatures[0]);
-	        uart_print(UART_DEBUG, strToPrint);
-	        sprintf(strToPrint, "Voltage: %d\r\n", inaData.voltage);
-	        uart_print(UART_DEBUG, strToPrint);
-	        sprintf(strToPrint, "Current: %d\r\n", inaData.current);
-	        uart_print(UART_DEBUG, strToPrint);
-
-	        sprintf(strToPrint, "Date and time: %d/%d/%d %d:%d:%d\r\n", dateTime.date, dateTime.month, dateTime.year,
-	                dateTime.hours, dateTime.minutes, dateTime.seconds);
-            uart_print(UART_DEBUG, strToPrint);
-
-	        sprintf(strToPrint, "UNIXTIME: %ld\r\n", unixtTimeNow);
-	        uart_print(UART_DEBUG, strToPrint);
-	        */
-
-	        /*
-	         * * sprintf(strToPrint, "Acceleration X-Axis: %d\r\n", accelerations[0]);
-	         * * uart_print(UART_DEBUG, strToPrint);
-	         * * sprintf(strToPrint, "Acceleration Y-Axis: %d\r\n", accelerations[1]);
-	         * * uart_print(UART_DEBUG, strToPrint);
-	         * * sprintf(strToPrint, "Acceleration Z-Axis: %d\r\n", accelerations[2]);
-	         * * uart_print(UART_DEBUG, strToPrint);
-	         * * */
-	        /*sprintf(strToPrint, "Pressure: %ld\r\n", pressure);
-	        uart_print(UART_DEBUG, strToPrint);
-	        sprintf(strToPrint, "Altitude: %ld\r\n", altitude);
-	        uart_print(UART_DEBUG, strToPrint);
-
-	        uart_print(UART_DEBUG, "\r\n");*/
-	        lastTime = uptime;
-	        struct TelemetryLine newTelemetry = {0};
-	        struct EventLine newEvent;
-	        newTelemetry.upTime = uptime;
-	        newTelemetry.unixTime = unixtTimeNow;
-	        newTelemetry.altitude = altitude;
-	        newTelemetry.temperatures[0] = temperatures[0];
-	        saveTelemetry(newTelemetry);
-
-	        //Try getting some of the already stored telemetry
-	        getTelemetryFRAM(2, &newTelemetry);
-	        getTelemetryFRAM(3, &newTelemetry);
-	        getTelemetryFRAM(1, &newTelemetry);
-	        getTelemetryFRAM(0, &newTelemetry);
-
-	        getEventFRAM(0, &newEvent);
-	        getEventFRAM(1, &newEvent);
-	        getEventFRAM(2, &newEvent);
-	    }
 	    //TODO
 
 	    //Blink LED
