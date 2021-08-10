@@ -26,6 +26,10 @@
 #define EVENT_CONFIGURATION_CHANGED         1
 #define EVENT_NOR_CLEAN                     2
 
+#define AVG_INDEX               0
+#define MAX_INDEX               1
+#define MIN_INDEX               2
+
 
 // Mission: 10 days -> 10*24*60*60 = 864 000 seconds
 // Proposing saving 1 Telemetry Line every 30 s --> 1.84 MB of telemetry
@@ -83,7 +87,25 @@ struct TelemetryLine
                                 //      i.e. launch, making video
     uint8_t sub_state;          // 1B - Current mission sub-state.
                                 //      i.e. launch, powering off camera 2
-    uint8_t padding[4];         // 4B - Padding to reach 64 bits
+    uint8_t switches_status;    // 1B - BIT0: Camera 01
+                                //      BIT1: Camera 02
+                                //      BIT2: Camera 03
+                                //      BIT3: Camera 04
+                                //      BIT4: MUX Enable
+                                //      BIT5: MUX Position
+                                //      BIT6: Sunrise CMD
+                                //      BIT7: Accelerometer Interrupt
+    uint16_t errors;            // 1B - BIT0: Camera 01 UART error
+                                //      BIT1: Camera 02 UART error
+                                //      BIT2: Camera 03 UART error
+                                //      BIT3: Camera 04 UART error
+                                //      BIT4: INA error
+                                //      BIT5: BARO error
+                                //      BIT6: RTC error
+                                //      BIT7: Accelerometer error
+                                //      BIT8: Temperature error
+
+    uint8_t padding[1];         // 1B - Padding to reach 64 bits
 };
 
 // 16 Bytes per Event Line
@@ -101,6 +123,9 @@ struct EventLine
     uint8_t event;              // 1B - Event code
     uint8_t payload[5];         // 5B - Extra information of the event
 };
+
+//Public function to read all sensors periodically
+void sensors_read();
 
 //Public Functions to save data permanently
 int8_t saveEvent(struct EventLine newEvent);

@@ -1,5 +1,100 @@
 #include "datalogger.h"
 
+//When was the last time each sensors was monitored?
+uint64_t lastTime_baroRead_ = 0;
+uint64_t lastTime_inaRead_ = 0;
+uint64_t lastTime_accRead_ = 0;
+uint64_t lastTime_tempRead_ = 0;
+
+uint32_t lastAltitude_ = 0;
+
+//Current status of the sensors
+struct TelemetryLine currentTelemetryLineFRAM_;
+uint16_t currentTelemetryLineIterationsFRAM_ = 0;
+struct TelemetryLine currentTelemetryLineNOR_;
+uint16_t currentTelemetryLineIterationsNOR_ = 0;
+
+//History of altitudes
+struct AltitudesHistory
+{
+    uint64_t time;
+    uint32_t altitude;
+};
+struct AltitudesHistory altitudeHistory_[5];
+uint8_t altitudeHistoryIndex_ = 0;
+
+/**
+ * Checks if it is time to read the sensors and saves them into memory
+ */
+void sensors_read()
+{
+    uint64_t uptime = millis_uptime();
+
+    //We use nested if-else in order to avoid using the I2C twice at the same time
+
+    //Time to read barometer?
+    if(lastTime_baroRead_ + confRegister_.baro_readPeriod < uptime)
+    {
+        //Time to read barometer
+        int32_t pressure;
+        int32_t altitude;
+        i2c_MS5611_getPressure(&pressure);
+        i2c_MS5611_getAltitude(&pressure, &altitude);
+        currentTelemetryLineFRAM_.altitude = altitude;
+        currentTelemetryLineFRAM_.pressure = pressure;
+        /*
+        //For FRAM line
+        if(currentTelemetryLineIterationsFRAM_ == 0)
+        {
+            //First time, so restart everything:
+            lastAltitude_ = altitude;
+            currentTelemetryLineFRAM_.verticalSpeed[AVG_INDEX] = 0;     //Average 0
+            currentTelemetryLineFRAM_.verticalSpeed[MAX_INDEX] = 0;     //Maximum 0
+            currentTelemetryLineFRAM_.verticalSpeed[MIN_INDEX] = 0;   //Minimum 99
+        }
+
+        //Calculate Speed:
+        int16_t speed = (altitude - lastAltitude_) / (uptime - lastTime_baroRead_);
+        if(speed > currentTelemetryLineFRAM_.verticalSpeed[MAX_INDEX])
+            currentTelemetryLineFRAM_.verticalSpeed[MAX_INDEX] = speed;
+        if(speed < currentTelemetryLineFRAM_.verticalSpeed[MIN_INDEX])
+            currentTelemetryLineFRAM_.verticalSpeed[MIN_INDEX] = speed;
+
+        currentTelemetryLineFRAM_.verticalSpeed[AVG_INDEX] =
+                currentTelemetryLineFRAM_.verticalSpeed[AVG_INDEX]
+                + (speed - currentTelemetryLineFRAM_.verticalSpeed[AVG_INDEX]) / currentTelemetryLineIterationsFRAM_;
+
+        //For NOR line
+        //TODO
+
+        lastAltitude_ = currentTelemetryLineFRAM_.altitude;
+        currentTelemetryLineIterationsFRAM_++;
+        currentTelemetryLineIterationsNOR_++;*/
+        lastTime_baroRead_ = uptime;
+    }
+    //Time to read temperatures?
+    else if(lastTime_tempRead_ + confRegister_.temp_readPeriod < uptime)
+    {
+        //Time to read barometer
+        //TODO
+        lastTime_tempRead_ = uptime;
+    }
+    //Time to read voltages and currents?
+    else if(lastTime_inaRead_ + confRegister_.ina_readPeriod < uptime)
+    {
+        //Time to read barometer
+        //TODO
+        lastTime_inaRead_ = uptime;
+    }
+    //Time to read voltages and currents?
+    else if(lastTime_accRead_ + confRegister_.acc_readPeriod < uptime)
+    {
+        //Time to read barometer
+        //TODO
+        lastTime_accRead_ = uptime;
+    }
+}
+
 /**
  * It saves an event on the FRAM and NOR memories
  */
