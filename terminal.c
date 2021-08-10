@@ -76,7 +76,7 @@ int8_t terminal_start(void)
 
 uint8_t bufferSizeNow = 0;
 uint8_t bufferSizeTotal = 0;
-char command[CMD_MAX_LEN] = {0};
+uint8_t command[CMD_MAX_LEN] = {0};
 
 /**
  *
@@ -90,7 +90,7 @@ int8_t terminal_readAndProcessCommands(void)
     if (bufferSizeNow > 0)
     {
         // Let's retrieve char by char
-        char charRead = uart_read(UART_DEBUG);
+        uint8_t charRead = uart_read(UART_DEBUG);
 
         // Filter out for only ASCII chars
         if ((uint8_t) charRead >= 32 && (uint8_t) charRead < 127)
@@ -156,7 +156,7 @@ int8_t terminal_readAndProcessCommands(void)
             uint32_t unixtTimeNow = i2c_RTC_unixTime_now();
             struct RTCDateTime dateTime;
             convert_from_unixTime(unixtTimeNow, &dateTime);
-            sprintf(strToPrint, "20%.2d/%.2d/%.2d %.2d:%.2d:%.2d\r\n",
+            sprintf(strToPrint, "Date is: 20%.2d/%.2d/%.2d %.2d:%.2d:%.2d\r\n",
                     dateTime.year,
                     dateTime.month,
                     dateTime.date,
@@ -165,14 +165,66 @@ int8_t terminal_readAndProcessCommands(void)
                     dateTime.seconds);
             uart_print(UART_DEBUG, strToPrint);
         }
-        else if (strcmp("datetime", command) == 0)
+        else if (strncmp("date", command, 4) == 0)
+        {
+            //datetime YYYY/MM/DD HH:mm:ss
+            if(strlen(command) != 24
+                    || command[9] != '/'
+                    || command[12] != '/'
+                    || command[15] != ' '
+                    || command[18] != ':'
+                    || command[21] != ':')
+            {
+                strcpy(strToPrint, "Incorrect command, usage is: date YYYY/MM/DD HH:mm:ss\r\n");
+            }
+            else
+            {
+                struct RTCDateTime dateTime;
+                uint8_t *pointer;
+                pointer = &command[7];
+                command[9] = '\0';     //End of word
+                command[12] = '\0';     //End of word
+                command[15] = '\0';     //End of word
+                command[18] = '\0';     //End of word
+                command[21] = '\0';     //End of word
+                dateTime.year = atoi(pointer);
+                pointer = &command[10];
+                dateTime.month = atoi(pointer);
+                pointer = &command[13];
+                dateTime.date = atoi(pointer);
+                pointer = &command[16];
+                dateTime.hours = atoi(pointer);
+                pointer = &command[19];
+                dateTime.minutes = atoi(pointer);
+                pointer = &command[22];
+                dateTime.seconds = atoi(pointer);
+                uint32_t unixTime = convert_to_unixTime(dateTime);
+                i2c_RTC_set_unixTime(unixTime);
+
+                sprintf(strToPrint, "Date changed to: 20%.2d/%.2d/%.2d %.2d:%.2d:%.2d\r\n",
+                                    dateTime.year,
+                                    dateTime.month,
+                                    dateTime.date,
+                                    dateTime.hours,
+                                    dateTime.minutes,
+                                    dateTime.seconds);
+            }
+            uart_print(UART_DEBUG, strToPrint);
+        }
+        else if (strcmp("RTCdate", command) == 0)
         {
             struct RTCDateTime dateTime;
             i2c_RTC_getClockData(&dateTime);
-            sprintf(strToPrint, "%d/%d/%d %d:%d:%d\r\n", dateTime.date, dateTime.month, dateTime.year,
-                    dateTime.hours, dateTime.minutes, dateTime.seconds);
+            sprintf(strToPrint, "Date from RTC is: 20%.2d/%.2d/%.2d %.2d:%.2d:%.2d\r\n",
+                    dateTime.year,
+                    dateTime.month,
+                    dateTime.date,
+                    dateTime.hours,
+                    dateTime.minutes,
+                    dateTime.seconds);
             uart_print(UART_DEBUG, strToPrint);
         }
+
         else if (strcmp("temperature", command) == 0)
         {
             int16_t temperatures[6];

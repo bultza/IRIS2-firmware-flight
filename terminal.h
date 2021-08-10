@@ -11,6 +11,7 @@
 #include <msp430.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include "uart.h"
 #include "clock.h"
 #include "i2c_DS1338Z.h"
