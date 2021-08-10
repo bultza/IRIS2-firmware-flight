@@ -11,10 +11,14 @@
 #include <msp430.h>
 #include "datalogger.h"
 
-#define MAGICWORD   0xBABE
-#define FWVERSION   2
+#define MAGICWORD           0xBABE
+#define FWVERSION           2
 #define FRAM_TLM_SAVEPERIOD 600     //seconds period to save on FRAM
-#define NOR_TLM_SAVEPERIOD 10       //seconds period to save on NOR Flash
+#define NOR_TLM_SAVEPERIOD  10      //seconds period to save on NOR Flash
+#define BARO_READPERIOD     1000    //Milliseconds period to read barometer
+#define TEMP_READPERIOD     1000    //Milliseconds period to read temperatures
+#define INA_READPERIOD      100     //Milliseconds period to read INA Voltage and currents
+#define ACC_READPERIOD      100     //Milliseconds period to read Accelerometer
 
 
 struct ConfigurationRegister
@@ -26,6 +30,10 @@ struct ConfigurationRegister
     //TODO
     uint16_t nor_tlmSavePeriod;
     uint16_t fram_tlmSavePeriod;
+    uint16_t baro_readPeriod;
+    uint16_t temp_readPeriod;
+    uint16_t ina_readPeriod;
+    uint16_t acc_readPeriod;
 
     //Put here all the current execution status
     uint32_t nor_eventAddress;

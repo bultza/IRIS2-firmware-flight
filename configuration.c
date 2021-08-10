@@ -20,6 +20,10 @@ void configuration_init(void)
         confRegister_.fram_eventAddress = FRAM_EVENTS_ADDRESS;
         confRegister_.nor_tlmSavePeriod = NOR_TLM_SAVEPERIOD;
         confRegister_.fram_tlmSavePeriod = FRAM_TLM_SAVEPERIOD;
+        confRegister_.baro_readPeriod = BARO_READPERIOD;
+        confRegister_.ina_readPeriod = INA_READPERIOD;
+        confRegister_.acc_readPeriod = ACC_READPERIOD;
+        confRegister_.temp_readPeriod = TEMP_READPERIOD;
 
         //TODO
     }
