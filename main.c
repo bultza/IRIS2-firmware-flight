@@ -225,8 +225,16 @@ int main(void)
 
 	///////////////////////////////////////////////////////////////////////////
 	//DEBUG, KEEP THIS COMMENTED ON FLIGHT
+
+	// UART Camera 1 Pin Test - P2.5
+	/*
+    P2OUT |= BIT5;
+	P2DIR |= BIT5;
+	sleep_ms(2000);
+	P2OUT &= ~BIT5;*/
+
 	int16_t temperatures[6];
-	struct RTCDateTime dateTime; //= {0, 42, 17, 3, 8, 21}; // Seconds, minute, hours, day, month, year
+	struct RTCDateTime dateTime;// = {0, 33, 0, 9, 8, 21}; // Seconds, minute, hours, day, month, year
 	//int16_t accelerations[3];
 	int32_t pressure;
 	int32_t altitude;

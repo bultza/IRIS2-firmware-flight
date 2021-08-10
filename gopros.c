@@ -7,7 +7,6 @@
 #include "gopros.h"
 
 struct CameraStatus cameraStatus_[4] = {0};
-
 uint8_t cameraHasStarted[4] = {0};
 
 /*
@@ -42,7 +41,7 @@ int8_t gopros_cameraRawPowerOn(uint8_t selectedCamera)
         P7OUT &= ~BIT5;     // Put output bit to 0
         P7DIR |= BIT5;      // Define button as output
 
-        sleep_ms(CAM_WAIT_BUTTON);     // Wait for 1 second
+        sleep_ms(CAM_WAIT_BUTTON);
 
         // RETURN TO INITIAL STATE - "UNPRESS BUTTON"
         P7DIR &= ~BIT5;      // Define button as input - high impedance
@@ -59,7 +58,7 @@ int8_t gopros_cameraRawPowerOn(uint8_t selectedCamera)
         P7OUT &= ~BIT6;     // Put output bit to 0
         P7DIR |= BIT6;      // Define button as output
 
-        sleep_ms(CAM_WAIT_BUTTON);     // Wait for 1 second
+        sleep_ms(CAM_WAIT_BUTTON);
 
         // RETURN TO INITIAL STATE - "UNPRESS BUTTON"
         P7DIR &= ~BIT6;      // Define button as input - high impedance
@@ -77,7 +76,7 @@ int8_t gopros_cameraRawPowerOn(uint8_t selectedCamera)
         P7OUT &= ~BIT7;     // Put output bit to 0
         P7DIR |= BIT7;      // Define button as output
 
-        sleep_ms(CAM_WAIT_BUTTON);     // Wait for 1 second
+        sleep_ms(CAM_WAIT_BUTTON);
 
         // RETURN TO INITIAL STATE - "UNPRESS BUTTON"
         P7DIR &= ~BIT7;      // Define button as input - high impedance
@@ -94,11 +93,45 @@ int8_t gopros_cameraRawPowerOn(uint8_t selectedCamera)
         P5OUT &= ~BIT6;     // Put output bit to 0
         P5DIR |= BIT6;      // Define button as output
 
-        sleep_ms(CAM_WAIT_BUTTON);     // Wait for 1 second
+        sleep_ms(CAM_WAIT_BUTTON);
 
         // RETURN TO INITIAL STATE - "UNPRESS BUTTON"
         P5DIR &= ~BIT6;      // Define button as input - high impedance
     }
+
+    sleep_ms(5000);
+
+    // Set default mode to video.
+    uart_print(selectedCamera + 1, CAM_DEF_MODE_VIDEO);
+    sleep_ms(CAM_WAIT_CONF_CHANGE);
+
+    // Set video format to NTSC.
+    uart_print(selectedCamera + 1, CAM_VIDEO_FORMAT_NTSC);
+    sleep_ms(CAM_WAIT_CONF_CHANGE);
+
+    // Never auto power down.
+    uart_print(selectedCamera + 1, CAM_AUTO_POWER_DOWN_NEVER);
+    sleep_ms(CAM_WAIT_CONF_CHANGE);
+
+    // Set video resolution to 4K, FPS to 15, and FOV to Wide.
+    char * videoPLD = CAM_PAYLOAD_VIDEO_RES_FPS_FOV;
+    char * videoRes = CAM_VIDEO_RES_4K;
+    char * videoFPS = CAM_VIDEO_FPS_15;
+    char * videoFOV = CAM_VIDEO_FOV_WIDE;
+    char videoDataCmd[28];
+    sprintf(videoDataCmd, "%s %s %s %s\n", videoPLD, videoRes, videoFPS, videoFOV);
+    uart_print(selectedCamera + 1, videoDataCmd);
+    sleep_ms(CAM_WAIT_CONF_CHANGE);
+
+    // Set date and time in camera.
+    struct RTCDateTime dateTime;
+    char * dateTimePLD = CAM_PAYLOAD_SET_DATETIME;
+    char dateTimeCmd[40];
+    i2c_RTC_getClockData(&dateTime);
+    sprintf(dateTimeCmd, "%s %2d %2d %2d %2d %2d %2d\n", dateTimePLD,
+            dateTime.year, dateTime.month, dateTime.date,
+            dateTime.hours, dateTime.minutes, dateTime.seconds);
+    uart_print(selectedCamera + 1, dateTimeCmd);
 
     return 0;
 }
@@ -157,6 +190,16 @@ int8_t gopros_cameraRawStopRecordingVideo(uint8_t selectedCamera)
     uart_print(selectedCamera + 1, CAM_SET_VIDEO_MODE);
     sleep_ms(CAM_WAIT_CONF_CHANGE);
     uart_print(selectedCamera + 1, CAM_VIDEO_STOP_REC);
+
+    return 0;
+}
+
+/*
+ * Send a customised command to the selected camera.
+ */
+int8_t gopros_cameraRawSendCommand(uint8_t selectedCamera, char * cmd)
+{
+    uart_print(selectedCamera + 1, cmd);
 
     return 0;
 }

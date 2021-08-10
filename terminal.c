@@ -26,16 +26,13 @@
  * camera x pic --> Takes a picture with camera x using default configuration
  * camera x video_start --> Starts recording video with camera x
  * camera x video_off --> Stops video recording with camera x
+ * camera x send_cmd y --> Sends command y (do not include \n!!!) to camera x
  * camera x off --> Safely powers off camera x
  */
 
 /*
  * FUTURE COMMANDS (TODO):
  * Acceleration X,Y,Z axes.
- * Camera 1,2,3,4 power off.
- * Camera 1,2,3,4 take a picture.
- * Camera 1,2,3,4 start recording video.
- * Camera 1,2,3,4 stop recording video.
  * Camera 1,2,3,4 change resolution.
  * Camera 1,2,3,4 change frames per second.
  * Dump NOR memory contents.
@@ -93,7 +90,6 @@ int8_t terminal_readAndProcessCommands(void)
     if (bufferSizeNow > 0)
     {
         // Let's retrieve char by char
-        uint8_t i;
         char charRead = uart_read(UART_DEBUG);
 
         // Filter out for only ASCII chars
@@ -251,7 +247,7 @@ int8_t terminal_readAndProcessCommands(void)
 
             if (strcmp("on", subcommand) == 0)
             {
-                cameraPowerOn(selectedCamera);
+                gopros_cameraRawPowerOn(selectedCamera);
                 sprintf(strToPrint, "Camera %c booting...\r\n", command[7]);
             }
             else if (strcmp("pic", subcommand) == 0)
@@ -266,8 +262,31 @@ int8_t terminal_readAndProcessCommands(void)
             }
             else if (strcmp("video_end", subcommand) == 0)
             {
-                gopros_cameraRawSafePowerOff(selectedCamera);
+                gopros_cameraRawStopRecordingVideo(selectedCamera);
                 sprintf(strToPrint, "Camera %c stopped recording video.\r\n", command[7]);
+            }
+            else if (strncmp("send_cmd", subcommand, 8) == 0)
+            {
+                uint8_t i;
+                uint8_t ended = 0;
+                char goProCommand[CMD_MAX_LEN] = {0};
+                char goProCommandNEOL[CMD_MAX_LEN] = {0};
+                for (i = 9; i < CMD_MAX_LEN; i++)
+                {
+                    if (subcommand[i] != 0)
+                    {
+                        goProCommandNEOL[i-9] = subcommand[i];
+                        goProCommand[i-9] = subcommand[i];
+                    }
+                    else
+                    {
+                        goProCommand[i-9] = (char) 0x0A;
+                        break;
+                    }
+                }
+
+                gopros_cameraRawSendCommand(selectedCamera, goProCommand);
+                sprintf(strToPrint, "Command %s sent to camera %c.\r\n", goProCommandNEOL, command[7]);
             }
             else if (strcmp("off", subcommand) == 0)
             {
