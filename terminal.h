@@ -20,7 +20,6 @@
 #include "i2c_INA.h"
 #include "gopros.h"
 
-#define CMD_NUM_HIST 10
 #define CMD_MAX_LEN 100
 
 int8_t terminal_start(void);

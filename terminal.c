@@ -11,10 +11,14 @@
  * terminal count --> Returns number of issued commands
  * terminal last --> Returns last command
  * terminal end --> Ends Terminal session
+ * ...CPU:
+ * reboot --> Reboots IRIS 2 CPU
  * ...Time:
  * uptime --> Returns elapsed seconds since boot
  * unixtime --> Returns actual UNIX time
- * datetime --> Returns actual date and time
+ * date --> Returns actual date and time from IRIS 2 CLK or sets it
+ *          Format for setting the date: YYYY/MM/DD HH:mm:ss
+ * RTCdate --> Returns actual date and time from RTC
  * ...Sensors:
  * temperature --> Returns temperature in hundredths of deg C
  * pressure --> Returns atmospheric pressure in hundredths of mbar
@@ -320,7 +324,6 @@ int8_t terminal_readAndProcessCommands(void)
             else if (strncmp("send_cmd", subcommand, 8) == 0)
             {
                 uint8_t i;
-                uint8_t ended = 0;
                 char goProCommand[CMD_MAX_LEN] = {0};
                 char goProCommandNEOL[CMD_MAX_LEN] = {0};
                 for (i = 9; i < CMD_MAX_LEN; i++)
