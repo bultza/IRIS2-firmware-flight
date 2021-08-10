@@ -93,7 +93,7 @@ int8_t i2c_RTC_getClockData(struct RTCDateTime *dateTime)
 uint32_t i2c_RTC_unixTime_now()
 {
     uint32_t now = seconds_uptime();
-    if(unixTimeStatus_.uptime + RTC_READ_PERIOD < now)
+    if(unixTimeStatus_.uptime + RTC_READ_PERIOD < now || unixTimeStatus_.uptime == 0)
     {
         //Ask again the time
         struct RTCDateTime dateFromRTC;
@@ -112,7 +112,11 @@ int8_t i2c_RTC_set_unixTime(uint32_t unixtime)
 {
     struct RTCDateTime dateTime;
     convert_from_unixTime(unixtime, &dateTime);
-    return i2c_RTC_setClockData(&dateTime);
+    int8_t returnValue = i2c_RTC_setClockData(&dateTime);
+    uint32_t now = seconds_uptime();
+    unixTimeStatus_.uptime = now;
+    unixTimeStatus_.unixtime = unixtime;
+    return returnValue;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
