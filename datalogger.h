@@ -11,9 +11,15 @@
 #include <msp430.h>
 #include "configuration.h"
 #include "clock.h"
+#include "i2c_MS5611.h"
+#include "i2c_TMP75C.h"
+#include "i2c_INA.h"
+#include "i2c_ADXL345.h"
+#include "i2c_DS1338Z.h"
+#include "spi_NOR.h"
 
 #define TELEMETRYSAVEPERIOD     30  //[s]
-#define NOR_TELEMETRY_ADDRESS   0
+#define NOR_TLM_ADDRESS         0
 #define NOR_EVENTS_ADDRESS      0x030D4000 //200*500*512 = 0x030D4000
 
 #define FRAM_TLM_ADDRESS        0x29FFC
@@ -126,10 +132,11 @@ struct EventLine
 
 //Public function to read all sensors periodically
 void sensors_read();
+int8_t returnCurrentTMLines(struct TelemetryLine *tmLines);
 
 //Public Functions to save data permanently
 int8_t saveEvent(struct EventLine newEvent);
-int8_t saveTelemetry(struct TelemetryLine newTelemetry);
+int8_t saveTelemetry();
 
 //Public Functions to get Saved data on the FRAM memory
 int8_t addEventFRAM(struct EventLine newEvent, uint32_t *address);
@@ -137,5 +144,12 @@ int8_t getEventFRAM(uint16_t pointer, struct EventLine *savedEvent);
 
 int8_t addTelemetryFRAM(struct TelemetryLine newTelemetry, uint32_t *address);
 int8_t getTelemetryFRAM(uint16_t pointer, struct TelemetryLine *savedTelemetry);
+
+//Public Functions to get Saved data on the NOR memory
+int8_t addEventNOR(struct EventLine newEvent, uint32_t *address);
+int8_t getEventNOR(uint32_t pointer, struct EventLine *savedEvent);
+
+int8_t addTelemetryNOR(struct TelemetryLine newTelemetry, uint32_t *address);
+int8_t getTelemetryNOR(uint32_t pointer, struct TelemetryLine *savedTelemetry);
 
 #endif /* DATALOGGER_H_ */

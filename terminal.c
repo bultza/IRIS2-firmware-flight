@@ -25,6 +25,9 @@
  * altitude --> Returns altitude in cm
  * voltage --> Returns INA voltage from batteries
  * current --> Returns INA current consumed
+ * ...Telemetry:
+ * tm_nor --> Returns current Telemetry Line to be saved in NOR memory.
+ * tm_fram --> Returns current Telemetry Line to be saved in FRAM memory.
  * ...Cameras:
  * camera x on --> Powers on and boots camera x (where x in [1,2,3,4])
  * camera x pic --> Takes a picture with camera x using default configuration
@@ -266,6 +269,45 @@ int8_t terminal_readAndProcessCommands(void)
             sprintf(strToPrint, "%d\r\n", inaData.current);
             uart_print(UART_DEBUG, strToPrint);
         }
+        else if (strcmp("tm_nor", command) == 0)
+        {
+            struct TelemetryLine *tmLines;
+            returnCurrentTMLines(tmLines);
+
+            sprintf(strToPrint, "Unix Time: %ld\r\n", tmLines[0].unixTime);
+            uart_print(UART_DEBUG, strToPrint);
+            sprintf(strToPrint, "Up Time: %ld\r\n", tmLines[0].upTime);
+            uart_print(UART_DEBUG, strToPrint);
+            sprintf(strToPrint, "Pressure: %ld\r\n", tmLines[0].pressure);
+            uart_print(UART_DEBUG, strToPrint);
+            sprintf(strToPrint, "Altitude: %ld\r\n", tmLines[0].altitude);
+            uart_print(UART_DEBUG, strToPrint);
+            sprintf(strToPrint, "Vertical Speed AVG: %d\r\n", tmLines[0].verticalSpeed[0]);
+            uart_print(UART_DEBUG, strToPrint);
+            sprintf(strToPrint, "Vertical Speed MAX: %d\r\n", tmLines[0].verticalSpeed[1]);
+            uart_print(UART_DEBUG, strToPrint);
+            sprintf(strToPrint, "Vertical Speed MIN: %d\r\n", tmLines[0].verticalSpeed[2]);
+            uart_print(UART_DEBUG, strToPrint);
+            sprintf(strToPrint, "Temperature PCB: %d\r\n", tmLines[0].temperatures[0]);
+            uart_print(UART_DEBUG, strToPrint);
+            sprintf(strToPrint, "Voltage AVG: %d\r\n", tmLines[0].voltages[0]);
+            uart_print(UART_DEBUG, strToPrint);
+            sprintf(strToPrint, "Voltage MAX: %d\r\n", tmLines[0].voltages[1]);
+            uart_print(UART_DEBUG, strToPrint);
+            sprintf(strToPrint, "Voltage MIN: %d\r\n", tmLines[0].voltages[2]);
+            uart_print(UART_DEBUG, strToPrint);
+            sprintf(strToPrint, "Current AVG: %d\r\n", tmLines[0].currents[0]);
+            uart_print(UART_DEBUG, strToPrint);
+            sprintf(strToPrint, "Current MAX: %d\r\n", tmLines[0].currents[1]);
+            uart_print(UART_DEBUG, strToPrint);
+            sprintf(strToPrint, "Current MIN: %d\r\n", tmLines[0].currents[2]);
+            uart_print(UART_DEBUG, strToPrint);
+        }
+        else if (strcmp("tm_fram", command) == 0)
+        {
+            //TODO
+        }
+
         // This is a camera control command
         else if (strncmp("camera", command, 6) == 0)
         {

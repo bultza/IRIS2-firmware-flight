@@ -42,6 +42,8 @@ struct ConfigurationRegister
     uint32_t fram_telemetryAddress;
     //TODO
     uint8_t simulatorEnabled;
+    uint8_t flightState;
+    uint8_t flightSubState;
 };
 
 //******************************************************************************
