@@ -18,14 +18,14 @@
  * unixtime --> Returns actual UNIX time
  * date --> Returns actual date and time from IRIS 2 CLK or sets it
  *          Format for setting the date: YYYY/MM/DD HH:mm:ss
- * i2c_rtc --> Returns actual date and time from RTC
+ * i2c rtc --> Returns actual date and time from RTC
  * ...Sensors:
- * temperature --> Returns temperature in hundredths of deg C
- * i2c_baro --> Returns atmospheric pressure and Altitude
- * i2c_ina --> Returns the INA voltage and currents
+ * i2c temp --> Returns temperature in hundredths of deg C.
+ * i2c baro --> Returns atmospheric pressure in hundredths of mbar and altitude in cm
+ * i2c ina --> Returns the INA voltage in hundredths of V and currents in mA
  * ...Telemetry:
- * tm_nor --> Returns current Telemetry Line to be saved in NOR memory.
- * tm_fram --> Returns current Telemetry Line to be saved in FRAM memory.
+ * tm nor --> Returns current Telemetry Line to be saved in NOR memory
+ * tm fram --> Returns current Telemetry Line to be saved in FRAM memory
  * ...Cameras:
  * camera x on --> Powers on and boots camera x (where x in [1,2,3,4])
  * camera x pic --> Takes a picture with camera x using default configuration
@@ -60,6 +60,29 @@ char strToPrint_[100];
 uint8_t numIssuedCommands_ = 0;
 char lastIssuedCommand_[CMD_MAX_LEN] = {0};
 
+
+// PRIVATE FUNCTIONS
+char extractSubcommand(uint8_t start, char * command);
+
+char extractSubcommand(uint8_t start, char * command)
+{
+    char subcommand[CMD_MAX_LEN] = {0};
+    uint8_t i;
+    for (i = start; i < CMD_MAX_LEN; i++)
+    {
+        subcommand[i-start] = command[i];
+        if(command[i] == '\0')
+            break;  //end of command detected
+    }
+    return *subcommand;
+}
+
+// PUBLIC FUNCTIONS
+
+/**
+ * Starts a terminal session. From now on, incoming commands are considerd.
+ * It also prints out the credits of the IRIS 2 instrument and FSW.
+ */
 int8_t terminal_start(void)
 {
     beginFlag_ = 1;
@@ -84,7 +107,8 @@ uint8_t bufferSizeTotal_ = 0;
 uint8_t command_[CMD_MAX_LEN] = {0};
 
 /**
- *
+ * Reads if there is any awaiting command in the UART DEBUG buffer.
+ * If so, processes it and acts accordingly.
  */
 int8_t terminal_readAndProcessCommands(void)
 {
@@ -171,7 +195,7 @@ int8_t terminal_readAndProcessCommands(void)
         else if (strcmp("uptime", (char *)command_) == 0)
         {
             uint32_t uptime = seconds_uptime();
-            sprintf(strToPrint_, "Uptime is %lds\r\n", uptime);
+            sprintf(strToPrint_, "Uptime is %ld s\r\n", uptime);
             uart_print(UART_DEBUG, strToPrint_);
         }
         else if (strcmp("unixtime", (char *)command_) == 0)
@@ -240,125 +264,134 @@ int8_t terminal_readAndProcessCommands(void)
             }
             uart_print(UART_DEBUG, strToPrint_);
         }
-        else if (strcmp("i2c_rtc", (char *)command_) == 0)
+        // This is an I2C command
+        else if(strncmp("i2c", (char *) command_, 3) == 0)
         {
-            struct RTCDateTime dateTime;
-            i2c_RTC_getClockData(&dateTime);
-            sprintf(strToPrint_, "Date from i2c RTC is: 20%.2d/%.2d/%.2d %.2d:%.2d:%.2d\r\n",
-                    dateTime.year,
-                    dateTime.month,
-                    dateTime.date,
-                    dateTime.hours,
-                    dateTime.minutes,
-                    dateTime.seconds);
-            uart_print(UART_DEBUG, strToPrint_);
-        }
-
-        else if (strcmp("temperature", (char *)command_) == 0)
-        {
-            int16_t temperatures[6];
-            i2c_TMP75_getTemperatures(temperatures);
-            sprintf(strToPrint_, "%d\r\n", temperatures[0]);
-            uart_print(UART_DEBUG, strToPrint_);
-        }
-        /*else if (strcmp("pressure", command) == 0)
-        {
-            int32_t pressure;
-            i2c_MS5611_getPressure(&pressure);
-            sprintf(strToPrint, "%ld\r\n", pressure);
-            uart_print(UART_DEBUG, strToPrint);
-        }
-        else if (strcmp("altitude", command) == 0)
-        {
-            int32_t pressure;
-            int32_t altitude;
-            i2c_MS5611_getPressure(&pressure);
-            i2c_MS5611_getAltitude(&pressure, &altitude);
-            sprintf(strToPrint, "%ld\r\n", altitude);
-            uart_print(UART_DEBUG, strToPrint);
-        }*/
-        else if (strcmp("i2c_baro", (char *)command_) == 0)
-        {
-            int32_t pressure, altitude;
-            int8_t error = i2c_MS5611_getPressure(&pressure);
-            if(error != 0)
-                sprintf(strToPrint_, "I2C BARO: Error code %d!\r\n", error);
-            else
+            char subcommand[CMD_MAX_LEN] = {0};
+            uint8_t i;
+            for (i = 4; i < CMD_MAX_LEN; i++)
             {
-                i2c_MS5611_getAltitude(&pressure, &altitude);
-                sprintf(strToPrint_, "I2C BARO: Pressure: %.2f mbar, Altitude: %.2f m\r\n",
-                        ((float)pressure/100.0),
-                        ((float)altitude/100.0));
+                subcommand[i-4] = command_[i];
+                if(command_[i] == '\0')
+                    break;  //end of command detected
+            }
+
+            if (strcmp("rtc", (char *) subcommand) == 0)
+            {
+                struct RTCDateTime dateTime;
+                uint8_t error = i2c_RTC_getClockData(&dateTime);
+
+                if (error != 0)
+                    sprintf(strToPrint_, "I2C RTC: Error code %d!\r\n", error);
+                else
+                {
+                    sprintf(strToPrint_, "Date from I2C RTC is: 20%.2d/%.2d/%.2d %.2d:%.2d:%.2d\r\n",
+                            dateTime.year,
+                            dateTime.month,
+                            dateTime.date,
+                            dateTime.hours,
+                            dateTime.minutes,
+                            dateTime.seconds);
+                }
 
             }
-            uart_print(UART_DEBUG, strToPrint_);
-        }
-        /*else if (strcmp("voltage", command) == 0)
-        {
-            struct INAData inaData;
-            i2c_INA_read(&inaData);
-            sprintf(strToPrint, "%d\r\n", inaData.voltage);
-            uart_print(UART_DEBUG, strToPrint);
-        }
-        else if (strcmp("current", command) == 0)
-        {
-            struct INAData inaData;
-            i2c_INA_read(&inaData);
-            sprintf(strToPrint, "%d\r\n", inaData.current);
-            uart_print(UART_DEBUG, strToPrint);
-        }*/
-        else if (strcmp("i2c_ina", (char *)command_) == 0)
-        {
-            struct INAData inaData;
-            int8_t error = i2c_INA_read(&inaData);
-            if(error != 0)
-                sprintf(strToPrint_, "I2C INA: Error code %d!\r\n", error);
+            else if (strcmp("temp", (char*) subcommand) == 0)
+            {
+                int16_t temperatures[6];
+                uint8_t error = i2c_TMP75_getTemperatures(temperatures);
+
+                if (error != 0)
+                    sprintf(strToPrint_, "I2C TEMP: Error code %d!\r\n", error);
+                else
+                    sprintf(strToPrint_, "Temperature: %d\r\n", temperatures[0]);
+            }
+            else if (strcmp("baro", (char *) subcommand) == 0)
+            {
+                int32_t pressure, altitude;
+                int8_t error = i2c_MS5611_getPressure(&pressure);
+                if(error != 0)
+                    sprintf(strToPrint_, "I2C BARO: Error code %d!\r\n", error);
+                else
+                {
+                    i2c_MS5611_getAltitude(&pressure, &altitude);
+                    sprintf(strToPrint_, "I2C BARO: Pressure: %.2f mbar, Altitude: %.2f m\r\n",
+                            ((float)pressure/100.0),
+                            ((float)altitude/100.0));
+
+                }
+            }
+            else if (strcmp("ina", (char *) subcommand) == 0)
+            {
+                struct INAData inaData;
+                int8_t error = i2c_INA_read(&inaData);
+                if(error != 0)
+                    sprintf(strToPrint_, "I2C INA: Error code %d!\r\n", error);
+                else
+                    sprintf(strToPrint_, "I2C INA: %fV, %dmA\r\n",
+                            ((float)inaData.voltage/10.0),
+                            inaData.current);
+            }
             else
-                sprintf(strToPrint_, "I2C INA: %fV, %dmA\r\n",
-                        ((float)inaData.voltage/10.0),
-                        inaData.current);
+            {
+                sprintf(strToPrint_, "Device or sensor %s not recognised in I2C devices list.\r\n", subcommand);
+            }
 
             uart_print(UART_DEBUG, strToPrint_);
         }
-        else if (strcmp("tm_nor", (char *)command_) == 0)
+        // This is a telemetry command
+        else if (strncmp("tm", (char *)command_, 2) == 0)
         {
             struct TelemetryLine tmLines[2];
             returnCurrentTMLines(tmLines);
 
-            sprintf(strToPrint_, "Unix Time: %ld\r\n", tmLines[0].unixTime);
-            uart_print(UART_DEBUG, strToPrint_);
-            sprintf(strToPrint_, "Up Time: %ld\r\n", tmLines[0].upTime);
-            uart_print(UART_DEBUG, strToPrint_);
-            sprintf(strToPrint_, "Pressure: %ld\r\n", tmLines[0].pressure);
-            uart_print(UART_DEBUG, strToPrint_);
-            sprintf(strToPrint_, "Altitude: %ld\r\n", tmLines[0].altitude);
-            uart_print(UART_DEBUG, strToPrint_);
-            sprintf(strToPrint_, "Vertical Speed AVG: %d\r\n", tmLines[0].verticalSpeed[0]);
-            uart_print(UART_DEBUG, strToPrint_);
-            sprintf(strToPrint_, "Vertical Speed MAX: %d\r\n", tmLines[0].verticalSpeed[1]);
-            uart_print(UART_DEBUG, strToPrint_);
-            sprintf(strToPrint_, "Vertical Speed MIN: %d\r\n", tmLines[0].verticalSpeed[2]);
-            uart_print(UART_DEBUG, strToPrint_);
-            sprintf(strToPrint_, "Temperature PCB: %d\r\n", tmLines[0].temperatures[0]);
-            uart_print(UART_DEBUG, strToPrint_);
-            sprintf(strToPrint_, "Voltage AVG: %d\r\n", tmLines[0].voltages[0]);
-            uart_print(UART_DEBUG, strToPrint_);
-            sprintf(strToPrint_, "Voltage MAX: %d\r\n", tmLines[0].voltages[1]);
-            uart_print(UART_DEBUG, strToPrint_);
-            sprintf(strToPrint_, "Voltage MIN: %d\r\n", tmLines[0].voltages[2]);
-            uart_print(UART_DEBUG, strToPrint_);
-            sprintf(strToPrint_, "Current AVG: %d\r\n", tmLines[0].currents[0]);
-            uart_print(UART_DEBUG, strToPrint_);
-            sprintf(strToPrint_, "Current MAX: %d\r\n", tmLines[0].currents[1]);
-            uart_print(UART_DEBUG, strToPrint_);
-            sprintf(strToPrint_, "Current MIN: %d\r\n", tmLines[0].currents[2]);
-            uart_print(UART_DEBUG, strToPrint_);
-        }
-        else if (strcmp("tm_fram", (char *)command_) == 0)
-        {
-            //TODO
-        }
+            char subcommand[CMD_MAX_LEN] = {0};
+            uint8_t i;
+            for (i = 3; i < CMD_MAX_LEN; i++)
+            {
+                subcommand[i-3] = command_[i];
+                if(command_[i] == '\0')
+                    break;  //end of command detected
+            }
 
+            struct TelemetryLine askedTMLine;
+            if (strcmp("nor", (char *)subcommand) == 0)
+            {
+                askedTMLine = tmLines[0];
+            }
+            else if (strcmp("nor", (char *)subcommand) == 0)
+            {
+                askedTMLine = tmLines[1];
+            }
+
+            sprintf(strToPrint_, "Unix Time: %ld\r\n", askedTMLine.unixTime);
+            uart_print(UART_DEBUG, strToPrint_);
+            sprintf(strToPrint_, "Up Time: %ld\r\n", askedTMLine.upTime);
+            uart_print(UART_DEBUG, strToPrint_);
+            sprintf(strToPrint_, "Pressure: %ld\r\n", askedTMLine.pressure);
+            uart_print(UART_DEBUG, strToPrint_);
+            sprintf(strToPrint_, "Altitude: %ld\r\n", askedTMLine.altitude);
+            uart_print(UART_DEBUG, strToPrint_);
+            sprintf(strToPrint_, "Vertical Speed AVG: %d\r\n", askedTMLine.verticalSpeed[0]);
+            uart_print(UART_DEBUG, strToPrint_);
+            sprintf(strToPrint_, "Vertical Speed MAX: %d\r\n", askedTMLine.verticalSpeed[1]);
+            uart_print(UART_DEBUG, strToPrint_);
+            sprintf(strToPrint_, "Vertical Speed MIN: %d\r\n", askedTMLine.verticalSpeed[2]);
+            uart_print(UART_DEBUG, strToPrint_);
+            sprintf(strToPrint_, "Temperature PCB: %d\r\n", askedTMLine.temperatures[0]);
+            uart_print(UART_DEBUG, strToPrint_);
+            sprintf(strToPrint_, "Voltage AVG: %d\r\n", askedTMLine.voltages[0]);
+            uart_print(UART_DEBUG, strToPrint_);
+            sprintf(strToPrint_, "Voltage MAX: %d\r\n", askedTMLine.voltages[1]);
+            uart_print(UART_DEBUG, strToPrint_);
+            sprintf(strToPrint_, "Voltage MIN: %d\r\n", askedTMLine.voltages[2]);
+            uart_print(UART_DEBUG, strToPrint_);
+            sprintf(strToPrint_, "Current AVG: %d\r\n", askedTMLine.currents[0]);
+            uart_print(UART_DEBUG, strToPrint_);
+            sprintf(strToPrint_, "Current MAX: %d\r\n", askedTMLine.currents[1]);
+            uart_print(UART_DEBUG, strToPrint_);
+            sprintf(strToPrint_, "Current MIN: %d\r\n", askedTMLine.currents[2]);
+            uart_print(UART_DEBUG, strToPrint_);
+        }
         // This is a camera control command
         else if (strncmp("camera", (char *)command_, 6) == 0)
         {

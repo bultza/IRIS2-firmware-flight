@@ -320,7 +320,7 @@ int8_t saveEvent(struct EventLine newEvent)
     addEventFRAM(newEvent, &confRegister_.fram_eventAddress);
 
     //Now save on the NOR that it is a little bit slower
-    addEventNOR(newEvent, &confRegister_.nor_eventAddress);
+    addEventNOR(&newEvent, &confRegister_.nor_eventAddress);
 
     return 0;
 }
@@ -355,7 +355,7 @@ int8_t saveTelemetry()
     if(lastTimeTelemetrySavedNOR_ + confRegister_.nor_tlmSavePeriod < elapsedSeconds)
     {
         //Time to save
-        addTelemetryNOR(currentTelemetryLineFRAMandNOR_[1], &confRegister_.nor_telemetryAddress);
+        addTelemetryNOR(&currentTelemetryLineFRAMandNOR_[1], &confRegister_.nor_telemetryAddress);
         lastTimeTelemetrySavedNOR_ = elapsedSeconds;
 
         //Reset Telemetry Line
@@ -495,30 +495,15 @@ int8_t getTelemetryFRAM(uint16_t pointer, struct TelemetryLine *savedTelemetry)
 /**
  * It saves a new Event Line in the NOR memory.
  */
-int8_t addEventNOR(struct EventLine newEvent, uint32_t *address)
+int8_t addEventNOR(struct EventLine *newEvent, uint32_t *address)
 {
     //Sanity check:
     if(*address < NOR_EVENTS_ADDRESS)
         return -1;
 
-    uint32_t *norPointerWrite;
-    uint8_t *ramPointerRead;
+    int8_t error = spi_NOR_writeToAddress(*address, (uint8_t *) newEvent, sizeof(struct EventLine), CS_FLASH1);
 
-    norPointerWrite = (uint32_t *)*address;
-    ramPointerRead = (uint8_t *)&newEvent;
-
-    *address += sizeof(newEvent);
-
-    uint8_t i;
-    //Copy each byte to the NOR
-    for(i = 0; i < sizeof(newEvent); i++)
-    {
-        spi_NOR_writeToAddress(*norPointerWrite, ramPointerRead, 1, CS_FLASH1);
-        norPointerWrite++;
-        ramPointerRead++;
-    }
-
-    return 0;
+    return error;
 }
 
 /**
@@ -527,38 +512,23 @@ int8_t addEventNOR(struct EventLine newEvent, uint32_t *address)
 int8_t getEventNOR(uint32_t pointer, struct EventLine *savedEvent)
 {
     uint32_t address = NOR_EVENTS_ADDRESS + pointer * sizeof(struct EventLine);
-    spi_NOR_readFromAddress(address, (uint8_t *) savedEvent, sizeof(struct EventLine), CS_FLASH1);
+    int8_t error = spi_NOR_readFromAddress(address, (uint8_t *) savedEvent, sizeof(struct EventLine), CS_FLASH1);
 
-   return 0;
+    return error;
 }
 
 /**
  * It saves a new Telemetry Line in the NOR memory.
  */
-int8_t addTelemetryNOR(struct TelemetryLine newTelemetry, uint32_t *address)
+int8_t addTelemetryNOR(struct TelemetryLine *newTelemetry, uint32_t *address)
 {
     //Sanity check:
     if(*address >= NOR_EVENTS_ADDRESS)
         return -1;
 
-    uint32_t *norPointerWrite;
-    uint8_t *ramPointerRead;
+    int8_t error = spi_NOR_writeToAddress(*address, (uint8_t *) newTelemetry, sizeof(struct TelemetryLine), CS_FLASH1);
 
-    norPointerWrite = (uint32_t *)*address;
-    ramPointerRead = (uint8_t *)&newTelemetry;
-
-    *address += sizeof(newTelemetry);
-
-    uint8_t i;
-    //Copy each byte to the NOR
-    for(i = 0; i < sizeof(newTelemetry); i++)
-    {
-        spi_NOR_writeToAddress(*norPointerWrite, ramPointerRead, 1, CS_FLASH1);
-        norPointerWrite++;
-        ramPointerRead++;
-    }
-
-    return 0;
+    return error;
 }
 
 /**
@@ -567,8 +537,8 @@ int8_t addTelemetryNOR(struct TelemetryLine newTelemetry, uint32_t *address)
 int8_t getTelemetryNOR(uint32_t pointer, struct TelemetryLine *savedTelemetry)
 {
     uint32_t address = NOR_TLM_ADDRESS + pointer * sizeof(struct TelemetryLine);
-    spi_NOR_readFromAddress(address, (uint8_t *) savedTelemetry, sizeof(struct TelemetryLine), CS_FLASH1);
+    int8_t error = spi_NOR_readFromAddress(address, (uint8_t *) savedTelemetry, sizeof(struct TelemetryLine), CS_FLASH1);
 
-   return 0;
+    return error;
 }
 
