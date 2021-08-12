@@ -6,6 +6,8 @@
 
 #include "datalogger.h"
 
+// GLOBAL VARIABLES
+
 // When was the last time each sensor was monitored?
 uint64_t lastTime_baroRead_ = 0;
 uint64_t lastTime_inaRead_ = 0;
@@ -29,11 +31,11 @@ struct AltitudesHistory
     uint32_t altitude;
 };
 
-const uint8_t MAX_HIST_SAVE = 10;
-struct AltitudesHistory altitudeHistory_[MAX_HIST_SAVE];
+const uint8_t maxHistSave_ = 10;
+struct AltitudesHistory altitudeHistory_[maxHistSave_];
 uint8_t altitudeHistoryIndex_ = 0;
 
-// Private functions
+// PRIVATE FUNCTIONS
 void addTimeAndStateMark();
 
 /**
@@ -57,6 +59,7 @@ void addTimeAndStateMark()
     currentTelemetryLineFRAMandNOR_[1].sub_state = confRegister_.flightSubState;
 }
 
+// PUBLIC FUNCTIONS
 
 /**
  * Checks if it is time to read the sensors and saves them into memory
@@ -79,7 +82,7 @@ void sensors_read()
         i2c_MS5611_getAltitude(&pressure, &altitude);
 
         //Save historic altitude data
-        if (altitudeHistoryIndex_ < MAX_HIST_SAVE)
+        if (altitudeHistoryIndex_ < maxHistSave_)
         {
             altitudeHistory_[altitudeHistoryIndex_].time = uptime;
             altitudeHistory_[altitudeHistoryIndex_].altitude = altitude;
@@ -88,12 +91,12 @@ void sensors_read()
         else
         {
             uint8_t i;
-            for (i = 0; i < MAX_HIST_SAVE-1; i++)
+            for (i = 0; i < maxHistSave_-1; i++)
             {
                 altitudeHistory_[i] = altitudeHistory_[i+1];
             }
-            altitudeHistory_[MAX_HIST_SAVE-1].time = uptime;
-            altitudeHistory_[MAX_HIST_SAVE-1].altitude = altitude;
+            altitudeHistory_[maxHistSave_-1].time = uptime;
+            altitudeHistory_[maxHistSave_-1].altitude = altitude;
         }
 
         uint8_t i;
@@ -301,9 +304,10 @@ void sensors_read()
     }
 }
 
-int8_t returnCurrentTMLines(struct TelemetryLine *tmLines)
+int8_t returnCurrentTMLines(struct TelemetryLine tmLines[2])
 {
-    tmLines = currentTelemetryLineFRAMandNOR_;
+    tmLines[0] = currentTelemetryLineFRAMandNOR_[0];
+    tmLines[1] = currentTelemetryLineFRAMandNOR_[1];
     return 0;
 }
 
@@ -340,7 +344,7 @@ int8_t saveTelemetry()
         lastTimeTelemetrySavedFRAM_ = elapsedSeconds;
 
         //Reset Telemetry Line
-        struct TelemetryLine newVoidTMLine;
+        struct TelemetryLine newVoidTMLine = {0};
         currentTelemetryLineFRAMandNOR_[0] = newVoidTMLine;
         numTimes_baroRead_[0] = 0;
         numTimes_inaRead_[0] = 0;
@@ -355,7 +359,7 @@ int8_t saveTelemetry()
         lastTimeTelemetrySavedNOR_ = elapsedSeconds;
 
         //Reset Telemetry Line
-        struct TelemetryLine newVoidTMLine;
+        struct TelemetryLine newVoidTMLine = {0};
         currentTelemetryLineFRAMandNOR_[1] = newVoidTMLine;
         numTimes_baroRead_[1] = 0;
         numTimes_inaRead_[1] = 0;
@@ -497,10 +501,10 @@ int8_t addEventNOR(struct EventLine newEvent, uint32_t *address)
     if(*address < NOR_EVENTS_ADDRESS)
         return -1;
 
-    volatile uint8_t *norPointerWrite;
-    volatile uint8_t *ramPointerRead;
+    uint32_t *norPointerWrite;
+    uint8_t *ramPointerRead;
 
-    norPointerWrite = (uint8_t *)*address;
+    norPointerWrite = (uint32_t *)*address;
     ramPointerRead = (uint8_t *)&newEvent;
 
     *address += sizeof(newEvent);
@@ -509,7 +513,7 @@ int8_t addEventNOR(struct EventLine newEvent, uint32_t *address)
     //Copy each byte to the NOR
     for(i = 0; i < sizeof(newEvent); i++)
     {
-        spi_NOR_writeToAddress(norPointerWrite, ramPointerRead, 1, CS_FLASH1);
+        spi_NOR_writeToAddress(*norPointerWrite, ramPointerRead, 1, CS_FLASH1);
         norPointerWrite++;
         ramPointerRead++;
     }
@@ -523,7 +527,7 @@ int8_t addEventNOR(struct EventLine newEvent, uint32_t *address)
 int8_t getEventNOR(uint32_t pointer, struct EventLine *savedEvent)
 {
     uint32_t address = NOR_EVENTS_ADDRESS + pointer * sizeof(struct EventLine);
-    spi_NOR_readFromAddress(address, savedEvent, sizeof(struct EventLine), CS_FLASH1);
+    spi_NOR_readFromAddress(address, (uint8_t *) savedEvent, sizeof(struct EventLine), CS_FLASH1);
 
    return 0;
 }
@@ -537,10 +541,10 @@ int8_t addTelemetryNOR(struct TelemetryLine newTelemetry, uint32_t *address)
     if(*address >= NOR_EVENTS_ADDRESS)
         return -1;
 
-    volatile uint8_t *norPointerWrite;
-    volatile uint8_t *ramPointerRead;
+    uint32_t *norPointerWrite;
+    uint8_t *ramPointerRead;
 
-    norPointerWrite = (uint8_t *)*address;
+    norPointerWrite = (uint32_t *)*address;
     ramPointerRead = (uint8_t *)&newTelemetry;
 
     *address += sizeof(newTelemetry);
@@ -549,7 +553,7 @@ int8_t addTelemetryNOR(struct TelemetryLine newTelemetry, uint32_t *address)
     //Copy each byte to the NOR
     for(i = 0; i < sizeof(newTelemetry); i++)
     {
-        spi_NOR_writeToAddress(norPointerWrite, ramPointerRead, 1, CS_FLASH1);
+        spi_NOR_writeToAddress(*norPointerWrite, ramPointerRead, 1, CS_FLASH1);
         norPointerWrite++;
         ramPointerRead++;
     }
@@ -563,7 +567,7 @@ int8_t addTelemetryNOR(struct TelemetryLine newTelemetry, uint32_t *address)
 int8_t getTelemetryNOR(uint32_t pointer, struct TelemetryLine *savedTelemetry)
 {
     uint32_t address = NOR_TLM_ADDRESS + pointer * sizeof(struct TelemetryLine);
-    spi_NOR_readFromAddress(address, savedTelemetry, sizeof(struct TelemetryLine), CS_FLASH1);
+    spi_NOR_readFromAddress(address, (uint8_t *) savedTelemetry, sizeof(struct TelemetryLine), CS_FLASH1);
 
    return 0;
 }

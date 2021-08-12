@@ -79,9 +79,9 @@ int8_t terminal_start(void)
     return 0;
 }
 
-uint8_t bufferSizeNow = 0;
-uint8_t bufferSizeTotal = 0;
-uint8_t command[CMD_MAX_LEN] = {0};
+uint8_t bufferSizeNow_ = 0;
+uint8_t bufferSizeTotal_ = 0;
+uint8_t command_[CMD_MAX_LEN] = {0};
 
 /**
  *
@@ -91,8 +91,8 @@ int8_t terminal_readAndProcessCommands(void)
     uint8_t commandArrived = 0;
 
     // If there is something in the buffer
-    bufferSizeNow = uart_available(UART_DEBUG);
-    if (bufferSizeNow > 0)
+    bufferSizeNow_ = uart_available(UART_DEBUG);
+    if (bufferSizeNow_ > 0)
     {
         // Let's retrieve char by char
         uint8_t charRead = uart_read(UART_DEBUG);
@@ -101,23 +101,23 @@ int8_t terminal_readAndProcessCommands(void)
         if ((uint8_t) charRead >= 32 && (uint8_t) charRead < 127)
         {
             // Build command
-            command[bufferSizeTotal] = charRead;
-            bufferSizeTotal++;
+            command_[bufferSizeTotal_] = charRead;
+            bufferSizeTotal_++;
             uart_write(UART_DEBUG, &charRead, 1); //print echo
         }
         else if(charRead == 0x08 || charRead == 127)   //Backspace!!
         {
             //Delete the last character
-            if(bufferSizeTotal != 0)
+            if(bufferSizeTotal_ != 0)
             {
-                bufferSizeTotal--;
+                bufferSizeTotal_--;
                 uart_write(UART_DEBUG, &charRead, 1); //print echo
             }
         }
         else if(charRead == '\n' || charRead == '\r')
         {
             commandArrived = 1;
-            command[bufferSizeTotal] = '\0';  //End of string
+            command_[bufferSizeTotal_] = '\0';  //End of string
             strToPrint_[0] = '\r';
             strToPrint_[1] = '\n';
             strToPrint_[2] = '\0';
@@ -126,10 +126,10 @@ int8_t terminal_readAndProcessCommands(void)
     }
 
     //detecting keystrokes from the arrows:
-    if(bufferSizeTotal >= 2 &&
-            command[bufferSizeTotal - 2] == '[')
+    if(bufferSizeTotal_ >= 2 &&
+            command_[bufferSizeTotal_ - 2] == '[')
     {
-        if(command[bufferSizeTotal - 1] == 'A')
+        if(command_[bufferSizeTotal_ - 1] == 'A')
         {
             //Up!
             //Clean line:
@@ -143,8 +143,8 @@ int8_t terminal_readAndProcessCommands(void)
             //print last command:
             uart_print(UART_DEBUG, lastIssuedCommand_);
             //Copy the command:
-            strcpy((char *)command, lastIssuedCommand_);
-            bufferSizeTotal = strlen((char *)command);
+            strcpy((char *)command_, lastIssuedCommand_);
+            bufferSizeTotal_ = strlen((char *)command_);
         }
         //Ignore any others for the moment
     }
@@ -156,11 +156,11 @@ int8_t terminal_readAndProcessCommands(void)
         //uart_print(UART_DEBUG, strToPrint);
 
         // Interpret command
-        if (command[0] == 0)
+        if (command_[0] == 0)
         {
             //Empty command, nothing to do, print again the commandline
         }
-        else if (strcmp("reboot", (char *)command) == 0)
+        else if (strcmp("reboot", (char *)command_) == 0)
         {
             strcpy(strToPrint_, "System will reboot...\r\n");
             uart_print(UART_DEBUG, strToPrint_);
@@ -168,19 +168,19 @@ int8_t terminal_readAndProcessCommands(void)
             //Perform a PUC reboot
             WDTCTL = 0xDEAD;
         }
-        else if (strcmp("uptime", (char *)command) == 0)
+        else if (strcmp("uptime", (char *)command_) == 0)
         {
             uint32_t uptime = seconds_uptime();
             sprintf(strToPrint_, "Uptime is %lds\r\n", uptime);
             uart_print(UART_DEBUG, strToPrint_);
         }
-        else if (strcmp("unixtime", (char *)command) == 0)
+        else if (strcmp("unixtime", (char *)command_) == 0)
         {
             uint32_t unixtTimeNow = i2c_RTC_unixTime_now();
             sprintf(strToPrint_, "%ld\r\n", unixtTimeNow);
             uart_print(UART_DEBUG, strToPrint_);
         }
-        else if (strcmp("date", (char *)command) == 0)
+        else if (strcmp("date", (char *)command_) == 0)
         {
             uint32_t unixtTimeNow = i2c_RTC_unixTime_now();
             struct RTCDateTime dateTime;
@@ -194,15 +194,15 @@ int8_t terminal_readAndProcessCommands(void)
                     dateTime.seconds);
             uart_print(UART_DEBUG, strToPrint_);
         }
-        else if (strncmp("date", (char *)command, 4) == 0)
+        else if (strncmp("date", (char *)command_, 4) == 0)
         {
             //date YYYY/MM/DD HH:mm:ss
-            if(strlen((char *)command) != 24
-                    || command[9] != '/'
-                    || command[12] != '/'
-                    || command[15] != ' '
-                    || command[18] != ':'
-                    || command[21] != ':')
+            if(strlen((char *)command_) != 24
+                    || command_[9] != '/'
+                    || command_[12] != '/'
+                    || command_[15] != ' '
+                    || command_[18] != ':'
+                    || command_[21] != ':')
             {
                 strcpy(strToPrint_, "Incorrect command, usage is: date YYYY/MM/DD HH:mm:ss\r\n");
             }
@@ -210,22 +210,22 @@ int8_t terminal_readAndProcessCommands(void)
             {
                 struct RTCDateTime dateTime;
                 uint8_t *pointer;
-                pointer = &command[7];
-                command[9] = '\0';     //End of word
-                command[12] = '\0';     //End of word
-                command[15] = '\0';     //End of word
-                command[18] = '\0';     //End of word
-                command[21] = '\0';     //End of word
+                pointer = &command_[7];
+                command_[9] = '\0';     //End of word
+                command_[12] = '\0';     //End of word
+                command_[15] = '\0';     //End of word
+                command_[18] = '\0';     //End of word
+                command_[21] = '\0';     //End of word
                 dateTime.year = atoi((char *)pointer);
-                pointer = &command[10];
+                pointer = &command_[10];
                 dateTime.month = atoi((char *)pointer);
-                pointer = &command[13];
+                pointer = &command_[13];
                 dateTime.date = atoi((char *)pointer);
-                pointer = &command[16];
+                pointer = &command_[16];
                 dateTime.hours = atoi((char *)pointer);
-                pointer = &command[19];
+                pointer = &command_[19];
                 dateTime.minutes = atoi((char *)pointer);
-                pointer = &command[22];
+                pointer = &command_[22];
                 dateTime.seconds = atoi((char *)pointer);
                 uint32_t unixTime = convert_to_unixTime(dateTime);
                 i2c_RTC_set_unixTime(unixTime);
@@ -240,7 +240,7 @@ int8_t terminal_readAndProcessCommands(void)
             }
             uart_print(UART_DEBUG, strToPrint_);
         }
-        else if (strcmp("i2c_rtc", (char *)command) == 0)
+        else if (strcmp("i2c_rtc", (char *)command_) == 0)
         {
             struct RTCDateTime dateTime;
             i2c_RTC_getClockData(&dateTime);
@@ -254,7 +254,7 @@ int8_t terminal_readAndProcessCommands(void)
             uart_print(UART_DEBUG, strToPrint_);
         }
 
-        else if (strcmp("temperature", (char *)command) == 0)
+        else if (strcmp("temperature", (char *)command_) == 0)
         {
             int16_t temperatures[6];
             i2c_TMP75_getTemperatures(temperatures);
@@ -277,7 +277,7 @@ int8_t terminal_readAndProcessCommands(void)
             sprintf(strToPrint, "%ld\r\n", altitude);
             uart_print(UART_DEBUG, strToPrint);
         }*/
-        else if (strcmp("i2c_baro", (char *)command) == 0)
+        else if (strcmp("i2c_baro", (char *)command_) == 0)
         {
             int32_t pressure, altitude;
             int8_t error = i2c_MS5611_getPressure(&pressure);
@@ -307,7 +307,7 @@ int8_t terminal_readAndProcessCommands(void)
             sprintf(strToPrint, "%d\r\n", inaData.current);
             uart_print(UART_DEBUG, strToPrint);
         }*/
-        else if (strcmp("i2c_ina", (char *)command) == 0)
+        else if (strcmp("i2c_ina", (char *)command_) == 0)
         {
             struct INAData inaData;
             int8_t error = i2c_INA_read(&inaData);
@@ -320,9 +320,9 @@ int8_t terminal_readAndProcessCommands(void)
 
             uart_print(UART_DEBUG, strToPrint_);
         }
-        else if (strcmp("tm_nor", (char *)command) == 0)
+        else if (strcmp("tm_nor", (char *)command_) == 0)
         {
-            struct TelemetryLine *tmLines;
+            struct TelemetryLine tmLines[2];
             returnCurrentTMLines(tmLines);
 
             sprintf(strToPrint_, "Unix Time: %ld\r\n", tmLines[0].unixTime);
@@ -354,17 +354,17 @@ int8_t terminal_readAndProcessCommands(void)
             sprintf(strToPrint_, "Current MIN: %d\r\n", tmLines[0].currents[2]);
             uart_print(UART_DEBUG, strToPrint_);
         }
-        else if (strcmp("tm_fram", (char *)command) == 0)
+        else if (strcmp("tm_fram", (char *)command_) == 0)
         {
             //TODO
         }
 
         // This is a camera control command
-        else if (strncmp("camera", (char *)command, 6) == 0)
+        else if (strncmp("camera", (char *)command_, 6) == 0)
         {
             // Process the selected camera
             uint8_t selectedCamera;
-            switch (command[7])
+            switch (command_[7])
             {
                 case '1':
                     selectedCamera = CAMERA01;
@@ -394,30 +394,30 @@ int8_t terminal_readAndProcessCommands(void)
             uint8_t i;
             for (i = 9; i < CMD_MAX_LEN; i++)
             {
-                subcommand[i-9] = command[i];
-                if(command[i] == '\0')
+                subcommand[i-9] = command_[i];
+                if(command_[i] == '\0')
                     break;  //end of command detected
             }
 
             if (strcmp("on", subcommand) == 0)
             {
                 gopros_cameraRawPowerOn(selectedCamera);
-                sprintf(strToPrint_, "Camera %c booting...\r\n", command[7]);
+                sprintf(strToPrint_, "Camera %c booting...\r\n", command_[7]);
             }
             else if (strcmp("pic", subcommand) == 0)
             {
                 gopros_cameraRawTakePicture(selectedCamera);
-                sprintf(strToPrint_, "Camera %c took a picture.\r\n", command[7]);
+                sprintf(strToPrint_, "Camera %c took a picture.\r\n", command_[7]);
             }
             else if (strcmp("video_start", subcommand) == 0)
             {
                 gopros_cameraRawStartRecordingVideo(selectedCamera);
-                sprintf(strToPrint_, "Camera %c started recording video.\r\n", command[7]);
+                sprintf(strToPrint_, "Camera %c started recording video.\r\n", command_[7]);
             }
             else if (strcmp("video_end", subcommand) == 0)
             {
                 gopros_cameraRawStopRecordingVideo(selectedCamera);
-                sprintf(strToPrint_, "Camera %c stopped recording video.\r\n", command[7]);
+                sprintf(strToPrint_, "Camera %c stopped recording video.\r\n", command_[7]);
             }
             else if (strncmp("send_cmd", subcommand, 8) == 0)
             {
@@ -439,29 +439,29 @@ int8_t terminal_readAndProcessCommands(void)
                 }
 
                 gopros_cameraRawSendCommand(selectedCamera, goProCommand);
-                sprintf(strToPrint_, "Command %s sent to camera %c.\r\n", goProCommandNEOL, command[7]);
+                sprintf(strToPrint_, "Command %s sent to camera %c.\r\n", goProCommandNEOL, command_[7]);
             }
             else if (strcmp("off", subcommand) == 0)
             {
                 gopros_cameraRawSafePowerOff(selectedCamera);
-                sprintf(strToPrint_, "Camera %c powered off.\r\n", command[7]);
+                sprintf(strToPrint_, "Camera %c powered off.\r\n", command_[7]);
             }
             else
                 sprintf(strToPrint_, "Camera subcommand %s not recognised...\r\n", subcommand);
 
             uart_print(UART_DEBUG, strToPrint_);
         }
-        else if (strcmp("terminal count", (char *)command) == 0)
+        else if (strcmp("terminal count", (char *)command_) == 0)
         {
             sprintf(strToPrint_, "%d commands issued in this session.\r\n", numIssuedCommands_);
             uart_print(UART_DEBUG, strToPrint_);
         }
-        else if (strcmp("terminal last", (char *)command) == 0)
+        else if (strcmp("terminal last", (char *)command_) == 0)
         {
             sprintf(strToPrint_, "Last issued command: %s\r\n", lastIssuedCommand_);
             uart_print(UART_DEBUG, strToPrint_);
         }
-        else if (strcmp("terminal end", (char *)command) == 0)
+        else if (strcmp("terminal end", (char *)command_) == 0)
         {
             beginFlag_ = 0;
             numIssuedCommands_ = 0;
@@ -475,7 +475,7 @@ int8_t terminal_readAndProcessCommands(void)
         }
         else
         {
-            sprintf(strToPrint_, "Command %s is not recognised.\r\n", (char *)command);
+            sprintf(strToPrint_, "Command %s is not recognised.\r\n", (char *)command_);
             uart_print(UART_DEBUG, strToPrint_);
         }
 
@@ -487,23 +487,23 @@ int8_t terminal_readAndProcessCommands(void)
             uint8_t i;
             for (i = 0; i < CMD_MAX_LEN; i++)
             {
-                lastIssuedCommand_[i] = command[i];
+                lastIssuedCommand_[i] = command_[i];
             }
         }
-        bufferSizeNow = 0;
-        bufferSizeTotal = 0;
+        bufferSizeNow_ = 0;
+        bufferSizeTotal_ = 0;
     }
     else if(commandArrived && beginFlag_ == 0)
     {
-        if(strcmp("terminal begin", (char *)command) == 0)
+        if(strcmp("terminal begin", (char *)command_) == 0)
             terminal_start();
         else
         {
             strcpy(strToPrint_, "Incorrect password...\r\n");
             uart_print(UART_DEBUG, strToPrint_);
         }
-        bufferSizeNow = 0;
-        bufferSizeTotal = 0;
+        bufferSizeNow_ = 0;
+        bufferSizeTotal_ = 0;
     }
 
     return 0;
