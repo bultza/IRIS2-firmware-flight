@@ -57,7 +57,9 @@ These are the currently implemented commands:
 |`unixtime`     |It returns the current unixtime  |
 |`date`         |It returns the current system date|
 |`date YYYY/MM/DD HH:mm:ss` |It sets the system date|
-|`RTCdate`      |It returns the current RTC date on the external RTC|
+|`i2c_rtc`      |It returns the current RTC date on the external RTC|
+|`i2c_baro`     |It returns the current barometric pressure and calculated Altitude|
+|`i2c_ina`      |It returns the current Voltage and Current input power values|
 |`camera x on`  |It switches on the X camera|
 |`camera x pic` |It takes a picture with the X camera|
 |`camera x video_start` |It makes a video on the X camera|
