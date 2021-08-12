@@ -221,7 +221,7 @@ int main(void)
 	init_board();
 
 	//Print reboot message on UART debug
-	uart_print(UART_DEBUG, "IRIS2 is booting up...\r\n");
+	uart_print(UART_DEBUG, "\r\nIRIS2 is booting up...\r\n");
 
 	///////////////////////////////////////////////////////////////////////////
 	//DEBUG, KEEP THIS COMMENTED ON FLIGHT
