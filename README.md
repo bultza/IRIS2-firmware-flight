@@ -32,11 +32,39 @@ Some of the files that you MUST read before trying to program the MCU:
 <img src="docs/IRIS2_CPU.png" alt="IRIS2 CPU Block Diagram" width="70%"/>
 </div>
 
-## Command line instructions
-TBC
+## Command line Interface
+In order to interface with IRIS, a TTY interface is provided. 
 
-## Command line examples
-TBC
+### Command line Configuration
+To access to the TTY from Windows we recommend using the program PuTTY that can be downloaded from here https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html
+The configuration parameters should be as follows:
+* Connection type: `Serial`
+* Serial line: `COMx` (where "x" is the COM number in your computer that you can find in the "device manager")
+* Speed: `115200`
+
+After opening the TTY session, the following must be typed: 
+```
+terminal begin
+```
+
+### Command line commands
+These are the currently implemented commands:
+
+|Command      | Comment     |
+|-------------|-------------|
+|`reboot`       |It performs a PUC reboot of the MCU|
+|`uptime`       |It returns the up time in seconds|
+|`unixtime`     |It returns the current unixtime  |
+|`date`         |It returns the current system date|
+|`date YYYY/MM/DD HH:mm:ss` |It sets the system date|
+|`RTCdate`      |It returns the current RTC date on the external RTC|
+|`camera x on`  |It switches on the X camera|
+|`camera x pic` |It takes a picture with the X camera|
+|`camera x video_start` |It makes a video on the X camera|
+|`camera x video_end`   |It stops a video on the X camera|
+|`camera x off` |It switches off the X camera|
+
+
 
 ## Authors
 * Aitor Conde <aitorconde@gmail.com>
