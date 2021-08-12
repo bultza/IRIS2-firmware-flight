@@ -20,7 +20,7 @@
  *          Format for setting the date: YYYY/MM/DD HH:mm:ss
  * i2c rtc --> Returns actual date and time from RTC
  * ...Sensors:
- * i2c temp --> Returns temperature in hundredths of deg C.
+ * i2c temp --> Returns temperature in tenths of deg C.
  * i2c baro --> Returns atmospheric pressure in hundredths of mbar and altitude in cm
  * i2c ina --> Returns the INA voltage in hundredths of V and currents in mA
  * ...Telemetry:
@@ -56,25 +56,49 @@
 uint8_t beginFlag_ = 0;
 char strToPrint_[100];
 
-// Command buffer
+// Terminal session control data
 uint8_t numIssuedCommands_ = 0;
 char lastIssuedCommand_[CMD_MAX_LEN] = {0};
-
+char commandHistory_[CMD_MAX_SAVE][CMD_MAX_LEN] = {0};
+uint8_t cmdSelector_ = 0;
 
 // PRIVATE FUNCTIONS
-char extractSubcommand(uint8_t start, char * command);
+char subcommand_[CMD_MAX_LEN] = {0};
+void extractSubcommand(uint8_t start, char * command);
+void addCommandToHistory(char * command);
 
-char extractSubcommand(uint8_t start, char * command)
+void extractSubcommand(uint8_t start, char * command)
 {
-    char subcommand[CMD_MAX_LEN] = {0};
     uint8_t i;
+    for (i = 0; i < CMD_MAX_LEN; i++)
+        subcommand_[i] = 0;
+
     for (i = start; i < CMD_MAX_LEN; i++)
     {
-        subcommand[i-start] = command[i];
+        subcommand_[i-start] = command[i];
         if(command[i] == '\0')
             break;  //end of command detected
     }
-    return *subcommand;
+}
+
+void addCommandToHistory(char * command)
+{
+    if (numIssuedCommands_ < CMD_MAX_SAVE)
+    {
+        uint8_t i;
+        for (i = 0; i < CMD_MAX_LEN; i++)
+            commandHistory_[numIssuedCommands_][i] = command[i];
+    }
+    else
+    {
+        uint8_t i,j;
+        for (i = 0; i < CMD_MAX_SAVE-1; i++)
+            for (j = 0; j < CMD_MAX_LEN; j++)
+                commandHistory_[i][j] = commandHistory_[i+1][j];
+
+        for (i = 0; i < CMD_MAX_LEN; i++)
+            commandHistory_[CMD_MAX_SAVE-1][i] = command[i];
+    }
 }
 
 // PUBLIC FUNCTIONS
@@ -164,10 +188,35 @@ int8_t terminal_readAndProcessCommands(void)
             uart_print(UART_DEBUG, strToPrint_); //put cursor on start
             //print terminal:
             uart_print(UART_DEBUG,"IRIS:/# ");
-            //print last command:
-            uart_print(UART_DEBUG, lastIssuedCommand_);
+            //print selected command:
+            sprintf(strToPrint_, "%s", commandHistory_[cmdSelector_]);
+            uart_print(UART_DEBUG, strToPrint_);
             //Copy the command:
-            strcpy((char *)command_, lastIssuedCommand_);
+            strcpy((char *)command_, commandHistory_[cmdSelector_]);
+            bufferSizeTotal_ = strlen((char *)command_);
+
+            if (cmdSelector_ > 0)
+                cmdSelector_--;
+        }
+        else if(command_[bufferSizeTotal_ - 1] == 'B')
+        {
+            if (cmdSelector_ < numIssuedCommands_-1 && cmdSelector_ < CMD_MAX_SAVE-1)
+                cmdSelector_++;
+
+            //Down!
+            //Clean line:
+            strToPrint_[0] = '\r';
+            strToPrint_[1] = '\0';
+            uart_print(UART_DEBUG, strToPrint_); //put cursor on start
+            uart_print(UART_DEBUG, "                              "); //Clean
+            uart_print(UART_DEBUG, strToPrint_); //put cursor on start
+            //print terminal:
+            uart_print(UART_DEBUG,"IRIS:/# ");
+            //print selected command:
+            sprintf(strToPrint_, "%s", commandHistory_[cmdSelector_]);
+            uart_print(UART_DEBUG, strToPrint_);
+            //Copy the command:
+            strcpy((char *)command_, commandHistory_[cmdSelector_]);
             bufferSizeTotal_ = strlen((char *)command_);
         }
         //Ignore any others for the moment
@@ -176,9 +225,6 @@ int8_t terminal_readAndProcessCommands(void)
     // If a command arrived and was composed
     if (commandArrived && beginFlag_ == 1)
     {
-        //sprintf(strToPrint, "%s\r\n", command);
-        //uart_print(UART_DEBUG, strToPrint);
-
         // Interpret command
         if (command_[0] == 0)
         {
@@ -227,9 +273,7 @@ int8_t terminal_readAndProcessCommands(void)
                     || command_[15] != ' '
                     || command_[18] != ':'
                     || command_[21] != ':')
-            {
                 strcpy(strToPrint_, "Incorrect command, usage is: date YYYY/MM/DD HH:mm:ss\r\n");
-            }
             else
             {
                 struct RTCDateTime dateTime;
@@ -267,16 +311,10 @@ int8_t terminal_readAndProcessCommands(void)
         // This is an I2C command
         else if(strncmp("i2c", (char *) command_, 3) == 0)
         {
-            char subcommand[CMD_MAX_LEN] = {0};
-            uint8_t i;
-            for (i = 4; i < CMD_MAX_LEN; i++)
-            {
-                subcommand[i-4] = command_[i];
-                if(command_[i] == '\0')
-                    break;  //end of command detected
-            }
+            // Extract the subcommand from I2C command
+            extractSubcommand(4, (char *) command_);
 
-            if (strcmp("rtc", (char *) subcommand) == 0)
+            if (strcmp("rtc", (char *) subcommand_) == 0)
             {
                 struct RTCDateTime dateTime;
                 uint8_t error = i2c_RTC_getClockData(&dateTime);
@@ -284,7 +322,6 @@ int8_t terminal_readAndProcessCommands(void)
                 if (error != 0)
                     sprintf(strToPrint_, "I2C RTC: Error code %d!\r\n", error);
                 else
-                {
                     sprintf(strToPrint_, "Date from I2C RTC is: 20%.2d/%.2d/%.2d %.2d:%.2d:%.2d\r\n",
                             dateTime.year,
                             dateTime.month,
@@ -292,10 +329,8 @@ int8_t terminal_readAndProcessCommands(void)
                             dateTime.hours,
                             dateTime.minutes,
                             dateTime.seconds);
-                }
-
             }
-            else if (strcmp("temp", (char*) subcommand) == 0)
+            else if (strcmp("temp", (char*) subcommand_) == 0)
             {
                 int16_t temperatures[6];
                 uint8_t error = i2c_TMP75_getTemperatures(temperatures);
@@ -303,9 +338,9 @@ int8_t terminal_readAndProcessCommands(void)
                 if (error != 0)
                     sprintf(strToPrint_, "I2C TEMP: Error code %d!\r\n", error);
                 else
-                    sprintf(strToPrint_, "Temperature: %d\r\n", temperatures[0]);
+                    sprintf(strToPrint_, "I2C TEMP: %.2f deg C\r\n", temperatures[0]/10.0);
             }
-            else if (strcmp("baro", (char *) subcommand) == 0)
+            else if (strcmp("baro", (char *) subcommand_) == 0)
             {
                 int32_t pressure, altitude;
                 int8_t error = i2c_MS5611_getPressure(&pressure);
@@ -317,24 +352,21 @@ int8_t terminal_readAndProcessCommands(void)
                     sprintf(strToPrint_, "I2C BARO: Pressure: %.2f mbar, Altitude: %.2f m\r\n",
                             ((float)pressure/100.0),
                             ((float)altitude/100.0));
-
                 }
             }
-            else if (strcmp("ina", (char *) subcommand) == 0)
+            else if (strcmp("ina", (char *) subcommand_) == 0)
             {
                 struct INAData inaData;
                 int8_t error = i2c_INA_read(&inaData);
                 if(error != 0)
                     sprintf(strToPrint_, "I2C INA: Error code %d!\r\n", error);
                 else
-                    sprintf(strToPrint_, "I2C INA: %fV, %dmA\r\n",
-                            ((float)inaData.voltage/10.0),
+                    sprintf(strToPrint_, "I2C INA: %.2f V, %d mA\r\n",
+                            ((float)inaData.voltage/100.0),
                             inaData.current);
             }
             else
-            {
-                sprintf(strToPrint_, "Device or sensor %s not recognised in I2C devices list.\r\n", subcommand);
-            }
+                sprintf(strToPrint_, "Device or sensor %s not recognised in I2C devices list.\r\n", subcommand_);
 
             uart_print(UART_DEBUG, strToPrint_);
         }
@@ -344,53 +376,54 @@ int8_t terminal_readAndProcessCommands(void)
             struct TelemetryLine tmLines[2];
             returnCurrentTMLines(tmLines);
 
-            char subcommand[CMD_MAX_LEN] = {0};
-            uint8_t i;
-            for (i = 3; i < CMD_MAX_LEN; i++)
-            {
-                subcommand[i-3] = command_[i];
-                if(command_[i] == '\0')
-                    break;  //end of command detected
-            }
+            // Extract the subcommand from telemetry command
+            extractSubcommand(3, (char *) command_);
+
+            uint8_t printResults = 1;
 
             struct TelemetryLine askedTMLine;
-            if (strcmp("nor", (char *)subcommand) == 0)
-            {
+            if (strcmp("nor", (char *)subcommand_) == 0)
                 askedTMLine = tmLines[0];
-            }
-            else if (strcmp("nor", (char *)subcommand) == 0)
-            {
+            else if (strcmp("fram", (char *)subcommand_) == 0)
                 askedTMLine = tmLines[1];
+            else
+            {
+                printResults = 0;
+                sprintf(strToPrint_, "%s is an invalid memory for telemetry command.\r\n", subcommand_);
+                uart_print(UART_DEBUG, strToPrint_);
             }
 
-            sprintf(strToPrint_, "Unix Time: %ld\r\n", askedTMLine.unixTime);
-            uart_print(UART_DEBUG, strToPrint_);
-            sprintf(strToPrint_, "Up Time: %ld\r\n", askedTMLine.upTime);
-            uart_print(UART_DEBUG, strToPrint_);
-            sprintf(strToPrint_, "Pressure: %ld\r\n", askedTMLine.pressure);
-            uart_print(UART_DEBUG, strToPrint_);
-            sprintf(strToPrint_, "Altitude: %ld\r\n", askedTMLine.altitude);
-            uart_print(UART_DEBUG, strToPrint_);
-            sprintf(strToPrint_, "Vertical Speed AVG: %d\r\n", askedTMLine.verticalSpeed[0]);
-            uart_print(UART_DEBUG, strToPrint_);
-            sprintf(strToPrint_, "Vertical Speed MAX: %d\r\n", askedTMLine.verticalSpeed[1]);
-            uart_print(UART_DEBUG, strToPrint_);
-            sprintf(strToPrint_, "Vertical Speed MIN: %d\r\n", askedTMLine.verticalSpeed[2]);
-            uart_print(UART_DEBUG, strToPrint_);
-            sprintf(strToPrint_, "Temperature PCB: %d\r\n", askedTMLine.temperatures[0]);
-            uart_print(UART_DEBUG, strToPrint_);
-            sprintf(strToPrint_, "Voltage AVG: %d\r\n", askedTMLine.voltages[0]);
-            uart_print(UART_DEBUG, strToPrint_);
-            sprintf(strToPrint_, "Voltage MAX: %d\r\n", askedTMLine.voltages[1]);
-            uart_print(UART_DEBUG, strToPrint_);
-            sprintf(strToPrint_, "Voltage MIN: %d\r\n", askedTMLine.voltages[2]);
-            uart_print(UART_DEBUG, strToPrint_);
-            sprintf(strToPrint_, "Current AVG: %d\r\n", askedTMLine.currents[0]);
-            uart_print(UART_DEBUG, strToPrint_);
-            sprintf(strToPrint_, "Current MAX: %d\r\n", askedTMLine.currents[1]);
-            uart_print(UART_DEBUG, strToPrint_);
-            sprintf(strToPrint_, "Current MIN: %d\r\n", askedTMLine.currents[2]);
-            uart_print(UART_DEBUG, strToPrint_);
+            if (printResults)
+            {
+                sprintf(strToPrint_, "Unix Time: %ld\r\n", askedTMLine.unixTime);
+                uart_print(UART_DEBUG, strToPrint_);
+                sprintf(strToPrint_, "Up Time: %ld\r\n", askedTMLine.upTime);
+                uart_print(UART_DEBUG, strToPrint_);
+                sprintf(strToPrint_, "Pressure: %ld\r\n", askedTMLine.pressure);
+                uart_print(UART_DEBUG, strToPrint_);
+                sprintf(strToPrint_, "Altitude: %ld\r\n", askedTMLine.altitude);
+                uart_print(UART_DEBUG, strToPrint_);
+                sprintf(strToPrint_, "Vertical Speed AVG: %d\r\n", askedTMLine.verticalSpeed[0]);
+                uart_print(UART_DEBUG, strToPrint_);
+                sprintf(strToPrint_, "Vertical Speed MAX: %d\r\n", askedTMLine.verticalSpeed[1]);
+                uart_print(UART_DEBUG, strToPrint_);
+                sprintf(strToPrint_, "Vertical Speed MIN: %d\r\n", askedTMLine.verticalSpeed[2]);
+                uart_print(UART_DEBUG, strToPrint_);
+                sprintf(strToPrint_, "Temperature PCB: %d\r\n", askedTMLine.temperatures[0]);
+                uart_print(UART_DEBUG, strToPrint_);
+                sprintf(strToPrint_, "Voltage AVG: %d\r\n", askedTMLine.voltages[0]);
+                uart_print(UART_DEBUG, strToPrint_);
+                sprintf(strToPrint_, "Voltage MAX: %d\r\n", askedTMLine.voltages[1]);
+                uart_print(UART_DEBUG, strToPrint_);
+                sprintf(strToPrint_, "Voltage MIN: %d\r\n", askedTMLine.voltages[2]);
+                uart_print(UART_DEBUG, strToPrint_);
+                sprintf(strToPrint_, "Current AVG: %d\r\n", askedTMLine.currents[0]);
+                uart_print(UART_DEBUG, strToPrint_);
+                sprintf(strToPrint_, "Current MAX: %d\r\n", askedTMLine.currents[1]);
+                uart_print(UART_DEBUG, strToPrint_);
+                sprintf(strToPrint_, "Current MIN: %d\r\n", askedTMLine.currents[2]);
+                uart_print(UART_DEBUG, strToPrint_);
+            }
         }
         // This is a camera control command
         else if (strncmp("camera", (char *)command_, 6) == 0)
@@ -423,46 +456,39 @@ int8_t terminal_readAndProcessCommands(void)
             gopros_cameraInit(selectedCamera);
 
             // Extract the subcommand from camera control command
-            char subcommand[CMD_MAX_LEN] = {0};
-            uint8_t i;
-            for (i = 9; i < CMD_MAX_LEN; i++)
-            {
-                subcommand[i-9] = command_[i];
-                if(command_[i] == '\0')
-                    break;  //end of command detected
-            }
+            extractSubcommand(9, (char *) command_);
 
-            if (strcmp("on", subcommand) == 0)
+            if (strcmp("on", subcommand_) == 0)
             {
                 gopros_cameraRawPowerOn(selectedCamera);
                 sprintf(strToPrint_, "Camera %c booting...\r\n", command_[7]);
             }
-            else if (strcmp("pic", subcommand) == 0)
+            else if (strcmp("pic", subcommand_) == 0)
             {
                 gopros_cameraRawTakePicture(selectedCamera);
                 sprintf(strToPrint_, "Camera %c took a picture.\r\n", command_[7]);
             }
-            else if (strcmp("video_start", subcommand) == 0)
+            else if (strcmp("video_start", subcommand_) == 0)
             {
                 gopros_cameraRawStartRecordingVideo(selectedCamera);
                 sprintf(strToPrint_, "Camera %c started recording video.\r\n", command_[7]);
             }
-            else if (strcmp("video_end", subcommand) == 0)
+            else if (strcmp("video_end", subcommand_) == 0)
             {
                 gopros_cameraRawStopRecordingVideo(selectedCamera);
                 sprintf(strToPrint_, "Camera %c stopped recording video.\r\n", command_[7]);
             }
-            else if (strncmp("send_cmd", subcommand, 8) == 0)
+            else if (strncmp("send_cmd", subcommand_, 8) == 0)
             {
                 uint8_t i;
                 char goProCommand[CMD_MAX_LEN] = {0};
                 char goProCommandNEOL[CMD_MAX_LEN] = {0};
                 for (i = 9; i < CMD_MAX_LEN; i++)
                 {
-                    if (subcommand[i] != 0)
+                    if (subcommand_[i] != 0)
                     {
-                        goProCommandNEOL[i-9] = subcommand[i];
-                        goProCommand[i-9] = subcommand[i];
+                        goProCommandNEOL[i-9] = subcommand_[i];
+                        goProCommand[i-9] = subcommand_[i];
                     }
                     else
                     {
@@ -474,36 +500,44 @@ int8_t terminal_readAndProcessCommands(void)
                 gopros_cameraRawSendCommand(selectedCamera, goProCommand);
                 sprintf(strToPrint_, "Command %s sent to camera %c.\r\n", goProCommandNEOL, command_[7]);
             }
-            else if (strcmp("off", subcommand) == 0)
+            else if (strcmp("off", subcommand_) == 0)
             {
                 gopros_cameraRawSafePowerOff(selectedCamera);
                 sprintf(strToPrint_, "Camera %c powered off.\r\n", command_[7]);
             }
             else
-                sprintf(strToPrint_, "Camera subcommand %s not recognised...\r\n", subcommand);
+                sprintf(strToPrint_, "Camera subcommand %s not recognised...\r\n", subcommand_);
 
             uart_print(UART_DEBUG, strToPrint_);
         }
-        else if (strcmp("terminal count", (char *)command_) == 0)
+        else if (strncmp("terminal", (char *)command_, 8) == 0)
         {
-            sprintf(strToPrint_, "%d commands issued in this session.\r\n", numIssuedCommands_);
-            uart_print(UART_DEBUG, strToPrint_);
-        }
-        else if (strcmp("terminal last", (char *)command_) == 0)
-        {
-            sprintf(strToPrint_, "Last issued command: %s\r\n", lastIssuedCommand_);
-            uart_print(UART_DEBUG, strToPrint_);
-        }
-        else if (strcmp("terminal end", (char *)command_) == 0)
-        {
-            beginFlag_ = 0;
-            numIssuedCommands_ = 0;
-            uint8_t i;
-            for (i = 0; i < CMD_MAX_LEN; i++)
+            // Extract the subcommand from terminal command
+            extractSubcommand(9, (char *) command_);
+
+            if (strcmp("count", (char *)subcommand_) == 0)
+                sprintf(strToPrint_, "%d commands issued in this session.\r\n", numIssuedCommands_);
+            else if (strcmp("last", (char *)subcommand_) == 0)
+                sprintf(strToPrint_, "Last issued command: %s\r\n", lastIssuedCommand_);
+            else if (strcmp("end", (char *)subcommand_) == 0)
             {
-                lastIssuedCommand_[i] = 0;
+                beginFlag_ = 0;
+                numIssuedCommands_ = 0;
+                cmdSelector_ = 0;
+
+                uint8_t i,j;
+                for (i = 0; i < CMD_MAX_LEN; i++)
+                    lastIssuedCommand_[i] = 0;
+
+                for (i = 0; i < CMD_MAX_SAVE-1; i++)
+                    for (j = 0; j < CMD_MAX_LEN; j++)
+                        commandHistory_[i][j] = 0;
+
+                sprintf(strToPrint_, "Terminal session was ended by user.\r\n");
             }
-            sprintf(strToPrint_, "Terminal session was ended by user.\r\n");
+            else
+                sprintf(strToPrint_, "Terminal subcommand %s not recognised...\r\n", subcommand_);
+
             uart_print(UART_DEBUG, strToPrint_);
         }
         else
@@ -514,15 +548,21 @@ int8_t terminal_readAndProcessCommands(void)
 
         if (beginFlag_ != 0)
         {
-            uart_print(UART_DEBUG,"IRIS:/# ");
-            numIssuedCommands_++;
+            // Add command to CMD history
+            addCommandToHistory((char *) command_);
+            if (numIssuedCommands_ < CMD_MAX_SAVE)
+                cmdSelector_ = numIssuedCommands_;
+            else
+                cmdSelector_ = CMD_MAX_SAVE - 1;
 
+            numIssuedCommands_++;
             uint8_t i;
             for (i = 0; i < CMD_MAX_LEN; i++)
-            {
                 lastIssuedCommand_[i] = command_[i];
-            }
+
+            uart_print(UART_DEBUG,"IRIS:/# ");
         }
+
         bufferSizeNow_ = 0;
         bufferSizeTotal_ = 0;
     }
@@ -535,6 +575,7 @@ int8_t terminal_readAndProcessCommands(void)
             strcpy(strToPrint_, "Incorrect password...\r\n");
             uart_print(UART_DEBUG, strToPrint_);
         }
+
         bufferSizeNow_ = 0;
         bufferSizeTotal_ = 0;
     }

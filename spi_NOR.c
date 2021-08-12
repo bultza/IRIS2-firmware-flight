@@ -3,7 +3,6 @@
  * Proyecto Daedalus - 2021
  */
 
-
 #include "spi_NOR.h"
 
 // Private functions
@@ -120,6 +119,7 @@ int8_t spi_NOR_readFromAddress(uint32_t readAddress, uint8_t * buffer, uint8_t n
  * is reached, the subsequent write address is set to the beginning
  * of the page.
  */
+//TODO: Implement error detection and alert. (Finished Writing flag)
 int8_t spi_NOR_writeToAddress(uint32_t writeAddress, uint8_t * buffer, uint8_t numOfBytes, uint8_t deviceSelect)
 {
     // Check that no write operation is in progress

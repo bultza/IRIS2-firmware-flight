@@ -1,5 +1,9 @@
-#include "configuration.h"
+/*
+ * This file is part of the Supervisor on IRIS2 Flight Firmware
+ * Proyecto Daedalus - 2021
+ */
 
+#include "configuration.h"
 
 #pragma PERSISTENT (confRegister_)
 struct ConfigurationRegister confRegister_ = {0};
