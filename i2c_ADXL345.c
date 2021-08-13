@@ -8,6 +8,8 @@
 
 int8_t i2c_ADXL345_init(void)
 {
+    //TODO: Review code, implement interrupt signal wired on PCB.
+
     // Take accelerometer out of Sleep mode, start measuring
     uint8_t powerControl[2] = {ADXL345_REG_POWERCTL, ADXL345_INITIALIZE};
     // Set format of measurements: full resolution (13-bit), full resolution

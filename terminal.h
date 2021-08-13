@@ -14,6 +14,7 @@
 #include <stdlib.h>
 #include "uart.h"
 #include "clock.h"
+#include "configuration.h"
 #include "i2c_DS1338Z.h"
 #include "i2c_TMP75C.h"
 #include "i2c_MS5611.h"

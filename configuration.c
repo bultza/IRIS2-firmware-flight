@@ -33,6 +33,7 @@ void configuration_init(void)
         confRegister_.acc_readPeriod = ACC_READPERIOD;
         confRegister_.temp_readPeriod = TEMP_READPERIOD;
 
+        confRegister_.simulatorEnabled = 0;
         confRegister_.flightState = 0;
         confRegister_.flightSubState = 0;
 

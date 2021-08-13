@@ -13,6 +13,10 @@
  * terminal end --> Ends Terminal session
  * ...CPU:
  * reboot --> Reboots IRIS 2 CPU
+ * fsw mode --> Returns Flight Software (FSW) mode
+ *              0: flight mode / 1: simulation mode (simulator enabled)
+ * fsw state --> Returns FSW state
+ * fsw substate --> Returns FSW substate
  * ...Time:
  * uptime --> Returns elapsed seconds since boot
  * unixtime --> Returns actual UNIX time
@@ -33,6 +37,10 @@
  * camera x video_off --> Stops video recording with camera x
  * camera x send_cmd y --> Sends command y (do not include \n!!!) to camera x
  * camera x off --> Safely powers off camera x
+ * ...Memory:
+ * dump [tlm/events] [nor/fram] [hex/csv] --> Dump Telemetry Lines or Event Lines
+ *                                            from selected memory (NOR/FRAM) in
+ *                                            HEX or CSV format.
  */
 
 /*
@@ -46,8 +54,6 @@
  * Dump event lines.
  * Read a NOR address.
  * Read a FRAM address.
- * Return flight state.
- * Return flight substate.
  */
 
 
@@ -308,6 +314,23 @@ int8_t terminal_readAndProcessCommands(void)
             }
             uart_print(UART_DEBUG, strToPrint_);
         }
+        // This is an FSW command
+        else if (strncmp("fsw", (char *) command_, 3) == 0)
+        {
+            // Extract the subcommand from FSW command
+            extractSubcommand(4, (char *) command_);
+
+            if (strcmp("mode", (char *) subcommand_) == 0)
+                sprintf(strToPrint_, "FSW mode: %d\r\n", confRegister_.simulatorEnabled);
+            else if (strcmp("state", (char *) subcommand_) == 0)
+                sprintf(strToPrint_, "FSW state: %d\r\n", confRegister_.flightState);
+            else if (strcmp("substate", (char *) subcommand_) == 0)
+                sprintf(strToPrint_, "FSW substate: %d\r\n", confRegister_.flightSubState);
+            else
+                sprintf(strToPrint_, "FSW subcommand %s not recognised...\r\n", subcommand_);
+
+            uart_print(UART_DEBUG, strToPrint_);
+        }
         // This is an I2C command
         else if(strncmp("i2c", (char *) command_, 3) == 0)
         {
@@ -422,6 +445,10 @@ int8_t terminal_readAndProcessCommands(void)
                 sprintf(strToPrint_, "Current MAX: %d\r\n", askedTMLine.currents[1]);
                 uart_print(UART_DEBUG, strToPrint_);
                 sprintf(strToPrint_, "Current MIN: %d\r\n", askedTMLine.currents[2]);
+                uart_print(UART_DEBUG, strToPrint_);
+                sprintf(strToPrint_, "Flight state: %d\r\n", askedTMLine.state);
+                uart_print(UART_DEBUG, strToPrint_);
+                sprintf(strToPrint_, "Flight substate: %d\r\n", askedTMLine.sub_state);
                 uart_print(UART_DEBUG, strToPrint_);
             }
         }
@@ -539,6 +566,83 @@ int8_t terminal_readAndProcessCommands(void)
                 sprintf(strToPrint_, "Terminal subcommand %s not recognised...\r\n", subcommand_);
 
             uart_print(UART_DEBUG, strToPrint_);
+        }
+        // This is a memory dump command
+        else if (strncmp("dump", (char *)command_, 4) == 0)
+        {
+            extractSubcommand(5, (char *) command_);
+
+            uint8_t memoryToRead;
+            uint32_t startReadAddress;
+            uint32_t endReadAddress;
+
+            if (strncmp("tlm", (char *)subcommand_, 3) == 0)
+            {
+                extractSubcommand(4, (char *) command_);
+                if (strncmp("nor", (char *)subcommand_, 3) == 0)
+                {
+                    memoryToRead = MEMORY_NOR;
+                    startReadAddress = NOR_TLM_ADDRESS;
+                    endReadAddress = NOR_EVENTS_ADDRESS - 1;
+                    extractSubcommand(4, (char *) command_);
+                }
+                else if (strncmp("fram", (char *)subcommand_, 4) == 0)
+                {
+                    memoryToRead = MEMORY_FRAM;
+                    startReadAddress = FRAM_TLM_ADDRESS;
+                    endReadAddress = FRAM_TLM_ADDRESS + FRAM_TLM_SIZE;
+                    extractSubcommand(5, (char *) command_);
+                }
+            }
+            else if (strncmp("events", (char *)subcommand_, 6) == 0)
+            {
+                extractSubcommand(7, (char *) command_);
+                if (strncmp("nor", (char *)subcommand_, 3) == 0)
+                {
+                    memoryToRead = MEMORY_NOR;
+                    startReadAddress = NOR_EVENTS_ADDRESS;
+                    endReadAddress = NOR_LAST_ADDRESS;
+                    extractSubcommand(4, (char *) command_);
+                }
+                else if (strncmp("fram", (char *)subcommand_, 4) == 0)
+                {
+                    memoryToRead = MEMORY_FRAM;
+                    startReadAddress = FRAM_EVENTS_ADDRESS;
+                    endReadAddress = FRAM_EVENTS_ADDRESS + FRAM_EVENTS_SIZE;
+                    extractSubcommand(5, (char *) command_);
+                }
+            }
+
+            if (memoryToRead == MEMORY_NOR)
+            {
+                //TODO
+            }
+            else if (memoryToRead == MEMORY_FRAM)
+            {
+                //TODO: Test + implement CSV
+
+                // Read page by page
+                uint32_t pointer;
+                uint8_t buffer[NOR_BYTES_PAGE];
+
+                uint8_t i,j;
+                for (i = 0; i < NOR_NUM_PAGES; i++)
+                {
+                    pointer = startReadAddress + i * NOR_BYTES_PAGE;
+                    if (NOR_BYTES_PAGE < endReadAddress - pointer)
+                        spi_NOR_readFromAddress(pointer, buffer, NOR_BYTES_PAGE, CS_FLASH1);
+                    else
+                        spi_NOR_readFromAddress(pointer, buffer, endReadAddress - pointer, CS_FLASH1);
+
+                    for (j = 0; j < NOR_BYTES_PAGE; j++)
+                    {
+                        sprintf(strToPrint_, "%X ", buffer[j]);
+                        uart_print(UART_DEBUG, strToPrint_);
+                    }
+                    uart_print(UART_DEBUG, "\r\n"); // New page new line
+                }
+            }
+
         }
         else
         {

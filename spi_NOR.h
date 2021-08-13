@@ -32,7 +32,10 @@
 #define NOR_RDSR1 0x05  // Read Status Register 1
 
 // Constants
-#define NOR_BYTES_PAGE 512  //512 Bytes per page
+#define NOR_BYTES_PAGE 512          //512 Bytes per page
+#define NOR_BYTES_SECTOR 256000     //256 kB per sector
+#define NOR_NUM_SECTORS 256
+#define NOR_NUM_PAGES 128000
 
 // Structures
 struct RDIDInfo
@@ -50,8 +53,8 @@ struct RDIDInfo
 // Functions
 int8_t spi_NOR_init(uint8_t deviceSelect);
 int8_t spi_NOR_getRDID(struct RDIDInfo *idInformation, uint8_t deviceSelect);
-int8_t spi_NOR_readFromAddress(uint32_t readAddress, uint8_t * buffer, uint8_t numOfBytes, uint8_t deviceSelect);
-int8_t spi_NOR_writeToAddress(uint32_t writeAddress, uint8_t * buffer, uint8_t numOfBytes, uint8_t deviceSelect);
+int8_t spi_NOR_readFromAddress(uint32_t readAddress, uint8_t * buffer, uint16_t numOfBytes, uint8_t deviceSelect);
+int8_t spi_NOR_writeToAddress(uint32_t writeAddress, uint8_t * buffer, uint16_t numOfBytes, uint8_t deviceSelect);
 int8_t spi_NOR_eraseSector(uint32_t sectorAddress, uint8_t deviceSelect);
 int8_t spi_NOR_bulkErase(uint8_t deviceSelect);
 

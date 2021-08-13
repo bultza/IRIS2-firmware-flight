@@ -84,7 +84,7 @@ int8_t spi_NOR_getRDID(struct RDIDInfo *idInformation, uint8_t deviceSelect)
 /**
  * Read bytes from an address.
  */
-int8_t spi_NOR_readFromAddress(uint32_t readAddress, uint8_t * buffer, uint8_t numOfBytes, uint8_t deviceSelect)
+int8_t spi_NOR_readFromAddress(uint32_t readAddress, uint8_t * buffer, uint16_t numOfBytes, uint8_t deviceSelect)
 {
     // Check that no write operation is in progress
     while(NOR_checkWriteInProgress(deviceSelect));
@@ -120,7 +120,7 @@ int8_t spi_NOR_readFromAddress(uint32_t readAddress, uint8_t * buffer, uint8_t n
  * of the page.
  */
 //TODO: Implement error detection and alert. (Finished Writing flag)
-int8_t spi_NOR_writeToAddress(uint32_t writeAddress, uint8_t * buffer, uint8_t numOfBytes, uint8_t deviceSelect)
+int8_t spi_NOR_writeToAddress(uint32_t writeAddress, uint8_t * buffer, uint16_t numOfBytes, uint8_t deviceSelect)
 {
     // Check that no write operation is in progress
     while(NOR_checkWriteInProgress(deviceSelect));

@@ -18,9 +18,13 @@
 #include "i2c_DS1338Z.h"
 #include "spi_NOR.h"
 
+#define MEMORY_NOR  0
+#define MEMORY_FRAM 1
+
 #define TELEMETRYSAVEPERIOD     30  //[s]
 #define NOR_TLM_ADDRESS         0
 #define NOR_EVENTS_ADDRESS      0x030D4000 //200*500*512 = 0x030D4000
+#define NOR_LAST_ADDRESS        0x03FFFFFF
 
 #define FRAM_TLM_ADDRESS        0x29FFC
 #define FRAM_TLM_SIZE           0x19000  //this is 1600 telemetry lines at 64 bytes each
