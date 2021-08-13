@@ -572,6 +572,8 @@ int8_t terminal_readAndProcessCommands(void)
         {
             extractSubcommand(5, (char *) command_);
 
+            int8_t error = 0;
+
             uint8_t memoryToRead;
             uint32_t startReadAddress;
             uint32_t endReadAddress;
@@ -593,6 +595,8 @@ int8_t terminal_readAndProcessCommands(void)
                     endReadAddress = FRAM_TLM_ADDRESS + FRAM_TLM_SIZE;
                     extractSubcommand(5, (char *) command_);
                 }
+                else
+                    error--;
             }
             else if (strncmp("events", (char *)subcommand_, 6) == 0)
             {
@@ -611,36 +615,60 @@ int8_t terminal_readAndProcessCommands(void)
                     endReadAddress = FRAM_EVENTS_ADDRESS + FRAM_EVENTS_SIZE;
                     extractSubcommand(5, (char *) command_);
                 }
+                else
+                    error--;
             }
+            else
+                error--;
 
-            if (memoryToRead == MEMORY_NOR)
+            uint8_t typeOutput = 0;
+            if (strcmp("hex", (char *) subcommand_) == 0)
+                typeOutput = 0;
+            else if (strcmp("csv", (char *) subcommand_) == 0)
+                typeOutput = 1;
+            else
+                error--;
+
+            if (error >= 0)
             {
-                //TODO
-            }
-            else if (memoryToRead == MEMORY_FRAM)
-            {
-                //TODO: Test + implement CSV
-
-                // Read page by page
-                uint32_t pointer;
-                uint8_t buffer[NOR_BYTES_PAGE];
-
-                uint8_t i,j;
-                for (i = 0; i < NOR_NUM_PAGES; i++)
+                if (memoryToRead == MEMORY_NOR)
                 {
-                    pointer = startReadAddress + i * NOR_BYTES_PAGE;
-                    if (NOR_BYTES_PAGE < endReadAddress - pointer)
-                        spi_NOR_readFromAddress(pointer, buffer, NOR_BYTES_PAGE, CS_FLASH1);
-                    else
-                        spi_NOR_readFromAddress(pointer, buffer, endReadAddress - pointer, CS_FLASH1);
+                    //TODO: Test
 
-                    for (j = 0; j < NOR_BYTES_PAGE; j++)
+                    // Read page by page
+                    uint32_t pointer;
+                    uint8_t buffer[NOR_BYTES_PAGE];
+
+                    uint8_t i,j;
+                    for (i = 0; i < NOR_NUM_PAGES; i++)
                     {
-                        sprintf(strToPrint_, "%X ", buffer[j]);
-                        uart_print(UART_DEBUG, strToPrint_);
+                        pointer = startReadAddress + i * NOR_BYTES_PAGE;
+                        if (NOR_BYTES_PAGE < endReadAddress - pointer)
+                            spi_NOR_readFromAddress(pointer, buffer, NOR_BYTES_PAGE, CS_FLASH1);
+                        else
+                            spi_NOR_readFromAddress(pointer, buffer, endReadAddress - pointer, CS_FLASH1);
+
+                        for (j = 0; j < NOR_BYTES_PAGE; j++)
+                        {
+                            if (typeOutput == 0)
+                                sprintf(strToPrint_, "%X ", buffer[j]);
+                            else if (typeOutput == 1)
+                                sprintf(strToPrint_, "%d,", buffer[j]);
+
+                            uart_print(UART_DEBUG, strToPrint_);
+                        }
+                        //uart_print(UART_DEBUG, "\r\n"); // New page new line
                     }
-                    uart_print(UART_DEBUG, "\r\n"); // New page new line
                 }
+                else if (memoryToRead == MEMORY_FRAM)
+                {
+                    //TODO: Implement + test
+                }
+            }
+            else
+            {
+                sprintf(strToPrint_, "Improper command format. Use: dump [tlm/events] [nor/fram] [hex/csv].\r\n");
+                uart_print(UART_DEBUG, strToPrint_);
             }
 
         }
