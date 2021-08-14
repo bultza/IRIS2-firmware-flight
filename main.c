@@ -190,6 +190,7 @@ void init_board()
     //newEvent.sub_state = 0;
     newEvent.event = EVENT_BOOT;
     //Save the hardware reboot reason cause
+    confRegister_.hardwareRebootReason = SYSRSTIV;
     newEvent.payload[0] = SYSRSTIV_L;
     newEvent.payload[1] = SYSRSTIV_H;
     //Clear system reset interrupt vector

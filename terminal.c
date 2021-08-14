@@ -107,6 +107,79 @@ void addCommandToHistory(char * command)
     }
 }
 
+/**
+ * As described on page 78 of datasheet
+ */
+void rebootReasonDecoded(uint16_t code, char * rebootReason)
+{
+    switch (code)
+    {
+    case 0x00:
+        strcpy(rebootReason, "Clean Start");
+        break;
+    case 0x02:
+        strcpy(rebootReason, "Brownout (BOR)");
+        break;
+    case 0x04:
+            strcpy(rebootReason, "RSTIFG RST/NMI (BOR)");
+            break;
+    case 0x06:
+            strcpy(rebootReason, "PMMSWBOR software BOR (BOR)");
+            break;
+    case 0x0a:
+            strcpy(rebootReason, "Security violation (BOR)");
+            break;
+    case 0x0e:
+            strcpy(rebootReason, "SVSHIFG SVSH event (BOR)");
+            break;
+    case 0x14:
+            strcpy(rebootReason, "PMMSWPOR software POR (POR)");
+            break;
+    case 0x16:
+            strcpy(rebootReason, "WDTIFG WDT timeout (PUC)");
+            break;
+    case 0x18:
+            strcpy(rebootReason, "WDTPW password violation (PUC)");
+            break;
+    case 0x1a:
+            strcpy(rebootReason, "FRCTLPW password violation (PUC)");
+            break;
+    case 0x1c:
+            strcpy(rebootReason, "Uncorrectable FRAM bit error detection (PUC)");
+            break;
+    case 0x1e:
+            strcpy(rebootReason, "Peripheral area fetch (PUC)");
+            break;
+    case 0x20:
+            strcpy(rebootReason, "PMMPW PMM password violation (PUC)");
+            break;
+    case 0x22:
+            strcpy(rebootReason, "MPUPW MPU password violation (PUC)");
+            break;
+    case 0x24:
+            strcpy(rebootReason, "CSPW CS password violation (PUC)");
+            break;
+    case 0x26:
+            strcpy(rebootReason, "MPUSEGIPIFG encapsulated IP memory segment violation (PUC)");
+            break;
+    case 0x28:
+            strcpy(rebootReason, "MPUSEGIIFG information memory segment violation (PUC)");
+            break;
+    case 0x2a:
+            strcpy(rebootReason, "MPUSEG1IFG segment 1 memory violation (PUC)");
+            break;
+    case 0x2c:
+            strcpy(rebootReason, "MPUSEG2IFG segment 2 memory violation (PUC)");
+            break;
+    case 0x2e:
+            strcpy(rebootReason, "MPUSEG3IFG segment 3 memory violation (PUC)");
+            break;
+    default:
+        strcpy(rebootReason, "Unknown");
+        break;
+    }
+}
+
 // PUBLIC FUNCTIONS
 
 /**
@@ -120,12 +193,20 @@ int8_t terminal_start(void)
     uint32_t uptime = seconds_uptime();
 
     uart_print(UART_DEBUG, "IRIS 2 (Image Recorder Instrument for Sunrise) terminal.\r\n");
+    sprintf(strToPrint_, "IRIS 2 Firmware version is '%d', compiled on %s at %s.\r\n", FWVERSION, __DATE__, __TIME__);
+    uart_print(UART_DEBUG, strToPrint_);
     uart_print(UART_DEBUG, "Made with passion and hard work by:\r\n");
     uart_print(UART_DEBUG, "  * Aitor Conde <aitorconde@gmail.com>. Senior Engineer. Electronics. Software.\r\n");
     uart_print(UART_DEBUG, "  * Ramon Garcia <ramongarciaalarcia@gmail.com>. Project Management. Software.\r\n");
     uart_print(UART_DEBUG, "  * David Mayo <mayo@sondasespaciales.com>. Electronics.\r\n");
     uart_print(UART_DEBUG, "  * Miguel Angel Gomez <haplo@sondasespaciales.com>. Structure.\r\n");
     sprintf(strToPrint_, "IRIS 2 last booted %ld seconds ago.\r\n", uptime);
+    uart_print(UART_DEBUG, strToPrint_);
+    sprintf(strToPrint_, "Reboot counter is %d.\r\n", confRegister_.numberReboots);
+    uart_print(UART_DEBUG, strToPrint_);
+    char rebootReason[70];
+    rebootReasonDecoded(confRegister_.hardwareRebootReason, rebootReason);
+    sprintf(strToPrint_, "Last Reboot reason was 0x%02X, '%s'.\r\n", confRegister_.hardwareRebootReason, rebootReason);
     uart_print(UART_DEBUG, strToPrint_);
     uart_print(UART_DEBUG,"IRIS:/# ");
 
@@ -371,7 +452,7 @@ int8_t terminal_readAndProcessCommands(void)
                     sprintf(strToPrint_, "I2C BARO: Error code %d!\r\n", error);
                 else
                 {
-                    i2c_MS5611_getAltitude(&pressure, &altitude);
+                    altitude = calculateAltitude(pressure);
                     sprintf(strToPrint_, "I2C BARO: Pressure: %.2f mbar, Altitude: %.2f m\r\n",
                             ((float)pressure/100.0),
                             ((float)altitude/100.0));

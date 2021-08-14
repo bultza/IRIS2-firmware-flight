@@ -12,7 +12,7 @@
 #include "datalogger.h"
 
 #define MAGICWORD           0xBABE
-#define FWVERSION           2
+#define FWVERSION           3
 #define FRAM_TLM_SAVEPERIOD 600     //seconds period to save on FRAM
 #define NOR_TLM_SAVEPERIOD  10      //seconds period to save on NOR Flash
 #define BARO_READPERIOD     1000    //Milliseconds period to read barometer
@@ -44,6 +44,7 @@ struct ConfigurationRegister
     uint8_t simulatorEnabled;
     uint8_t flightState;
     uint8_t flightSubState;
+    uint16_t hardwareRebootReason;
 };
 
 //******************************************************************************
