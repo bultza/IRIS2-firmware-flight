@@ -32,7 +32,7 @@ struct AltitudesHistory
 };
 
 const uint8_t maxHistSave_ = 10;
-struct AltitudesHistory altitudeHistory_[maxHistSave_];
+struct AltitudesHistory altitudeHistory_[10]; // Number must be equal to maxHistSave_
 uint8_t altitudeHistoryIndex_ = 0;
 
 // PRIVATE FUNCTIONS

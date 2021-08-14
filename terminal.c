@@ -570,6 +570,7 @@ int8_t terminal_readAndProcessCommands(void)
         // This is a memory dump command
         else if (strncmp("dump", (char *)command_, 4) == 0)
         {
+            // Which part of the memory shall we read? Extract tlm/events from command
             extractSubcommand(5, (char *) command_);
 
             int8_t error = 0;
@@ -578,42 +579,51 @@ int8_t terminal_readAndProcessCommands(void)
             uint32_t startReadAddress;
             uint32_t endReadAddress;
 
+            char cmdCopy[CMD_MAX_LEN];
             if (strncmp("tlm", (char *)subcommand_, 3) == 0)
             {
-                extractSubcommand(4, (char *) command_);
+                // From which memory shall we read? Extract nor/fram from command
+                strcpy(cmdCopy, subcommand_);
+                extractSubcommand(4, (char *) cmdCopy);
                 if (strncmp("nor", (char *)subcommand_, 3) == 0)
                 {
                     memoryToRead = MEMORY_NOR;
                     startReadAddress = NOR_TLM_ADDRESS;
                     endReadAddress = NOR_EVENTS_ADDRESS - 1;
-                    extractSubcommand(4, (char *) command_);
+                    strcpy(cmdCopy, subcommand_);
+                    extractSubcommand(4, (char *) cmdCopy);
                 }
                 else if (strncmp("fram", (char *)subcommand_, 4) == 0)
                 {
                     memoryToRead = MEMORY_FRAM;
                     startReadAddress = FRAM_TLM_ADDRESS;
                     endReadAddress = FRAM_TLM_ADDRESS + FRAM_TLM_SIZE;
-                    extractSubcommand(5, (char *) command_);
+                    strcpy(cmdCopy, subcommand_);
+                    extractSubcommand(5, (char *) cmdCopy);
                 }
                 else
                     error--;
             }
             else if (strncmp("events", (char *)subcommand_, 6) == 0)
             {
-                extractSubcommand(7, (char *) command_);
+                // From which memory shall we read? Extract nor/fram from command
+                strcpy(cmdCopy, subcommand_);
+                extractSubcommand(7, (char *) cmdCopy);
                 if (strncmp("nor", (char *)subcommand_, 3) == 0)
                 {
                     memoryToRead = MEMORY_NOR;
                     startReadAddress = NOR_EVENTS_ADDRESS;
                     endReadAddress = NOR_LAST_ADDRESS;
-                    extractSubcommand(4, (char *) command_);
+                    strcpy(cmdCopy, subcommand_);
+                    extractSubcommand(4, (char *) cmdCopy);
                 }
                 else if (strncmp("fram", (char *)subcommand_, 4) == 0)
                 {
                     memoryToRead = MEMORY_FRAM;
                     startReadAddress = FRAM_EVENTS_ADDRESS;
                     endReadAddress = FRAM_EVENTS_ADDRESS + FRAM_EVENTS_SIZE;
-                    extractSubcommand(5, (char *) command_);
+                    strcpy(cmdCopy, subcommand_);
+                    extractSubcommand(5, (char *) cmdCopy);
                 }
                 else
                     error--;
@@ -621,6 +631,7 @@ int8_t terminal_readAndProcessCommands(void)
             else
                 error--;
 
+            // How should we output the results? Extract hex/csv from command
             uint8_t typeOutput = 0;
             if (strcmp("hex", (char *) subcommand_) == 0)
                 typeOutput = 0;
@@ -629,6 +640,7 @@ int8_t terminal_readAndProcessCommands(void)
             else
                 error--;
 
+            // If there are no errors reading the command,
             if (error >= 0)
             {
                 if (memoryToRead == MEMORY_NOR)

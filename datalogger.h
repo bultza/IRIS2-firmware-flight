@@ -35,6 +35,27 @@
 #define EVENT_BOOT                          69
 #define EVENT_CONFIGURATION_CHANGED         1
 #define EVENT_NOR_CLEAN                     2
+#define EVENT_CAMERA1_ON                    3
+#define EVENT_CAMERA2_ON                    4
+#define EVENT_CAMERA3_ON                    5
+#define EVENT_CAMERA4_ON                    6
+#define EVENT_CAMERA1_PICTURE               7
+#define EVENT_CAMERA2_PICTURE               8
+#define EVENT_CAMERA3_PICTURE               9
+#define EVENT_CAMERA4_PICTURE               10
+#define EVENT_CAMERA1_VIDEO_START           11
+#define EVENT_CAMERA2_VIDEO_START           12
+#define EVENT_CAMERA3_VIDEO_START           13
+#define EVENT_CAMERA4_VIDEO_START           14
+#define EVENT_CAMERA1_VIDEO_END             15
+#define EVENT_CAMERA2_VIDEO_END             16
+#define EVENT_CAMERA3_VIDEO_END             17
+#define EVENT_CAMERA4_VIDEO_END             18
+#define EVENT_CAMERA1_OFF                   19
+#define EVENT_CAMERA2_OFF                   20
+#define EVENT_CAMERA3_OFF                   21
+#define EVENT_CAMERA4_OFF                   22
+#define EVENT_TERMINAL_START                23
 
 #define AVG_INDEX               0
 #define MAX_INDEX               1
