@@ -648,6 +648,36 @@ int8_t terminal_readAndProcessCommands(void)
 
             uart_print(UART_DEBUG, strToPrint_);
         }
+        else if (strcmp("memory status", (char *)command_) == 0)
+        {
+            //Print FRAM memory status
+            uart_print(UART_DEBUG, "FRAM memory status: \r\n");
+            uart_print(UART_DEBUG, " * FRAM memory is ready\r\n");
+            uint16_t n_events = (confRegister_.fram_eventAddress - FRAM_EVENTS_ADDRESS) / sizeof(struct EventLine);
+            uint16_t n_eventsTotal = FRAM_EVENTS_SIZE / sizeof(struct EventLine);
+            float percentage_used = (float)n_events * 100.0 / (float) n_eventsTotal;
+            sprintf(strToPrint_, " * %d saved events. %.2f%% used. Last address is 0x%06X\r\n",
+                    n_events,
+                    percentage_used,
+                    confRegister_.fram_eventAddress);
+            uart_print(UART_DEBUG, strToPrint_);
+            n_events = (confRegister_.fram_telemetryAddress - FRAM_TLM_ADDRESS) / sizeof(struct TelemetryLine);
+            n_eventsTotal = FRAM_TLM_SIZE / sizeof(struct TelemetryLine);
+            percentage_used = (float)n_events * 100.0 / (float) n_eventsTotal;
+            sprintf(strToPrint_, " * %d saved telemetry. %.2f%% used. Last address is 0x%06X\r\n",
+                    n_events,
+                    percentage_used,
+                    confRegister_.fram_telemetryAddress);
+            uart_print(UART_DEBUG, strToPrint_);
+
+            //Print NOR memory flag status
+            uart_print(UART_DEBUG, "NOR memory status: \r\n");
+            //TODO
+
+            //Print NOR memory pointer status
+            //TODO
+
+        }
         // This is a memory dump command
         else if (strncmp("dump", (char *)command_, 4) == 0)
         {
