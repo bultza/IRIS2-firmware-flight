@@ -79,7 +79,7 @@ void sensors_read()
         int32_t pressure;
         int32_t altitude;
         i2c_MS5611_getPressure(&pressure);
-        i2c_MS5611_getAltitude(&pressure, &altitude);
+        altitude = calculateAltitude(pressure);
 
         //Save historic altitude data
         if (altitudeHistoryIndex_ < maxHistSave_)

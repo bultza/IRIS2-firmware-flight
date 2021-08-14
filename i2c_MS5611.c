@@ -192,49 +192,49 @@ int8_t i2c_MS5611_getPressure(int32_t * pressure)
 }
 
 /**
- * Returns the altitude in cm.
+ * Returns the altitude in cm. Input is pressure in thousands of millibars.
+ * 102400 is sea level.
+ *
+ * - Troposfera: Z=(T0/L)*[(P/P0)^(-R*L/g)-1]
+ *   - Baja Estratosfera: Z=11000-(R*T11k/g)*ln(P/P11k)
+ *   - Alta Estratosfera: Z=25000+(T25k/L)*[(P/P25k)^(-R*L/g)-1]
+ *  Donde:
+ *       T0=288,15
+ *       L=-0,0065
+ *       P0=101325
+ *       R=287
+ *       g=9,81
+ *       T11k=216,65
+ *       P11k=22552
+ *       T25k=216,65
+ *       P25k=2481
+ *   Con ln=Logaritmo Neperiano, las presiones en Pascales,
+ *   las Temperaturas en Kelvin, y P la presion medida.
  */
-int8_t i2c_MS5611_getAltitude(int32_t * pressure, int32_t * altitude)
+int32_t calculateAltitude(int32_t pressure)
 {
-    /*
-     - Troposfera: Z=(T0/L)*[(P/P0)^(-R*L/g)-1]
-     - Baja Estratosfera: Z=11000-(R*T11k/g)*ln(P/P11k)
-     - Alta Estratosfera: Z=25000+(T25k/L)*[(P/P25k)^(-R*L/g)-1]
+    int32_t altitude = 0;
 
-    Donde:
-
-         T0=288,15
-         L=-0,0065
-         P0=101325
-         R=287
-         g=9,81
-         T11k=216,65
-         P11k=22552
-         T25k=216,65
-         P25k=2481
-
-     Con ln=Logaritmo Neperiano, las presiones en Pascales, las Temperaturas en Kelvin, y P la presion medida.*/
-
-    if(*pressure > 22632)  //11km
+    if(pressure > 22632)  //11km
     {
       //We are at troposphere
       //Z=(T0/L)*[(P/P0)^(-R*L/g)-1];
-      *altitude = (-4433080 * (pow(*pressure / 101325., 0.190163) - 1.));
+      altitude = (-4433080 * (pow(pressure / 101325., 0.190163) - 1.));
     }
-    else if(*pressure > 2481)  //25km??
+    else if(pressure > 2481)  //25km??
     {
       //We are at stratosphere
       //Z=11000-(R*T11k/g)*ln(P/P11k)
-      *altitude = (1100000 - (6338.282 * log(*pressure / 22552.)));
+      altitude = (1100000 - (6338.282 * log(pressure / 22552.)));
     }
-    else if(*pressure > 111)  //47km
+    else if(pressure > 111)  //47km
     {
       //We are at high stratosphere
       //Z=25000+(T25k/L)*[(P/P25k)^(-R*L/g)-1]
-      *altitude = (2500000 + (-33330.8 * (pow(*pressure/2481., 0.190163) - 1.)));
+      altitude = (2500000 + (-33330.8 * (pow(pressure/2481., 0.190163) - 1.)));
     }
     else
-      *altitude = 5000000;  //Return a veeery high altitude
+      altitude = 5000000;  //Return a veeery high altitude
 
-    return 0;
+    return altitude;
 }
