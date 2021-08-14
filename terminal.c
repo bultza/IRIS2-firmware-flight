@@ -38,6 +38,13 @@
  * camera x send_cmd y --> Sends command y (do not include \n!!!) to camera x
  * camera x off --> Safely powers off camera x
  * ...Memory:
+ * memory [status/read/dump/write/erase] [nor/fram]
+ *  if status --> Returns the status of the NOR or FRAM memory.
+ *  if read, add: [tlm/events] [OPTIONAL line_start] [OPTIONAL line_end] --> Reads num bytes starting at address.
+ *  if dump, add: [line_start] [num bytes] [hex/bin] --> Reads all Telemetry Lines or Event Lines in HEX/CSV format.
+ *  if write, add: [address] [num bytes] [data] --> Writes num bytes of data starting at address.
+ *  if erase, add: [address] [num bytes] or [bulk] --> Erases num bytes of data starting at address or whole memory.
+ *
  * dump [tlm/events] [nor/fram] [hex/csv] --> Dump Telemetry Lines or Event Lines
  *                                            from selected memory (NOR/FRAM) in
  *                                            HEX or CSV format.
@@ -71,7 +78,11 @@ uint8_t cmdSelector_ = 0;
 // PRIVATE FUNCTIONS
 char subcommand_[CMD_MAX_LEN] = {0};
 void extractSubcommand(uint8_t start, char * command);
+void extractCommandPart(char * command, uint8_t desiredPart);
 void addCommandToHistory(char * command);
+void rebootReasonDecoded(uint16_t code, char * rebootReason);
+void processMemoryCommand(char * command);
+
 
 void extractSubcommand(uint8_t start, char * command)
 {
@@ -84,6 +95,54 @@ void extractSubcommand(uint8_t start, char * command)
         subcommand_[i-start] = command[i];
         if(command[i] == '\0')
             break;  //end of command detected
+    }
+}
+
+void extractCommandPart(char * command, uint8_t desiredPart)
+{
+    uint8_t i;
+
+    // Wipe out contents of subcommand_
+    for (i = 0; i < CMD_MAX_LEN; i++)
+        subcommand_[i] = 0;
+
+    // If the first part of the command is asked
+    if (desiredPart == 0)
+    {
+        // Read until a space (or end of text) is found
+        for (i = 0; i < CMD_MAX_LEN; i++)
+        {
+            subcommand_[i] = command[i];
+            if (command[i] == ' ' || command[i] == '\0')
+                break;
+        }
+    }
+    else
+    {
+        // Variable to store the number of part that we are iterating
+        uint8_t numPart = 0;
+        // Variable to determine if chars must be saved or not
+        uint8_t doRead = 0;
+
+        for (i = 0; i < CMD_MAX_LEN; i++)
+        {
+            if (doRead == 1)
+                subcommand_[i] = command[i];
+
+            // Update the part that we are iterating
+            if (command[i] == ' ')
+                numPart++;
+
+            // If it is the part that we want to keep
+            if (numPart == desiredPart)
+                doRead = 1;
+            else
+                doRead = 0;
+
+            // End of command detected
+            if (command[i] == '\0')
+                break;
+        }
     }
 }
 
@@ -177,6 +236,133 @@ void rebootReasonDecoded(uint16_t code, char * rebootReason)
     default:
         strcpy(rebootReason, "Unknown");
         break;
+    }
+}
+
+void processMemoryCommand(char * command)
+{
+    int8_t memorySubcommand;
+    int8_t memoryType;
+
+    // MEMORY SUBCOMMANDS: status/read/dump/write/erase
+    extractCommandPart((char *) command, 1);
+
+    // memory status [nor/fram]
+    if (strncmp("status", (char *)subcommand_, 6) == 0)
+        memorySubcommand = 0;
+    // memory read [nor/fram] [OPTIONAL start_line] [OPTIONAL end_line]
+    else if (strncmp("read", (char *)subcommand_, 4) == 0)
+        memorySubcommand = 1;
+    // memory dump [nor/fram] [address] [num_bytes] [hex/bin]
+    else if (strncmp("dump", (char *)subcommand_, 4) == 0)
+        memorySubcommand = 2;
+    // memory write [nor/fram] [address] [num_bytes] [byte0 byte1 byte2...]
+    else if (strncmp("write", (char *)subcommand_, 5) == 0)
+        memorySubcommand = 3;
+    // memory erase [nor/fram] [address] [num_bytes] OR [bulk]
+    else if (strncmp("erase", (char *)subcommand_, 5) == 0)
+        memorySubcommand = 4;
+    else
+    {
+        memorySubcommand = -1;
+        sprintf(strToPrint_, "Incorrect memory subcommand. Use: memory [status/read/dump/write/erase].\r\n");
+        uart_print(UART_DEBUG, strToPrint_);
+    }
+
+    if (memorySubcommand != -1)
+    {
+        // Move on, EXTRACT MEMORY: nor or fram
+        extractCommandPart((char *) command, 2);
+
+        if (strncmp("nor", (char *)subcommand_, 3) == 0)
+            memoryType = 0;
+        else if (strncmp("fram", (char *)subcommand_, 4) == 0)
+            memoryType = 1;
+        else
+        {
+            memoryType = -1;
+            sprintf(strToPrint_, "Incorrect desired memory. Use: memory [status/read/dump/write/erase] [nor/fram].\r\n");
+            uart_print(UART_DEBUG, strToPrint_);
+        }
+
+        if (memoryType != -1)
+        {
+            //Move on, PROCESS each subcommand
+            // Memory Status
+            if (memorySubcommand == 0)
+            {
+                if (memoryType == 0)
+                {
+                    uart_print(UART_DEBUG, "NOR Memory Status: TODO\r\n");
+
+                    //Print NOR memory flag status
+                    uart_print(UART_DEBUG, "NOR memory status: \r\n");
+                    //TODO
+
+                    //Print NOR memory pointer status
+                    //TODO
+                }
+                else if (memoryType == 1)
+                {
+                    //Print FRAM memory status
+                    uart_print(UART_DEBUG, "FRAM memory status: \r\n");
+                    uart_print(UART_DEBUG, " * FRAM memory is ready\r\n");
+                    uint16_t n_events = (confRegister_.fram_eventAddress - FRAM_EVENTS_ADDRESS) / sizeof(struct EventLine);
+                    uint16_t n_eventsTotal = FRAM_EVENTS_SIZE / sizeof(struct EventLine);
+                    float percentage_used = (float)n_events * 100.0 / (float) n_eventsTotal;
+                    sprintf(strToPrint_, " * %d saved events. %.2f%% used. Last address is 0x%06X\r\n",
+                            n_events,
+                            percentage_used,
+                            confRegister_.fram_eventAddress);
+                    uart_print(UART_DEBUG, strToPrint_);
+                    n_events = (confRegister_.fram_telemetryAddress - FRAM_TLM_ADDRESS) / sizeof(struct TelemetryLine);
+                    n_eventsTotal = FRAM_TLM_SIZE / sizeof(struct TelemetryLine);
+                    percentage_used = (float)n_events * 100.0 / (float) n_eventsTotal;
+                    sprintf(strToPrint_, " * %d saved telemetry. %.2f%% used. Last address is 0x%06X\r\n",
+                            n_events,
+                            percentage_used,
+                            confRegister_.fram_telemetryAddress);
+                    uart_print(UART_DEBUG, strToPrint_);
+                }
+            }
+            // Memory Read
+            else if (memorySubcommand == 1)
+            {
+                uart_print(UART_DEBUG, "Memory Read: TODO\r\n");
+            }
+            // Memory Dump
+            else if (memorySubcommand == 2)
+            {
+                uart_print(UART_DEBUG, "Memory Dump: TODO\r\n");
+            }
+            // Memory Write
+            else if (memorySubcommand == 3)
+            {
+                uart_print(UART_DEBUG, "Memory Write: TODO\r\n");
+            }
+            // Memory Erase
+            else if (memorySubcommand == 4)
+            {
+                extractCommandPart((char *) command, 3);
+
+                // Check whether bulk erase is requested or if
+                // user wants to erase a certain amount of bytes
+                if (strncmp("bulk", (char *)subcommand_, 4) == 0)
+                {
+                    // Bulk erase the memory
+                    int16_t eraseStart = seconds_uptime();
+                    uart_print(UART_DEBUG, "Started bulk-erasing NOR memory...\r\n");
+                    spi_NOR_bulkErase(CS_FLASH1);
+                    int16_t eraseEnd = seconds_uptime();
+                    sprintf(strToPrint_, "NOR memory has been completely wiped out in %d seconds.\r\n", eraseEnd - eraseStart);
+                    uart_print(UART_DEBUG, strToPrint_);
+                }
+                else
+                {
+                    uart_print(UART_DEBUG, "Custom Memory Erase: TODO\r\n");
+                }
+            }
+        }
     }
 }
 
