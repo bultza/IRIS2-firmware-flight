@@ -45,9 +45,6 @@
  *  if write, add: [address] [num bytes] [data] --> Writes num bytes of data starting at address.
  *  if erase, add: [address] [num bytes] or [bulk] --> Erases num bytes of data starting at address or whole memory.
  *
- * dump [tlm/events] [nor/fram] [hex/csv] --> Dump Telemetry Lines or Event Lines
- *                                            from selected memory (NOR/FRAM) in
- *                                            HEX or CSV format.
  */
 
 /*
@@ -55,12 +52,6 @@
  * Acceleration X,Y,Z axes.
  * Camera 1,2,3,4 change resolution.
  * Camera 1,2,3,4 change frames per second.
- * Dump NOR memory contents.
- * Dump FRAM memory contents.
- * Dump telemetry lines.
- * Dump event lines.
- * Read a NOR address.
- * Read a FRAM address.
  */
 
 
@@ -106,43 +97,24 @@ void extractCommandPart(char * command, uint8_t desiredPart)
     for (i = 0; i < CMD_MAX_LEN; i++)
         subcommand_[i] = 0;
 
-    // If the first part of the command is asked
-    if (desiredPart == 0)
+    // Variable to store the number of part that we are iterating
+    uint8_t numPart = 0;
+    uint8_t whereToWrite = 0;
+
+    for (i = 0; i < CMD_MAX_LEN; i++)
     {
-        // Read until a space (or end of text) is found
-        for (i = 0; i < CMD_MAX_LEN; i++)
+        if ((uint8_t) (numPart == desiredPart))
+            subcommand_[i-whereToWrite] = command[i];
+
+        // Update the part that we are iterating
+        if (command[i] == ' ')
         {
-            subcommand_[i] = command[i];
-            if (command[i] == ' ' || command[i] == '\0')
-                break;
+            numPart++;
+            whereToWrite = i + 1;
         }
-    }
-    else
-    {
-        // Variable to store the number of part that we are iterating
-        uint8_t numPart = 0;
-        // Variable to determine if chars must be saved or not
-        uint8_t doRead = 0;
-
-        for (i = 0; i < CMD_MAX_LEN; i++)
-        {
-            if (doRead == 1)
-                subcommand_[i] = command[i];
-
-            // Update the part that we are iterating
-            if (command[i] == ' ')
-                numPart++;
-
-            // If it is the part that we want to keep
-            if (numPart == desiredPart)
-                doRead = 1;
-            else
-                doRead = 0;
-
-            // End of command detected
-            if (command[i] == '\0')
-                break;
-        }
+        // End of command detected
+        else if (command[i] == '\0')
+            break;
     }
 }
 
@@ -285,10 +257,13 @@ void processMemoryCommand(char * command)
             uart_print(UART_DEBUG, strToPrint_);
         }
 
+        //Move on, PROCESS each subcommand
         if (memoryType != -1)
         {
-            //Move on, PROCESS each subcommand
-            // Memory Status
+            /* * *
+             * Memory Status
+             * memory status [nor/fram]
+             */
             if (memorySubcommand == 0)
             {
                 if (memoryType == 0)
@@ -325,24 +300,296 @@ void processMemoryCommand(char * command)
                     uart_print(UART_DEBUG, strToPrint_);
                 }
             }
-            // Memory Read
+            /* * *
+             * Memory Read
+             * memory read [nor/fram] [OPTIONAL start_line] [OPTIONAL end_line]
+             */
             else if (memorySubcommand == 1)
             {
-                uart_print(UART_DEBUG, "Memory Read: TODO\r\n");
+                uint8_t error = 0;
+                uint8_t lineType = 0;
+                uint32_t startAddress = 0;
+                uint8_t lineSize = 0;
+                int16_t lineStart = 0;
+                int16_t lineEnd = 0;
+
+                // READ TYPE OF LINE to read (telemetry/event)
+                extractCommandPart((char *) command, 3);
+                if (strncmp("tlm", (char *)subcommand_, 3) == 0)
+                {
+                    if (memoryType == 0)
+                        startAddress = NOR_TLM_ADDRESS;
+                    else if (memoryType == 1)
+                        startAddress = FRAM_TLM_ADDRESS;
+                    lineType = 0;
+                    lineSize = sizeof(struct TelemetryLine);
+                }
+                else if (strncmp("event", (char *)subcommand_, 5) == 0)
+                {
+                    if (memoryType == 0)
+                        startAddress = NOR_EVENTS_ADDRESS;
+                    else if (memoryType == 1)
+                        startAddress = FRAM_EVENTS_ADDRESS;
+                    lineType = 1;
+                    lineSize = sizeof(struct EventLine);
+                }
+                else
+                {
+                    error--;
+                    sprintf(strToPrint_, "Incorrect desired line. Use: memory read [nor/fram] [tlm/event].\r\n");
+                    uart_print(UART_DEBUG, strToPrint_);
+                }
+
+                // READ MEMORY START, if specified
+                extractCommandPart((char *) command, 4);
+                if (subcommand_[0] != '\0')
+                    lineStart = atoi(subcommand_);
+
+                // READ MEMORY END, if specified
+                extractCommandPart((char *) command, 5);
+                // TODO: If memory end not specified, read until there are no more lines
+                if (subcommand_[0] != '\0')
+                    lineEnd = atoi(subcommand_);
+
+                if (lineStart < 0)
+                {
+                    error--;
+                    sprintf(strToPrint_, "ERROR: Beginning line must be a positive integer.\r\n");
+                    uart_print(UART_DEBUG, strToPrint_);
+                }
+
+                if (lineEnd < 0)
+                {
+                    error--;
+                    sprintf(strToPrint_, "ERROR: Ending line must be a positive integer.\r\n");
+                    uart_print(UART_DEBUG, strToPrint_);
+                }
+
+                if (lineEnd != 0 && lineEnd < lineStart)
+                {
+                    error--;
+                    sprintf(strToPrint_, "ERROR: Ending line must be bigger than beginning line.\r\n");
+                    uart_print(UART_DEBUG, strToPrint_);
+                }
+
+                // No errors, proceed to command execution...
+                if (error == 0)
+                {
+                    // Print line header in CSV format
+                    if (lineType == 0)
+                    {
+                        uart_print(UART_DEBUG, "unixTime, upTime, pressure, altitude,"
+                                "verticalSpeedAVG, verticalSpeedMAX, verticalSpeedMIN,"
+                                "temperatures0, temperatures1, temperatures2, temperatures3, temperatures4,"
+                                "accXAxisAVG, accXAxisMAX, accXAxisMIN, accYAxisAVG, accYAxisMAX, accYAxisMIN,"
+                                "accZAxisAVG, accZAxisMAX, accZAxisMIN, voltagesAVG, voltagesMAX, voltagesMIN,"
+                                "currentsAVG, currentsMAX, currentsMIN, state, sub_state,"
+                                "switches_status0, switches_status1, switches_status2, switches_status3,"
+                                "switches_status4, switches_status5, switches_status6, switches_status7,"
+                                "errors0, errors1, errors2, errors3, errors4, errors5, errors6, errors7, errors8\r\n");
+                    }
+                    else if (lineType == 1)
+                    {
+                        uart_print(UART_DEBUG, "unixTime, upTime, state, sub_state, event,"
+                                "payload0, payload1, payload2, payload3, payload4\r\n");
+                    }
+
+                    // Compute lines to be read
+                    uint16_t linesToRead;
+                    if (lineEnd == 0)
+                        linesToRead = 1;
+                    else
+                        linesToRead = (lineEnd + 1) - lineStart;
+
+                    // Read line by line
+                    struct TelemetryLine readTelemetry;
+                    struct EventLine readEvent;
+                    uint8_t i;
+                    for (i = lineStart; i < lineStart + linesToRead; i++)
+                    {
+                        startAddress = startAddress + i * lineSize;
+
+                        // Retrieve line
+                        if (memoryType == 0)
+                            if (lineType == 0)
+                                getTelemetryNOR(startAddress, &readTelemetry);
+                            else if (lineType == 1)
+                                getEventNOR(startAddress, &readEvent);
+                        else if (memoryType == 1)
+                            if (lineType == 0)
+                                getTelemetryFRAM(startAddress, &readTelemetry);
+                            else if (lineType == 1)
+                                getEventFRAM(startAddress, &readEvent);
+
+                        if (lineType == 0)
+                        {
+                            sprintf(strToPrint_, "%ld, %ld, %ld, %ld, %d, %d, %d, %d, %d, %d,, %d, %d"
+                                    "%d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d,"
+                                    "%d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d,"
+                                    "\r\n", readTelemetry.unixTime, readTelemetry.upTime, readTelemetry.pressure,
+                                    readTelemetry.altitude, readTelemetry.verticalSpeed[0], readTelemetry.verticalSpeed[1],
+                                    readTelemetry.verticalSpeed[2], readTelemetry.temperatures[0], readTelemetry.temperatures[1],
+                                    readTelemetry.temperatures[2], readTelemetry.temperatures[3], readTelemetry.temperatures[4],
+                                    readTelemetry.accXAxis[0], readTelemetry.accXAxis[1], readTelemetry.accXAxis[2],
+                                    readTelemetry.accYAxis[0], readTelemetry.accYAxis[1], readTelemetry.accYAxis[2],
+                                    readTelemetry.accZAxis[0], readTelemetry.accZAxis[1], readTelemetry.accZAxis[2],
+                                    readTelemetry.voltages[0], readTelemetry.voltages[1], readTelemetry.voltages[2],
+                                    readTelemetry.currents[0], readTelemetry.currents[1], readTelemetry.currents[2],
+                                    readTelemetry.state, readTelemetry.sub_state, readTelemetry.switches_status & 0x01,
+                                    readTelemetry.switches_status & 0x02, readTelemetry.switches_status & 0x03,
+                                    readTelemetry.switches_status & 0x04, readTelemetry.switches_status & 0x05,
+                                    readTelemetry.switches_status & 0x06, readTelemetry.switches_status & 0x07,
+                                    readTelemetry.switches_status & 0x08, readTelemetry.errors & 0x01,
+                                    readTelemetry.errors & 0x02, readTelemetry.errors & 0x03, readTelemetry.errors & 0x04,
+                                    readTelemetry.errors & 0x05, readTelemetry.errors & 0x06, readTelemetry.errors & 0x07,
+                                    readTelemetry.errors & 0x08, readTelemetry.errors & 0x08);
+                            uart_print(UART_DEBUG, strToPrint_);
+                        }
+                        else if (lineType == 1)
+                        {
+                            sprintf(strToPrint_, "%ld, %ld, %d, %d, %d, %d, %d, %d, %d, %d\r\n",
+                                       readEvent.unixTime, readEvent.upTime, readEvent.state,
+                                       readEvent.sub_state, readEvent.event, readEvent.payload[0],
+                                       readEvent.payload[1], readEvent.payload[2], readEvent.payload[3], readEvent.payload[4]);
+                            uart_print(UART_DEBUG, strToPrint_);
+                        }
+                    }
+                }
+
             }
-            // Memory Dump
+            /* * *
+             * Memory Dump
+             * memory dump [nor/fram] [address] [num_bytes] [hex/bin]
+             */
             else if (memorySubcommand == 2)
             {
-                uart_print(UART_DEBUG, "Memory Dump: TODO\r\n");
+                uint8_t error = 0;
+
+                // EXTRACT READ ADDRESS
+                uint32_t * readAddress;
+                extractCommandPart((char *) command, 3);
+                if (subcommand_ != '\0')
+                    readAddress = (uint32_t *) atoi(subcommand_);
+                else
+                {
+                    sprintf(strToPrint_, "Please specify the reading address. Use: memory dump [nor/fram] [address].");
+                    uart_print(UART_DEBUG, strToPrint_);
+                    error--;
+                }
+
+                // EXTRACT NUMBER OF BYTES to read
+                uint16_t numBytes = 0;
+                extractCommandPart((char *) command, 4);
+                if (subcommand_ != '\0')
+                    numBytes = atoi(subcommand_);
+                else
+                {
+                    sprintf(strToPrint_, "Please specify the number of bytes to read. Use: memory dump [nor/fram] [address] [num_bytes].");
+                    uart_print(UART_DEBUG, strToPrint_);
+                    error--;
+                }
+
+                // EXTRACT OUTPUT FORMAT (hex/bin)
+                uint8_t outputFormat;
+                extractCommandPart((char *) command, 4);
+                if (subcommand_ != '\0')
+                {
+                    if (strncmp("hex", (char*)subcommand_, 3) == 0)
+                        outputFormat = 0;
+                    else if (strncmp("bin", (char*)subcommand_, 3) == 0)
+                        outputFormat = 1;
+                }
+                else
+                {
+                    sprintf(strToPrint_, "Please specify the output format. Use: memory dump [nor/fram] [address] [num_bytes] [hex/bin].");
+                    uart_print(UART_DEBUG, strToPrint_);
+                    error--;
+                }
+
+                // No errors, proceed to serve command
+                if (error == 0)
+                {
+                    uint8_t byteRead;
+
+                    uint8_t i;
+                    for (i = 0; i < numBytes; i++)
+                    {
+                        // Depending on memory type, we read one way or the other
+                        if (memoryType == 0)
+                            spi_NOR_readFromAddress(*readAddress, &byteRead, 1, CS_FLASH1);
+                        else if (memoryType == 1)
+                            byteRead = *readAddress;
+
+                        // Take into account output format
+                        if (outputFormat == 0)
+                            sprintf(strToPrint_, "%X ", byteRead);
+                        // TODO: Implement binary (not integer!)
+                        else if (outputFormat == 1)
+                            sprintf(strToPrint_, "%d ", byteRead);
+
+                        uart_print(UART_DEBUG, strToPrint_);
+                    }
+
+                    uart_print(UART_DEBUG, "\r\n");
+                }
             }
-            // Memory Write
+            /* * *
+             * Memory Write
+             * memory write [nor/fram] [address] [num_bytes] [byte0 byte1 byte2...]
+             */
             else if (memorySubcommand == 3)
             {
-                uart_print(UART_DEBUG, "Memory Write: TODO\r\n");
+                uint8_t error = 0;
+
+                // EXTRACT WRITE ADDRESS
+                uint32_t * writeAddress;
+                extractCommandPart((char *) command, 3);
+                if (subcommand_ != '\0')
+                    writeAddress = (uint32_t *) atoi(subcommand_);
+                else
+                {
+                    sprintf(strToPrint_, "Please specify the writing address. Use: memory write [nor/fram] [address].");
+                    uart_print(UART_DEBUG, strToPrint_);
+                    error--;
+                }
+
+                // EXTRACT NUMBER OF BYTES to write
+                uint16_t numBytes = 0;
+                extractCommandPart((char *) command, 4);
+                if (subcommand_ != '\0')
+                    numBytes = atoi(subcommand_);
+                else
+                {
+                    sprintf(strToPrint_, "Please specify the number of bytes to write. Use: memory write [nor/fram] [address] [num_bytes].");
+                    uart_print(UART_DEBUG, strToPrint_);
+                    error--;
+                }
+
+                int8_t i;
+                for (i = 0; i < numBytes; i++)
+                {
+                    // Extract i'th byte to write
+                    extractCommandPart((char *) command, 5+i);
+                    if (subcommand_ != '\0')
+                    {
+                        // Depending on memory type, we write one way or the other
+                        if (memoryType == 0)
+                            spi_NOR_writeToAddress(*writeAddress, (uint8_t*) &subcommand_, 1, CS_FLASH1);
+                        else if (memoryType == 1)
+                            *writeAddress = *subcommand_;
+                    }
+                    else
+                        break; // We are done here...
+                }
             }
-            // Memory Erase
+            /* * *
+             * Memory Erase
+             * memory erase [nor/fram] [address] [num_bytes] OR [bulk]
+             */
             else if (memorySubcommand == 4)
             {
+                uint8_t error = 0;
+
                 extractCommandPart((char *) command, 3);
 
                 // Check whether bulk erase is requested or if
@@ -359,6 +606,32 @@ void processMemoryCommand(char * command)
                 }
                 else
                 {
+                    // EXTRACT ERASE ADDRESS
+                    uint32_t * eraseAddress;
+                    extractCommandPart((char *) command, 3);
+                    if (subcommand_ != '\0')
+                        eraseAddress = (uint32_t *) atoi(subcommand_);
+                    else
+                    {
+                        sprintf(strToPrint_, "Please specify the erasing address. Use: memory erase [nor/fram] [address].");
+                        uart_print(UART_DEBUG, strToPrint_);
+                        error--;
+                    }
+
+                    // EXTRACT NUMBER OF BYTES to erase
+                    uint16_t numBytes = 0;
+                    extractCommandPart((char *) command, 4);
+                    if (subcommand_ != '\0')
+                        numBytes = atoi(subcommand_);
+                    else
+                    {
+                        sprintf(strToPrint_, "Please specify the number of bytes to erase. Use: memory erase [nor/fram] [address] [num_bytes].");
+                        uart_print(UART_DEBUG, strToPrint_);
+                        error--;
+                    }
+
+                    // TODO: Continue
+
                     uart_print(UART_DEBUG, "Custom Memory Erase: TODO\r\n");
                 }
             }
@@ -834,152 +1107,9 @@ int8_t terminal_readAndProcessCommands(void)
 
             uart_print(UART_DEBUG, strToPrint_);
         }
-        else if (strcmp("memory status", (char *)command_) == 0)
+        else if (strncmp("memory", (char *)command_, 6) == 0)
         {
-            //Print FRAM memory status
-            uart_print(UART_DEBUG, "FRAM memory status: \r\n");
-            uart_print(UART_DEBUG, " * FRAM memory is ready\r\n");
-            uint16_t n_events = (confRegister_.fram_eventAddress - FRAM_EVENTS_ADDRESS) / sizeof(struct EventLine);
-            uint16_t n_eventsTotal = FRAM_EVENTS_SIZE / sizeof(struct EventLine);
-            float percentage_used = (float)n_events * 100.0 / (float) n_eventsTotal;
-            sprintf(strToPrint_, " * %d saved events. %.2f%% used. Last address is 0x%06X\r\n",
-                    n_events,
-                    percentage_used,
-                    confRegister_.fram_eventAddress);
-            uart_print(UART_DEBUG, strToPrint_);
-            n_events = (confRegister_.fram_telemetryAddress - FRAM_TLM_ADDRESS) / sizeof(struct TelemetryLine);
-            n_eventsTotal = FRAM_TLM_SIZE / sizeof(struct TelemetryLine);
-            percentage_used = (float)n_events * 100.0 / (float) n_eventsTotal;
-            sprintf(strToPrint_, " * %d saved telemetry. %.2f%% used. Last address is 0x%06X\r\n",
-                    n_events,
-                    percentage_used,
-                    confRegister_.fram_telemetryAddress);
-            uart_print(UART_DEBUG, strToPrint_);
-
-            //Print NOR memory flag status
-            uart_print(UART_DEBUG, "NOR memory status: \r\n");
-            //TODO
-
-            //Print NOR memory pointer status
-            //TODO
-
-        }
-        // This is a memory dump command
-        else if (strncmp("dump", (char *)command_, 4) == 0)
-        {
-            // Which part of the memory shall we read? Extract tlm/events from command
-            extractSubcommand(5, (char *) command_);
-
-            int8_t error = 0;
-
-            uint8_t memoryToRead;
-            uint32_t startReadAddress;
-            uint32_t endReadAddress;
-
-            char cmdCopy[CMD_MAX_LEN];
-            if (strncmp("tlm", (char *)subcommand_, 3) == 0)
-            {
-                // From which memory shall we read? Extract nor/fram from command
-                strcpy(cmdCopy, subcommand_);
-                extractSubcommand(4, (char *) cmdCopy);
-                if (strncmp("nor", (char *)subcommand_, 3) == 0)
-                {
-                    memoryToRead = MEMORY_NOR;
-                    startReadAddress = NOR_TLM_ADDRESS;
-                    endReadAddress = NOR_EVENTS_ADDRESS - 1;
-                    strcpy(cmdCopy, subcommand_);
-                    extractSubcommand(4, (char *) cmdCopy);
-                }
-                else if (strncmp("fram", (char *)subcommand_, 4) == 0)
-                {
-                    memoryToRead = MEMORY_FRAM;
-                    startReadAddress = FRAM_TLM_ADDRESS;
-                    endReadAddress = FRAM_TLM_ADDRESS + FRAM_TLM_SIZE;
-                    strcpy(cmdCopy, subcommand_);
-                    extractSubcommand(5, (char *) cmdCopy);
-                }
-                else
-                    error--;
-            }
-            else if (strncmp("events", (char *)subcommand_, 6) == 0)
-            {
-                // From which memory shall we read? Extract nor/fram from command
-                strcpy(cmdCopy, subcommand_);
-                extractSubcommand(7, (char *) cmdCopy);
-                if (strncmp("nor", (char *)subcommand_, 3) == 0)
-                {
-                    memoryToRead = MEMORY_NOR;
-                    startReadAddress = NOR_EVENTS_ADDRESS;
-                    endReadAddress = NOR_LAST_ADDRESS;
-                    strcpy(cmdCopy, subcommand_);
-                    extractSubcommand(4, (char *) cmdCopy);
-                }
-                else if (strncmp("fram", (char *)subcommand_, 4) == 0)
-                {
-                    memoryToRead = MEMORY_FRAM;
-                    startReadAddress = FRAM_EVENTS_ADDRESS;
-                    endReadAddress = FRAM_EVENTS_ADDRESS + FRAM_EVENTS_SIZE;
-                    strcpy(cmdCopy, subcommand_);
-                    extractSubcommand(5, (char *) cmdCopy);
-                }
-                else
-                    error--;
-            }
-            else
-                error--;
-
-            // How should we output the results? Extract hex/csv from command
-            uint8_t typeOutput = 0;
-            if (strcmp("hex", (char *) subcommand_) == 0)
-                typeOutput = 0;
-            else if (strcmp("csv", (char *) subcommand_) == 0)
-                typeOutput = 1;
-            else
-                error--;
-
-            // If there are no errors reading the command,
-            if (error >= 0)
-            {
-                if (memoryToRead == MEMORY_NOR)
-                {
-                    //TODO: Test
-
-                    // Read page by page
-                    uint32_t pointer;
-                    uint8_t buffer[NOR_BYTES_PAGE];
-
-                    uint8_t i,j;
-                    for (i = 0; i < NOR_NUM_PAGES; i++)
-                    {
-                        pointer = startReadAddress + i * NOR_BYTES_PAGE;
-                        if (NOR_BYTES_PAGE < endReadAddress - pointer)
-                            spi_NOR_readFromAddress(pointer, buffer, NOR_BYTES_PAGE, CS_FLASH1);
-                        else
-                            spi_NOR_readFromAddress(pointer, buffer, endReadAddress - pointer, CS_FLASH1);
-
-                        for (j = 0; j < NOR_BYTES_PAGE; j++)
-                        {
-                            if (typeOutput == 0)
-                                sprintf(strToPrint_, "%X ", buffer[j]);
-                            else if (typeOutput == 1)
-                                sprintf(strToPrint_, "%d,", buffer[j]);
-
-                            uart_print(UART_DEBUG, strToPrint_);
-                        }
-                        //uart_print(UART_DEBUG, "\r\n"); // New page new line
-                    }
-                }
-                else if (memoryToRead == MEMORY_FRAM)
-                {
-                    //TODO: Implement + test
-                }
-            }
-            else
-            {
-                sprintf(strToPrint_, "Improper command format. Use: dump [tlm/events] [nor/fram] [hex/csv].\r\n");
-                uart_print(UART_DEBUG, strToPrint_);
-            }
-
+            processMemoryCommand((char *) command_);
         }
         else
         {

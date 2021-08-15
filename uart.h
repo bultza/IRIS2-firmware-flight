@@ -30,7 +30,7 @@
 #define UART_CAM3  3
 #define UART_CAM4  4
 
-#define UARTBUFFERLENGHT 512
+#define UARTBUFFERLENGHT 1024
 
 
 //******************************************************************************
