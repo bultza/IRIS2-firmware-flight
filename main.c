@@ -191,8 +191,8 @@ void init_board()
     newEvent.event = EVENT_BOOT;
     //Save the hardware reboot reason cause
     confRegister_.hardwareRebootReason = SYSRSTIV;
-    newEvent.payload[0] = SYSRSTIV_L;
-    newEvent.payload[1] = SYSRSTIV_H;
+    newEvent.payload[0] = confRegister_.hardwareRebootReason & 0xFF;
+    newEvent.payload[1] = (uint8_t) 0xFF & ((confRegister_.hardwareRebootReason & 0xFF00) >> 8);
     //Clear system reset interrupt vector
     SYSRSTIV = 0;
     saveEvent(newEvent);
@@ -246,6 +246,9 @@ int main(void)
 
 	    //Read all sensors
 	    sensors_read();
+
+	    //Save telemetry periodically
+	    saveTelemetry();
 
 	    //Fligh sequence
 	    //TODO
