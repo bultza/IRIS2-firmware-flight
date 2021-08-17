@@ -378,20 +378,21 @@ void processMemoryCommand(char * command)
                     // Print line header in CSV format
                     if (lineType == 0)
                     {
-                        uart_print(UART_DEBUG, "unixTime, upTime, pressure, altitude,"
-                                "verticalSpeedAVG, verticalSpeedMAX, verticalSpeedMIN,"
-                                "temperatures0, temperatures1, temperatures2, temperatures3, temperatures4,"
-                                "accXAxisAVG, accXAxisMAX, accXAxisMIN, accYAxisAVG, accYAxisMAX, accYAxisMIN,"
-                                "accZAxisAVG, accZAxisMAX, accZAxisMIN, voltagesAVG, voltagesMAX, voltagesMIN,"
-                                "currentsAVG, currentsMAX, currentsMIN, state, sub_state,"
-                                "switches_status0, switches_status1, switches_status2, switches_status3,"
-                                "switches_status4, switches_status5, switches_status6, switches_status7,"
-                                "errors0, errors1, errors2, errors3, errors4, errors5, errors6, errors7, errors8\r\n");
+                        uart_print(UART_DEBUG, "address, date, unixtime, uptime, pressure, altitude,"
+                                " verticalSpeedAVG, verticalSpeedMAX, verticalSpeedMIN,"
+                                " temperatures0, temperatures1, temperatures2, temperatures3, temperatures4,"
+                                " accXAxisAVG, accXAxisMAX, accXAxisMIN, accYAxisAVG, accYAxisMAX, accYAxisMIN,"
+                                " accZAxisAVG, accZAxisMAX, accZAxisMIN, voltagesAVG, voltagesMAX, voltagesMIN,"
+                                " currentsAVG, currentsMAX, currentsMIN, state, sub_state,"
+                                " switches_status0, switches_status1, switches_status2, switches_status3,"
+                                " switches_status4, switches_status5, switches_status6, switches_status7,"
+                                " errors0, errors1, errors2, errors3, errors4, errors5, errors6, errors7, errors8\r\n");
                     }
                     else if (lineType == 1)
                     {
-                        uart_print(UART_DEBUG, "unixTime, upTime, state, sub_state, event,"
-                                "payload0, payload1, payload2, payload3, payload4\r\n");
+                        uart_print(UART_DEBUG, "address, date, unixtime,"
+                                " uptime, state, sub_state, event, payload0,"
+                                " payload1, payload2, payload3, payload4\r\n");
                     }
 
                     // Compute lines to be read
@@ -407,50 +408,114 @@ void processMemoryCommand(char * command)
                     uint8_t i;
                     for (i = lineStart; i < lineStart + linesToRead; i++)
                     {
-                        startAddress = startAddress + i * lineSize;
+                        //startAddress = startAddress + i * lineSize;
 
                         // Retrieve line
                         if (memoryType == 0)
+                        {
                             if (lineType == 0)
-                                getTelemetryNOR(startAddress, &readTelemetry);
+                                getTelemetryNOR(i, &readTelemetry);
                             else if (lineType == 1)
-                                getEventNOR(startAddress, &readEvent);
-                        else if (memoryType == 1)
+                                getEventNOR(i, &readEvent);
+                        }
+                        else if (memoryType == 1)   //FRAM
+                        {
                             if (lineType == 0)
-                                getTelemetryFRAM(startAddress, &readTelemetry);
+                                getTelemetryFRAM(i, &readTelemetry);
                             else if (lineType == 1)
-                                getEventFRAM(startAddress, &readEvent);
+                                getEventFRAM(i, &readEvent);
+                        }
 
                         if (lineType == 0)
                         {
-                            sprintf(strToPrint_, "%ld, %ld, %ld, %ld, %d, %d, %d, %d, %d, %d,, %d, %d"
-                                    "%d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d,"
-                                    "%d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d,"
-                                    "\r\n", readTelemetry.unixTime, readTelemetry.upTime, readTelemetry.pressure,
-                                    readTelemetry.altitude, readTelemetry.verticalSpeed[0], readTelemetry.verticalSpeed[1],
-                                    readTelemetry.verticalSpeed[2], readTelemetry.temperatures[0], readTelemetry.temperatures[1],
-                                    readTelemetry.temperatures[2], readTelemetry.temperatures[3], readTelemetry.temperatures[4],
-                                    readTelemetry.accXAxis[0], readTelemetry.accXAxis[1], readTelemetry.accXAxis[2],
-                                    readTelemetry.accYAxis[0], readTelemetry.accYAxis[1], readTelemetry.accYAxis[2],
-                                    readTelemetry.accZAxis[0], readTelemetry.accZAxis[1], readTelemetry.accZAxis[2],
-                                    readTelemetry.voltages[0], readTelemetry.voltages[1], readTelemetry.voltages[2],
-                                    readTelemetry.currents[0], readTelemetry.currents[1], readTelemetry.currents[2],
-                                    readTelemetry.state, readTelemetry.sub_state, readTelemetry.switches_status & 0x01,
-                                    readTelemetry.switches_status & 0x02, readTelemetry.switches_status & 0x03,
-                                    readTelemetry.switches_status & 0x04, readTelemetry.switches_status & 0x05,
-                                    readTelemetry.switches_status & 0x06, readTelemetry.switches_status & 0x07,
-                                    readTelemetry.switches_status & 0x08, readTelemetry.errors & 0x01,
-                                    readTelemetry.errors & 0x02, readTelemetry.errors & 0x03, readTelemetry.errors & 0x04,
-                                    readTelemetry.errors & 0x05, readTelemetry.errors & 0x06, readTelemetry.errors & 0x07,
-                                    readTelemetry.errors & 0x08, readTelemetry.errors & 0x08);
+                            struct RTCDateTime dateTime;
+                            convert_from_unixTime(readTelemetry.unixTime, &dateTime);
+                            sprintf(strToPrint_, "%d, 20%.2d/%.2d/%.2d %.2d:%.2d:%.2d,",
+                                    i,
+                                    dateTime.year,
+                                    dateTime.month,
+                                    dateTime.date,
+                                    dateTime.hours,
+                                    dateTime.minutes,
+                                    dateTime.seconds);
+                            uart_print(UART_DEBUG, strToPrint_);
+                            sprintf(strToPrint_, " %ld, %ld, %ld, %ld, %d, %d,"
+                                    " %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d,"
+                                    " %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d,"
+                                    " %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d,"
+                                    " %d, %d, %d, %d, %d, %d, %d\r\n",
+                                    readTelemetry.unixTime,
+                                    readTelemetry.upTime,
+                                    readTelemetry.pressure,
+                                    readTelemetry.altitude,
+                                    readTelemetry.verticalSpeed[0],
+                                    readTelemetry.verticalSpeed[1],
+                                    readTelemetry.verticalSpeed[2],
+                                    readTelemetry.temperatures[0],
+                                    readTelemetry.temperatures[1],
+                                    readTelemetry.temperatures[2],
+                                    readTelemetry.temperatures[3],
+                                    readTelemetry.temperatures[4],
+                                    readTelemetry.accXAxis[0],
+                                    readTelemetry.accXAxis[1],
+                                    readTelemetry.accXAxis[2],
+                                    readTelemetry.accYAxis[0],
+                                    readTelemetry.accYAxis[1],
+                                    readTelemetry.accYAxis[2],
+                                    readTelemetry.accZAxis[0],
+                                    readTelemetry.accZAxis[1],
+                                    readTelemetry.accZAxis[2],
+                                    readTelemetry.voltages[0],
+                                    readTelemetry.voltages[1],
+                                    readTelemetry.voltages[2],
+                                    readTelemetry.currents[0],
+                                    readTelemetry.currents[1],
+                                    readTelemetry.currents[2],
+                                    readTelemetry.state,
+                                    readTelemetry.sub_state,
+                                    readTelemetry.switches_status & 0x01,
+                                    readTelemetry.switches_status & 0x02,
+                                    readTelemetry.switches_status & 0x03,
+                                    readTelemetry.switches_status & 0x04,
+                                    readTelemetry.switches_status & 0x05,
+                                    readTelemetry.switches_status & 0x06,
+                                    readTelemetry.switches_status & 0x07,
+                                    readTelemetry.switches_status & 0x08,
+                                    readTelemetry.errors & 0x01,
+                                    readTelemetry.errors & 0x02,
+                                    readTelemetry.errors & 0x03,
+                                    readTelemetry.errors & 0x04,
+                                    readTelemetry.errors & 0x05,
+                                    readTelemetry.errors & 0x06,
+                                    readTelemetry.errors & 0x07,
+                                    readTelemetry.errors & 0x08,
+                                    readTelemetry.errors & 0x08);
                             uart_print(UART_DEBUG, strToPrint_);
                         }
                         else if (lineType == 1)
                         {
+                            struct RTCDateTime dateTime;
+                            convert_from_unixTime(readEvent.unixTime, &dateTime);
+                            sprintf(strToPrint_, "%d, 20%.2d/%.2d/%.2d %.2d:%.2d:%.2d, ",
+                                    i,
+                                    dateTime.year,
+                                    dateTime.month,
+                                    dateTime.date,
+                                    dateTime.hours,
+                                    dateTime.minutes,
+                                    dateTime.seconds);
+                            uart_print(UART_DEBUG, strToPrint_);
                             sprintf(strToPrint_, "%ld, %ld, %d, %d, %d, %d, %d, %d, %d, %d\r\n",
-                                       readEvent.unixTime, readEvent.upTime, readEvent.state,
-                                       readEvent.sub_state, readEvent.event, readEvent.payload[0],
-                                       readEvent.payload[1], readEvent.payload[2], readEvent.payload[3], readEvent.payload[4]);
+                                       readEvent.unixTime,
+                                       readEvent.upTime,
+                                       readEvent.state,
+                                       readEvent.sub_state,
+                                       readEvent.event,
+                                       readEvent.payload[0],
+                                       readEvent.payload[1],
+                                       readEvent.payload[2],
+                                       readEvent.payload[3],
+                                       readEvent.payload[4]);
                             uart_print(UART_DEBUG, strToPrint_);
                         }
                     }
