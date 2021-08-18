@@ -457,7 +457,7 @@ void processMemoryCommand(char * command)
              */
             if (memorySubcommand == MEM_CMD_STATUS)
             {
-                if (memoryType == MEM_TYPE_NOR)
+                //if (memoryType == MEM_TYPE_NOR)
                 {
                     // Print NOR memory flag status
                     uint8_t busy = spi_NOR_checkWriteInProgress(confRegister_.nor_deviceSelected);
@@ -471,7 +471,7 @@ void processMemoryCommand(char * command)
                     uint32_t n_tlmlines = (confRegister_.nor_telemetryAddress - NOR_TLM_ADDRESS) / sizeof(struct TelemetryLine);
                     uint32_t n_tlmlinesTotal = NOR_TLM_SIZE / sizeof(struct TelemetryLine);
                     float percentage_used = (float)n_tlmlines * 100.0 / (float) n_tlmlinesTotal;
-                    sprintf(strToPrint_, " * %ld saved telemetry lines. %.2f%% used. Last address is 0x%06X\r\n",
+                    sprintf(strToPrint_, " * %ld saved telemetry lines. %.2f%% used. Last address is %ld\r\n",
                             n_tlmlines,
                             percentage_used,
                             confRegister_.nor_telemetryAddress);
@@ -480,13 +480,13 @@ void processMemoryCommand(char * command)
                     uint32_t n_events = (confRegister_.nor_eventAddress - NOR_EVENTS_ADDRESS) / sizeof(struct EventLine);
                     uint32_t n_eventsTotal = NOR_EVENTS_SIZE / sizeof(struct EventLine);
                     percentage_used = (float)n_events * 100.0 / (float) n_eventsTotal;
-                    sprintf(strToPrint_, " * %ld saved events. %.2f%% used. Last address is 0x%06X\r\n",
+                    sprintf(strToPrint_, " * %ld saved events. %.2f%% used. Last address is %ld\r\n",
                             n_events,
                             percentage_used,
                             confRegister_.nor_eventAddress);
                     uart_print(UART_DEBUG, strToPrint_);
                 }
-                else if (memoryType == MEM_TYPE_FRAM)
+                //else if (memoryType == MEM_TYPE_FRAM)
                 {
                     //Print FRAM memory status
                     uart_print(UART_DEBUG, "FRAM memory status: \r\n");
@@ -494,7 +494,7 @@ void processMemoryCommand(char * command)
                     uint16_t n_events = (confRegister_.fram_eventAddress - FRAM_EVENTS_ADDRESS) / sizeof(struct EventLine);
                     uint16_t n_eventsTotal = FRAM_EVENTS_SIZE / sizeof(struct EventLine);
                     float percentage_used = (float)n_events * 100.0 / (float) n_eventsTotal;
-                    sprintf(strToPrint_, " * %d saved events. %.2f%% used. Last address is 0x%06X\r\n",
+                    sprintf(strToPrint_, " * %d saved events. %.2f%% used. Last address is %ld\r\n",
                             n_events,
                             percentage_used,
                             confRegister_.fram_eventAddress);
@@ -502,7 +502,7 @@ void processMemoryCommand(char * command)
                     n_events = (confRegister_.fram_telemetryAddress - FRAM_TLM_ADDRESS) / sizeof(struct TelemetryLine);
                     n_eventsTotal = FRAM_TLM_SIZE / sizeof(struct TelemetryLine);
                     percentage_used = (float)n_events * 100.0 / (float) n_eventsTotal;
-                    sprintf(strToPrint_, " * %d saved telemetry. %.2f%% used. Last address is 0x%06X\r\n",
+                    sprintf(strToPrint_, " * %d saved telemetry. %.2f%% used. Last address is %ld\r\n",
                             n_events,
                             percentage_used,
                             confRegister_.fram_telemetryAddress);
