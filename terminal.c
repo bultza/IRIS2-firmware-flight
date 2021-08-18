@@ -461,6 +461,11 @@ void processMemoryCommand(char * command)
                 {
                     // Print NOR memory flag status
                     uint8_t busy = spi_NOR_checkWriteInProgress(confRegister_.nor_deviceSelected);
+                    uart_print(UART_DEBUG, "NOR memory status: \r\n");
+                    if (busy)
+                        uart_print(UART_DEBUG, " * NOR memory is busy (write operation in progress)\r\n");
+                    else
+                        uart_print(UART_DEBUG, " * NOR memory is ready\r\n");
 
                     // Print NOR memory pointer status
                     uint32_t n_tlmlines = (confRegister_.nor_telemetryAddress - NOR_TLM_ADDRESS) / sizeof(struct TelemetryLine);
