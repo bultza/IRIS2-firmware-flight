@@ -5,10 +5,6 @@
 
 #include "spi_NOR.h"
 
-//TODO: Assess potentially unsafe while statements in NOR operations
-//with purpose of waiting for Write In Progress register bit to be 0.
-// Return 0 or -1 (error) instead of waiting?
-
 // PRIVATE FUNCTIONS
 int8_t NOR_writeEnableDisable(uint8_t enabled, uint8_t deviceSelect);
 
@@ -93,8 +89,9 @@ int8_t spi_NOR_getRDID(struct RDIDInfo *idInformation, uint8_t deviceSelect)
  */
 int8_t spi_NOR_readFromAddress(uint32_t readAddress, uint8_t * buffer, uint16_t numOfBytes, uint8_t deviceSelect)
 {
-    // Check that no write operation is in progress
-    while(spi_NOR_checkWriteInProgress(deviceSelect));
+    // Check that no write operation is in progress, else return error
+    if (spi_NOR_checkWriteInProgress(deviceSelect))
+        return -1;
 
     // Chip Select ON
     if (deviceSelect == CS_FLASH1)
@@ -129,8 +126,9 @@ int8_t spi_NOR_readFromAddress(uint32_t readAddress, uint8_t * buffer, uint16_t 
 //TODO: Implement error return with P_ERR from SR1.
 int8_t spi_NOR_writeToAddress(uint32_t writeAddress, uint8_t * buffer, uint16_t numOfBytes, uint8_t deviceSelect)
 {
-    // Check that no write operation is in progress
-    while(spi_NOR_checkWriteInProgress(deviceSelect));
+    // Check that no write operation is in progress, else return error
+    if (spi_NOR_checkWriteInProgress(deviceSelect))
+        return -1;
 
     // Enable Write Operations
     NOR_writeEnableDisable(1, deviceSelect);
@@ -175,8 +173,9 @@ int8_t spi_NOR_writeToAddress(uint32_t writeAddress, uint8_t * buffer, uint16_t 
 //TODO: Implement error return with E_ERR from SR1.
 int8_t spi_NOR_sectorErase(uint32_t sectorAddress, uint8_t deviceSelect)
 {
-    // Check that no write operation is in progress
-    while(spi_NOR_checkWriteInProgress(deviceSelect));
+    // Check that no write operation is in progress, else return error
+    if (spi_NOR_checkWriteInProgress(deviceSelect))
+        return -1;
 
     // Enable Write Operations
     NOR_writeEnableDisable(1, deviceSelect);
@@ -216,8 +215,9 @@ int8_t spi_NOR_sectorErase(uint32_t sectorAddress, uint8_t deviceSelect)
  */
 int8_t spi_NOR_bulkErase(uint8_t deviceSelect)
 {
-    // Check that no write operation is in progress
-    while(spi_NOR_checkWriteInProgress(deviceSelect));
+    // Check that no write operation is in progress, else return error
+    if (spi_NOR_checkWriteInProgress(deviceSelect))
+        return -1;
 
     // Enable Write Operations
     NOR_writeEnableDisable(1, deviceSelect);

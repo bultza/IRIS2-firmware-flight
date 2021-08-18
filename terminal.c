@@ -40,7 +40,7 @@
  * ...Memory:
  * memory [status/read/dump/write/erase] [nor/fram]
  *  if status --> Returns the status of the NOR or FRAM memory.
- *  if read, add: [tlm/events] [OPTIONAL line_start] [OPTIONAL line_end] --> Reads num bytes starting at address.
+ *  if read, add: [tlm/event] [OPTIONAL line_start] [OPTIONAL line_end] --> Reads num bytes starting at address.
  *  if dump, add: [line_start] [num bytes] [hex/bin] --> Reads all Telemetry Lines or Event Lines in HEX/CSV format.
  *  if write, add: [address] [num bytes] [data] --> Writes num bytes of data starting at address.
  *  if erase, add: [sector] [num sector] or [bulk] --> Erases a sector of data (0-255) or whole memory.
@@ -67,32 +67,16 @@ uint8_t cmdSelector_ = 0;
 
 // PRIVATE FUNCTIONS
 char subcommand_[CMD_MAX_LEN] = {0};
-void extractSubcommand(uint8_t start, char * command);
 void extractCommandPart(char * command, uint8_t desiredPart);
 void addCommandToHistory(char * command);
 void rebootReasonDecoded(uint16_t code, char * rebootReason);
 //Composed (multi-part) commands have their own function
 void processTerminalCommand(char * command);
-void processI2CCommand(char * commmand);
+void processFSWCommand(char * command);
+void processI2CCommand(char * command);
 void processCameraCommand(char * command);
+void processTMCommand(char * command);
 void processMemoryCommand(char * command);
-
-/**
- * DEPRECATED. Use extractCommandPart instead.
- */
-void extractSubcommand(uint8_t start, char * command)
-{
-    uint8_t i;
-    for (i = 0; i < CMD_MAX_LEN; i++)
-        subcommand_[i] = 0;
-
-    for (i = start; i < CMD_MAX_LEN; i++)
-    {
-        subcommand_[i-start] = command[i];
-        if(command[i] == '\0')
-            break;  //end of command detected
-    }
-}
 
 /**
  * A parted command is separated into multiple parts by means of spaces.
@@ -105,6 +89,8 @@ void extractCommandPart(char * command, uint8_t desiredPart)
     // Wipe out contents of subcommand_
     for (i = 0; i < CMD_MAX_LEN; i++)
         subcommand_[i] = 0;
+
+    subcommand_[0] = '\0';
 
     // Variable to store the number of part that we are iterating
     uint8_t numPart = 0;
@@ -227,7 +213,7 @@ void rebootReasonDecoded(uint16_t code, char * rebootReason)
 void processTerminalCommand(char * command)
 {
     // Extract the subcommand from terminal command
-    extractSubcommand(9, (char *) command);
+    extractCommandPart((char *) command, 1);
 
     if (strcmp("count", (char *)subcommand_) == 0)
         sprintf(strToPrint_, "%d commands issued in this session.\r\n", numIssuedCommands_);
@@ -255,10 +241,27 @@ void processTerminalCommand(char * command)
     uart_print(UART_DEBUG, strToPrint_);
 }
 
+void processFSWCommand(char * command)
+{
+    // Extract the subcommand from FSW command
+    extractCommandPart((char *) command, 1);
+
+    if (strcmp("mode", (char *) subcommand_) == 0)
+        sprintf(strToPrint_, "FSW mode: %d\r\n", confRegister_.simulatorEnabled);
+    else if (strcmp("state", (char *) subcommand_) == 0)
+        sprintf(strToPrint_, "FSW state: %d\r\n", confRegister_.flightState);
+    else if (strcmp("substate", (char *) subcommand_) == 0)
+        sprintf(strToPrint_, "FSW substate: %d\r\n", confRegister_.flightSubState);
+    else
+        sprintf(strToPrint_, "FSW subcommand %s not recognised...\r\n", subcommand_);
+
+    uart_print(UART_DEBUG, strToPrint_);
+}
+
 void processI2CCommand(char * command)
 {
     // Extract the subcommand from I2C command
-    extractSubcommand(4, (char *) command);
+    extractCommandPart((char *) command, 1);
 
     if (strcmp("rtc", (char *) subcommand_) == 0)
     {
@@ -320,8 +323,10 @@ void processI2CCommand(char * command)
 void processCameraCommand(char * command)
 {
     // Process the selected camera
+    extractCommandPart((char *) command, 1);
     uint8_t selectedCamera;
-    switch (command[7])
+
+    switch (subcommand_[0])
     {
         case '1':
             selectedCamera = CAMERA01;
@@ -347,7 +352,7 @@ void processCameraCommand(char * command)
     gopros_cameraInit(selectedCamera);
 
     // Extract the subcommand from camera control command
-    extractSubcommand(9, (char *) command);
+    extractCommandPart((char *) command, 2);
 
     if (strcmp("on", subcommand_) == 0)
     {
@@ -402,6 +407,64 @@ void processCameraCommand(char * command)
     uart_print(UART_DEBUG, strToPrint_);
 }
 
+void processTMCommand(char * command)
+{
+    struct TelemetryLine tmLines[2];
+    returnCurrentTMLines(tmLines);
+
+    // Extract the subcommand from telemetry command
+    extractCommandPart((char *) command, 1);
+
+    uint8_t printResults = 1;
+
+    struct TelemetryLine askedTMLine;
+    if (strcmp("nor", (char *)subcommand_) == 0)
+        askedTMLine = tmLines[0];
+    else if (strcmp("fram", (char *)subcommand_) == 0)
+        askedTMLine = tmLines[1];
+    else
+    {
+        printResults = 0;
+        uart_print(UART_DEBUG, "Invalid memory for telemetry command. Use: tm [nor/fram]\r\n");
+    }
+
+    if (printResults)
+    {
+        sprintf(strToPrint_, "Unix Time: %ld\r\n", askedTMLine.unixTime);
+        uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "Up Time: %ld\r\n", askedTMLine.upTime);
+        uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "Pressure: %ld\r\n", askedTMLine.pressure);
+        uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "Altitude: %ld\r\n", askedTMLine.altitude);
+        uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "Vertical Speed AVG: %d\r\n", askedTMLine.verticalSpeed[0]);
+        uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "Vertical Speed MAX: %d\r\n", askedTMLine.verticalSpeed[1]);
+        uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "Vertical Speed MIN: %d\r\n", askedTMLine.verticalSpeed[2]);
+        uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "Temperature PCB: %d\r\n", askedTMLine.temperatures[0]);
+        uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "Voltage AVG: %d\r\n", askedTMLine.voltages[0]);
+        uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "Voltage MAX: %d\r\n", askedTMLine.voltages[1]);
+        uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "Voltage MIN: %d\r\n", askedTMLine.voltages[2]);
+        uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "Current AVG: %d\r\n", askedTMLine.currents[0]);
+        uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "Current MAX: %d\r\n", askedTMLine.currents[1]);
+        uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "Current MIN: %d\r\n", askedTMLine.currents[2]);
+        uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "Flight state: %d\r\n", askedTMLine.state);
+        uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "Flight substate: %d\r\n", askedTMLine.sub_state);
+        uart_print(UART_DEBUG, strToPrint_);
+    }
+}
+
 void processMemoryCommand(char * command)
 {
     int8_t memorySubcommand;
@@ -413,7 +476,7 @@ void processMemoryCommand(char * command)
     // memory status [nor/fram]
     if (strncmp("status", (char *)subcommand_, 6) == 0)
         memorySubcommand = MEM_CMD_STATUS;
-    // memory read [nor/fram] [OPTIONAL start_line] [OPTIONAL end_line]
+    // memory read [nor/fram] [tlm/event] [OPTIONAL start_line] [OPTIONAL end_line]
     else if (strncmp("read", (char *)subcommand_, 4) == 0)
         memorySubcommand = MEM_CMD_READ;
     // memory dump [nor/fram] [address] [num_bytes] [hex/bin]
@@ -428,8 +491,7 @@ void processMemoryCommand(char * command)
     else
     {
         memorySubcommand = -1;
-        sprintf(strToPrint_, "Incorrect memory subcommand. Use: memory [status/read/dump/write/erase].\r\n");
-        uart_print(UART_DEBUG, strToPrint_);
+        uart_print(UART_DEBUG, "Incorrect memory subcommand. Use: memory [status/read/dump/write/erase].\r\n");
     }
 
     if (memorySubcommand != -1)
@@ -444,8 +506,7 @@ void processMemoryCommand(char * command)
         else
         {
             memoryType = -1;
-            sprintf(strToPrint_, "Incorrect desired memory. Use: memory [status/read/dump/write/erase] [nor/fram].\r\n");
-            uart_print(UART_DEBUG, strToPrint_);
+            uart_print(UART_DEBUG, "Incorrect desired memory. Use: memory [status/read/dump/write/erase] [nor/fram].\r\n");
         }
 
         //Move on, PROCESS each subcommand
@@ -457,7 +518,7 @@ void processMemoryCommand(char * command)
              */
             if (memorySubcommand == MEM_CMD_STATUS)
             {
-                //if (memoryType == MEM_TYPE_NOR)
+                if (memoryType == MEM_TYPE_NOR)
                 {
                     // Print NOR memory flag status
                     uint8_t busy = spi_NOR_checkWriteInProgress(confRegister_.nor_deviceSelected);
@@ -486,7 +547,7 @@ void processMemoryCommand(char * command)
                             confRegister_.nor_eventAddress);
                     uart_print(UART_DEBUG, strToPrint_);
                 }
-                //else if (memoryType == MEM_TYPE_FRAM)
+                else if (memoryType == MEM_TYPE_FRAM)
                 {
                     //Print FRAM memory status
                     uart_print(UART_DEBUG, "FRAM memory status: \r\n");
@@ -511,11 +572,11 @@ void processMemoryCommand(char * command)
             }
             /* * *
              * Memory Read
-             * memory read [nor/fram] [OPTIONAL start_line] [OPTIONAL end_line]
+             * memory read [nor/fram] [tlm/event] [OPTIONAL start_line] [OPTIONAL end_line]
              */
             else if (memorySubcommand == MEM_CMD_READ)
             {
-                uint8_t error = 0;
+                uint8_t readCmdError = 0;
                 uint8_t lineType = 0;
                 uint32_t startAddress = 0;
                 uint8_t lineSize = 0;
@@ -544,45 +605,51 @@ void processMemoryCommand(char * command)
                 }
                 else
                 {
-                    error--;
-                    sprintf(strToPrint_, "Incorrect desired line. Use: memory read [nor/fram] [tlm/event].\r\n");
-                    uart_print(UART_DEBUG, strToPrint_);
+                    readCmdError--;
+                    uart_print(UART_DEBUG, "Incorrect desired line. Use: memory read [nor/fram] [tlm/event].\r\n");
                 }
 
                 // READ MEMORY START, if specified
                 extractCommandPart((char *) command, 4);
+                // TODO: If memory end not specified, read since the beginning
                 if (subcommand_[0] != '\0')
                     lineStart = atoi(subcommand_);
+                else
+                    lineStart = 0;
 
                 // READ MEMORY END, if specified
                 extractCommandPart((char *) command, 5);
                 // TODO: If memory end not specified, read until there are no more lines
                 if (subcommand_[0] != '\0')
                     lineEnd = atoi(subcommand_);
+                else
+                {
+                    if (lineType == MEM_LINE_TLM)
+                        lineEnd = (uint16_t) confRegister_.fram_telemetryAddress / NOR_TLM_SIZE;
+                    else if (lineType == MEM_LINE_EVENT)
+                        lineEnd = (uint16_t) confRegister_.fram_eventAddress / NOR_EVENTS_SIZE;
+                }
 
                 if (lineStart < 0)
                 {
-                    error--;
-                    sprintf(strToPrint_, "ERROR: Beginning line must be a positive integer.\r\n");
-                    uart_print(UART_DEBUG, strToPrint_);
+                    readCmdError--;
+                    uart_print(UART_DEBUG, "ERROR: Beginning line must be a positive integer.\r\n");
                 }
 
                 if (lineEnd < 0)
                 {
-                    error--;
-                    sprintf(strToPrint_, "ERROR: Ending line must be a positive integer.\r\n");
-                    uart_print(UART_DEBUG, strToPrint_);
+                    readCmdError--;
+                    uart_print(UART_DEBUG, "ERROR: Ending line must be a positive integer.\r\n");
                 }
 
                 if (lineEnd != 0 && lineEnd < lineStart)
                 {
-                    error--;
-                    sprintf(strToPrint_, "ERROR: Ending line must be bigger than beginning line.\r\n");
-                    uart_print(UART_DEBUG, strToPrint_);
+                    readCmdError--;
+                    uart_print(UART_DEBUG, "ERROR: Ending line must be bigger than beginning line.\r\n");
                 }
 
                 // No errors, proceed to command execution...
-                if (error == 0)
+                if (readCmdError == 0)
                 {
                     // Print line header in CSV format
                     if (lineType == MEM_LINE_TLM)
@@ -617,17 +684,22 @@ void processMemoryCommand(char * command)
                     uint8_t i;
                     for (i = lineStart; i < lineStart + linesToRead; i++)
                     {
-                        //startAddress = startAddress + i * lineSize;
-
                         // Retrieve line
                         if (memoryType == MEM_TYPE_NOR)
                         {
+                            int8_t readCmdError;
                             if (lineType == MEM_LINE_TLM)
-                                getTelemetryNOR(i, &readTelemetry);
+                                readCmdError = getTelemetryNOR(i, &readTelemetry);
                             else if (lineType == MEM_LINE_EVENT)
-                                getEventNOR(i, &readEvent);
+                                readCmdError = getEventNOR(i, &readEvent);
+
+                            if (readCmdError != 0)
+                            {
+                                sprintf(strToPrint_, "Error while trying to read line %d from NOR memory.\r\n", i);
+                                uart_print(UART_DEBUG, strToPrint_);
+                            }
                         }
-                        else if (memoryType == MEM_TYPE_FRAM)   //FRAM
+                        else if (memoryType == MEM_TYPE_FRAM)
                         {
                             if (lineType == MEM_LINE_TLM)
                                 getTelemetryFRAM(i, &readTelemetry);
@@ -742,41 +814,43 @@ void processMemoryCommand(char * command)
                 // EXTRACT READ ADDRESS
                 uint32_t * readAddress;
                 extractCommandPart((char *) command, 3);
-                if (subcommand_ != '\0')
+                if (subcommand_[0] != '\0')
                     readAddress = (uint32_t *) atoi(subcommand_);
                 else
                 {
-                    sprintf(strToPrint_, "Please specify the reading address. Use: memory dump [nor/fram] [address].");
-                    uart_print(UART_DEBUG, strToPrint_);
+                    uart_print(UART_DEBUG, "Please specify the reading address. Use: memory dump [nor/fram] [address].\r\n");
                     error--;
                 }
 
                 // EXTRACT NUMBER OF BYTES to read
                 uint16_t numBytes = 0;
                 extractCommandPart((char *) command, 4);
-                if (subcommand_ != '\0')
+                if (subcommand_[0] != '\0')
                     numBytes = atoi(subcommand_);
                 else
                 {
-                    sprintf(strToPrint_, "Please specify the number of bytes to read. Use: memory dump [nor/fram] [address] [num_bytes].");
-                    uart_print(UART_DEBUG, strToPrint_);
+                    uart_print(UART_DEBUG, "Please specify the number of bytes to read. Use: memory dump [nor/fram] [address] [num_bytes].\r\n");
                     error--;
                 }
 
                 // EXTRACT OUTPUT FORMAT (hex/bin)
                 uint8_t outputFormat;
-                extractCommandPart((char *) command, 4);
-                if (subcommand_ != '\0')
+                extractCommandPart((char *) command, 5);
+                if (subcommand_[0] != '\0')
                 {
                     if (strncmp("hex", (char*)subcommand_, 3) == 0)
                         outputFormat = MEM_OUTFORMAT_HEX;
                     else if (strncmp("bin", (char*)subcommand_, 3) == 0)
                         outputFormat = MEM_OUTFORMAT_BIN;
+                    else
+                    {
+                        uart_print(UART_DEBUG, "Incorrect output format. Use: memory dump [nor/fram] [address] [num_bytes] [hex/bin].\r\n");
+                        error--;
+                    }
                 }
                 else
                 {
-                    sprintf(strToPrint_, "Please specify the output format. Use: memory dump [nor/fram] [address] [num_bytes] [hex/bin].");
-                    uart_print(UART_DEBUG, strToPrint_);
+                    uart_print(UART_DEBUG, "Please specify the output format. Use: memory dump [nor/fram] [address] [num_bytes] [hex/bin].\r\n");
                     error--;
                 }
 
@@ -790,7 +864,14 @@ void processMemoryCommand(char * command)
                     {
                         // Depending on memory type, we read one way or the other
                         if (memoryType == MEM_TYPE_NOR)
-                            spi_NOR_readFromAddress(*readAddress, &byteRead, 1, confRegister_.nor_deviceSelected);
+                        {
+                            int8_t errorRead = spi_NOR_readFromAddress(*readAddress, &byteRead, 1, confRegister_.nor_deviceSelected);
+                            if (errorRead != 0)
+                            {
+                                sprintf(strToPrint_, "Error while trying to read from address %ld from NOR memory.\r\n", *readAddress);
+                                uart_print(UART_DEBUG, strToPrint_);
+                            }
+                        }
                         else if (memoryType == MEM_TYPE_FRAM)
                             byteRead = *readAddress;
 
@@ -800,14 +881,14 @@ void processMemoryCommand(char * command)
                         // TODO: LSB or MSB? Reverse order?
                         else if (outputFormat == MEM_OUTFORMAT_BIN)
                             sprintf(strToPrint_, "%d%d%d%d%d%d%d%d",
-                                    byteRead & 0x00,
-                                    byteRead & 0x01,
-                                    byteRead & 0x02,
-                                    byteRead & 0x03,
-                                    byteRead & 0x04,
-                                    byteRead & 0x05,
-                                    byteRead & 0x06,
-                                    byteRead & 0x07);
+                                    (byteRead & 0xFF),
+                                    ((byteRead >> 1) & 0xFF),
+                                    ((byteRead >> 2) & 0xFF),
+                                    ((byteRead >> 3) & 0xFF),
+                                    ((byteRead >> 4) & 0xFF),
+                                    ((byteRead >> 5) & 0xFF),
+                                    ((byteRead >> 6) & 0xFF),
+                                    ((byteRead >> 7) & 0xFF));
 
                         uart_print(UART_DEBUG, strToPrint_);
                     }
@@ -826,37 +907,44 @@ void processMemoryCommand(char * command)
                 // EXTRACT WRITE ADDRESS
                 uint32_t * writeAddress;
                 extractCommandPart((char *) command, 3);
-                if (subcommand_ != '\0')
+                if (subcommand_[0] != '\0')
                     writeAddress = (uint32_t *) atoi(subcommand_);
                 else
                 {
-                    sprintf(strToPrint_, "Please specify the writing address. Use: memory write [nor/fram] [address].");
-                    uart_print(UART_DEBUG, strToPrint_);
+                    uart_print(UART_DEBUG, "Please specify the writing address. Use: memory write [nor/fram] [address].\r\n");
                     error--;
                 }
 
                 // EXTRACT NUMBER OF BYTES to write
                 uint16_t numBytes = 0;
                 extractCommandPart((char *) command, 4);
-                if (subcommand_ != '\0')
+                if (subcommand_[0] != '\0')
                     numBytes = atoi(subcommand_);
                 else
                 {
-                    sprintf(strToPrint_, "Please specify the number of bytes to write. Use: memory write [nor/fram] [address] [num_bytes].");
-                    uart_print(UART_DEBUG, strToPrint_);
+                    uart_print(UART_DEBUG, "Please specify the number of bytes to write. Use: memory write [nor/fram] [address] [num_bytes].\r\n");
                     error--;
                 }
+
+                //TODO: Implement Write protection to make sure that nothing is overwritten
 
                 int8_t i;
                 for (i = 0; i < numBytes; i++)
                 {
                     // Extract i'th byte to write
                     extractCommandPart((char *) command, 5+i);
-                    if (subcommand_ != '\0')
+                    if (subcommand_[0] != '\0')
                     {
                         // Depending on memory type, we write one way or the other
                         if (memoryType == MEM_TYPE_NOR)
-                            spi_NOR_writeToAddress(*writeAddress, (uint8_t*) &subcommand_, 1, confRegister_.nor_deviceSelected);
+                        {
+                            int8_t errorWrite = spi_NOR_writeToAddress(*writeAddress, (uint8_t*) &subcommand_, 1, confRegister_.nor_deviceSelected);
+                            if (errorWrite != 0)
+                            {
+                                sprintf(strToPrint_, "Error while trying to write to address %ld from NOR memory.\r\n", *writeAddress);
+                                uart_print(UART_DEBUG, strToPrint_);
+                            }
+                        }
                         else if (memoryType == MEM_TYPE_FRAM)
                             *writeAddress = *subcommand_;
                     }
@@ -873,7 +961,6 @@ void processMemoryCommand(char * command)
                 //TODO: Implement FRAM erasing... or not?
 
                 uint8_t error = 0;
-
                 extractCommandPart((char *) command, 3);
 
                 // Check whether bulk erase is requested or if
@@ -883,56 +970,84 @@ void processMemoryCommand(char * command)
                     // Extract erase sector
                     uint8_t sectorToErase;
                     extractCommandPart((char *) command, 4);
-                    if (subcommand_ != '\0')
+                    if (subcommand_[0] != '\0')
                         sectorToErase = atoi(subcommand_);
                     else
                     {
-                        sprintf(strToPrint_, "Please specify the erasing sector. Use: memory erase [nor/fram] sector [num sector]\r\n.");
-                        uart_print(UART_DEBUG, strToPrint_);
+                        uart_print(UART_DEBUG, "Please specify the erasing sector. Use: memory erase [nor/fram] sector [num sector]\r\n.");
                         error--;
                     }
 
                     if (sectorToErase > 255)
                     {
-                        sprintf(strToPrint_, "ERROR: NOR sector number must be between 0 and 255 (included).\r\n.");
-                        uart_print(UART_DEBUG, strToPrint_);
+                        uart_print(UART_DEBUG, "ERROR: NOR sector number must be between 0 and 255 (included).\r\n.");
                         error--;
                     }
 
                     // No errors processing command, move on
                     if (error == 0)
                     {
-                        // Sector erase
-                        int16_t eraseStart = seconds_uptime();
-                        sprintf(strToPrint_, "Started erasing sector %d of NOR memory...\r\n", sectorToErase);
-                        uart_print(UART_DEBUG, strToPrint_);
+                        if (memoryType == MEM_TYPE_NOR)
+                        {
+                            // Sector erase the NOR memory
+                            int16_t eraseStart = seconds_uptime();
+                            sprintf(strToPrint_, "Started erasing sector %d of NOR memory...\r\n", sectorToErase);
+                            uart_print(UART_DEBUG, strToPrint_);
 
-                        uint32_t sectorLength = (uint32_t) 0x3FFFF;
-                        uint32_t sectorAddress = 0x00 + sectorToErase * (sectorLength+1);
-                        spi_NOR_sectorErase(sectorAddress, confRegister_.nor_deviceSelected);
+                            uint32_t sectorLength = (uint32_t) 0x3FFFF;
+                            uint32_t sectorAddress = 0x00 + sectorToErase * (sectorLength+1);
+                            int8_t eraseCmdError = spi_NOR_sectorErase(sectorAddress, confRegister_.nor_deviceSelected);
 
-                        int16_t eraseEnd = seconds_uptime();
-                        sprintf(strToPrint_, "NOR sector %d has been completely wiped out in %d seconds.\r\n", sectorToErase, eraseEnd - eraseStart);
-                        uart_print(UART_DEBUG, strToPrint_);
+                            if (eraseCmdError == 0)
+                            {
+                                int16_t eraseEnd = seconds_uptime();
+                                sprintf(strToPrint_, "NOR sector %d has been completely wiped out in %d seconds.\r\n", sectorToErase, eraseEnd - eraseStart);
+                                uart_print(UART_DEBUG, strToPrint_);
+                            }
+                            else
+                            {
+                                sprintf(strToPrint_, "Error while trying to erase sector %d of NOR memory.\r\n", sectorToErase);
+                                uart_print(UART_DEBUG, strToPrint_);
+                            }
+                        }
+                        else if (memoryType == MEM_TYPE_FRAM)
+                        {
+                            // TODO: Sector erase the FRAM memory
+                            uart_print(UART_DEBUG, "FRAM memory sector erasing not implemented.\r\n");
+                        }
                     }
 
                 }
                 else if (strncmp("bulk", (char *)subcommand_, 4) == 0)
                 {
-                    // Bulk erase the memory
-                    int16_t eraseStart = seconds_uptime();
-                    uart_print(UART_DEBUG, "Started bulk-erasing NOR memory...\r\n");
+                    if (memoryType == MEM_TYPE_NOR)
+                    {
+                        // Bulk erase the NOR memory
+                        int16_t eraseStart = seconds_uptime();
+                        uart_print(UART_DEBUG, "Started bulk-erasing NOR memory...\r\n");
 
-                    spi_NOR_bulkErase(confRegister_.nor_deviceSelected);
+                        int8_t eraseCmdError = spi_NOR_bulkErase(confRegister_.nor_deviceSelected);
 
-                    int16_t eraseEnd = seconds_uptime();
-                    sprintf(strToPrint_, "NOR memory has been completely wiped out in %d seconds.\r\n", eraseEnd - eraseStart);
-                    uart_print(UART_DEBUG, strToPrint_);
+                        if (eraseCmdError == 0)
+                        {
+                            int16_t eraseEnd = seconds_uptime();
+                            sprintf(strToPrint_, "NOR memory has been completely wiped out in %d seconds.\r\n", eraseEnd - eraseStart);
+                            uart_print(UART_DEBUG, strToPrint_);
+                        }
+                        else
+                        {
+                            uart_print(UART_DEBUG, "Error while trying to bulk erase the NOR memory.\r\n");
+                        }
+                    }
+                    else if (memoryType == MEM_TYPE_FRAM)
+                    {
+                        // TODO: Bulk erase the FRAM memory
+                        uart_print(UART_DEBUG, "FRAM memory bulk erasing not implemented.\r\n");
+                    }
                 }
                 else
                 {
-                    sprintf(strToPrint_, "Available erase options are sector or bulk erase. Use: memory erase [nor/fram] [sector/bulk].\r\n");
-                    uart_print(UART_DEBUG, strToPrint_);
+                    uart_print(UART_DEBUG, "Available erase options are sector or bulk erase. Use: memory erase [nor/fram] [sector/bulk].\r\n");
                 }
             }
         }
@@ -1160,24 +1275,10 @@ int8_t terminal_readAndProcessCommands(void)
             }
             uart_print(UART_DEBUG, strToPrint_);
         }
-        // This is an FSW command
         else if (strncmp("fsw", (char *) command_, 3) == 0)
         {
-            // Extract the subcommand from FSW command
-            extractSubcommand(4, (char *) command_);
-
-            if (strcmp("mode", (char *) subcommand_) == 0)
-                sprintf(strToPrint_, "FSW mode: %d\r\n", confRegister_.simulatorEnabled);
-            else if (strcmp("state", (char *) subcommand_) == 0)
-                sprintf(strToPrint_, "FSW state: %d\r\n", confRegister_.flightState);
-            else if (strcmp("substate", (char *) subcommand_) == 0)
-                sprintf(strToPrint_, "FSW substate: %d\r\n", confRegister_.flightSubState);
-            else
-                sprintf(strToPrint_, "FSW subcommand %s not recognised...\r\n", subcommand_);
-
-            uart_print(UART_DEBUG, strToPrint_);
+            processFSWCommand((char *) command_);
         }
-        // This is an I2C command
         else if(strncmp("i2c", (char *) command_, 3) == 0)
         {
             processI2CCommand((char *) command_);
@@ -1186,64 +1287,9 @@ int8_t terminal_readAndProcessCommands(void)
         {
             processCameraCommand((char *) command_);
         }
-        // This is a telemetry command
         else if (strncmp("tm", (char *)command_, 2) == 0)
         {
-            struct TelemetryLine tmLines[2];
-            returnCurrentTMLines(tmLines);
-
-            // Extract the subcommand from telemetry command
-            extractSubcommand(3, (char *) command_);
-
-            uint8_t printResults = 1;
-
-            struct TelemetryLine askedTMLine;
-            if (strcmp("nor", (char *)subcommand_) == 0)
-                askedTMLine = tmLines[0];
-            else if (strcmp("fram", (char *)subcommand_) == 0)
-                askedTMLine = tmLines[1];
-            else
-            {
-                printResults = 0;
-                sprintf(strToPrint_, "%s is an invalid memory for telemetry command.\r\n", subcommand_);
-                uart_print(UART_DEBUG, strToPrint_);
-            }
-
-            if (printResults)
-            {
-                sprintf(strToPrint_, "Unix Time: %ld\r\n", askedTMLine.unixTime);
-                uart_print(UART_DEBUG, strToPrint_);
-                sprintf(strToPrint_, "Up Time: %ld\r\n", askedTMLine.upTime);
-                uart_print(UART_DEBUG, strToPrint_);
-                sprintf(strToPrint_, "Pressure: %ld\r\n", askedTMLine.pressure);
-                uart_print(UART_DEBUG, strToPrint_);
-                sprintf(strToPrint_, "Altitude: %ld\r\n", askedTMLine.altitude);
-                uart_print(UART_DEBUG, strToPrint_);
-                sprintf(strToPrint_, "Vertical Speed AVG: %d\r\n", askedTMLine.verticalSpeed[0]);
-                uart_print(UART_DEBUG, strToPrint_);
-                sprintf(strToPrint_, "Vertical Speed MAX: %d\r\n", askedTMLine.verticalSpeed[1]);
-                uart_print(UART_DEBUG, strToPrint_);
-                sprintf(strToPrint_, "Vertical Speed MIN: %d\r\n", askedTMLine.verticalSpeed[2]);
-                uart_print(UART_DEBUG, strToPrint_);
-                sprintf(strToPrint_, "Temperature PCB: %d\r\n", askedTMLine.temperatures[0]);
-                uart_print(UART_DEBUG, strToPrint_);
-                sprintf(strToPrint_, "Voltage AVG: %d\r\n", askedTMLine.voltages[0]);
-                uart_print(UART_DEBUG, strToPrint_);
-                sprintf(strToPrint_, "Voltage MAX: %d\r\n", askedTMLine.voltages[1]);
-                uart_print(UART_DEBUG, strToPrint_);
-                sprintf(strToPrint_, "Voltage MIN: %d\r\n", askedTMLine.voltages[2]);
-                uart_print(UART_DEBUG, strToPrint_);
-                sprintf(strToPrint_, "Current AVG: %d\r\n", askedTMLine.currents[0]);
-                uart_print(UART_DEBUG, strToPrint_);
-                sprintf(strToPrint_, "Current MAX: %d\r\n", askedTMLine.currents[1]);
-                uart_print(UART_DEBUG, strToPrint_);
-                sprintf(strToPrint_, "Current MIN: %d\r\n", askedTMLine.currents[2]);
-                uart_print(UART_DEBUG, strToPrint_);
-                sprintf(strToPrint_, "Flight state: %d\r\n", askedTMLine.state);
-                uart_print(UART_DEBUG, strToPrint_);
-                sprintf(strToPrint_, "Flight substate: %d\r\n", askedTMLine.sub_state);
-                uart_print(UART_DEBUG, strToPrint_);
-            }
+            processTMCommand((char *) command_);
         }
         else if (strncmp("memory", (char *)command_, 6) == 0)
         {

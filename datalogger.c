@@ -75,7 +75,7 @@ void setWritingAddressesNOR()
     do
     {
         spi_NOR_readFromAddress(telemetryLinesLastAddress, readByte, 1, confRegister_.nor_deviceSelected);
-        telemetryLinesLastAddress++;
+        telemetryLinesLastAddress += sizeof(struct TelemetryLine);
 
     } while ((uint8_t) readByte[0] != 255);
 
@@ -84,7 +84,7 @@ void setWritingAddressesNOR()
     {
         uint8_t readByte[1];
         spi_NOR_readFromAddress(eventsLinesLastAddress, readByte, 1, confRegister_.nor_deviceSelected);
-        eventsLinesLastAddress++;
+        eventsLinesLastAddress += sizeof(struct EventLine);
 
     } while ((uint8_t) readByte[0] != 255);
 
