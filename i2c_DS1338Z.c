@@ -101,7 +101,9 @@ uint32_t i2c_RTC_unixTime_now()
         }
         else
         {
-            uart_print(UART_DEBUG, "ERROR\r\n");
+            //uart_print(UART_DEBUG, "ERROR\r\n");
+            //Indicate error on RTC i2c
+            //TODO
         }
     }
     return unixTimeStatus_.unixtime + (now - unixTimeStatus_.uptime);
