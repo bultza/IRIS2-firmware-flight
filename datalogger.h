@@ -18,13 +18,15 @@
 #include "i2c_DS1338Z.h"
 #include "spi_NOR.h"
 
-#define MEMORY_NOR  0
-#define MEMORY_FRAM 1
+#define MEMORY_NOR      0
+#define MEMORY_FRAM     1
 
 #define TELEMETRYSAVEPERIOD     30  //[s]
 #define NOR_TLM_ADDRESS         0
-#define NOR_EVENTS_ADDRESS      0x030D4000 //200*500*512 = 0x030D4000
-#define NOR_LAST_ADDRESS        0x03FFFFFF
+#define NOR_TLM_SIZE            0x03200000 // Last address of sector 199 is 0x031FFFFF
+#define NOR_EVENTS_ADDRESS      0x03200000 // First address of sector 200
+#define NOR_EVENTS_SIZE         0x00E00000
+#define NOR_LAST_ADDRESS        0x03FFFFFF // per datasheet, page 45 (last address of sec. 255)
 
 #define FRAM_TLM_ADDRESS        0x29FFC
 #define FRAM_TLM_SIZE           0x19000  //this is 1600 telemetry lines at 64 bytes each
@@ -61,7 +63,7 @@
 #define MAX_INDEX               1
 #define MIN_INDEX               2
 
-
+// ---NOR COMPUTATIONS---
 // Mission: 10 days -> 10*24*60*60 = 864 000 seconds
 // Proposing saving 1 Telemetry Line every 30 s --> 1.84 MB of telemetry
 // (NOR memory has 64 MB)
@@ -139,6 +141,7 @@ struct TelemetryLine
     uint8_t padding[1];         // 1B - Padding to reach 64 bits
 };
 
+// ---NOR COMPUTATIONS---
 // 16 Bytes per Event Line
 // 512 B per page, 16 B per line: 32 EV lines per page --> 16000 EV lines
 // per sector --> 896 000 EV lines possible
@@ -155,7 +158,10 @@ struct EventLine
     uint8_t payload[5];         // 5B - Extra information of the event
 };
 
-//Public function to read all sensors periodically
+//Public function to return the addresses to continue writing in the NOR
+void setWritingAddressesNOR();
+
+//Public functions to read all sensors periodically and return TM Lines
 void sensors_read();
 int8_t returnCurrentTMLines(struct TelemetryLine *tmLines);
 

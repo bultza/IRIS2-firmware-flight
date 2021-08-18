@@ -9,6 +9,7 @@
 
 #include <stdint.h>
 #include <msp430.h>
+#include "spi_NOR.h"
 #include "datalogger.h"
 
 #define MAGICWORD           0xBABE
@@ -37,6 +38,7 @@ struct ConfigurationRegister
     uint16_t acc_readPeriod;
 
     //Put here all the current execution status
+    uint8_t nor_deviceSelected;
     uint32_t nor_eventAddress;
     uint32_t nor_telemetryAddress;
     uint32_t fram_eventAddress;

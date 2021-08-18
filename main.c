@@ -179,6 +179,9 @@ void init_board()
     //Init configuration
     configuration_init();
 
+    //Set NOR writing addresses
+    setWritingAddressesNOR();
+
     //Open UART_DEBUG externally
     uart_init(UART_DEBUG, BR_115200);
 

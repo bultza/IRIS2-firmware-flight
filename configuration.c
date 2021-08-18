@@ -24,6 +24,7 @@ void configuration_init(void)
         confRegister_.fram_eventAddress = FRAM_EVENTS_ADDRESS;
         confRegister_.fram_tlmSavePeriod = FRAM_TLM_SAVEPERIOD;
 
+        confRegister_.nor_deviceSelected = CS_FLASH1;
         confRegister_.nor_telemetryAddress = NOR_TLM_ADDRESS;
         confRegister_.nor_eventAddress = NOR_EVENTS_ADDRESS;
         confRegister_.nor_tlmSavePeriod = NOR_TLM_SAVEPERIOD;

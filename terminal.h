@@ -25,7 +25,18 @@
 #define CMD_MAX_SAVE 10
 #define CMD_MAX_LEN 100
 
-int8_t terminal_start(void);
+#define MEM_CMD_STATUS      0
+#define MEM_CMD_READ        1
+#define MEM_CMD_DUMP        2
+#define MEM_CMD_WRITE       3
+#define MEM_CMD_ERASE       4
+#define MEM_TYPE_NOR        0
+#define MEM_TYPE_FRAM       1
+#define MEM_LINE_TLM        0
+#define MEM_LINE_EVENT      1
+#define MEM_OUTFORMAT_HEX   0
+#define MEM_OUTFORMAT_BIN   1
+
 int8_t terminal_readAndProcessCommands(void);
 
 #endif /* TERMINAL_H_ */

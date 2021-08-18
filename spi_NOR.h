@@ -15,27 +15,27 @@
 // The memory to be read/written from/to must be first selected with CS.
 
 // Select one device or the other
-#define CS_FLASH1 0
-#define CS_FLASH2 1
+#define CS_FLASH1   0
+#define CS_FLASH2   1
 
 // Commands for single S25FL512 memories
-#define NOR_RDID 0x9F   // Read Identification
-#define NOR_READ 0x03   // Read from 3-bit address
-#define NOR_FOURREAD 0x13  // Read from 4-bit address
-#define NOR_WREN 0x06   // Write Enable
-#define NOR_WRDI 0x04   // Write Disable
-#define NOR_PP 0x02     // Write to 3-byte address
-#define NOR_FOURPP 0x12    // Write to 4-byte address
-#define NOR_SE 0xD8     // Sector Erase a 3-byte address (only one sector)
-#define NOR_FOURSE 0xDC    // Sector Erase a 4-byte address (only one sector)
-#define NOR_BE 0x60     // Bulk Erase (entire flash memory array)
-#define NOR_RDSR1 0x05  // Read Status Register 1
+#define NOR_RDID        0x9F        // Read Identification
+#define NOR_READ        0x03        // Read from 3-bit address
+#define NOR_FOURREAD    0x13        // Read from 4-bit address
+#define NOR_WREN        0x06        // Write Enable
+#define NOR_WRDI        0x04        // Write Disable
+#define NOR_PP          0x02        // Write to 3-byte address
+#define NOR_FOURPP      0x12        // Write to 4-byte address
+#define NOR_SE          0xD8        // Sector Erase a 3-byte address (only one sector)
+#define NOR_FOURSE      0xDC        // Sector Erase a 4-byte address (only one sector)
+#define NOR_BE          0x60        // Bulk Erase (entire flash memory array)
+#define NOR_RDSR1       0x05        // Read Status Register 1
 
 // Constants
-#define NOR_BYTES_PAGE 512          //512 Bytes per page
-#define NOR_BYTES_SECTOR 256000     //256 kB per sector
-#define NOR_NUM_SECTORS 256
-#define NOR_NUM_PAGES 128000
+#define NOR_BYTES_PAGE      512         //512 Bytes per page
+#define NOR_BYTES_SECTOR    256000      //256 kB per sector
+#define NOR_NUM_SECTORS     256
+#define NOR_NUM_PAGES       128000
 
 // Structures
 struct RDIDInfo
@@ -52,10 +52,11 @@ struct RDIDInfo
 
 // Functions
 int8_t spi_NOR_init(uint8_t deviceSelect);
+int8_t spi_NOR_checkWriteInProgress(uint8_t deviceSelect);
 int8_t spi_NOR_getRDID(struct RDIDInfo *idInformation, uint8_t deviceSelect);
 int8_t spi_NOR_readFromAddress(uint32_t readAddress, uint8_t * buffer, uint16_t numOfBytes, uint8_t deviceSelect);
 int8_t spi_NOR_writeToAddress(uint32_t writeAddress, uint8_t * buffer, uint16_t numOfBytes, uint8_t deviceSelect);
-int8_t spi_NOR_eraseSector(uint32_t sectorAddress, uint8_t deviceSelect);
+int8_t spi_NOR_sectorErase(uint32_t sectorAddress, uint8_t deviceSelect);
 int8_t spi_NOR_bulkErase(uint8_t deviceSelect);
 
 #endif /* SPI_NOR_H_ */

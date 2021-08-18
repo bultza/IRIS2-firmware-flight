@@ -62,6 +62,37 @@ void addTimeAndStateMark()
 // PUBLIC FUNCTIONS
 
 /**
+ * Reads the NOR partitions for Telemetry Lines and Events Lines. Checks where
+ * last lines were written, sets addresses to continue writing on NOR.
+ */
+void setWritingAddressesNOR()
+{
+    uint32_t telemetryLinesLastAddress = NOR_TLM_ADDRESS;
+    uint32_t eventsLinesLastAddress = NOR_EVENTS_ADDRESS;
+
+    // Check first Telemetry Lines partition
+    uint8_t readByte[1];
+    do
+    {
+        spi_NOR_readFromAddress(telemetryLinesLastAddress, readByte, 1, confRegister_.nor_deviceSelected);
+        telemetryLinesLastAddress++;
+
+    } while ((uint8_t) readByte[0] != 255);
+
+    // Then check Event Lines partition
+    do
+    {
+        uint8_t readByte[1];
+        spi_NOR_readFromAddress(eventsLinesLastAddress, readByte, 1, confRegister_.nor_deviceSelected);
+        eventsLinesLastAddress++;
+
+    } while ((uint8_t) readByte[0] != 255);
+
+    confRegister_.nor_telemetryAddress = telemetryLinesLastAddress-1;
+    confRegister_.nor_eventAddress = eventsLinesLastAddress-1;
+}
+
+/**
  * Checks if it is time to read the sensors and saves them into memory
  */
 void sensors_read()
@@ -501,7 +532,9 @@ int8_t addEventNOR(struct EventLine *newEvent, uint32_t *address)
     if(*address < NOR_EVENTS_ADDRESS)
         return -1;
 
-    int8_t error = spi_NOR_writeToAddress(*address, (uint8_t *) newEvent, sizeof(struct EventLine), CS_FLASH1);
+    int8_t error = spi_NOR_writeToAddress(*address, (uint8_t *) newEvent, sizeof(struct EventLine), confRegister_.nor_deviceSelected);
+
+    *address += sizeof(struct EventLine);
 
     return error;
 }
@@ -512,7 +545,7 @@ int8_t addEventNOR(struct EventLine *newEvent, uint32_t *address)
 int8_t getEventNOR(uint32_t pointer, struct EventLine *savedEvent)
 {
     uint32_t address = NOR_EVENTS_ADDRESS + pointer * sizeof(struct EventLine);
-    int8_t error = spi_NOR_readFromAddress(address, (uint8_t *) savedEvent, sizeof(struct EventLine), CS_FLASH1);
+    int8_t error = spi_NOR_readFromAddress(address, (uint8_t *) savedEvent, sizeof(struct EventLine), confRegister_.nor_deviceSelected);
 
     return error;
 }
@@ -526,7 +559,9 @@ int8_t addTelemetryNOR(struct TelemetryLine *newTelemetry, uint32_t *address)
     if(*address >= NOR_EVENTS_ADDRESS)
         return -1;
 
-    int8_t error = spi_NOR_writeToAddress(*address, (uint8_t *) newTelemetry, sizeof(struct TelemetryLine), CS_FLASH1);
+    int8_t error = spi_NOR_writeToAddress(*address, (uint8_t *) newTelemetry, sizeof(struct TelemetryLine), confRegister_.nor_deviceSelected);
+
+    *address += sizeof(struct TelemetryLine);
 
     return error;
 }
@@ -537,7 +572,7 @@ int8_t addTelemetryNOR(struct TelemetryLine *newTelemetry, uint32_t *address)
 int8_t getTelemetryNOR(uint32_t pointer, struct TelemetryLine *savedTelemetry)
 {
     uint32_t address = NOR_TLM_ADDRESS + pointer * sizeof(struct TelemetryLine);
-    int8_t error = spi_NOR_readFromAddress(address, (uint8_t *) savedTelemetry, sizeof(struct TelemetryLine), CS_FLASH1);
+    int8_t error = spi_NOR_readFromAddress(address, (uint8_t *) savedTelemetry, sizeof(struct TelemetryLine), confRegister_.nor_deviceSelected);
 
     return error;
 }
