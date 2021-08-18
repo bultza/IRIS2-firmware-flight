@@ -1031,6 +1031,7 @@ int8_t terminal_readAndProcessCommands(void)
             strToPrint_[1] = '\0';
             uart_print(UART_DEBUG, strToPrint_); //put cursor on start
             uart_print(UART_DEBUG, "                              "); //Clean
+            uart_print(UART_DEBUG, "                              "); //Clean
             uart_print(UART_DEBUG, strToPrint_); //put cursor on start
             //print terminal:
             uart_print(UART_DEBUG,"IRIS:/# ");
@@ -1054,6 +1055,7 @@ int8_t terminal_readAndProcessCommands(void)
             strToPrint_[0] = '\r';
             strToPrint_[1] = '\0';
             uart_print(UART_DEBUG, strToPrint_); //put cursor on start
+            uart_print(UART_DEBUG, "                              "); //Clean
             uart_print(UART_DEBUG, "                              "); //Clean
             uart_print(UART_DEBUG, strToPrint_); //put cursor on start
             //print terminal:
@@ -1256,17 +1258,19 @@ int8_t terminal_readAndProcessCommands(void)
         if (beginFlag_ != 0)
         {
             // Add command to CMD history
-            addCommandToHistory((char *) command_);
-            if (numIssuedCommands_ < CMD_MAX_SAVE)
-                cmdSelector_ = numIssuedCommands_;
-            else
-                cmdSelector_ = CMD_MAX_SAVE - 1;
+            if(command_[0] != 0)
+            {
+                addCommandToHistory((char *) command_);
+                if (numIssuedCommands_ < CMD_MAX_SAVE)
+                    cmdSelector_ = numIssuedCommands_;
+                else
+                    cmdSelector_ = CMD_MAX_SAVE - 1;
 
-            numIssuedCommands_++;
-            uint8_t i;
-            for (i = 0; i < CMD_MAX_LEN; i++)
-                lastIssuedCommand_[i] = command_[i];
-
+                numIssuedCommands_++;
+                uint8_t i;
+                for (i = 0; i < CMD_MAX_LEN; i++)
+                    lastIssuedCommand_[i] = command_[i];
+            }
             uart_print(UART_DEBUG,"IRIS:/# ");
         }
 
