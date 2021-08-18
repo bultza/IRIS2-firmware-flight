@@ -58,6 +58,7 @@
 #define EVENT_CAMERA3_OFF                   21
 #define EVENT_CAMERA4_OFF                   22
 #define EVENT_TERMINAL_START                23
+#define EVENT_I2C_ERROR_RESET               24
 
 #define AVG_INDEX               0
 #define MAX_INDEX               1
@@ -167,6 +168,7 @@ int8_t returnCurrentTMLines(struct TelemetryLine *tmLines);
 
 //Public Functions to save data permanently
 int8_t saveEvent(struct EventLine newEvent);
+int8_t saveEventSimple(uint8_t code, uint8_t payload[5]);
 int8_t saveTelemetry();
 
 //Public Functions to get Saved data on the FRAM memory

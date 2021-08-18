@@ -109,7 +109,20 @@ void sensors_read()
 
         int32_t pressure;
         int32_t altitude;
-        i2c_MS5611_getPressure(&pressure);
+        int8_t error = i2c_MS5611_getPressure(&pressure);
+        if (error != 0)
+        {
+            //Try to reboot the i2c!!!
+            uart_print(UART_DEBUG, "\r\nERROR: I2C seems to be not responding, rebooting the I2C...\r\n");
+            i2c_master_init();
+            //Init Barometer
+            i2c_MS5611_init();
+            //Register that an error ocurred today
+            uint8_t payload[5] = {0};
+            saveEventSimple(EVENT_I2C_ERROR_RESET, payload);
+            return;
+        }
+
         altitude = calculateAltitude(pressure);
 
         //Save historic altitude data
@@ -354,6 +367,26 @@ int8_t saveEvent(struct EventLine newEvent)
     addEventNOR(&newEvent, &confRegister_.nor_eventAddress);
 
     return 0;
+}
+
+/**
+ * It adds an event in the simplest possible way
+ */
+int8_t saveEventSimple(uint8_t code, uint8_t payload[5])
+{
+    //Register that a boot happened just now:
+    struct EventLine newEvent = {0};
+    newEvent.upTime = (uint32_t) millis_uptime();
+    newEvent.unixTime = i2c_RTC_unixTime_now();
+    newEvent.state = confRegister_.flightState;
+    newEvent.sub_state = confRegister_.flightSubState;
+    newEvent.event = code;
+    newEvent.payload[0] = payload[0];
+    newEvent.payload[1] = payload[1];
+    newEvent.payload[2] = payload[2];
+    newEvent.payload[3] = payload[3];
+    newEvent.payload[4] = payload[4];
+    return saveEvent(newEvent);
 }
 
 uint32_t lastTimeTelemetrySavedNOR_ = 0;
