@@ -78,12 +78,8 @@ int8_t i2c_RTC_getClockData(struct RTCDateTime *dateTime)
         dateTime->year =    ((uint8_t) ((rtcData[DS1338Z_YEAR] & 0b11110000) >> 4)) * 10
                 + ((uint8_t) (rtcData[DS1338Z_YEAR] & 0x0F));
     }
-    else
-    {
-        dateTime->year = 0;
-    }
 
-    return 0;
+    return ack;
 }
 
 /**
@@ -97,9 +93,16 @@ uint32_t i2c_RTC_unixTime_now()
     {
         //Ask again the time
         struct RTCDateTime dateFromRTC;
-        i2c_RTC_getClockData(&dateFromRTC);
-        unixTimeStatus_.uptime = now;
-        unixTimeStatus_.unixtime = convert_to_unixTime(dateFromRTC);
+        int8_t error = i2c_RTC_getClockData(&dateFromRTC);
+        if(error == 0)
+        {
+            unixTimeStatus_.uptime = now;
+            unixTimeStatus_.unixtime = convert_to_unixTime(dateFromRTC);
+        }
+        else
+        {
+            uart_print(UART_DEBUG, "ERROR\r\n");
+        }
     }
     return unixTimeStatus_.unixtime + (now - unixTimeStatus_.uptime);
 

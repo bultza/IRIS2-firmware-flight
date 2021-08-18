@@ -263,7 +263,7 @@ void processI2CCommand(char * command)
     if (strcmp("rtc", (char *) subcommand_) == 0)
     {
         struct RTCDateTime dateTime;
-        uint8_t error = i2c_RTC_getClockData(&dateTime);
+        int8_t error = i2c_RTC_getClockData(&dateTime);
 
         if (error != 0)
             sprintf(strToPrint_, "I2C RTC: Error code %d!\r\n", error);
@@ -279,7 +279,7 @@ void processI2CCommand(char * command)
     else if (strcmp("temp", (char*) subcommand_) == 0)
     {
         int16_t temperatures[6];
-        uint8_t error = i2c_TMP75_getTemperatures(temperatures);
+        int8_t error = i2c_TMP75_getTemperatures(temperatures);
 
         if (error != 0)
             sprintf(strToPrint_, "I2C TEMP: Error code %d!\r\n", error);

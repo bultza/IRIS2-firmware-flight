@@ -12,6 +12,7 @@
 #include <stdint.h>
 #include "i2c.h"
 #include "clock.h"
+#include "uart.h"
 
 #define DS1338Z_ADDRESS 0x68
 #define DS1338Z_SECONDS 0x00

@@ -29,12 +29,11 @@ int8_t i2c_TMP75_init(void)
 }
 
 /**
- * It asks a slave TMP75 its temperature
+ * It asks a slave TMP75 its temperature and returns an error code
  */
-int16_t i2c_TMP75_getTemperature(uint8_t selectedBus, uint8_t i2cAddress)
+int8_t i2c_TMP75_getTemperature(uint8_t selectedBus, uint8_t i2cAddress, int16_t *temperature)
 {
     uint8_t buffer[2];
-    int16_t result = 0;
 
     buffer[0] = 0;
     int8_t ack = i2c_write(selectedBus, i2cAddress, buffer, 1, 0);
@@ -44,14 +43,14 @@ int16_t i2c_TMP75_getTemperature(uint8_t selectedBus, uint8_t i2cAddress)
     if(ack == 0)
     {
         //Make conversion
-        result = (0xFF00 & ((uint16_t) buffer[0] << 8))
+        *temperature = (0xFF00 & ((uint16_t) buffer[0] << 8))
                 | ((uint16_t) (0x00FF & buffer[1]));
-        result = result >> 4;   //As per datasheet
+        *temperature = *temperature >> 4;   //As per datasheet
     }
     else
-        result = 32767;   //Deterrent value
+        *temperature = 32767;   //Deterrent value
 
-    return result;
+    return ack;
 }
 
 
@@ -61,10 +60,23 @@ int16_t i2c_TMP75_getTemperature(uint8_t selectedBus, uint8_t i2cAddress)
  */
 int8_t i2c_TMP75_getTemperatures(int16_t *temperatures)
 {
-    temperatures[0] = (i2c_TMP75_getTemperature(I2C_BUS00, TMP75_ADDRESS01)*10)/16;
-    //temperatures[1] = (i2c_TMP75_getTemperature(I2C_BUS01, TMP75_ADDRESS02)*10)/16;
-    //temperatures[2] = (i2c_TMP75_getTemperature(I2C_BUS02, TMP75_ADDRESS03)*10)/16;
-    //temperatures[3] = (i2c_TMP75_getTemperature(I2C_BUS03, TMP75_ADDRESS04)*10)/16;
-    //temperatures[4] = (i2c_TMP75_getTemperature(I2C_BUS04, TMP75_ADDRESS05)*10)/16;
+    int8_t error = 0;
+    int16_t temperature;
+
+    error += i2c_TMP75_getTemperature(I2C_BUS00, TMP75_ADDRESS01, &temperature);
+    temperatures[0] = (temperature*10)/16;
+
+    //error += i2c_TMP75_getTemperature(I2C_BUS01, TMP75_ADDRESS02, &temperature);
+    //temperatures[1] = (temperature*10)/16;
+
+    //error += i2c_TMP75_getTemperature(I2C_BUS01, TMP75_ADDRESS03, &temperature);
+    //temperatures[2] = (temperature*10)/16;
+
+    //error += i2c_TMP75_getTemperature(I2C_BUS01, TMP75_ADDRESS04, &temperature);
+    //temperatures[3] = (temperature*10)/16;
+
+    //error += i2c_TMP75_getTemperature(I2C_BUS01, TMP75_ADDRESS05, &temperature);
+    //temperatures[4] = (temperature*10)/16;
+
     return 0;
 }
