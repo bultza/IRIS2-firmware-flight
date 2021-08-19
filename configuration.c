@@ -11,7 +11,7 @@ struct ConfigurationRegister confRegister_ = {0};
 /**
  *
  */
-void configuration_init(void)
+int8_t configuration_init(void)
 {
     if(confRegister_.magicWord != MAGICWORD)
     {
@@ -37,8 +37,17 @@ void configuration_init(void)
         confRegister_.temp_readPeriod = TEMP_READPERIOD;
 
         //TODO
+
+        //Reboot counter moves up
+        confRegister_.numberReboots++;
+
+        //Return with error
+        return -1;
     }
 
     //Configuration is already in place so... just move on...
     confRegister_.numberReboots++;
+
+    //Return without error
+    return 0;
 }

@@ -58,7 +58,7 @@ extern struct ConfigurationRegister confRegister_;
 //******************************************************************************
 //* PUBLIC FUNCTION DECLARATIONS :                                             *
 //******************************************************************************
-void configuration_init(void);
+int8_t configuration_init(void);
 
 
 

@@ -177,10 +177,13 @@ void init_board()
     //TODO
 
     //Init configuration
-    configuration_init();
+    int8_t error = configuration_init();
 
-    //Set NOR writing addresses
-    setWritingAddressesNOR();
+    if(error != 0)
+    {
+        //Search where in the NOR we should continue
+        setWritingAddressesNOR();
+    }
 
     //Open UART_DEBUG externally
     uart_init(UART_DEBUG, BR_115200);
