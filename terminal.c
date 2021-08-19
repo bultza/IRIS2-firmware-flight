@@ -69,8 +69,8 @@ char commandHistory_[CMD_MAX_SAVE][CMD_MAX_LEN] = {0};
 uint8_t cmdSelector_ = 0;
 
 // PRIVATE FUNCTIONS
-char subcommand_[CMD_MAX_LEN] = {0};
-void extractCommandPart(char * command, uint8_t desiredPart);
+//char subcommand_[CMD_MAX_LEN] = {0};
+void extractCommandPart(char * command, uint8_t desiredPart, char * commandPart);
 void addCommandToHistory(char * command);
 void rebootReasonDecoded(uint16_t code, char * rebootReason);
 //Composed (multi-part) commands have their own function
@@ -86,15 +86,15 @@ void processMemoryCommand(char * command);
  * A parted command is separated into multiple parts by means of spaces.
  * This function returns a single desired part of a command.
  */
-void extractCommandPart(char * command, uint8_t desiredPart)
+void extractCommandPart(char * command, uint8_t desiredPart, char * commandPart)
 {
     uint8_t i;
 
-    // Wipe out contents of subcommand_
-    for (i = 0; i < CMD_MAX_LEN; i++)
-        subcommand_[i] = 0;
+    // Wipe out contents of commandPart
+    //for (i = 0; i < CMD_MAX_LEN; i++)
+    //    commandPart[i] = 0;
 
-    subcommand_[0] = '\0';
+    commandPart[0] = '\0';
 
     // Variable to store the number of part that we are iterating
     uint8_t numPart = 0;
@@ -103,7 +103,7 @@ void extractCommandPart(char * command, uint8_t desiredPart)
     for (i = 0; i < CMD_MAX_LEN; i++)
     {
         if ((uint8_t) (numPart == desiredPart))
-            subcommand_[i-whereToWrite] = command[i];
+            commandPart[i-whereToWrite] = command[i];
 
         // Update the part that we are iterating
         if (command[i] == ' ')
@@ -217,13 +217,14 @@ void rebootReasonDecoded(uint16_t code, char * rebootReason)
 void processTerminalCommand(char * command)
 {
     // Extract the subcommand from terminal command
-    extractCommandPart((char *) command, 1);
+    char terminalSubcommand[CMD_MAX_LEN] = {0};
+    extractCommandPart((char *) command, 1, (char *) terminalSubcommand);
 
-    if (strcmp("count", (char *)subcommand_) == 0)
+    if (strcmp("count", (char *)terminalSubcommand) == 0)
         sprintf(strToPrint_, "%d commands issued in this session.\r\n", numIssuedCommands_);
-    else if (strcmp("last", (char *)subcommand_) == 0)
+    else if (strcmp("last", (char *)terminalSubcommand) == 0)
         sprintf(strToPrint_, "Last issued command: %s\r\n", lastIssuedCommand_);
-    else if (strcmp("end", (char *)subcommand_) == 0)
+    else if (strcmp("end", (char *)terminalSubcommand) == 0)
     {
         beginFlag_ = 0;
         numIssuedCommands_ = 0;
@@ -240,7 +241,7 @@ void processTerminalCommand(char * command)
         sprintf(strToPrint_, "Terminal session was ended by user.\r\n");
     }
     else
-        sprintf(strToPrint_, "Terminal subcommand %s not recognised...\r\n", subcommand_);
+        sprintf(strToPrint_, "Terminal subcommand %s not recognised...\r\n", terminalSubcommand);
 
     uart_print(UART_DEBUG, strToPrint_);
 }
@@ -248,16 +249,17 @@ void processTerminalCommand(char * command)
 void processFSWCommand(char * command)
 {
     // Extract the subcommand from FSW command
-    extractCommandPart((char *) command, 1);
+    char fswSubcommand[CMD_MAX_LEN] = {0};
+    extractCommandPart((char *) command, 1, (char *) fswSubcommand);
 
-    if (strcmp("mode", (char *) subcommand_) == 0)
+    if (strcmp("mode", (char *)fswSubcommand) == 0)
         sprintf(strToPrint_, "FSW mode: %d\r\n", confRegister_.simulatorEnabled);
-    else if (strcmp("state", (char *) subcommand_) == 0)
+    else if (strcmp("state", (char *)fswSubcommand) == 0)
         sprintf(strToPrint_, "FSW state: %d\r\n", confRegister_.flightState);
-    else if (strcmp("substate", (char *) subcommand_) == 0)
+    else if (strcmp("substate", (char *)fswSubcommand) == 0)
         sprintf(strToPrint_, "FSW substate: %d\r\n", confRegister_.flightSubState);
     else
-        sprintf(strToPrint_, "FSW subcommand %s not recognised...\r\n", subcommand_);
+        sprintf(strToPrint_, "FSW subcommand %s not recognised...\r\n", fswSubcommand);
 
     uart_print(UART_DEBUG, strToPrint_);
 }
@@ -265,10 +267,11 @@ void processFSWCommand(char * command)
 void processConfCommand(char * command)
 {
     //Extract the subcommand (get/set) from conf command
-    extractCommandPart((char *) command, 1);
+    char confSubcommand[CMD_MAX_LEN] = {0};
+    extractCommandPart((char *) command, 1, (char *) confSubcommand);
     int8_t typeOfOperation = 0;
 
-    if (subcommand_[0] == '\0')
+    if (confSubcommand[0] == '\0')
     {
         typeOfOperation = 0;
         sprintf(strToPrint_, "magicWord = %X\r\n", confRegister_.magicWord);
@@ -310,9 +313,9 @@ void processConfCommand(char * command)
         sprintf(strToPrint_, "temp_readPeriod = %d\r\n", confRegister_.temp_readPeriod);
         uart_print(UART_DEBUG, strToPrint_);
     }
-    else if (strncmp("get", (char *)subcommand_, 3) == 0)
+    else if (strncmp("get", (char *)confSubcommand, 3) == 0)
         typeOfOperation = 1;
-    else if (strncmp("set", (char *)subcommand_, 3) == 0)
+    else if (strncmp("set", (char *)confSubcommand, 3) == 0)
         typeOfOperation = 2;
     else
         uart_print(UART_DEBUG, "Invalid command parameter. Use: conf or conf [get/set] for a particular value.\r\n");
@@ -321,16 +324,18 @@ void processConfCommand(char * command)
     if (typeOfOperation > 0)
     {
         // Extract parameter to get/set
-        extractCommandPart((char *) command, 2);
+        char selectedParameter[CMD_MAX_LEN] = {0};
+        extractCommandPart((char *) command, 2, (char *) selectedParameter);
 
         // SET OPERATION
         uint32_t valueToSet;
         if (typeOfOperation == 2)
         {
             // Extract value to set
-            extractCommandPart((char *) command, 3);
-            if (subcommand_[0] != '\0')
-                valueToSet = atoi(subcommand_);
+            char valueToSetChar[CMD_MAX_LEN] = {0};
+            extractCommandPart((char *) command, 3, (char *) valueToSetChar);
+            if (valueToSetChar[0] != '\0')
+                valueToSet = atoi(valueToSetChar);
             else
             {
                 uart_print(UART_DEBUG, "Invalid command format. Use: conf set [parameter] [value].\r\n");
@@ -338,112 +343,113 @@ void processConfCommand(char * command)
         }
 
         // Evaluate parameter to get/set
-        if (strncmp("magicWord", (char *)subcommand_, 9) == 0)
+        uint8_t parameterOk = 1;
+        if (strncmp("magicWord", (char *)selectedParameter, 9) == 0)
         {
             if (typeOfOperation == 1)
                 sprintf(strToPrint_, "magicWord = %X\r\n", confRegister_.magicWord);
             else if (typeOfOperation == 2)
                 confRegister_.magicWord = valueToSet;
         }
-        else if (strncmp("swVersion", (char *)subcommand_, 9) == 0)
+        else if (strncmp("swVersion", (char *)selectedParameter, 9) == 0)
         {
             if (typeOfOperation == 1)
                 sprintf(strToPrint_, "swVersion = %d\r\n", confRegister_.swVersion);
             else if (typeOfOperation == 2)
                 confRegister_.swVersion = valueToSet;
         }
-        else if (strncmp("simulatorEnabled", (char *)subcommand_, 16) == 0)
+        else if (strncmp("simulatorEnabled", (char *)selectedParameter, 16) == 0)
         {
             if (typeOfOperation == 1)
                 sprintf(strToPrint_, "simulatorEnabled = %d\r\n", confRegister_.simulatorEnabled);
             else if (typeOfOperation == 2)
                 confRegister_.simulatorEnabled = valueToSet;
         }
-        else if (strncmp("flightState", (char *)subcommand_, 11) == 0)
+        else if (strncmp("flightState", (char *)selectedParameter, 11) == 0)
         {
             if (typeOfOperation == 1)
                 sprintf(strToPrint_, "flightState = %d\r\n", confRegister_.flightState);
             else if (typeOfOperation == 2)
                 confRegister_.flightState = valueToSet;
         }
-        else if (strncmp("flightSubState", (char *)subcommand_, 14) == 0)
+        else if (strncmp("flightSubState", (char *)selectedParameter, 14) == 0)
         {
             if (typeOfOperation == 1)
                 sprintf(strToPrint_, "flightSubState = %d\r\n", confRegister_.flightSubState);
             else if (typeOfOperation == 2)
                 confRegister_.flightSubState = valueToSet;
         }
-        else if (strncmp("fram_telemetryAddress", (char *)subcommand_, 21) == 0)
+        else if (strncmp("fram_telemetryAddress", (char *)selectedParameter, 21) == 0)
         {
             if (typeOfOperation == 1)
                 sprintf(strToPrint_, "fram_telemetryAddress = %ld\r\n", confRegister_.fram_telemetryAddress);
             else if (typeOfOperation == 2)
                 confRegister_.fram_telemetryAddress = valueToSet;
         }
-        else if (strncmp("fram_eventAddress", (char *)subcommand_, 17) == 0)
+        else if (strncmp("fram_eventAddress", (char *)selectedParameter, 17) == 0)
         {
             if (typeOfOperation == 1)
                 sprintf(strToPrint_, "fram_eventAddress = %ld\r\n", confRegister_.fram_eventAddress);
             else if (typeOfOperation == 2)
                 confRegister_.fram_eventAddress = valueToSet;
         }
-        else if (strncmp("fram_tlmSavePeriod", (char *)subcommand_, 18) == 0)
+        else if (strncmp("fram_tlmSavePeriod", (char *)selectedParameter, 18) == 0)
         {
             if (typeOfOperation == 1)
                 sprintf(strToPrint_, "fram_tlmSavePeriod = %d\r\n", confRegister_.fram_tlmSavePeriod);
             else if (typeOfOperation == 2)
                 confRegister_.fram_tlmSavePeriod = valueToSet;
         }
-        else if (strncmp("nor_deviceSelected", (char *)subcommand_, 18) == 0)
+        else if (strncmp("nor_deviceSelected", (char *)selectedParameter, 18) == 0)
         {
             if (typeOfOperation == 1)
                 sprintf(strToPrint_, "nor_deviceSelected = %d\r\n", confRegister_.nor_deviceSelected);
             else if (typeOfOperation == 2)
                 confRegister_.nor_deviceSelected = valueToSet;
         }
-        else if (strncmp("nor_telemetryAddress", (char *)subcommand_, 20) == 0)
+        else if (strncmp("nor_telemetryAddress", (char *)selectedParameter, 20) == 0)
         {
             if (typeOfOperation == 1)
                 sprintf(strToPrint_, "nor_telemetryAddress = %ld\r\n", confRegister_.nor_telemetryAddress);
             else if (typeOfOperation == 2)
                 confRegister_.nor_telemetryAddress = valueToSet;
         }
-        else if (strncmp("nor_eventAddress", (char *)subcommand_, 16) == 0)
+        else if (strncmp("nor_eventAddress", (char *)selectedParameter, 16) == 0)
         {
             if (typeOfOperation == 1)
                 sprintf(strToPrint_, "nor_eventAddress = %ld\r\n", confRegister_.nor_eventAddress);
             else if (typeOfOperation == 2)
                 confRegister_.nor_eventAddress = valueToSet;
         }
-        else if (strncmp("nor_tlmSavePeriod", (char *)subcommand_, 17) == 0)
+        else if (strncmp("nor_tlmSavePeriod", (char *)selectedParameter, 17) == 0)
         {
             if (typeOfOperation == 1)
                 sprintf(strToPrint_, "nor_tlmSavePeriod = %d\r\n", confRegister_.nor_tlmSavePeriod);
             else if (typeOfOperation == 2)
                 confRegister_.nor_tlmSavePeriod = valueToSet;
         }
-        else if (strncmp("baro_readPeriod", (char *)subcommand_, 15) == 0)
+        else if (strncmp("baro_readPeriod", (char *)selectedParameter, 15) == 0)
         {
             if (typeOfOperation == 1)
                 sprintf(strToPrint_, "baro_readPeriod = %d\r\n", confRegister_.baro_readPeriod);
             else if (typeOfOperation == 2)
                 confRegister_.baro_readPeriod = valueToSet;
         }
-        else if (strncmp("ina_readPeriod", (char *)subcommand_, 14) == 0)
+        else if (strncmp("ina_readPeriod", (char *)selectedParameter, 14) == 0)
         {
             if (typeOfOperation == 1)
                 sprintf(strToPrint_, "ina_readPeriod = %d\r\n", confRegister_.ina_readPeriod);
             else if (typeOfOperation == 2)
                 confRegister_.ina_readPeriod = valueToSet;
         }
-        else if (strncmp("acc_readPeriod", (char *)subcommand_, 14) == 0)
+        else if (strncmp("acc_readPeriod", (char *)selectedParameter, 14) == 0)
         {
             if (typeOfOperation == 1)
                 sprintf(strToPrint_, "acc_readPeriod = %d\r\n", confRegister_.acc_readPeriod);
             else if (typeOfOperation == 2)
                 confRegister_.acc_readPeriod = valueToSet;
         }
-        else if (strncmp("temp_readPeriod", (char *)subcommand_, 15) == 0)
+        else if (strncmp("temp_readPeriod", (char *)selectedParameter, 15) == 0)
         {
             if (typeOfOperation == 1)
                 sprintf(strToPrint_, "temp_readPeriod = %d\r\n", confRegister_.temp_readPeriod);
@@ -451,13 +457,19 @@ void processConfCommand(char * command)
                 confRegister_.temp_readPeriod = valueToSet;
         }
         else
-            uart_print(UART_DEBUG, "Invalid command format. Use: conf [get/set] [parameter].\r\n");
-
-        if (typeOfOperation == 2)
         {
-            sprintf(strToPrint_, "Selected parameter has been set to %ld.", valueToSet);
+            parameterOk = 0;
+            uart_print(UART_DEBUG, "Invalid command format. Use: conf [get/set] [parameter].\r\n");
         }
-        uart_print(UART_DEBUG, strToPrint_);
+
+        if (parameterOk != 0)
+        {
+            if (typeOfOperation == 2)
+            {
+                sprintf(strToPrint_, "Selected parameter %s has been set to %ld.\r\n", selectedParameter, valueToSet);
+            }
+            uart_print(UART_DEBUG, strToPrint_);
+        }
     }
 
 }
@@ -465,9 +477,10 @@ void processConfCommand(char * command)
 void processI2CCommand(char * command)
 {
     // Extract the subcommand from I2C command
-    extractCommandPart((char *) command, 1);
+    char i2cSubcommand[CMD_MAX_LEN] = {0};
+    extractCommandPart((char *) command, 1, (char *) i2cSubcommand);
 
-    if (strcmp("rtc", (char *) subcommand_) == 0)
+    if (strcmp("rtc", (char *) i2cSubcommand) == 0)
     {
         struct RTCDateTime dateTime;
         int8_t error = i2c_RTC_getClockData(&dateTime);
@@ -483,7 +496,7 @@ void processI2CCommand(char * command)
                     dateTime.minutes,
                     dateTime.seconds);
     }
-    else if (strcmp("temp", (char*) subcommand_) == 0)
+    else if (strcmp("temp", (char*) i2cSubcommand) == 0)
     {
         int16_t temperatures[6];
         int8_t error = i2c_TMP75_getTemperatures(temperatures);
@@ -493,7 +506,7 @@ void processI2CCommand(char * command)
         else
             sprintf(strToPrint_, "I2C TEMP: %.2f deg C\r\n", temperatures[0]/10.0);
     }
-    else if (strcmp("baro", (char *) subcommand_) == 0)
+    else if (strcmp("baro", (char *) i2cSubcommand) == 0)
     {
         int32_t pressure, altitude;
         int8_t error = i2c_MS5611_getPressure(&pressure);
@@ -507,7 +520,7 @@ void processI2CCommand(char * command)
                     ((float)altitude/100.0));
         }
     }
-    else if (strcmp("ina", (char *) subcommand_) == 0)
+    else if (strcmp("ina", (char *) i2cSubcommand) == 0)
     {
         struct INAData inaData;
         int8_t error = i2c_INA_read(&inaData);
@@ -519,7 +532,7 @@ void processI2CCommand(char * command)
                     inaData.current);
     }
     else
-        sprintf(strToPrint_, "Device or sensor %s not recognised in I2C devices list.\r\n", subcommand_);
+        sprintf(strToPrint_, "Device or sensor %s not recognised in I2C devices list.\r\n", i2cSubcommand);
 
     uart_print(UART_DEBUG, strToPrint_);
 }
@@ -527,10 +540,11 @@ void processI2CCommand(char * command)
 void processCameraCommand(char * command)
 {
     // Process the selected camera
-    extractCommandPart((char *) command, 1);
+    char selectedCameraChar[CMD_MAX_LEN] = {0};
+    extractCommandPart((char *) command, 1, (char *) selectedCameraChar);
     uint8_t selectedCamera;
 
-    switch (subcommand_[0])
+    switch (selectedCameraChar[0])
     {
         case '1':
             selectedCamera = CAMERA01;
@@ -556,39 +570,40 @@ void processCameraCommand(char * command)
     gopros_cameraInit(selectedCamera);
 
     // Extract the subcommand from camera control command
-    extractCommandPart((char *) command, 2);
+    char cameraSubcommand[CMD_MAX_LEN] = {0};
+    extractCommandPart((char *) command, 2, (char *) cameraSubcommand);
 
-    if (strcmp("on", subcommand_) == 0)
+    if (strcmp("on", cameraSubcommand) == 0)
     {
         gopros_cameraRawPowerOn(selectedCamera);
         sprintf(strToPrint_, "Camera %c booting...\r\n", command[7]);
     }
-    else if (strcmp("pic", subcommand_) == 0)
+    else if (strcmp("pic", cameraSubcommand) == 0)
     {
         gopros_cameraRawTakePicture(selectedCamera);
         sprintf(strToPrint_, "Camera %c took a picture.\r\n", command[7]);
     }
-    else if (strcmp("video_start", subcommand_) == 0)
+    else if (strcmp("video_start", cameraSubcommand) == 0)
     {
         gopros_cameraRawStartRecordingVideo(selectedCamera);
         sprintf(strToPrint_, "Camera %c started recording video.\r\n", command[7]);
     }
-    else if (strcmp("video_end", subcommand_) == 0)
+    else if (strcmp("video_end", cameraSubcommand) == 0)
     {
         gopros_cameraRawStopRecordingVideo(selectedCamera);
         sprintf(strToPrint_, "Camera %c stopped recording video.\r\n", command[7]);
     }
-    else if (strncmp("send_cmd", subcommand_, 8) == 0)
+    else if (strncmp("send_cmd", cameraSubcommand, 8) == 0)
     {
         uint8_t i;
         char goProCommand[CMD_MAX_LEN] = {0};
         char goProCommandNEOL[CMD_MAX_LEN] = {0};
         for (i = 9; i < CMD_MAX_LEN; i++)
         {
-            if (subcommand_[i] != 0)
+            if (cameraSubcommand[i] != 0)
             {
-                goProCommandNEOL[i-9] = subcommand_[i];
-                goProCommand[i-9] = subcommand_[i];
+                goProCommandNEOL[i-9] = cameraSubcommand[i];
+                goProCommand[i-9] = cameraSubcommand[i];
             }
             else
             {
@@ -600,13 +615,13 @@ void processCameraCommand(char * command)
         gopros_cameraRawSendCommand(selectedCamera, goProCommand);
         sprintf(strToPrint_, "Command %s sent to camera %c.\r\n", goProCommandNEOL, command[7]);
     }
-    else if (strcmp("off", subcommand_) == 0)
+    else if (strcmp("off", cameraSubcommand) == 0)
     {
         gopros_cameraRawSafePowerOff(selectedCamera);
         sprintf(strToPrint_, "Camera %c powered off.\r\n", command[7]);
     }
     else
-        sprintf(strToPrint_, "Camera subcommand %s not recognised...\r\n", subcommand_);
+        sprintf(strToPrint_, "Camera subcommand %s not recognised...\r\n", cameraSubcommand);
 
     uart_print(UART_DEBUG, strToPrint_);
 }
@@ -617,14 +632,15 @@ void processTMCommand(char * command)
     returnCurrentTMLines(tmLines);
 
     // Extract the subcommand from telemetry command
-    extractCommandPart((char *) command, 1);
+    char telemetrySubcommand[CMD_MAX_LEN] = {0};
+    extractCommandPart((char *) command, 1, (char *) telemetrySubcommand);
 
     uint8_t printResults = 1;
 
     struct TelemetryLine askedTMLine;
-    if (strcmp("nor", (char *)subcommand_) == 0)
+    if (strcmp("nor", (char *)telemetrySubcommand) == 0)
         askedTMLine = tmLines[0];
-    else if (strcmp("fram", (char *)subcommand_) == 0)
+    else if (strcmp("fram", (char *)telemetrySubcommand) == 0)
         askedTMLine = tmLines[1];
     else
     {
@@ -675,22 +691,23 @@ void processMemoryCommand(char * command)
     int8_t memoryType;
 
     // MEMORY SUBCOMMANDS: status/read/dump/write/erase
-    extractCommandPart((char *) command, 1);
+    char memorySubcommandStr[CMD_MAX_LEN] = {0};
+    extractCommandPart((char *) command, 1, (char *) memorySubcommandStr);
 
     // memory status [nor/fram]
-    if (strncmp("status", (char *)subcommand_, 6) == 0)
+    if (strncmp("status", (char *)memorySubcommandStr, 6) == 0)
         memorySubcommand = MEM_CMD_STATUS;
     // memory read [nor/fram] [tlm/event] [OPTIONAL start_line] [OPTIONAL end_line]
-    else if (strncmp("read", (char *)subcommand_, 4) == 0)
+    else if (strncmp("read", (char *)memorySubcommandStr, 4) == 0)
         memorySubcommand = MEM_CMD_READ;
     // memory dump [nor/fram] [address] [num_bytes] [hex/bin]
-    else if (strncmp("dump", (char *)subcommand_, 4) == 0)
+    else if (strncmp("dump", (char *)memorySubcommandStr, 4) == 0)
         memorySubcommand = MEM_CMD_DUMP;
     // memory write [nor/fram] [address] [num_bytes] [byte0 byte1 byte2...]
-    else if (strncmp("write", (char *)subcommand_, 5) == 0)
+    else if (strncmp("write", (char *)memorySubcommandStr, 5) == 0)
         memorySubcommand = MEM_CMD_WRITE;
     // memory erase [nor/fram] [address] [num_bytes] OR [bulk]
-    else if (strncmp("erase", (char *)subcommand_, 5) == 0)
+    else if (strncmp("erase", (char *)memorySubcommandStr, 5) == 0)
         memorySubcommand = MEM_CMD_ERASE;
     else
     {
@@ -701,11 +718,12 @@ void processMemoryCommand(char * command)
     if (memorySubcommand != -1)
     {
         // Move on, EXTRACT MEMORY: nor or fram
-        extractCommandPart((char *) command, 2);
+        char memoryTypeStr[CMD_MAX_LEN] = {0};
+        extractCommandPart((char *) command, 2, (char *) memoryTypeStr);
 
-        if (strncmp("nor", (char *)subcommand_, 3) == 0)
+        if (strncmp("nor", (char *)memoryTypeStr, 3) == 0)
             memoryType = MEM_TYPE_NOR;
-        else if (strncmp("fram", (char *)subcommand_, 4) == 0)
+        else if (strncmp("fram", (char *)memoryTypeStr, 4) == 0)
             memoryType = MEM_TYPE_FRAM;
         else
         {
@@ -782,31 +800,17 @@ void processMemoryCommand(char * command)
             {
                 uint8_t readCmdError = 0;
                 uint8_t lineType = 0;
-                uint32_t startAddress = 0;
-                uint8_t lineSize = 0;
                 int16_t lineStart = 0;
                 int16_t lineEnd = 0;
 
                 // READ TYPE OF LINE to read (telemetry/event)
-                extractCommandPart((char *) command, 3);
-                if (strncmp("tlm", (char *)subcommand_, 3) == 0)
-                {
-                    if (memoryType == MEM_TYPE_NOR)
-                        startAddress = NOR_TLM_ADDRESS;
-                    else if (memoryType == MEM_TYPE_FRAM)
-                        startAddress = FRAM_TLM_ADDRESS;
+                char lineTypeStr[CMD_MAX_LEN] = {0};
+                extractCommandPart((char *) command, 3, (char *) lineTypeStr);
+
+                if (strncmp("tlm", (char *)lineTypeStr, 3) == 0)
                     lineType = MEM_LINE_TLM;
-                    lineSize = sizeof(struct TelemetryLine);
-                }
-                else if (strncmp("event", (char *)subcommand_, 5) == 0)
-                {
-                    if (memoryType == MEM_TYPE_NOR)
-                        startAddress = NOR_EVENTS_ADDRESS;
-                    else if (memoryType == MEM_TYPE_FRAM)
-                        startAddress = FRAM_EVENTS_ADDRESS;
+                else if (strncmp("event", (char *)lineTypeStr, 5) == 0)
                     lineType = MEM_LINE_EVENT;
-                    lineSize = sizeof(struct EventLine);
-                }
                 else
                 {
                     readCmdError--;
@@ -814,18 +818,20 @@ void processMemoryCommand(char * command)
                 }
 
                 // READ MEMORY START, if specified
-                extractCommandPart((char *) command, 4);
-                // TODO: If memory end not specified, read since the beginning
-                if (subcommand_[0] != '\0')
-                    lineStart = atoi(subcommand_);
+                char lineStartStr[CMD_MAX_LEN] = {0};
+                extractCommandPart((char *) command, 4, (char *) lineStartStr);
+
+                if (lineStartStr[0] != '\0')
+                    lineStart = atoi(lineStartStr);
                 else
                     lineStart = 0;
 
                 // READ MEMORY END, if specified
-                extractCommandPart((char *) command, 5);
-                // TODO: If memory end not specified, read until there are no more lines
-                if (subcommand_[0] != '\0')
-                    lineEnd = atoi(subcommand_);
+                char lineEndStr[CMD_MAX_LEN] = {0};
+                extractCommandPart((char *) command, 5, (char *) lineEndStr);
+
+                if (lineEndStr[0] != '\0')
+                    lineEnd = atoi(lineEndStr);
                 else
                 {
                     if (lineType == MEM_LINE_TLM)
@@ -1000,10 +1006,12 @@ void processMemoryCommand(char * command)
                 uint8_t error = 0;
 
                 // EXTRACT READ ADDRESS
+                char readAddressStr[CMD_MAX_LEN] = {0};
                 uint32_t * readAddress;
-                extractCommandPart((char *) command, 3);
-                if (subcommand_[0] != '\0')
-                    readAddress = (uint32_t *) atoi(subcommand_);
+                extractCommandPart((char *) command, 3, (char *) readAddressStr);
+
+                if (readAddressStr[0] != '\0')
+                    readAddress = (uint32_t *) atoi(readAddressStr);
                 else
                 {
                     uart_print(UART_DEBUG, "Please specify the reading address. Use: memory dump [nor/fram] [address].\r\n");
@@ -1011,10 +1019,12 @@ void processMemoryCommand(char * command)
                 }
 
                 // EXTRACT NUMBER OF BYTES to read
+                char numBytesStr[CMD_MAX_LEN] = {0};
                 uint16_t numBytes = 0;
-                extractCommandPart((char *) command, 4);
-                if (subcommand_[0] != '\0')
-                    numBytes = atoi(subcommand_);
+                extractCommandPart((char *) command, 4, (char *) numBytesStr);
+
+                if (numBytesStr[0] != '\0')
+                    numBytes = atoi(numBytesStr);
                 else
                 {
                     uart_print(UART_DEBUG, "Please specify the number of bytes to read. Use: memory dump [nor/fram] [address] [num_bytes].\r\n");
@@ -1022,13 +1032,15 @@ void processMemoryCommand(char * command)
                 }
 
                 // EXTRACT OUTPUT FORMAT (hex/bin)
+                char outputFormatStr[CMD_MAX_LEN] = {0};
                 uint8_t outputFormat;
-                extractCommandPart((char *) command, 5);
-                if (subcommand_[0] != '\0')
+                extractCommandPart((char *) command, 5, (char *) outputFormatStr);
+
+                if (outputFormatStr[0] != '\0')
                 {
-                    if (strncmp("hex", (char*)subcommand_, 3) == 0)
+                    if (strncmp("hex", (char*)outputFormatStr, 3) == 0)
                         outputFormat = MEM_OUTFORMAT_HEX;
-                    else if (strncmp("bin", (char*)subcommand_, 3) == 0)
+                    else if (strncmp("bin", (char*)outputFormatStr, 3) == 0)
                         outputFormat = MEM_OUTFORMAT_BIN;
                     else
                     {
@@ -1093,10 +1105,12 @@ void processMemoryCommand(char * command)
                 uint8_t error = 0;
 
                 // EXTRACT WRITE ADDRESS
+                char writeAddressStr[CMD_MAX_LEN] = {0};
                 uint32_t * writeAddress;
-                extractCommandPart((char *) command, 3);
-                if (subcommand_[0] != '\0')
-                    writeAddress = (uint32_t *) atoi(subcommand_);
+                extractCommandPart((char *) command, 3, (char *) writeAddressStr);
+
+                if (writeAddressStr[0] != '\0')
+                    writeAddress = (uint32_t *) atoi(writeAddressStr);
                 else
                 {
                     uart_print(UART_DEBUG, "Please specify the writing address. Use: memory write [nor/fram] [address].\r\n");
@@ -1104,10 +1118,12 @@ void processMemoryCommand(char * command)
                 }
 
                 // EXTRACT NUMBER OF BYTES to write
+                char numBytesStr[CMD_MAX_LEN] = {0};
                 uint16_t numBytes = 0;
-                extractCommandPart((char *) command, 4);
-                if (subcommand_[0] != '\0')
-                    numBytes = atoi(subcommand_);
+                extractCommandPart((char *) command, 4, (char *) numBytesStr);
+
+                if (numBytesStr[0] != '\0')
+                    numBytes = atoi(numBytesStr);
                 else
                 {
                     uart_print(UART_DEBUG, "Please specify the number of bytes to write. Use: memory write [nor/fram] [address] [num_bytes].\r\n");
@@ -1120,13 +1136,15 @@ void processMemoryCommand(char * command)
                 for (i = 0; i < numBytes; i++)
                 {
                     // Extract i'th byte to write
-                    extractCommandPart((char *) command, 5+i);
-                    if (subcommand_[0] != '\0')
+                    char byteToWrite[CMD_MAX_LEN] = {0};
+                    extractCommandPart((char *) command, 5+i, (char *) byteToWrite);
+
+                    if (byteToWrite[0] != '\0')
                     {
                         // Depending on memory type, we write one way or the other
                         if (memoryType == MEM_TYPE_NOR)
                         {
-                            int8_t errorWrite = spi_NOR_writeToAddress(*writeAddress, (uint8_t*) &subcommand_, 1, confRegister_.nor_deviceSelected);
+                            int8_t errorWrite = spi_NOR_writeToAddress(*writeAddress, (uint8_t*) &byteToWrite, 1, confRegister_.nor_deviceSelected);
                             if (errorWrite != 0)
                             {
                                 sprintf(strToPrint_, "Error while trying to write to address %ld from NOR memory.\r\n", *writeAddress);
@@ -1134,7 +1152,7 @@ void processMemoryCommand(char * command)
                             }
                         }
                         else if (memoryType == MEM_TYPE_FRAM)
-                            *writeAddress = *subcommand_;
+                            *writeAddress = *byteToWrite;
                     }
                     else
                         break; // We are done here...
@@ -1149,17 +1167,19 @@ void processMemoryCommand(char * command)
                 //TODO: Implement FRAM erasing... or not?
 
                 uint8_t error = 0;
-                extractCommandPart((char *) command, 3);
+                char eraseType[CMD_MAX_LEN] = {0};
+                extractCommandPart((char *) command, 3, (char *) eraseType);
 
                 // Check whether bulk erase is requested or if
                 // user wants to erase a certain amount of bytes
-                if (strncmp("sector", (char *)subcommand_, 6) == 0)
+                if (strncmp("sector", (char *)eraseType, 6) == 0)
                 {
                     // Extract erase sector
+                    char sectorToEraseStr[CMD_MAX_LEN] = {0};
                     uint8_t sectorToErase;
-                    extractCommandPart((char *) command, 4);
-                    if (subcommand_[0] != '\0')
-                        sectorToErase = atoi(subcommand_);
+                    extractCommandPart((char *) command, 4, (char *) sectorToEraseStr);
+                    if (sectorToEraseStr[0] != '\0')
+                        sectorToErase = atoi(sectorToEraseStr);
                     else
                     {
                         uart_print(UART_DEBUG, "Please specify the erasing sector. Use: memory erase [nor/fram] sector [num sector]\r\n.");
@@ -1206,7 +1226,7 @@ void processMemoryCommand(char * command)
                     }
 
                 }
-                else if (strncmp("bulk", (char *)subcommand_, 4) == 0)
+                else if (strncmp("bulk", (char *)eraseType, 4) == 0)
                 {
                     if (memoryType == MEM_TYPE_NOR)
                     {
