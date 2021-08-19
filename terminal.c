@@ -57,7 +57,7 @@
 #include "terminal.h"
 
 uint8_t beginFlag_ = 0;
-char strToPrint_[100];
+char strToPrint_[200];
 
 // Terminal session control data
 uint8_t numIssuedCommands_ = 0;
@@ -660,9 +660,7 @@ void processMemoryCommand(char * command)
                                 " accXAxisAVG, accXAxisMAX, accXAxisMIN, accYAxisAVG, accYAxisMAX, accYAxisMIN,"
                                 " accZAxisAVG, accZAxisMAX, accZAxisMIN, voltagesAVG, voltagesMAX, voltagesMIN,"
                                 " currentsAVG, currentsMAX, currentsMIN, state, sub_state,"
-                                " switches_status0, switches_status1, switches_status2, switches_status3,"
-                                " switches_status4, switches_status5, switches_status6, switches_status7,"
-                                " errors0, errors1, errors2, errors3, errors4, errors5, errors6, errors7, errors8\r\n");
+                                " switches_status, errors\r\n");
                     }
                     else if (lineType == MEM_LINE_EVENT)
                     {
@@ -681,7 +679,7 @@ void processMemoryCommand(char * command)
                     // Read line by line
                     struct TelemetryLine readTelemetry;
                     struct EventLine readEvent;
-                    uint8_t i;
+                    uint32_t i;
                     for (i = lineStart; i < lineStart + linesToRead; i++)
                     {
                         // Retrieve line
@@ -721,10 +719,7 @@ void processMemoryCommand(char * command)
                                     dateTime.seconds);
                             uart_print(UART_DEBUG, strToPrint_);
                             sprintf(strToPrint_, " %ld, %ld, %ld, %ld, %d, %d,"
-                                    " %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d,"
-                                    " %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d,"
-                                    " %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d,"
-                                    " %d, %d, %d, %d, %d, %d, %d\r\n",
+                                    " %d, %d, %d, %d, %d, %d,",
                                     readTelemetry.unixTime,
                                     readTelemetry.upTime,
                                     readTelemetry.pressure,
@@ -736,7 +731,11 @@ void processMemoryCommand(char * command)
                                     readTelemetry.temperatures[1],
                                     readTelemetry.temperatures[2],
                                     readTelemetry.temperatures[3],
-                                    readTelemetry.temperatures[4],
+                                    readTelemetry.temperatures[4]);
+                            uart_print(UART_DEBUG, strToPrint_);
+                            sprintf(strToPrint_, " %d, %d, %d, %d, %d,"
+                                    " %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d,"
+                                    " %d, 0x%02X, 0x%04X\r\n",
                                     readTelemetry.accXAxis[0],
                                     readTelemetry.accXAxis[1],
                                     readTelemetry.accXAxis[2],
@@ -754,23 +753,8 @@ void processMemoryCommand(char * command)
                                     readTelemetry.currents[2],
                                     readTelemetry.state,
                                     readTelemetry.sub_state,
-                                    readTelemetry.switches_status & 0x01,
-                                    readTelemetry.switches_status & 0x02,
-                                    readTelemetry.switches_status & 0x03,
-                                    readTelemetry.switches_status & 0x04,
-                                    readTelemetry.switches_status & 0x05,
-                                    readTelemetry.switches_status & 0x06,
-                                    readTelemetry.switches_status & 0x07,
-                                    readTelemetry.switches_status & 0x08,
-                                    readTelemetry.errors & 0x01,
-                                    readTelemetry.errors & 0x02,
-                                    readTelemetry.errors & 0x03,
-                                    readTelemetry.errors & 0x04,
-                                    readTelemetry.errors & 0x05,
-                                    readTelemetry.errors & 0x06,
-                                    readTelemetry.errors & 0x07,
-                                    readTelemetry.errors & 0x08,
-                                    readTelemetry.errors & 0x09);
+                                    readTelemetry.switches_status,
+                                    readTelemetry.errors);
                             uart_print(UART_DEBUG, strToPrint_);
                         }
                         else if (lineType == MEM_LINE_EVENT)
@@ -859,7 +843,7 @@ void processMemoryCommand(char * command)
                 {
                     uint8_t byteRead;
 
-                    uint8_t i;
+                    uint32_t i;
                     for (i = 0; i < numBytes; i++)
                     {
                         // Depending on memory type, we read one way or the other
