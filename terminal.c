@@ -693,7 +693,7 @@ void processMemoryCommand(char * command)
 
                             if (readCmdError != 0)
                             {
-                                sprintf(strToPrint_, "Error while trying to read line %d from NOR memory.\r\n", i);
+                                sprintf(strToPrint_, "Error while trying to read line %ld from NOR memory.\r\n", i);
                                 uart_print(UART_DEBUG, strToPrint_);
                             }
                         }
@@ -709,7 +709,7 @@ void processMemoryCommand(char * command)
                         {
                             struct RTCDateTime dateTime;
                             convert_from_unixTime(readTelemetry.unixTime, &dateTime);
-                            sprintf(strToPrint_, "%d, 20%.2d/%.2d/%.2d %.2d:%.2d:%.2d,",
+                            sprintf(strToPrint_, "%ld, 20%.2d/%.2d/%.2d %.2d:%.2d:%.2d,",
                                     i,
                                     dateTime.year,
                                     dateTime.month,
@@ -761,7 +761,7 @@ void processMemoryCommand(char * command)
                         {
                             struct RTCDateTime dateTime;
                             convert_from_unixTime(readEvent.unixTime, &dateTime);
-                            sprintf(strToPrint_, "%d, 20%.2d/%.2d/%.2d %.2d:%.2d:%.2d, ",
+                            sprintf(strToPrint_, "%ld, 20%.2d/%.2d/%.2d %.2d:%.2d:%.2d, ",
                                     i,
                                     dateTime.year,
                                     dateTime.month,
