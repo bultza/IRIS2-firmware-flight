@@ -364,7 +364,7 @@ int8_t saveEvent(struct EventLine newEvent)
     addEventFRAM(newEvent, &confRegister_.fram_eventAddress);
 
     //Now save on the NOR that it is a little bit slower
-    addEventNOR(&newEvent, &confRegister_.nor_eventAddress);
+    addEventNOR(newEvent, &confRegister_.nor_eventAddress);
 
     return 0;
 }
@@ -559,13 +559,13 @@ int8_t getTelemetryFRAM(uint16_t pointer, struct TelemetryLine *savedTelemetry)
 /**
  * It saves a new Event Line in the NOR memory.
  */
-int8_t addEventNOR(struct EventLine *newEvent, uint32_t *address)
+int8_t addEventNOR(struct EventLine newEvent, uint32_t *address)
 {
     //Sanity check:
     if(*address < NOR_EVENTS_ADDRESS)
-        return -1;
+        return -5;
 
-    int8_t error = spi_NOR_writeToAddress(*address, (uint8_t *) newEvent, sizeof(struct EventLine), confRegister_.nor_deviceSelected);
+    int8_t error = spi_NOR_writeToAddress(*address, (uint8_t *) &newEvent, sizeof(struct EventLine), confRegister_.nor_deviceSelected);
 
     *address += sizeof(struct EventLine);
 

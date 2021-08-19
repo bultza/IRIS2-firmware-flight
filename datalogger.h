@@ -179,7 +179,7 @@ int8_t addTelemetryFRAM(struct TelemetryLine newTelemetry, uint32_t *address);
 int8_t getTelemetryFRAM(uint16_t pointer, struct TelemetryLine *savedTelemetry);
 
 //Public Functions to get Saved data on the NOR memory
-int8_t addEventNOR(struct EventLine *newEvent, uint32_t *address);
+int8_t addEventNOR(struct EventLine newEvent, uint32_t *address);
 int8_t getEventNOR(uint32_t pointer, struct EventLine *savedEvent);
 
 int8_t addTelemetryNOR(struct TelemetryLine *newTelemetry, uint32_t *address);
