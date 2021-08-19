@@ -17,6 +17,9 @@
  *              0: flight mode / 1: simulation mode (simulator enabled)
  * fsw state --> Returns FSW state
  * fsw substate --> Returns FSW substate
+ * conf --> If no parameter is passed, returns actual FSW configuration
+ *      If [get] is passed, returns only desired parameter
+ *      If [set] is passed, sets value to desired parameter
  * ...Time:
  * uptime --> Returns elapsed seconds since boot
  * unixtime --> Returns actual UNIX time
@@ -73,6 +76,7 @@ void rebootReasonDecoded(uint16_t code, char * rebootReason);
 //Composed (multi-part) commands have their own function
 void processTerminalCommand(char * command);
 void processFSWCommand(char * command);
+void processConfCommand(char * command);
 void processI2CCommand(char * command);
 void processCameraCommand(char * command);
 void processTMCommand(char * command);
@@ -256,6 +260,206 @@ void processFSWCommand(char * command)
         sprintf(strToPrint_, "FSW subcommand %s not recognised...\r\n", subcommand_);
 
     uart_print(UART_DEBUG, strToPrint_);
+}
+
+void processConfCommand(char * command)
+{
+    //Extract the subcommand (get/set) from conf command
+    extractCommandPart((char *) command, 1);
+    int8_t typeOfOperation = 0;
+
+    if (subcommand_[0] == '\0')
+    {
+        typeOfOperation = 0;
+        sprintf(strToPrint_, "magicWord = %X\r\n", confRegister_.magicWord);
+        uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "swVersion = %d\r\n", confRegister_.swVersion);
+        uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "simulatorEnabled = %d\r\n", confRegister_.simulatorEnabled);
+        uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "flightState = %d\r\n", confRegister_.flightState);
+        uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "flightSubState = %d\r\n", confRegister_.flightSubState);
+        uart_print(UART_DEBUG, strToPrint_);
+
+        uart_print(UART_DEBUG, "\r\n");
+
+        sprintf(strToPrint_, "fram_telemetryAddress = %ld\r\n", confRegister_.fram_telemetryAddress);
+        uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "fram_eventAddress = %ld\r\n", confRegister_.fram_eventAddress);
+        uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "fram_tlmSavePeriod = %d\r\n", confRegister_.fram_tlmSavePeriod);
+        uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "nor_deviceSelected = %d\r\n", confRegister_.nor_deviceSelected);
+        uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "nor_telemetryAddress = %ld\r\n", confRegister_.nor_telemetryAddress);
+        uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "nor_eventAddress = %ld\r\n", confRegister_.nor_eventAddress);
+        uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "nor_tlmSavePeriod = %d\r\n", confRegister_.nor_tlmSavePeriod);
+        uart_print(UART_DEBUG, strToPrint_);
+
+        uart_print(UART_DEBUG, "\r\n");
+
+        sprintf(strToPrint_, "baro_readPeriod = %d\r\n", confRegister_.baro_readPeriod);
+        uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "ina_readPeriod = %d\r\n", confRegister_.ina_readPeriod);
+        uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "acc_readPeriod = %d\r\n", confRegister_.acc_readPeriod);
+        uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "temp_readPeriod = %d\r\n", confRegister_.temp_readPeriod);
+        uart_print(UART_DEBUG, strToPrint_);
+    }
+    else if (strncmp("get", (char *)subcommand_, 3) == 0)
+        typeOfOperation = 1;
+    else if (strncmp("set", (char *)subcommand_, 3) == 0)
+        typeOfOperation = 2;
+    else
+        uart_print(UART_DEBUG, "Invalid command parameter. Use: conf or conf [get/set] for a particular value.\r\n");
+
+    // GET OR SET OPERATION
+    if (typeOfOperation > 0)
+    {
+        // Extract parameter to get/set
+        extractCommandPart((char *) command, 2);
+
+        // SET OPERATION
+        uint32_t valueToSet;
+        if (typeOfOperation == 2)
+        {
+            // Extract value to set
+            extractCommandPart((char *) command, 3);
+            if (subcommand_[0] != '\0')
+                valueToSet = atoi(subcommand_);
+            else
+            {
+                uart_print(UART_DEBUG, "Invalid command format. Use: conf set [parameter] [value].\r\n");
+            }
+        }
+
+        // Evaluate parameter to get/set
+        if (strncmp("magicWord", (char *)subcommand_, 9) == 0)
+        {
+            if (typeOfOperation == 1)
+                sprintf(strToPrint_, "magicWord = %X\r\n", confRegister_.magicWord);
+            else if (typeOfOperation == 2)
+                confRegister_.magicWord = valueToSet;
+        }
+        else if (strncmp("swVersion", (char *)subcommand_, 9) == 0)
+        {
+            if (typeOfOperation == 1)
+                sprintf(strToPrint_, "swVersion = %d\r\n", confRegister_.swVersion);
+            else if (typeOfOperation == 2)
+                confRegister_.swVersion = valueToSet;
+        }
+        else if (strncmp("simulatorEnabled", (char *)subcommand_, 16) == 0)
+        {
+            if (typeOfOperation == 1)
+                sprintf(strToPrint_, "simulatorEnabled = %d\r\n", confRegister_.simulatorEnabled);
+            else if (typeOfOperation == 2)
+                confRegister_.simulatorEnabled = valueToSet;
+        }
+        else if (strncmp("flightState", (char *)subcommand_, 11) == 0)
+        {
+            if (typeOfOperation == 1)
+                sprintf(strToPrint_, "flightState = %d\r\n", confRegister_.flightState);
+            else if (typeOfOperation == 2)
+                confRegister_.flightState = valueToSet;
+        }
+        else if (strncmp("flightSubState", (char *)subcommand_, 14) == 0)
+        {
+            if (typeOfOperation == 1)
+                sprintf(strToPrint_, "flightSubState = %d\r\n", confRegister_.flightSubState);
+            else if (typeOfOperation == 2)
+                confRegister_.flightSubState = valueToSet;
+        }
+        else if (strncmp("fram_telemetryAddress", (char *)subcommand_, 21) == 0)
+        {
+            if (typeOfOperation == 1)
+                sprintf(strToPrint_, "fram_telemetryAddress = %ld\r\n", confRegister_.fram_telemetryAddress);
+            else if (typeOfOperation == 2)
+                confRegister_.fram_telemetryAddress = valueToSet;
+        }
+        else if (strncmp("fram_eventAddress", (char *)subcommand_, 17) == 0)
+        {
+            if (typeOfOperation == 1)
+                sprintf(strToPrint_, "fram_eventAddress = %ld\r\n", confRegister_.fram_eventAddress);
+            else if (typeOfOperation == 2)
+                confRegister_.fram_eventAddress = valueToSet;
+        }
+        else if (strncmp("fram_tlmSavePeriod", (char *)subcommand_, 18) == 0)
+        {
+            if (typeOfOperation == 1)
+                sprintf(strToPrint_, "fram_tlmSavePeriod = %d\r\n", confRegister_.fram_tlmSavePeriod);
+            else if (typeOfOperation == 2)
+                confRegister_.fram_tlmSavePeriod = valueToSet;
+        }
+        else if (strncmp("nor_deviceSelected", (char *)subcommand_, 18) == 0)
+        {
+            if (typeOfOperation == 1)
+                sprintf(strToPrint_, "nor_deviceSelected = %d\r\n", confRegister_.nor_deviceSelected);
+            else if (typeOfOperation == 2)
+                confRegister_.nor_deviceSelected = valueToSet;
+        }
+        else if (strncmp("nor_telemetryAddress", (char *)subcommand_, 20) == 0)
+        {
+            if (typeOfOperation == 1)
+                sprintf(strToPrint_, "nor_telemetryAddress = %ld\r\n", confRegister_.nor_telemetryAddress);
+            else if (typeOfOperation == 2)
+                confRegister_.nor_telemetryAddress = valueToSet;
+        }
+        else if (strncmp("nor_eventAddress", (char *)subcommand_, 16) == 0)
+        {
+            if (typeOfOperation == 1)
+                sprintf(strToPrint_, "nor_eventAddress = %ld\r\n", confRegister_.nor_eventAddress);
+            else if (typeOfOperation == 2)
+                confRegister_.nor_eventAddress = valueToSet;
+        }
+        else if (strncmp("nor_tlmSavePeriod", (char *)subcommand_, 17) == 0)
+        {
+            if (typeOfOperation == 1)
+                sprintf(strToPrint_, "nor_tlmSavePeriod = %d\r\n", confRegister_.nor_tlmSavePeriod);
+            else if (typeOfOperation == 2)
+                confRegister_.nor_tlmSavePeriod = valueToSet;
+        }
+        else if (strncmp("baro_readPeriod", (char *)subcommand_, 15) == 0)
+        {
+            if (typeOfOperation == 1)
+                sprintf(strToPrint_, "baro_readPeriod = %d\r\n", confRegister_.baro_readPeriod);
+            else if (typeOfOperation == 2)
+                confRegister_.baro_readPeriod = valueToSet;
+        }
+        else if (strncmp("ina_readPeriod", (char *)subcommand_, 14) == 0)
+        {
+            if (typeOfOperation == 1)
+                sprintf(strToPrint_, "ina_readPeriod = %d\r\n", confRegister_.ina_readPeriod);
+            else if (typeOfOperation == 2)
+                confRegister_.ina_readPeriod = valueToSet;
+        }
+        else if (strncmp("acc_readPeriod", (char *)subcommand_, 14) == 0)
+        {
+            if (typeOfOperation == 1)
+                sprintf(strToPrint_, "acc_readPeriod = %d\r\n", confRegister_.acc_readPeriod);
+            else if (typeOfOperation == 2)
+                confRegister_.acc_readPeriod = valueToSet;
+        }
+        else if (strncmp("temp_readPeriod", (char *)subcommand_, 15) == 0)
+        {
+            if (typeOfOperation == 1)
+                sprintf(strToPrint_, "temp_readPeriod = %d\r\n", confRegister_.temp_readPeriod);
+            else if (typeOfOperation == 2)
+                confRegister_.temp_readPeriod = valueToSet;
+        }
+        else
+            uart_print(UART_DEBUG, "Invalid command format. Use: conf [get/set] [parameter].\r\n");
+
+        if (typeOfOperation == 2)
+        {
+            sprintf(strToPrint_, "Selected parameter has been set to %ld.", valueToSet);
+        }
+        uart_print(UART_DEBUG, strToPrint_);
+    }
+
 }
 
 void processI2CCommand(char * command)
@@ -1014,6 +1218,11 @@ void processMemoryCommand(char * command)
 
                         if (eraseCmdError == 0)
                         {
+                            // Reset write addresses
+                            confRegister_.fram_telemetryAddress = FRAM_TLM_ADDRESS;
+                            confRegister_.fram_eventAddress = FRAM_EVENTS_ADDRESS;
+
+                            // We are done here
                             int16_t eraseEnd = seconds_uptime();
                             sprintf(strToPrint_, "NOR memory has been completely wiped out in %d seconds.\r\n", eraseEnd - eraseStart);
                             uart_print(UART_DEBUG, strToPrint_);
@@ -1262,6 +1471,10 @@ int8_t terminal_readAndProcessCommands(void)
         else if (strncmp("fsw", (char *) command_, 3) == 0)
         {
             processFSWCommand((char *) command_);
+        }
+        else if (strncmp("conf", (char *) command_, 4) == 0)
+        {
+            processConfCommand((char *) command_);
         }
         else if(strncmp("i2c", (char *) command_, 3) == 0)
         {

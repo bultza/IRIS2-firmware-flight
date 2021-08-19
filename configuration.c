@@ -17,8 +17,10 @@ void configuration_init(void)
     {
         //We need to load the default configuration!!
         confRegister_.magicWord = MAGICWORD;
-        confRegister_.simulatorEnabled = 0;
         confRegister_.swVersion = FWVERSION;
+        confRegister_.simulatorEnabled = 0;
+        confRegister_.flightState = 0;
+        confRegister_.flightSubState = 0;
 
         confRegister_.fram_telemetryAddress = FRAM_TLM_ADDRESS;
         confRegister_.fram_eventAddress = FRAM_EVENTS_ADDRESS;
@@ -33,10 +35,6 @@ void configuration_init(void)
         confRegister_.ina_readPeriod = INA_READPERIOD;
         confRegister_.acc_readPeriod = ACC_READPERIOD;
         confRegister_.temp_readPeriod = TEMP_READPERIOD;
-
-        confRegister_.simulatorEnabled = 0;
-        confRegister_.flightState = 0;
-        confRegister_.flightSubState = 0;
 
         //TODO
     }
