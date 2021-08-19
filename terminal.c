@@ -1239,8 +1239,8 @@ void processMemoryCommand(char * command)
                         if (eraseCmdError == 0)
                         {
                             // Reset write addresses
-                            confRegister_.fram_telemetryAddress = FRAM_TLM_ADDRESS;
-                            confRegister_.fram_eventAddress = FRAM_EVENTS_ADDRESS;
+                            confRegister_.nor_telemetryAddress = NOR_TLM_ADDRESS;
+                            confRegister_.nor_eventAddress = NOR_EVENTS_ADDRESS;
 
                             // We are done here
                             int16_t eraseEnd = seconds_uptime();
