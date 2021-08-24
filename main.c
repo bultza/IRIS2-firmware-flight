@@ -219,6 +219,7 @@ void init_board()
     confRegister_.hardwareRebootReason = SYSRSTIV;
     newEvent.payload[0] = confRegister_.hardwareRebootReason & 0xFF;
     newEvent.payload[1] = (uint8_t) 0xFF & ((confRegister_.hardwareRebootReason & 0xFF00) >> 8);
+    newEvent.payload[4] = FWVERSION; //Adding firmware version!!
     //Clear system reset interrupt vector
     SYSRSTIV = 0;
     saveEvent(newEvent);
