@@ -200,8 +200,8 @@ void sensors_read()
             currentTelemetryLineFRAMandNOR_[i].temperatures[0] = temperatures[0]; //PCB
             currentTelemetryLineFRAMandNOR_[i].temperatures[1] = temperatures[1]; //Baro
             currentTelemetryLineFRAMandNOR_[i].temperatures[2] = temperatures[2]; //External 01
-            currentTelemetryLineFRAMandNOR_[i].temperatures[3] = temperatures[3]; //External 02
-            currentTelemetryLineFRAMandNOR_[i].temperatures[4] = temperatures[4]; //External 03
+            //currentTelemetryLineFRAMandNOR_[i].temperatures[3] = temperatures[3]; //External 02
+            //currentTelemetryLineFRAMandNOR_[i].temperatures[4] = temperatures[4]; //External 03
         }
 
         lastTime_tempRead_ = uptime;
