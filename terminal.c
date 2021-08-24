@@ -929,7 +929,7 @@ void processMemoryCommand(char * command)
                                     dateTime.seconds);
                             uart_print(UART_DEBUG, strToPrint_);
                             sprintf(strToPrint_, " %ld, %ld, %ld, %ld, %d, %d,"
-                                    " %d, %d, %d, %d, %d, %d,",
+                                    " %d, %d, %d, %d,",
                                     readTelemetry.unixTime,
                                     readTelemetry.upTime,
                                     readTelemetry.pressure,
@@ -939,9 +939,9 @@ void processMemoryCommand(char * command)
                                     readTelemetry.verticalSpeed[2],
                                     readTelemetry.temperatures[0],
                                     readTelemetry.temperatures[1],
-                                    readTelemetry.temperatures[2],
+                                    readTelemetry.temperatures[2]/*,
                                     readTelemetry.temperatures[3],
-                                    readTelemetry.temperatures[4]);
+                                    readTelemetry.temperatures[4]*/);
                             uart_print(UART_DEBUG, strToPrint_);
                             sprintf(strToPrint_, " %d, %d, %d, %d, %d,"
                                     " %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d,"
@@ -1007,11 +1007,15 @@ void processMemoryCommand(char * command)
 
                 // EXTRACT READ ADDRESS
                 char readAddressStr[CMD_MAX_LEN] = {0};
-                uint32_t * readAddress;
+                uint8_t *readAddressPointer;
+                uint32_t readAddress;
                 extractCommandPart((char *) command, 3, (char *) readAddressStr);
 
                 if (readAddressStr[0] != '\0')
-                    readAddress = (uint32_t *) atoi(readAddressStr);
+                {
+                    readAddress = atol(readAddressStr);
+                    readAddressPointer = (uint8_t *)readAddress;
+                }
                 else
                 {
                     uart_print(UART_DEBUG, "Please specify the reading address. Use: memory dump [nor/fram] [address].\r\n");
@@ -1024,7 +1028,7 @@ void processMemoryCommand(char * command)
                 extractCommandPart((char *) command, 4, (char *) numBytesStr);
 
                 if (numBytesStr[0] != '\0')
-                    numBytes = atoi(numBytesStr);
+                    numBytes = atol(numBytesStr);
                 else
                 {
                     uart_print(UART_DEBUG, "Please specify the number of bytes to read. Use: memory dump [nor/fram] [address] [num_bytes].\r\n");
@@ -1065,34 +1069,37 @@ void processMemoryCommand(char * command)
                         // Depending on memory type, we read one way or the other
                         if (memoryType == MEM_TYPE_NOR)
                         {
-                            int8_t errorRead = spi_NOR_readFromAddress(*readAddress, &byteRead, 1, confRegister_.nor_deviceSelected);
+                            int8_t errorRead = spi_NOR_readFromAddress(readAddress + i, &byteRead, 1, confRegister_.nor_deviceSelected);
                             if (errorRead != 0)
                             {
-                                sprintf(strToPrint_, "Error while trying to read from address %ld from NOR memory.\r\n", *readAddress);
+                                sprintf(strToPrint_, "Error while trying to read from address %ld from NOR memory.\r\n", readAddress + i);
                                 uart_print(UART_DEBUG, strToPrint_);
                             }
                         }
                         else if (memoryType == MEM_TYPE_FRAM)
-                            byteRead = *readAddress;
+                        {
+                            byteRead = *readAddressPointer;
+                        }
 
                         // Take into account output format
                         if (outputFormat == MEM_OUTFORMAT_HEX)
-                            sprintf(strToPrint_, "%X ", byteRead);
-                        // TODO: LSB or MSB? Reverse order?
+                        {
+                            if(i % 16 == 0)
+                            {
+                                sprintf(strToPrint_, "\r\n%ld ", (i + readAddress));
+                                uart_print(UART_DEBUG, strToPrint_);
+                            }
+                            sprintf(strToPrint_, "0x%02X ", byteRead);
+                            uart_print(UART_DEBUG, strToPrint_);
+                            readAddressPointer++;
+                        }
                         else if (outputFormat == MEM_OUTFORMAT_BIN)
-                            sprintf(strToPrint_, "%d%d%d%d%d%d%d%d",
-                                    (byteRead & 0xFF),
-                                    ((byteRead >> 1) & 0xFF),
-                                    ((byteRead >> 2) & 0xFF),
-                                    ((byteRead >> 3) & 0xFF),
-                                    ((byteRead >> 4) & 0xFF),
-                                    ((byteRead >> 5) & 0xFF),
-                                    ((byteRead >> 6) & 0xFF),
-                                    ((byteRead >> 7) & 0xFF));
-
-                        uart_print(UART_DEBUG, strToPrint_);
+                        {
+                            //Just print the binary raw data into the console
+                            uart_write(UART_DEBUG, &byteRead, 1);
+                            readAddressPointer++;
+                        }
                     }
-
                     uart_print(UART_DEBUG, "\r\n");
                 }
             }
