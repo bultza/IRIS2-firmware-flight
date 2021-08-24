@@ -160,7 +160,7 @@ struct EventLine
 };
 
 //Public function to return the addresses to continue writing in the NOR
-void setWritingAddressesNOR();
+void searchAddressesNOR();
 
 //Public functions to read all sensors periodically and return TM Lines
 void sensors_read();

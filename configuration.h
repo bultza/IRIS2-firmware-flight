@@ -15,8 +15,9 @@
 #define MAGICWORD           0xBABE
 #define FWVERSION           4
 //#define FRAM_TLM_SAVEPERIOD 600     //seconds period to save on FRAM
-#define FRAM_TLM_SAVEPERIOD 1     //Only for Debug
-#define NOR_TLM_SAVEPERIOD  10      //seconds period to save on NOR Flash
+#define FRAM_TLM_SAVEPERIOD 59     //Only for Debug TODO
+//#define NOR_TLM_SAVEPERIOD  10      //seconds period to save on NOR Flash
+#define NOR_TLM_SAVEPERIOD  1      //Only for Debug TODO
 #define BARO_READPERIOD     1000    //Milliseconds period to read barometer
 #define TEMP_READPERIOD     1000    //Milliseconds period to read temperatures
 #define INA_READPERIOD      100     //Milliseconds period to read INA Voltage and currents

@@ -202,7 +202,7 @@ void init_board()
     if(error != 0)
     {
         //Search where in the NOR we should continue
-        setWritingAddressesNOR();
+        searchAddressesNOR();
     }
 
     //Open UART_DEBUG externally
@@ -309,7 +309,7 @@ int main(void)
             LED_B_OFF;
         else
             LED_B_ON;
-	}
+	};
 	
 	return 0;
 }

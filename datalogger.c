@@ -65,31 +65,44 @@ void addTimeAndStateMark()
  * Reads the NOR partitions for Telemetry Lines and Events Lines. Checks where
  * last lines were written, sets addresses to continue writing on NOR.
  */
-void setWritingAddressesNOR()
+void searchAddressesNOR()
 {
     uint32_t telemetryLinesLastAddress = NOR_TLM_ADDRESS;
     uint32_t eventsLinesLastAddress = NOR_EVENTS_ADDRESS;
 
     // Check first Telemetry Lines partition
-    uint8_t readByte[1];
-    do
+    uint8_t readByte[4];
+    while(1)
     {
-        spi_NOR_readFromAddress(telemetryLinesLastAddress, readByte, 1, confRegister_.nor_deviceSelected);
+        //TODO probably we should have a way of escape, something reasonable
+        spi_NOR_readFromAddress(telemetryLinesLastAddress, readByte, 4, confRegister_.nor_deviceSelected);
+        if((uint8_t) readByte[0] == 0xFF
+                && (uint8_t) readByte[1] == 0xFF
+                && (uint8_t) readByte[2] == 0xFF
+                && (uint8_t) readByte[3] == 0xFF)
+        {
+            break;  //found
+        }
         telemetryLinesLastAddress += sizeof(struct TelemetryLine);
-
-    } while ((uint8_t) readByte[0] != 255);
+    }
 
     // Then check Event Lines partition
-    do
+    while(1)
     {
-        uint8_t readByte[1];
-        spi_NOR_readFromAddress(eventsLinesLastAddress, readByte, 1, confRegister_.nor_deviceSelected);
+        //TODO probably we should have a way of escape, something reasonable
+        spi_NOR_readFromAddress(eventsLinesLastAddress, readByte, 4, confRegister_.nor_deviceSelected);
+        if((uint8_t) readByte[0] == 0xFF
+                && (uint8_t) readByte[1] == 0xFF
+                && (uint8_t) readByte[2] == 0xFF
+                && (uint8_t) readByte[3] == 0xFF)
+        {
+            break;  //found
+        }
         eventsLinesLastAddress += sizeof(struct EventLine);
 
-    } while ((uint8_t) readByte[0] != 255);
-
-    confRegister_.nor_telemetryAddress = telemetryLinesLastAddress-1;
-    confRegister_.nor_eventAddress = eventsLinesLastAddress-1;
+    }
+    confRegister_.nor_telemetryAddress = telemetryLinesLastAddress;
+    confRegister_.nor_eventAddress = eventsLinesLastAddress;
 }
 
 /**
