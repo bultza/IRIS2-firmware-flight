@@ -501,7 +501,7 @@ int8_t addTelemetryFRAM(struct TelemetryLine newTelemetry, uint32_t *address)
 {
     //Sanity check:
     if(*address < FRAM_TLM_ADDRESS ||
-            (*address + sizeof(newTelemetry)) > (FRAM_TLM_ADDRESS + FRAM_TLM_SIZE))
+            (*address + (uint32_t)sizeof(newTelemetry)) > (FRAM_TLM_ADDRESS + FRAM_TLM_SIZE))
         //memory overflow, protect exiting from here!
         return -1;
 
@@ -537,7 +537,8 @@ int8_t addTelemetryFRAM(struct TelemetryLine newTelemetry, uint32_t *address)
 int8_t getTelemetryFRAM(uint16_t pointer, struct TelemetryLine *savedTelemetry)
 {
 
-    uint32_t address = FRAM_TLM_ADDRESS + pointer * sizeof(struct TelemetryLine);
+    uint32_t address = FRAM_TLM_ADDRESS + (uint32_t)pointer * (uint32_t)sizeof(struct TelemetryLine);
+
     volatile uint8_t *framPointerRead;
     volatile uint8_t *ramPointerWrite;
 

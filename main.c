@@ -220,7 +220,7 @@ void init_board()
  * main.c
  */
 int main(void)
-{
+    {
     //stop watchdog timer
 	WDTCTL = WDTPW | WDTHOLD;
 
@@ -232,6 +232,13 @@ int main(void)
 
 	///////////////////////////////////////////////////////////////////////////
 	//DEBUG, KEEP THIS COMMENTED ON FLIGHT
+	char strLine[100];
+	uint16_t size = (uint32_t)sizeof(struct TelemetryLine);
+	sprintf(strLine, "Size of TelemetryLine is %d\r\n", size);
+	uart_print(UART_DEBUG, strLine);
+	size = (uint32_t)sizeof(struct EventLine);
+    sprintf(strLine, "Size of EventLine is %d\r\n", size);
+    uart_print(UART_DEBUG, strLine);
 	//TODO
 	//END OF DEBUG
 	///////////////////////////////////////////////////////////////////////////

@@ -78,7 +78,7 @@
 // 512 B per page, 64 B per line: 8 TM lines per page -->  4000 TM
 //  lines per sector --> 800 000 TM lines possible
 // (theoretically, about 30 days of telemetry can be saved)
-#define TEMPERATURESENSORS_COUNT 5
+#define TEMPERATURESENSORS_COUNT 3
 
 struct TelemetryLine
 {
@@ -117,6 +117,15 @@ struct TelemetryLine
                                 //      00 - Average value
                                 //      01 - Maximum value
                                 //      02 - Minimum value
+    uint16_t errors;            // 1B - BIT0: Camera 01 UART error
+                                //      BIT1: Camera 02 UART error
+                                //      BIT2: Camera 03 UART error
+                                //      BIT3: Camera 04 UART error
+                                //      BIT4: INA error
+                                //      BIT5: BARO error
+                                //      BIT6: RTC error
+                                //      BIT7: Accelerometer error
+                                //      BIT8: Temperature error
     uint8_t state;              // 1B - Current mission state
                                 //      i.e. launch, making video
     uint8_t sub_state;          // 1B - Current mission sub-state.
@@ -129,15 +138,6 @@ struct TelemetryLine
                                 //      BIT5: MUX Position
                                 //      BIT6: Sunrise CMD
                                 //      BIT7: Accelerometer Interrupt
-    uint16_t errors;            // 1B - BIT0: Camera 01 UART error
-                                //      BIT1: Camera 02 UART error
-                                //      BIT2: Camera 03 UART error
-                                //      BIT3: Camera 04 UART error
-                                //      BIT4: INA error
-                                //      BIT5: BARO error
-                                //      BIT6: RTC error
-                                //      BIT7: Accelerometer error
-                                //      BIT8: Temperature error
 
     uint8_t padding[1];         // 1B - Padding to reach 64 bits
 };
