@@ -98,6 +98,18 @@
 #define LED_OFF         (P1OUT &= ~BIT0)
 #define LED_TOGGLE      (P1OUT ^= BIT0)
 
+#define LED_R_OFF       (P3OUT |= BIT6)
+#define LED_R_ON        (P3OUT &= ~BIT6)
+#define LED_R_TOGGLE    (P3OUT ^= BIT6)
+
+#define LED_G_OFF       (P3OUT |= BIT5)
+#define LED_G_ON        (P3OUT &= ~BIT5)
+#define LED_G_TOGGLE    (P3OUT ^= BIT5)
+
+#define LED_B_OFF       (P3OUT |= BIT4)
+#define LED_B_ON        (P3OUT &= ~BIT4)
+#define LED_B_TOGGLE    (P3OUT ^= BIT4)
+
 /*
  * Init all GPIO and MCU subsystems
  */
@@ -105,6 +117,9 @@ void init_board()
 {
     //Switch off everything on boot
     LED_OFF;
+    LED_R_OFF;
+    LED_G_OFF;
+    LED_B_OFF;
     CAMERA01_OFF;
     CAMERA02_OFF;
     CAMERA03_OFF;
@@ -115,6 +130,9 @@ void init_board()
 
     //Configure LED on P1.0
     P1DIR |= BIT0;
+
+    //Configure LED on P3.6, 5, 4
+    P3DIR |= BIT4 | BIT5 | BIT6;
 
     //Mux contollers for CAMs 3 and 4
     P2DIR |= BIT3;
@@ -136,14 +154,16 @@ void init_board()
     //SPI pins
     P5SEL1 &= ~(BIT0 | BIT1 | BIT2);        // USCI_B1 SCLK, MOSI,
     P5SEL0 |= (BIT0 | BIT1 | BIT2);         // STE, and MISO pin
-    // For XT1
-    PJSEL0 |= BIT4 | BIT5;
+
     //CS1
     FLASH_CS1_OFF;
-    P5OUT |= BIT3;
+    P5DIR |= BIT3;
     //CS2
     FLASH_CS2_OFF;
-    P3OUT |= BIT6;
+    P8DIR |= BIT3;
+
+    // For XT1
+    PJSEL0 |= BIT4 | BIT5;
 
     //Disable the GPIO Power-on default high-impedance mode to activate
     //previously configured port settings:
@@ -271,6 +291,24 @@ int main(void)
 	        LED_OFF;
 	    else
 	        LED_ON;
+
+	    //Blink LED
+        if((uptime + 100) % 1000 > 100)
+            LED_R_OFF;
+        else
+            LED_R_ON;
+
+        //Blink LED
+        if((uptime + 200) % 1000 > 100)
+            LED_G_OFF;
+        else
+            LED_G_ON;
+
+        //Blink LED
+        if((uptime + 300) % 1000 > 100)
+            LED_B_OFF;
+        else
+            LED_B_ON;
 	}
 	
 	return 0;
