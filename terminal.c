@@ -864,19 +864,19 @@ void processMemoryCommand(char * command)
                     // Print line header in CSV format
                     if (lineType == MEM_LINE_TLM)
                     {
-                        uart_print(UART_DEBUG, "address, date, unixtime, uptime, pressure, altitude,"
-                                " verticalSpeedAVG, verticalSpeedMAX, verticalSpeedMIN,"
-                                " temperatures0, temperatures1, temperatures2, temperatures3, temperatures4,"
-                                " accXAxisAVG, accXAxisMAX, accXAxisMIN, accYAxisAVG, accYAxisMAX, accYAxisMIN,"
-                                " accZAxisAVG, accZAxisMAX, accZAxisMIN, voltagesAVG, voltagesMAX, voltagesMIN,"
-                                " currentsAVG, currentsMAX, currentsMIN, state, sub_state,"
-                                " switches_status, errors\r\n");
+                        uart_print(UART_DEBUG, "address,date,unixtime,uptime,pressure,altitude,"
+                                "verticalSpeedAVG,verticalSpeedMAX,verticalSpeedMIN,"
+                                "temperatures0,temperatures1,temperatures2,temperatures3,temperatures4,"
+                                "accXAxisAVG,accXAxisMAX,accXAxisMIN,accYAxisAVG,accYAxisMAX,accYAxisMIN,"
+                                "accZAxisAVG,accZAxisMAX,accZAxisMIN,voltagesAVG,voltagesMAX,voltagesMIN,"
+                                "currentsAVG,currentsMAX,currentsMIN,state,sub_state,"
+                                "switches_status,errors\r\n");
                     }
                     else if (lineType == MEM_LINE_EVENT)
                     {
-                        uart_print(UART_DEBUG, "address, date, unixtime,"
-                                " uptime, state, sub_state, event, payload0,"
-                                " payload1, payload2, payload3, payload4\r\n");
+                        uart_print(UART_DEBUG, "address,date,unixtime,"
+                                "uptime,state,sub_state,event,payload0,"
+                                "payload1,payload2,payload3,payload4\r\n");
                     }
 
                     // Compute lines to be read
@@ -919,7 +919,7 @@ void processMemoryCommand(char * command)
                         {
                             struct RTCDateTime dateTime;
                             convert_from_unixTime(readTelemetry.unixTime, &dateTime);
-                            sprintf(strToPrint_, "%ld, 20%.2d/%.2d/%.2d %.2d:%.2d:%.2d,",
+                            sprintf(strToPrint_, "%ld,20%.2d/%.2d/%.2d %.2d:%.2d:%.2d,",
                                     i,
                                     dateTime.year,
                                     dateTime.month,
@@ -928,8 +928,8 @@ void processMemoryCommand(char * command)
                                     dateTime.minutes,
                                     dateTime.seconds);
                             uart_print(UART_DEBUG, strToPrint_);
-                            sprintf(strToPrint_, " %ld, %ld, %ld, %ld, %d, %d,"
-                                    " %d, %d, %d, %d,",
+                            sprintf(strToPrint_, "%ld,%ld,%ld,%ld,%d,%d,"
+                                    "%d,%d,%d,%d,",
                                     readTelemetry.unixTime,
                                     readTelemetry.upTime,
                                     readTelemetry.pressure,
@@ -943,9 +943,9 @@ void processMemoryCommand(char * command)
                                     readTelemetry.temperatures[3],
                                     readTelemetry.temperatures[4]*/);
                             uart_print(UART_DEBUG, strToPrint_);
-                            sprintf(strToPrint_, " %d, %d, %d, %d, %d,"
-                                    " %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d,"
-                                    " %d, 0x%02X, 0x%04X\r\n",
+                            sprintf(strToPrint_, "%d,%d,%d,%d,%d,"
+                                    "%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,"
+                                    "%d,0x%02X,0x%04X\r\n",
                                     readTelemetry.accXAxis[0],
                                     readTelemetry.accXAxis[1],
                                     readTelemetry.accXAxis[2],
@@ -971,7 +971,7 @@ void processMemoryCommand(char * command)
                         {
                             struct RTCDateTime dateTime;
                             convert_from_unixTime(readEvent.unixTime, &dateTime);
-                            sprintf(strToPrint_, "%ld, 20%.2d/%.2d/%.2d %.2d:%.2d:%.2d, ",
+                            sprintf(strToPrint_, "%ld,20%.2d/%.2d/%.2d %.2d:%.2d:%.2d,",
                                     i,
                                     dateTime.year,
                                     dateTime.month,
@@ -980,7 +980,7 @@ void processMemoryCommand(char * command)
                                     dateTime.minutes,
                                     dateTime.seconds);
                             uart_print(UART_DEBUG, strToPrint_);
-                            sprintf(strToPrint_, "%ld, %ld, %d, %d, %d, %d, %d, %d, %d, %d\r\n",
+                            sprintf(strToPrint_, "%ld,%ld,%d,%d,%d,%d,%d,%d,%d,%d\r\n",
                                        readEvent.unixTime,
                                        readEvent.upTime,
                                        readEvent.state,
