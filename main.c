@@ -131,6 +131,9 @@ void init_board()
     //Configure LED on P1.0
     P1DIR |= BIT0;
 
+    //Sunrise Flight Signal
+    P2DIR &= ~BIT2;
+
     //Configure LED on P3.6, 5, 4
     P3DIR |= BIT4 | BIT5 | BIT6;
 
