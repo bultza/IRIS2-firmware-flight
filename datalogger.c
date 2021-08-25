@@ -462,6 +462,7 @@ int8_t saveTelemetry()
     }
 
     //Now save on the NOR which is a little bit slower
+    //if(1) //Trick to save a lot of them altoghether
     if(lastTimeTelemetrySavedNOR_ + confRegister_.nor_tlmSavePeriod < elapsedSeconds)
     {
         //Time to save

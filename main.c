@@ -172,6 +172,9 @@ void init_board()
     //Init clock to 8MHz using internal DCO, millis etc
     clock_init();
 
+    //Enable Interrupts
+    _BIS_SR(GIE);
+
     //Init I2C
     i2c_master_init();
 
@@ -232,9 +235,6 @@ void init_board()
         __delay_cycles(400000);
     }
     LED_OFF;
-
-    //Enable Interrupts
-    _BIS_SR(GIE);
 }
 
 /**
