@@ -335,7 +335,7 @@ void processConfCommand(char * command)
             char valueToSetChar[CMD_MAX_LEN] = {0};
             extractCommandPart((char *) command, 3, (char *) valueToSetChar);
             if (valueToSetChar[0] != '\0')
-                valueToSet = atoi(valueToSetChar);
+                valueToSet = atol(valueToSetChar);
             else
             {
                 uart_print(UART_DEBUG, "Invalid command format. Use: conf set [parameter] [value].\r\n");
@@ -800,8 +800,8 @@ void processMemoryCommand(char * command)
             {
                 uint8_t readCmdError = 0;
                 uint8_t lineType = 0;
-                int16_t lineStart = 0;
-                int16_t lineEnd = 0;
+                int32_t lineStart = 0;
+                int32_t lineEnd = 0;
 
                 // READ TYPE OF LINE to read (telemetry/event)
                 char lineTypeStr[CMD_MAX_LEN] = {0};
@@ -822,7 +822,7 @@ void processMemoryCommand(char * command)
                 extractCommandPart((char *) command, 4, (char *) lineStartStr);
 
                 if (lineStartStr[0] != '\0')
-                    lineStart = atoi(lineStartStr);
+                    lineStart = atol(lineStartStr);
                 else
                     lineStart = 0;
 
@@ -831,7 +831,7 @@ void processMemoryCommand(char * command)
                 extractCommandPart((char *) command, 5, (char *) lineEndStr);
 
                 if (lineEndStr[0] != '\0')
-                    lineEnd = atoi(lineEndStr);
+                    lineEnd = atol(lineEndStr);
                 else
                 {
                     if (lineType == MEM_LINE_TLM)
@@ -1109,7 +1109,8 @@ void processMemoryCommand(char * command)
              */
             else if (memorySubcommand == MEM_CMD_WRITE)
             {
-                uint8_t error = 0;
+                //Code disabled until not tested
+                /*uint8_t error = 0;
 
                 // EXTRACT WRITE ADDRESS
                 char writeAddressStr[CMD_MAX_LEN] = {0};
@@ -1117,7 +1118,7 @@ void processMemoryCommand(char * command)
                 extractCommandPart((char *) command, 3, (char *) writeAddressStr);
 
                 if (writeAddressStr[0] != '\0')
-                    writeAddress = (uint32_t *) atoi(writeAddressStr);
+                    writeAddress = (uint32_t *) atol(writeAddressStr);
                 else
                 {
                     uart_print(UART_DEBUG, "Please specify the writing address. Use: memory write [nor/fram] [address].\r\n");
@@ -1163,7 +1164,7 @@ void processMemoryCommand(char * command)
                     }
                     else
                         break; // We are done here...
-                }
+                }*/
             }
             /* * *
              * Memory Erase
