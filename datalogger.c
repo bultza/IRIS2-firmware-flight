@@ -75,13 +75,29 @@ void searchAddressesNOR()
     while(1)
     {
         //TODO probably we should have a way of escape, something reasonable
-        spi_NOR_readFromAddress(telemetryLinesLastAddress, readByte, 4, confRegister_.nor_deviceSelected);
+        spi_NOR_readFromAddress(telemetryLinesLastAddress,
+                                readByte,
+                                4,
+                                confRegister_.nor_deviceSelected);
         if((uint8_t) readByte[0] == 0xFF
                 && (uint8_t) readByte[1] == 0xFF
                 && (uint8_t) readByte[2] == 0xFF
                 && (uint8_t) readByte[3] == 0xFF)
         {
-            break;  //found
+            //read and test again just in case
+            spi_NOR_readFromAddress(telemetryLinesLastAddress + sizeof(struct TelemetryLine),
+                                    readByte,
+                                    4,
+                                    confRegister_.nor_deviceSelected );
+            //Check also next one just in case there was not a power off in the middle.
+            if((uint8_t) readByte[0] == 0xFF
+                            && (uint8_t) readByte[1] == 0xFF
+                            && (uint8_t) readByte[2] == 0xFF
+                            && (uint8_t) readByte[3] == 0xFF)
+            {
+                //read the following line and test again just in case
+                break;  //found
+            }
         }
         telemetryLinesLastAddress += sizeof(struct TelemetryLine);
     }
@@ -90,13 +106,27 @@ void searchAddressesNOR()
     while(1)
     {
         //TODO probably we should have a way of escape, something reasonable
-        spi_NOR_readFromAddress(eventsLinesLastAddress, readByte, 4, confRegister_.nor_deviceSelected);
+        spi_NOR_readFromAddress(eventsLinesLastAddress,
+                                readByte,
+                                4,
+                                confRegister_.nor_deviceSelected);
         if((uint8_t) readByte[0] == 0xFF
                 && (uint8_t) readByte[1] == 0xFF
                 && (uint8_t) readByte[2] == 0xFF
                 && (uint8_t) readByte[3] == 0xFF)
         {
-            break;  //found
+            //read the following line and test again just in case
+            spi_NOR_readFromAddress(eventsLinesLastAddress + sizeof(struct EventLine),
+                                    readByte,
+                                    4,
+                                    confRegister_.nor_deviceSelected);
+            if((uint8_t) readByte[0] == 0xFF
+                    && (uint8_t) readByte[1] == 0xFF
+                    && (uint8_t) readByte[2] == 0xFF
+                    && (uint8_t) readByte[3] == 0xFF)
+            {
+                break;  //found
+            }
         }
         eventsLinesLastAddress += sizeof(struct EventLine);
 
@@ -377,7 +407,10 @@ int8_t saveEvent(struct EventLine newEvent)
     addEventFRAM(newEvent, &confRegister_.fram_eventAddress);
 
     //Now save on the NOR that it is a little bit slower
-    addEventNOR(newEvent, &confRegister_.nor_eventAddress);
+    int8_t error = addEventNOR(newEvent, &confRegister_.nor_eventAddress);
+
+    if(error)
+        uart_print(UART_DEBUG, "ERROR: NOR memory was busy, we could not write events in.");
 
     return 0;
 }
@@ -432,7 +465,10 @@ int8_t saveTelemetry()
     if(lastTimeTelemetrySavedNOR_ + confRegister_.nor_tlmSavePeriod < elapsedSeconds)
     {
         //Time to save
-        addTelemetryNOR(&currentTelemetryLineFRAMandNOR_[1], &confRegister_.nor_telemetryAddress);
+        int8_t error = addTelemetryNOR(&currentTelemetryLineFRAMandNOR_[1], &confRegister_.nor_telemetryAddress);
+        if(error)
+            uart_print(UART_DEBUG, "ERROR: NOR memory was busy, we could not write telemetry in.");
+
         lastTimeTelemetrySavedNOR_ = elapsedSeconds;
 
         //Reset Telemetry Line
@@ -579,9 +615,16 @@ int8_t addEventNOR(struct EventLine newEvent, uint32_t *address)
     if(*address < NOR_EVENTS_ADDRESS)
         return -5;
 
-    int8_t error = spi_NOR_writeToAddress(*address, (uint8_t *) &newEvent, sizeof(struct EventLine), confRegister_.nor_deviceSelected);
+    int8_t error = spi_NOR_writeToAddress(*address,
+                                          (uint8_t *) &newEvent,
+                                          sizeof(struct EventLine),
+                                          confRegister_.nor_deviceSelected);
+    //Give time to the NOR memory to become available again (takes 1 to 2 ms),
+    //this solves many problems
+    sleep_ms(2);
 
-    *address += sizeof(struct EventLine);
+    if(error == 0)  //Advance only if no error was detected
+        *address += sizeof(struct EventLine);
 
     return error;
 }
@@ -606,9 +649,16 @@ int8_t addTelemetryNOR(struct TelemetryLine *newTelemetry, uint32_t *address)
     if(*address >= NOR_EVENTS_ADDRESS)
         return -1;
 
-    int8_t error = spi_NOR_writeToAddress(*address, (uint8_t *) newTelemetry, sizeof(struct TelemetryLine), confRegister_.nor_deviceSelected);
+    int8_t error = spi_NOR_writeToAddress(*address,
+                                          (uint8_t *) newTelemetry,
+                                          sizeof(struct TelemetryLine),
+                                          confRegister_.nor_deviceSelected);
+    //Give time to the NOR memory to become available again (takes 1 to 2 ms),
+    //this solves many problems
+    sleep_ms(2);
 
-    *address += sizeof(struct TelemetryLine);
+    if(error == 0)  //Advance only if no error was detected
+        *address += sizeof(struct TelemetryLine);
 
     return error;
 }

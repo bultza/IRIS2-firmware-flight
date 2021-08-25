@@ -241,7 +241,7 @@ void init_board()
  * main.c
  */
 int main(void)
-    {
+{
     //stop watchdog timer
 	WDTCTL = WDTPW | WDTHOLD;
 

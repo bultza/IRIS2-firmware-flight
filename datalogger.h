@@ -9,6 +9,10 @@
 
 #include <stdint.h>
 #include <msp430.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
 #include "configuration.h"
 #include "clock.h"
 #include "i2c_MS5611.h"
