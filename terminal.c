@@ -1086,7 +1086,11 @@ void processMemoryCommand(char * command)
                         {
                             if(i % 16 == 0)
                             {
-                                sprintf(strToPrint_, "\r\n%ld ", (i + readAddress));
+                                if (i == 0)
+                                    sprintf(strToPrint_, "%ld ", (i + readAddress));
+                                else
+                                    sprintf(strToPrint_, "\r\n%ld ", (i + readAddress));
+
                                 uart_print(UART_DEBUG, strToPrint_);
                             }
                             sprintf(strToPrint_, "0x%02X ", byteRead);
