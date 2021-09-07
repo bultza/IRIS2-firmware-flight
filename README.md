@@ -52,7 +52,16 @@ These are the currently implemented commands:
 
 |Command      | Comment     |
 |-------------|-------------|
+|`help`           |It returns informations on commands and its use|
+|`terminal begin` |It starts Terminal session (required before sending any command)|
+|`terminal count` |It returns number of issued commands|
+|`terminal last`  |It eturns last command|
+|`terminal end`   |It ends Terminal session|
 |`reboot`       |It performs a PUC reboot of the MCU|
+|`fsw mode`     |It returns Flight Software (FSW) mode|
+|`fsw state`    |It returns FSW state|
+|`fsw substate` |It returns FSW substate|
+|`conf`         |It returns or sets actual FSW configuration|
 |`uptime`       |It returns the up time in seconds|
 |`unixtime`     |It returns the current unixtime  |
 |`date`         |It returns the current system date|
@@ -64,9 +73,11 @@ These are the currently implemented commands:
 |`camera x pic` |It takes a picture with the X camera|
 |`camera x video_start` |It makes a video on the X camera|
 |`camera x video_end`   |It stops a video on the X camera|
+|`camera x send_cmd y`   |Sends command y (do not include line feed at the end!) to camera x|
 |`camera x off` |It switches off the X camera|
-
-
+|`tm nor`       |It returns current Telemetry Line to be saved in NOR memory|
+|`tm fram`      |It returns current Telemetry Line to be saved in FRAM memory|
+|`memory [status/read/dump/write/erase] [nor/fram]` |It interacts with NOR/FRAM memories of the CPU|
 
 ## Authors
 * Aitor Conde <aitorconde@gmail.com>
