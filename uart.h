@@ -8,6 +8,7 @@
 
 #include <msp430.h>
 #include <stdint.h>
+#include "configuration.h"
 
 //******************************************************************************
 //* PUBLIC TYPE DEFINITIONS :                                                  *

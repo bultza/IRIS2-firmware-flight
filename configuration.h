@@ -49,6 +49,8 @@ struct ConfigurationRegister
     uint8_t flightState;
     uint8_t flightSubState;
     uint16_t hardwareRebootReason;
+
+    uint8_t debugUART;
 };
 
 //******************************************************************************

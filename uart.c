@@ -532,7 +532,8 @@ __interrupt void USCI_A1_ISR(void)
             if((UCA1STATW & UCOE) != 0)
                 uart_device[UART_CAM1].counterErrorOverrun++;
 
-            uart_device[UART_CAM1].bufferIn[(uart_device[UART_CAM1].bufferInEnd)] = UCA1RXBUF;
+            uint8_t buffer = UCA1RXBUF;
+            uart_device[UART_CAM1].bufferIn[(uart_device[UART_CAM1].bufferInEnd)] = buffer;
             uart_device[UART_CAM1].bufferInEnd++;
             if((uart_device[UART_CAM1].bufferInEnd) >= UARTBUFFERLENGHT)
                 uart_device[UART_CAM1].bufferInEnd = 0;
@@ -550,6 +551,9 @@ __interrupt void USCI_A1_ISR(void)
 
 
             uart_device[UART_CAM1].somethingOnQueue = 1;
+
+            if(confRegister_.debugUART == 1)
+                UCA0TXBUF = buffer;
         }break;
 
         case USCI_UART_UCTXIFG:
@@ -599,7 +603,8 @@ __interrupt void USCI_A2_ISR(void)
             if((UCA2STATW & UCOE) != 0)
                 uart_device[UART_CAM2].counterErrorOverrun++;
 
-            uart_device[UART_CAM2].bufferIn[(uart_device[UART_CAM2].bufferInEnd)] = UCA2RXBUF;
+            uint8_t buffer = UCA2RXBUF;
+            uart_device[UART_CAM2].bufferIn[(uart_device[UART_CAM2].bufferInEnd)] = buffer;
             uart_device[UART_CAM2].bufferInEnd++;
             if((uart_device[UART_CAM2].bufferInEnd) >= UARTBUFFERLENGHT)
                 uart_device[UART_CAM2].bufferInEnd = 0;
@@ -617,6 +622,9 @@ __interrupt void USCI_A2_ISR(void)
 
 
             uart_device[UART_CAM2].somethingOnQueue = 1;
+
+            if(confRegister_.debugUART == 2)
+                UCA0TXBUF = buffer;
         }break;
 
         case USCI_UART_UCTXIFG:
@@ -671,7 +679,8 @@ __interrupt void USCI_A3_ISR(void)
             if((UCA3STATW & UCOE) != 0)
                 uart_device[uartName].counterErrorOverrun++;
 
-            uart_device[uartName].bufferIn[(uart_device[uartName].bufferInEnd)] = UCA3RXBUF;
+            uint8_t buffer = UCA3RXBUF;
+            uart_device[uartName].bufferIn[(uart_device[uartName].bufferInEnd)] = buffer;
             uart_device[uartName].bufferInEnd++;
             if((uart_device[uartName].bufferInEnd) >= UARTBUFFERLENGHT)
               uart_device[uartName].bufferInEnd = 0;
@@ -688,6 +697,8 @@ __interrupt void USCI_A3_ISR(void)
 
 
             uart_device[uartName].somethingOnQueue = 1;
+            if(confRegister_.debugUART == uartName)
+                UCA0TXBUF = buffer;
         }break;
 
         case USCI_UART_UCTXIFG:

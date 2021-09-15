@@ -156,59 +156,59 @@ void rebootReasonDecoded(uint16_t code, char * rebootReason)
         strcpy(rebootReason, "Brownout (BOR)");
         break;
     case 0x04:
-            strcpy(rebootReason, "RSTIFG RST/NMI (BOR)");
-            break;
+        strcpy(rebootReason, "RSTIFG RST/NMI (BOR)");
+        break;
     case 0x06:
-            strcpy(rebootReason, "PMMSWBOR software BOR (BOR)");
-            break;
+        strcpy(rebootReason, "PMMSWBOR software BOR (BOR)");
+        break;
     case 0x0a:
-            strcpy(rebootReason, "Security violation (BOR)");
-            break;
+        strcpy(rebootReason, "Security violation (BOR)");
+        break;
     case 0x0e:
-            strcpy(rebootReason, "SVSHIFG SVSH event (BOR)");
-            break;
+        strcpy(rebootReason, "SVSHIFG SVSH event (BOR)");
+        break;
     case 0x14:
-            strcpy(rebootReason, "PMMSWPOR software POR (POR)");
-            break;
+        strcpy(rebootReason, "PMMSWPOR software POR (POR)");
+        break;
     case 0x16:
-            strcpy(rebootReason, "WDTIFG WDT timeout (PUC)");
-            break;
+        strcpy(rebootReason, "WDTIFG WDT timeout (PUC)");
+        break;
     case 0x18:
-            strcpy(rebootReason, "WDTPW password violation (PUC)");
-            break;
+        strcpy(rebootReason, "WDTPW password violation (PUC)");
+        break;
     case 0x1a:
-            strcpy(rebootReason, "FRCTLPW password violation (PUC)");
-            break;
+        strcpy(rebootReason, "FRCTLPW password violation (PUC)");
+        break;
     case 0x1c:
-            strcpy(rebootReason, "Uncorrectable FRAM bit error detection (PUC)");
-            break;
+        strcpy(rebootReason, "Uncorrectable FRAM bit error detection (PUC)");
+        break;
     case 0x1e:
-            strcpy(rebootReason, "Peripheral area fetch (PUC)");
-            break;
+        strcpy(rebootReason, "Peripheral area fetch (PUC)");
+        break;
     case 0x20:
-            strcpy(rebootReason, "PMMPW PMM password violation (PUC)");
-            break;
+        strcpy(rebootReason, "PMMPW PMM password violation (PUC)");
+        break;
     case 0x22:
-            strcpy(rebootReason, "MPUPW MPU password violation (PUC)");
-            break;
+        strcpy(rebootReason, "MPUPW MPU password violation (PUC)");
+        break;
     case 0x24:
-            strcpy(rebootReason, "CSPW CS password violation (PUC)");
-            break;
+        strcpy(rebootReason, "CSPW CS password violation (PUC)");
+        break;
     case 0x26:
-            strcpy(rebootReason, "MPUSEGIPIFG encapsulated IP memory segment violation (PUC)");
-            break;
+        strcpy(rebootReason, "MPUSEGIPIFG encapsulated IP memory segment violation (PUC)");
+        break;
     case 0x28:
-            strcpy(rebootReason, "MPUSEGIIFG information memory segment violation (PUC)");
-            break;
+        strcpy(rebootReason, "MPUSEGIIFG information memory segment violation (PUC)");
+        break;
     case 0x2a:
-            strcpy(rebootReason, "MPUSEG1IFG segment 1 memory violation (PUC)");
-            break;
+        strcpy(rebootReason, "MPUSEG1IFG segment 1 memory violation (PUC)");
+        break;
     case 0x2c:
-            strcpy(rebootReason, "MPUSEG2IFG segment 2 memory violation (PUC)");
-            break;
+        strcpy(rebootReason, "MPUSEG2IFG segment 2 memory violation (PUC)");
+        break;
     case 0x2e:
-            strcpy(rebootReason, "MPUSEG3IFG segment 3 memory violation (PUC)");
-            break;
+        strcpy(rebootReason, "MPUSEG3IFG segment 3 memory violation (PUC)");
+        break;
     default:
         strcpy(rebootReason, "Unknown");
         break;
@@ -247,6 +247,9 @@ void processTerminalCommand(char * command)
     uart_print(UART_DEBUG, strToPrint_);
 }
 
+/**
+ * TODO please complete
+ */
 void processFSWCommand(char * command)
 {
     // Extract the subcommand from FSW command
@@ -265,6 +268,9 @@ void processFSWCommand(char * command)
     uart_print(UART_DEBUG, strToPrint_);
 }
 
+/**
+ * TODO please complete
+ */
 void processConfCommand(char * command)
 {
     //Extract the subcommand (get/set) from conf command
@@ -475,6 +481,9 @@ void processConfCommand(char * command)
 
 }
 
+/**
+ * TODO please complete
+ */
 void processI2CCommand(char * command)
 {
     // Extract the subcommand from I2C command
@@ -538,6 +547,9 @@ void processI2CCommand(char * command)
     uart_print(UART_DEBUG, strToPrint_);
 }
 
+/**
+ * TODO please complete
+ */
 void processCameraCommand(char * command)
 {
     // Process the selected camera
@@ -627,6 +639,9 @@ void processCameraCommand(char * command)
     uart_print(UART_DEBUG, strToPrint_);
 }
 
+/**
+ * TODO please complete
+ */
 void processTMCommand(char * command)
 {
     struct TelemetryLine tmLines[2];
@@ -686,6 +701,9 @@ void processTMCommand(char * command)
     }
 }
 
+/**
+ * TODO please complete
+ */
 void processMemoryCommand(char * command)
 {
     int8_t memorySubcommand;
@@ -1501,6 +1519,41 @@ int8_t terminal_readAndProcessCommands(void)
                     dateTime.minutes,
                     dateTime.seconds);
             uart_print(UART_DEBUG, strToPrint_);
+        }
+        else if (strncmp("uartdebug", (char *)command_, 9) == 0)
+        {
+            if(command_[10] == '1')
+            {
+                confRegister_.debugUART = 1;
+                uart_init(1, BR_57600);
+            }
+            else if(command_[10] == '2')
+            {
+                confRegister_.debugUART = 2;
+                uart_init(2, BR_57600);
+            }
+            else if(command_[10] == '3')
+            {
+                confRegister_.debugUART = 3;
+                uart_init(3, BR_57600);
+            }
+            else if(command_[10] == '4')
+            {
+                confRegister_.debugUART = 4;
+                uart_init(4, BR_57600);
+            }
+            else
+                confRegister_.debugUART = 0;
+
+            sprintf(strToPrint_, "UART debug changed to camera: %d\r\n",
+                    confRegister_.debugUART);
+            uart_print(UART_DEBUG, strToPrint_);
+        }
+        else if (strncmp("u ", (char *)command_, 2) == 0)
+        {
+            uint8_t *pointer;
+            pointer = &command_[2];
+            uart_print(confRegister_.debugUART, (char *)pointer);
         }
         else if (strncmp("date", (char *)command_, 4) == 0)
         {

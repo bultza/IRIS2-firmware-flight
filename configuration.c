@@ -35,6 +35,7 @@ int8_t configuration_init(void)
         confRegister_.ina_readPeriod = INA_READPERIOD;
         confRegister_.acc_readPeriod = ACC_READPERIOD;
         confRegister_.temp_readPeriod = TEMP_READPERIOD;
+        confRegister_.debugUART = 0;
 
         //TODO
 
