@@ -141,8 +141,13 @@ int8_t gopros_cameraRawPowerOn(uint8_t selectedCamera)
  */
 int8_t gopros_cameraRawSafePowerOff(uint8_t selectedCamera)
 {
+    //Send the command to power off
     uart_print(selectedCamera + 1, CAM_POWEROFF);
     sleep_ms(CAM_WAIT_POWER);
+
+    //We need to close the UART otherwise we are losing power through
+    //the opened UART port to the MewPro
+    uart_close(selectedCamera + 1);
 
     if (selectedCamera == CAMERA01)
         CAMERA01_OFF;
@@ -261,6 +266,9 @@ void releaseButton(uint8_t camera)
  */
 void cutPower(uint8_t camera)
 {
+    //We need to close the UART otherwise we are losing power through
+    //the opened UART port to the MewPro
+    uart_close(camera + 1);
     switch(camera)
     {
     case CAMERA01:
@@ -317,7 +325,7 @@ int8_t cameraPowerOn(uint8_t selectedCamera)
 int8_t cameraPowerOff(uint8_t selectedCamera)
 {
     if(cameraStatus_[selectedCamera].cameraStatus == CAM_STATUS_OFF)
-            return -1;  //Return error
+        return -1;  //Return error
 
     cameraStatus_[selectedCamera].fsmStatus = FSM_CAM_PRESSBTNOFF;
     pressButton(selectedCamera);
