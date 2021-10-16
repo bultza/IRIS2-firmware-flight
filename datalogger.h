@@ -95,7 +95,7 @@ struct TelemetryLine
                                 //      00 - Average value
                                 //      01 - Maximum value
                                 //      02 - Minimum value
-    int16_t temperatures[TEMPERATURESENSORS_COUNT];    // 2B X 5 = 10B: [Cº * 10]
+    int16_t temperatures[TEMPERATURESENSORS_COUNT];    // 2B X 5 = 10B: [Cï¿½ * 10]
                                 //      00 - PCB
                                 //      01 - BARO
                                 //      02 - External 01
@@ -113,11 +113,11 @@ struct TelemetryLine
                                 //      00 - Average value
                                 //      01 - Maximum value
                                 //      02 - Minimum value
-    int16_t voltages[3];        // 2B x 3 - Battery voltages input [mV]
+    int16_t voltage[3];        // 2B x 3 - Battery voltages input [mV]
                                 //      00 - Average value
                                 //      01 - Maximum value
                                 //      02 - Minimum value
-    int16_t currents[3];        // 2B x 3 - Currents consumption [mA]
+    int16_t current[3];        // 2B x 3 - Currents consumption [mA]
                                 //      00 - Average value
                                 //      01 - Maximum value
                                 //      02 - Minimum value
@@ -188,5 +188,7 @@ int8_t getEventNOR(uint32_t pointer, struct EventLine *savedEvent);
 
 int8_t addTelemetryNOR(struct TelemetryLine *newTelemetry, uint32_t *address);
 int8_t getTelemetryNOR(uint32_t pointer, struct TelemetryLine *savedTelemetry);
+
+void printAltitudeHistory();
 
 #endif /* DATALOGGER_H_ */

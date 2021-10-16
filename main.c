@@ -9,7 +9,6 @@
  * Authors:
  *      Aitor Conde <aitorconde@gmail.com>
  *      Ramon Garcia <ramongarciaalarcia@gmail.com>
- *
  */
 
 /**
@@ -203,12 +202,10 @@ void init_board()
     //Init INA
     i2c_INA_init();
 
-    //Init NOR Memory
-    //TODO
-
     //Init configuration
     int8_t error = configuration_init();
 
+    //Init NOR Memory
     if(error != 0)
     {
         //Search where in the NOR we should continue
@@ -270,6 +267,9 @@ int main(void)
 	//TODO
 	//END OF DEBUG
 	///////////////////////////////////////////////////////////////////////////
+
+    //Terminal begin by default thanks
+    terminal_start();
 
 	while(1)
 	{

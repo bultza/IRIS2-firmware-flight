@@ -37,6 +37,7 @@
 #define MEM_OUTFORMAT_HEX   0
 #define MEM_OUTFORMAT_BIN   1
 
+int8_t terminal_start(void);
 int8_t terminal_readAndProcessCommands(void);
 
 #endif /* TERMINAL_H_ */

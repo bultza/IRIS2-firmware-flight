@@ -15,28 +15,22 @@ uint64_t lastTime_accRead_ = 0;
 uint64_t lastTime_tempRead_ = 0;
 
 // How many times has a sensor been read per Telemetry Line? --> to compute avgs
-uint16_t numTimes_baroRead_[2] = {0, 0};   // FRAM, NOR
-uint16_t numTimes_inaRead_[2] = {0, 0};
-uint16_t numTimes_accRead_[2] = {0, 0};
+int16_t numTimes_baroRead_[2] = {0, 0};   // FRAM, NOR
+int16_t numTimes_inaRead_[2] = {0, 0};
+int16_t numTimes_accRead_[2] = {0, 0};
 
 //Current Telemetry Line. First index corresponds to FRAM one, second index to NOR.
-struct TelemetryLine currentTelemetryLineFRAMandNOR_[2];
+struct TelemetryLine currentTelemetryLine_[2];
 
 //History of altitudes
-uint32_t lastAltitude_ = 0;
-
+#define ALTITUDE_HISTORY 10
 struct AltitudesHistory
 {
-    uint64_t time;
-    uint32_t altitude;
+    int32_t time;
+    int32_t altitude;
 };
-
-const uint8_t maxHistSave_ = 10;
-struct AltitudesHistory altitudeHistory_[10]; // Number must be equal to maxHistSave_
+struct AltitudesHistory altitudeHistory_[ALTITUDE_HISTORY];
 uint8_t altitudeHistoryIndex_ = 0;
-
-// PRIVATE FUNCTIONS
-void addTimeAndStateMark();
 
 /**
  * When a sensor is read and its data put into a TM line, this function
@@ -48,15 +42,15 @@ void addTimeAndStateMark()
     uint32_t unixtTimeNow = i2c_RTC_unixTime_now();
     uint32_t uptime = millis_uptime();
 
-    currentTelemetryLineFRAMandNOR_[0].unixTime = unixtTimeNow;
-    currentTelemetryLineFRAMandNOR_[0].upTime = uptime;
-    currentTelemetryLineFRAMandNOR_[0].state = confRegister_.flightState;
-    currentTelemetryLineFRAMandNOR_[0].sub_state = confRegister_.flightSubState;
+    currentTelemetryLine_[0].unixTime = unixtTimeNow;
+    currentTelemetryLine_[0].upTime = uptime;
+    currentTelemetryLine_[0].state = confRegister_.flightState;
+    currentTelemetryLine_[0].sub_state = confRegister_.flightSubState;
 
-    currentTelemetryLineFRAMandNOR_[1].unixTime = unixtTimeNow;
-    currentTelemetryLineFRAMandNOR_[1].upTime = uptime;
-    currentTelemetryLineFRAMandNOR_[1].state = confRegister_.flightState;
-    currentTelemetryLineFRAMandNOR_[1].sub_state = confRegister_.flightSubState;
+    currentTelemetryLine_[1].unixTime = unixtTimeNow;
+    currentTelemetryLine_[1].upTime = uptime;
+    currentTelemetryLine_[1].state = confRegister_.flightState;
+    currentTelemetryLine_[1].sub_state = confRegister_.flightSubState;
 }
 
 // PUBLIC FUNCTIONS
@@ -136,6 +130,92 @@ void searchAddressesNOR()
 }
 
 /**
+ * It uses the current speed based on the history of 10 altitudes
+ * so the speed is in reality an average of the last 10 altitudes
+ * The returned value is in m/s*100 = cm/s
+ */
+int32_t calculateSpeed()
+{
+    //Check if we have valid values
+    uint8_t maxIndex = 0;
+    uint8_t minIndex = 9;
+    uint8_t i;
+
+    uint64_t timeNow = millis_uptime();
+
+    //Avoid calculating speeds if uptime is very low
+    if(timeNow < ALTITUDE_HISTORY * 1500L)
+        return 0;
+
+    int32_t sumOfSpeeds = 0;
+
+    //Search for the oldest and newest values
+    for(i = 0; i < ALTITUDE_HISTORY; i++)
+    {
+        if(altitudeHistory_[i].time == 0)
+            //There are not enough saved values to calculate speed!
+            return 0;
+        if(altitudeHistory_[i].time > altitudeHistory_[maxIndex].time)
+            maxIndex = i;
+        if(altitudeHistory_[i].time < altitudeHistory_[minIndex].time)
+            minIndex = i;
+
+        if(i == 0)
+        {
+            if(altitudeHistory_[0].time > altitudeHistory_[ALTITUDE_HISTORY - 1].time)
+            {
+                //Time to calculate speed:
+                int32_t timeDelta = altitudeHistory_[0].time
+                        - altitudeHistory_[ALTITUDE_HISTORY - 1].time;
+                int32_t distanceDelta = altitudeHistory_[0].altitude
+                        - altitudeHistory_[ALTITUDE_HISTORY - 1].altitude;
+
+                sumOfSpeeds += (distanceDelta * timeDelta);
+            }
+        }
+        else
+        {
+            if(altitudeHistory_[i].time > altitudeHistory_[i - 1].time)
+            {
+                //Time to calculate speed:
+                int32_t timeDelta = altitudeHistory_[i].time
+                        - altitudeHistory_[i - 1].time;
+                int32_t distanceDelta = altitudeHistory_[i].altitude
+                        - altitudeHistory_[i - 1].altitude;
+
+                sumOfSpeeds += (distanceDelta * timeDelta);
+            }
+        }
+    }
+
+    //Sanity check, if no altitudes for 20s, then return 0
+    if(altitudeHistory_[maxIndex].time + 20000 < timeNow)
+        return 0;
+
+    /*
+
+    //Time to calculate speed:
+    int32_t timeDelta = altitudeHistory_[maxIndex].time
+            - altitudeHistory_[minIndex].time;
+    int32_t distanceDelta = altitudeHistory_[maxIndex].altitude
+            - altitudeHistory_[minIndex].altitude;
+
+    //Sanity check, timeDelta should be of only 15s
+    if(timeDelta > ALTITUDE_HISTORY * 1500L)
+        return 0;
+
+    //timedelta is in ms, so we divide by 1000
+    //distance is in cm, and remains like that
+    return (distanceDelta * timeDelta)/1000;
+
+    */
+
+    return sumOfSpeeds / ((ALTITUDE_HISTORY - 1) * 1000L);
+}
+
+//uint32_t altDebug = 4000000;
+
+/**
  * Checks if it is time to read the sensors and saves them into memory
  */
 void sensors_read()
@@ -148,10 +228,9 @@ void sensors_read()
     if(lastTime_baroRead_ + confRegister_.baro_readPeriod < uptime)
     {
         //Time to read barometer
-        addTimeAndStateMark();
-
         int32_t pressure;
         int32_t altitude;
+        int32_t speed;
         int8_t error = i2c_MS5611_getPressure(&pressure);
         if (error != 0)
         {
@@ -163,65 +242,56 @@ void sensors_read()
             //Register that an error ocurred today
             uint8_t payload[5] = {0};
             saveEventSimple(EVENT_I2C_ERROR_RESET, payload);
+
+            //Reset time to read baro
+            lastTime_baroRead_ = uptime;
             return;
         }
 
+        //Convert baro to altitude
         altitude = calculateAltitude(pressure);
 
-        //Save historic altitude data
-        if (altitudeHistoryIndex_ < maxHistSave_)
-        {
-            altitudeHistory_[altitudeHistoryIndex_].time = uptime;
-            altitudeHistory_[altitudeHistoryIndex_].altitude = altitude;
-            altitudeHistoryIndex_++;
-        }
-        else
-        {
-            uint8_t i;
-            for (i = 0; i < maxHistSave_-1; i++)
-            {
-                altitudeHistory_[i] = altitudeHistory_[i+1];
-            }
-            altitudeHistory_[maxHistSave_-1].time = uptime;
-            altitudeHistory_[maxHistSave_-1].altitude = altitude;
-        }
+        //altitude = altDebug;
+        //altDebug = altDebug - uptime;
+
+        //add altitude to altitude history
+        altitudeHistory_[altitudeHistoryIndex_].time = (int32_t)uptime;
+        altitudeHistory_[altitudeHistoryIndex_].altitude = altitude;
+        altitudeHistoryIndex_++;
+        if(altitudeHistoryIndex_ >= ALTITUDE_HISTORY)
+            altitudeHistoryIndex_ = 0;
+
+        //Calculate speed
+        speed = calculateSpeed();
 
         uint8_t i;
         for (i = 0; i < 2; i++)
         {
-            // Save pressure
-            currentTelemetryLineFRAMandNOR_[i].pressure = pressure;
-
-            // Save altitude
-            currentTelemetryLineFRAMandNOR_[i].altitude = altitude;
+            currentTelemetryLine_[i].pressure = pressure;
+            currentTelemetryLine_[i].altitude = altitude;
+            //currentTelemetryLine_[i]. = altitude;
 
             // Save vertical velocity
-            if (i == 0 && numTimes_baroRead_[0] == 0)
+            if(numTimes_baroRead_[i] == 0)
             {
-                currentTelemetryLineFRAMandNOR_[0].verticalSpeed[AVG_INDEX] = 0;
-                currentTelemetryLineFRAMandNOR_[0].verticalSpeed[MAX_INDEX] = -32767; //int16 minimum value
-                currentTelemetryLineFRAMandNOR_[0].verticalSpeed[MIN_INDEX] = 32767; //int16 maximum value
-            }
-            else if (i == 1 && numTimes_baroRead_[1] == 0)
-            {
-                currentTelemetryLineFRAMandNOR_[1].verticalSpeed[AVG_INDEX] = 0;
-                currentTelemetryLineFRAMandNOR_[1].verticalSpeed[MAX_INDEX] = -32767; //int16 minimum value
-                currentTelemetryLineFRAMandNOR_[1].verticalSpeed[MIN_INDEX] = 32767; //int16 maximum value
+                currentTelemetryLine_[i].verticalSpeed[AVG_INDEX] = 0;
+                currentTelemetryLine_[i].verticalSpeed[MAX_INDEX] = -32767; //int16 minimum value
+                currentTelemetryLine_[i].verticalSpeed[MIN_INDEX] = 32767; //int16 maximum value
             }
             else
             {
-                uint32_t currentVerticalSpeed = (altitude-lastAltitude_)/2;
-                uint32_t newAverageVerticalSpeed = (currentVerticalSpeed -
-                        currentTelemetryLineFRAMandNOR_[i].verticalSpeed[AVG_INDEX])/numTimes_baroRead_[i];
+                //media = media + (newValue-media)/numberOfValues
 
-                currentTelemetryLineFRAMandNOR_[i].verticalSpeed[AVG_INDEX] += newAverageVerticalSpeed;
-                if (currentVerticalSpeed < currentTelemetryLineFRAMandNOR_[i].verticalSpeed[MIN_INDEX])
-                    currentTelemetryLineFRAMandNOR_[i].verticalSpeed[MIN_INDEX] = currentVerticalSpeed;
-                if (currentVerticalSpeed > currentTelemetryLineFRAMandNOR_[i].verticalSpeed[MAX_INDEX])
-                    currentTelemetryLineFRAMandNOR_[i].verticalSpeed[MAX_INDEX] = currentVerticalSpeed;
+                int16_t newAverageVerticalSpeed = (speed -
+                        currentTelemetryLine_[i].verticalSpeed[AVG_INDEX])/numTimes_baroRead_[i];
+
+                currentTelemetryLine_[i].verticalSpeed[AVG_INDEX] += newAverageVerticalSpeed;
+
+                if (speed < currentTelemetryLine_[i].verticalSpeed[MIN_INDEX])
+                    currentTelemetryLine_[i].verticalSpeed[MIN_INDEX] = speed;
+                if (speed > currentTelemetryLine_[i].verticalSpeed[MAX_INDEX])
+                    currentTelemetryLine_[i].verticalSpeed[MAX_INDEX] = speed;
             }
-
-            lastAltitude_ = altitude;
             numTimes_baroRead_[i]++;
         }
 
@@ -230,20 +300,17 @@ void sensors_read()
     //Time to read temperatures?
     else if(lastTime_tempRead_ + confRegister_.temp_readPeriod < uptime)
     {
-        //Time to read thermometer
-        addTimeAndStateMark();
-
         int16_t temperatures[6];
-        i2c_TMP75_getTemperatures(temperatures);
+        int8_t error = i2c_TMP75_getTemperatures(temperatures);
 
         uint8_t i;
         for (i = 0; i < 2; i++)
         {
             // Save temperature
-            currentTelemetryLineFRAMandNOR_[i].temperatures[0] = temperatures[0]; //PCB
-            currentTelemetryLineFRAMandNOR_[i].temperatures[1] = temperatures[1]; //Baro
-            currentTelemetryLineFRAMandNOR_[i].temperatures[2] = temperatures[2]; //External 01
-            //currentTelemetryLineFRAMandNOR_[i].temperatures[3] = temperatures[3]; //External 02
+            currentTelemetryLine_[i].temperatures[0] = temperatures[0]; //PCB
+            currentTelemetryLine_[i].temperatures[1] = temperatures[1]; //Baro
+            currentTelemetryLine_[i].temperatures[2] = temperatures[2]; //External 01
+            //currentTelemetryLine_[i].temperatures[3] = temperatures[3]; //External 02
             //currentTelemetryLineFRAMandNOR_[i].temperatures[4] = temperatures[4]; //External 03
         }
 
@@ -252,56 +319,45 @@ void sensors_read()
     //Time to read voltages and currents?
     else if(lastTime_inaRead_ + confRegister_.ina_readPeriod < uptime)
     {
-        //Time to read voltages and currents
-        addTimeAndStateMark();
-
         struct INAData inaData;
-        i2c_INA_read(&inaData);
+        int8_t error = i2c_INA_read(&inaData);
 
         uint8_t i;
         for (i = 0; i < 2; i++)
         {
             // Save voltages
-            if (i == 0 && numTimes_inaRead_[0] == 0)
+            if (numTimes_inaRead_[i] == 0)
             {
-                currentTelemetryLineFRAMandNOR_[0].voltages[AVG_INDEX] = inaData.voltage;
-                currentTelemetryLineFRAMandNOR_[0].voltages[MAX_INDEX] = inaData.voltage;
-                currentTelemetryLineFRAMandNOR_[0].voltages[MIN_INDEX] = inaData.voltage;
+                currentTelemetryLine_[i].voltage[AVG_INDEX] = 0;
+                currentTelemetryLine_[i].voltage[MAX_INDEX] = -32767;
+                currentTelemetryLine_[i].voltage[MIN_INDEX] = 32767;
 
-                currentTelemetryLineFRAMandNOR_[0].currents[AVG_INDEX] = inaData.current;
-                currentTelemetryLineFRAMandNOR_[0].currents[MAX_INDEX] = inaData.current;
-                currentTelemetryLineFRAMandNOR_[0].currents[MIN_INDEX] = inaData.current;
-            }
-            else if (i == 1 && numTimes_inaRead_[1] == 0)
-            {
-                currentTelemetryLineFRAMandNOR_[1].voltages[AVG_INDEX] = inaData.voltage;
-                currentTelemetryLineFRAMandNOR_[1].voltages[MAX_INDEX] = inaData.voltage;
-                currentTelemetryLineFRAMandNOR_[1].voltages[MIN_INDEX] = inaData.voltage;
-
-                currentTelemetryLineFRAMandNOR_[0].currents[AVG_INDEX] = inaData.current;
-                currentTelemetryLineFRAMandNOR_[0].currents[MAX_INDEX] = inaData.current;
-                currentTelemetryLineFRAMandNOR_[0].currents[MIN_INDEX] = inaData.current;
+                currentTelemetryLine_[i].current[AVG_INDEX] = 0;
+                currentTelemetryLine_[i].current[MAX_INDEX] = -32767;
+                currentTelemetryLine_[i].current[MIN_INDEX] = 32767;
             }
             else
             {
-                uint32_t newAverageVoltage = (inaData.voltage -
-                        currentTelemetryLineFRAMandNOR_[i].voltages[AVG_INDEX])/numTimes_inaRead_[i];
+                //media = media + (newValue-media)/numberOfValues
+                int16_t newAverageVoltage = (inaData.voltage -
+                        currentTelemetryLine_[i].voltage[AVG_INDEX])/numTimes_inaRead_[i];
 
-                currentTelemetryLineFRAMandNOR_[i].voltages[AVG_INDEX] += newAverageVoltage;
-                if (inaData.voltage < currentTelemetryLineFRAMandNOR_[i].voltages[MIN_INDEX])
-                    currentTelemetryLineFRAMandNOR_[i].voltages[MIN_INDEX] = inaData.voltage;
-                if (inaData.voltage > currentTelemetryLineFRAMandNOR_[i].voltages[MAX_INDEX])
-                    currentTelemetryLineFRAMandNOR_[i].voltages[MAX_INDEX] = inaData.voltage;
+                currentTelemetryLine_[i].voltage[AVG_INDEX] += newAverageVoltage;
+
+                if (inaData.voltage < currentTelemetryLine_[i].voltage[MIN_INDEX])
+                    currentTelemetryLine_[i].voltage[MIN_INDEX] = inaData.voltage;
+                if (inaData.voltage > currentTelemetryLine_[i].voltage[MAX_INDEX])
+                    currentTelemetryLine_[i].voltage[MAX_INDEX] = inaData.voltage;
 
 
-                uint32_t newAverageCurrent = (inaData.current -
-                        currentTelemetryLineFRAMandNOR_[i].currents[AVG_INDEX])/numTimes_inaRead_[i];
+                int16_t newAverageCurrent = (inaData.current -
+                        currentTelemetryLine_[i].current[AVG_INDEX])/numTimes_inaRead_[i];
 
-                currentTelemetryLineFRAMandNOR_[i].currents[AVG_INDEX] += newAverageCurrent;
-                if (inaData.current < currentTelemetryLineFRAMandNOR_[i].currents[MIN_INDEX])
-                    currentTelemetryLineFRAMandNOR_[i].currents[MIN_INDEX] = inaData.current;
-                if (inaData.current > currentTelemetryLineFRAMandNOR_[i].currents[MAX_INDEX])
-                    currentTelemetryLineFRAMandNOR_[i].currents[MAX_INDEX] = inaData.current;
+                currentTelemetryLine_[i].current[AVG_INDEX] += newAverageCurrent;
+                if (inaData.current < currentTelemetryLine_[i].current[MIN_INDEX])
+                    currentTelemetryLine_[i].current[MIN_INDEX] = inaData.current;
+                if (inaData.current > currentTelemetryLine_[i].current[MAX_INDEX])
+                    currentTelemetryLine_[i].current[MAX_INDEX] = inaData.current;
             }
 
             numTimes_inaRead_[i]++;
@@ -316,7 +372,6 @@ void sensors_read()
 
         /*
         //Time to read accelerations
-        addTimeAndStateMark();
 
         struct Accelerations accData;
         i2c_ADXL345_getAccelerations(&accData);
@@ -393,8 +448,8 @@ void sensors_read()
 
 int8_t returnCurrentTMLines(struct TelemetryLine tmLines[2])
 {
-    tmLines[0] = currentTelemetryLineFRAMandNOR_[0];
-    tmLines[1] = currentTelemetryLineFRAMandNOR_[1];
+    tmLines[0] = currentTelemetryLine_[0];
+    tmLines[1] = currentTelemetryLine_[1];
     return 0;
 }
 
@@ -443,19 +498,25 @@ uint32_t lastTimeTelemetrySavedFRAM_ = 0;
  */
 int8_t saveTelemetry()
 {
+    uint64_t uptime = millis_uptime();
     uint32_t elapsedSeconds = seconds_uptime();
+    uint32_t unixtTimeNow = i2c_RTC_unixTime_now();
 
     //First save on the FRAM which is much faster
     //Save it only once every x seconds, otherwise we fill it!
     if(lastTimeTelemetrySavedFRAM_ + confRegister_.fram_tlmSavePeriod < elapsedSeconds)
     {
+        currentTelemetryLine_[0].unixTime = unixtTimeNow;
+        currentTelemetryLine_[0].upTime = uptime;
+        currentTelemetryLine_[0].state = confRegister_.flightState;
+        currentTelemetryLine_[0].sub_state = confRegister_.flightSubState;
         //Time to save
-        addTelemetryFRAM(currentTelemetryLineFRAMandNOR_[0], &confRegister_.fram_telemetryAddress);
+        addTelemetryFRAM(currentTelemetryLine_[0], &confRegister_.fram_telemetryAddress);
         lastTimeTelemetrySavedFRAM_ = elapsedSeconds;
 
         //Reset Telemetry Line
         struct TelemetryLine newVoidTMLine = {0};
-        currentTelemetryLineFRAMandNOR_[0] = newVoidTMLine;
+        currentTelemetryLine_[0] = newVoidTMLine;
         numTimes_baroRead_[0] = 0;
         numTimes_inaRead_[0] = 0;
         numTimes_accRead_[0] = 0;
@@ -465,8 +526,13 @@ int8_t saveTelemetry()
     //if(1) //Trick to save a lot of them altoghether
     if(lastTimeTelemetrySavedNOR_ + confRegister_.nor_tlmSavePeriod < elapsedSeconds)
     {
+        currentTelemetryLine_[1].unixTime = unixtTimeNow;
+        currentTelemetryLine_[1].upTime = uptime;
+        currentTelemetryLine_[1].state = confRegister_.flightState;
+        currentTelemetryLine_[1].sub_state = confRegister_.flightSubState;
+
         //Time to save
-        int8_t error = addTelemetryNOR(&currentTelemetryLineFRAMandNOR_[1], &confRegister_.nor_telemetryAddress);
+        int8_t error = addTelemetryNOR(&currentTelemetryLine_[1], &confRegister_.nor_telemetryAddress);
         if(error)
             uart_print(UART_DEBUG, "ERROR: NOR memory was busy, we could not write telemetry in.");
 
@@ -474,7 +540,7 @@ int8_t saveTelemetry()
 
         //Reset Telemetry Line
         struct TelemetryLine newVoidTMLine = {0};
-        currentTelemetryLineFRAMandNOR_[1] = newVoidTMLine;
+        currentTelemetryLine_[1] = newVoidTMLine;
         numTimes_baroRead_[1] = 0;
         numTimes_inaRead_[1] = 0;
         numTimes_accRead_[1] = 0;
@@ -636,7 +702,10 @@ int8_t addEventNOR(struct EventLine newEvent, uint32_t *address)
 int8_t getEventNOR(uint32_t pointer, struct EventLine *savedEvent)
 {
     uint32_t address = NOR_EVENTS_ADDRESS + pointer * sizeof(struct EventLine);
-    int8_t error = spi_NOR_readFromAddress(address, (uint8_t *) savedEvent, sizeof(struct EventLine), confRegister_.nor_deviceSelected);
+    int8_t error = spi_NOR_readFromAddress(address,
+                                           (uint8_t *) savedEvent,
+                                           sizeof(struct EventLine),
+                                           confRegister_.nor_deviceSelected);
 
     return error;
 }
@@ -665,13 +734,41 @@ int8_t addTelemetryNOR(struct TelemetryLine *newTelemetry, uint32_t *address)
 }
 
 /**
- * It returns a stored Telemetry Line from the NOR, the pointer is the TM line num.
+ * It returns a stored Telemetry Line from the NOR, the pointer is the TM
+ * line num.
  */
-int8_t getTelemetryNOR(uint32_t pointer, struct TelemetryLine *savedTelemetry)
+int8_t getTelemetryNOR(uint32_t pointer,
+                       struct TelemetryLine *savedTelemetry)
 {
     uint32_t address = NOR_TLM_ADDRESS + pointer * sizeof(struct TelemetryLine);
-    int8_t error = spi_NOR_readFromAddress(address, (uint8_t *) savedTelemetry, sizeof(struct TelemetryLine), confRegister_.nor_deviceSelected);
+    int8_t error = spi_NOR_readFromAddress(address,
+                                           (uint8_t *) savedTelemetry,
+                                           sizeof(struct TelemetryLine),
+                                           confRegister_.nor_deviceSelected);
 
     return error;
+}
+
+/**
+ * It prints on UART_DEBUG the history of altitudes and calculated vertical
+ * speed
+ */
+void printAltitudeHistory()
+{
+    char strToPrint[200];
+    uart_print(UART_DEBUG, "Altitude History:\r\n");
+    uint8_t i;
+    for(i = 0; i < ALTITUDE_HISTORY; i++)
+    {
+        sprintf(strToPrint, "\t[%d]: %.3fs\t %.2fm\r\n",
+                i,
+                (float)altitudeHistory_[i].time / 1000.0,
+                (float)altitudeHistory_[i].altitude / 100.0);
+        uart_print(UART_DEBUG, strToPrint);
+    }
+
+    int32_t speed = calculateSpeed();
+    sprintf(strToPrint, "Current Speed:\t%.3fm/s\r\n", (float)speed / 100.0);
+    uart_print(UART_DEBUG, strToPrint);
 }
 

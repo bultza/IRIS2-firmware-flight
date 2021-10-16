@@ -640,7 +640,7 @@ void processCameraCommand(char * command)
 }
 
 /**
- * TODO please complete
+ * Print telemetry lines data.
  */
 void processTMCommand(char * command)
 {
@@ -655,9 +655,9 @@ void processTMCommand(char * command)
 
     struct TelemetryLine askedTMLine;
     if (strcmp("nor", (char *)telemetrySubcommand) == 0)
-        askedTMLine = tmLines[0];
-    else if (strcmp("fram", (char *)telemetrySubcommand) == 0)
         askedTMLine = tmLines[1];
+    else if (strcmp("fram", (char *)telemetrySubcommand) == 0)
+        askedTMLine = tmLines[0];
     else
     {
         printResults = 0;
@@ -666,39 +666,115 @@ void processTMCommand(char * command)
 
     if (printResults)
     {
-        sprintf(strToPrint_, "Unix Time: %ld\r\n", askedTMLine.unixTime);
+        sprintf(strToPrint_, "Pressure:\t%.2fmbar\r\n", askedTMLine.pressure/100.0);
         uart_print(UART_DEBUG, strToPrint_);
-        sprintf(strToPrint_, "Up Time: %ld\r\n", askedTMLine.upTime);
+        sprintf(strToPrint_, "Altitude:\t%.2fm\r\n", askedTMLine.altitude/100.0);
         uart_print(UART_DEBUG, strToPrint_);
-        sprintf(strToPrint_, "Pressure: %ld\r\n", askedTMLine.pressure);
+        sprintf(strToPrint_, "Speed AVG:\t%.2fm/s\r\n", askedTMLine.verticalSpeed[0]/100.0);
         uart_print(UART_DEBUG, strToPrint_);
-        sprintf(strToPrint_, "Altitude: %ld\r\n", askedTMLine.altitude);
+        sprintf(strToPrint_, "Speed MAX:\t%.2fm/s\r\n", askedTMLine.verticalSpeed[1]/100.0);
         uart_print(UART_DEBUG, strToPrint_);
-        sprintf(strToPrint_, "Vertical Speed AVG: %d\r\n", askedTMLine.verticalSpeed[0]);
+        sprintf(strToPrint_, "Speed MIN:\t%.2fm/s\r\n", askedTMLine.verticalSpeed[2]/100.0);
         uart_print(UART_DEBUG, strToPrint_);
-        sprintf(strToPrint_, "Vertical Speed MAX: %d\r\n", askedTMLine.verticalSpeed[1]);
+        sprintf(strToPrint_, "Temp CPU:\t%.1fºC\r\n", askedTMLine.temperatures[0]/10.0);
         uart_print(UART_DEBUG, strToPrint_);
-        sprintf(strToPrint_, "Vertical Speed MIN: %d\r\n", askedTMLine.verticalSpeed[2]);
+        sprintf(strToPrint_, "Temp [1]:\t%.1fºC\r\n", askedTMLine.temperatures[1]/10.0);
         uart_print(UART_DEBUG, strToPrint_);
-        sprintf(strToPrint_, "Temperature PCB: %d\r\n", askedTMLine.temperatures[0]);
+        sprintf(strToPrint_, "Temp [2]:\t%.1fºC\r\n", askedTMLine.temperatures[2]/10.0);
         uart_print(UART_DEBUG, strToPrint_);
-        sprintf(strToPrint_, "Voltage AVG: %d\r\n", askedTMLine.voltages[0]);
+        //TODO Acc adata
+        sprintf(strToPrint_, "Voltage AVG:\t%.2fV\r\n", askedTMLine.voltage[0]/100.0);
         uart_print(UART_DEBUG, strToPrint_);
-        sprintf(strToPrint_, "Voltage MAX: %d\r\n", askedTMLine.voltages[1]);
+        sprintf(strToPrint_, "Voltage MAX:\t%.2fV\r\n", askedTMLine.voltage[1]/100.0);
         uart_print(UART_DEBUG, strToPrint_);
-        sprintf(strToPrint_, "Voltage MIN: %d\r\n", askedTMLine.voltages[2]);
+        sprintf(strToPrint_, "Voltage MIN:\t%.2fV\r\n", askedTMLine.voltage[2]/100.0);
         uart_print(UART_DEBUG, strToPrint_);
-        sprintf(strToPrint_, "Current AVG: %d\r\n", askedTMLine.currents[0]);
+        sprintf(strToPrint_, "Current AVG:\t%dmA\r\n", askedTMLine.current[0]);
         uart_print(UART_DEBUG, strToPrint_);
-        sprintf(strToPrint_, "Current MAX: %d\r\n", askedTMLine.currents[1]);
+        sprintf(strToPrint_, "Current MAX:\t%dmA\r\n", askedTMLine.current[1]);
         uart_print(UART_DEBUG, strToPrint_);
-        sprintf(strToPrint_, "Current MIN: %d\r\n", askedTMLine.currents[2]);
+        sprintf(strToPrint_, "Current MIN:\t%dmA\r\n", askedTMLine.current[2]);
         uart_print(UART_DEBUG, strToPrint_);
-        sprintf(strToPrint_, "Flight state: %d\r\n", askedTMLine.state);
+        sprintf(strToPrint_, "State:\t\t%d\r\n", askedTMLine.state);
         uart_print(UART_DEBUG, strToPrint_);
-        sprintf(strToPrint_, "Flight substate: %d\r\n", askedTMLine.sub_state);
+        sprintf(strToPrint_, "Substate:\t%d\r\n", askedTMLine.sub_state);
+        uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "Switches:\t0x%02X\r\n", askedTMLine.switches_status);
+        uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "Errors:\t\t0x%04X\r\n", askedTMLine.errors);
         uart_print(UART_DEBUG, strToPrint_);
     }
+}
+
+/**
+ * Prints current status of the CPU
+ */
+void printStatus()
+{
+    //Get current FRAM telemetry to get the general statistics of the sensors
+    struct TelemetryLine tmLines[2];
+    returnCurrentTMLines(tmLines);
+    struct TelemetryLine askedTMLine = tmLines[0];
+
+    uint64_t uptime = millis_uptime();
+    uint32_t elapsedSeconds = seconds_uptime();
+    uint32_t unixtTimeNow = i2c_RTC_unixTime_now();
+
+    //Put first the general status of the board
+    sprintf(strToPrint_, "Uptime:\t\t%.3fs\r\n", uptime/1000.0);
+    uart_print(UART_DEBUG, strToPrint_);
+    struct RTCDateTime dateTime;
+    convert_from_unixTime(unixtTimeNow, &dateTime);
+    sprintf(strToPrint_, "Time:\t\t20%.2d/%.2d/%.2d %.2d:%.2d:%.2d\r\n",
+            dateTime.year,
+            dateTime.month,
+            dateTime.date,
+            dateTime.hours,
+            dateTime.minutes,
+            dateTime.seconds);
+    uart_print(UART_DEBUG, strToPrint_);
+
+    //Then start with the sensors
+    sprintf(strToPrint_, "Pressure:\t%.2fmbar\r\n", askedTMLine.pressure/100.0);
+    uart_print(UART_DEBUG, strToPrint_);
+    sprintf(strToPrint_, "Altitude:\t%.2fm\r\n", askedTMLine.altitude/100.0);
+    uart_print(UART_DEBUG, strToPrint_);
+    sprintf(strToPrint_, "Speed AVG:\t%.2fm/s\r\n", askedTMLine.verticalSpeed[0]/100.0);
+    uart_print(UART_DEBUG, strToPrint_);
+    sprintf(strToPrint_, "Speed MAX:\t%.2fm/s\r\n", askedTMLine.verticalSpeed[1]/100.0);
+    uart_print(UART_DEBUG, strToPrint_);
+    sprintf(strToPrint_, "Speed MIN:\t%.2fm/s\r\n", askedTMLine.verticalSpeed[2]/100.0);
+    uart_print(UART_DEBUG, strToPrint_);
+    sprintf(strToPrint_, "Temp CPU:\t%.1fºC\r\n", askedTMLine.temperatures[0]/10.0);
+    uart_print(UART_DEBUG, strToPrint_);
+    sprintf(strToPrint_, "Temp [1]:\t%.1fºC\r\n", askedTMLine.temperatures[1]/10.0);
+    uart_print(UART_DEBUG, strToPrint_);
+    sprintf(strToPrint_, "Temp [2]:\t%.1fºC\r\n", askedTMLine.temperatures[2]/10.0);
+    uart_print(UART_DEBUG, strToPrint_);
+    //TODO Acc adata
+    sprintf(strToPrint_, "Voltage AVG:\t%.2fV\r\n", askedTMLine.voltage[0]/100.0);
+    uart_print(UART_DEBUG, strToPrint_);
+    sprintf(strToPrint_, "Voltage MAX:\t%.2fV\r\n", askedTMLine.voltage[1]/100.0);
+    uart_print(UART_DEBUG, strToPrint_);
+    sprintf(strToPrint_, "Voltage MIN:\t%.2fV\r\n", askedTMLine.voltage[2]/100.0);
+    uart_print(UART_DEBUG, strToPrint_);
+    sprintf(strToPrint_, "Current AVG:\t%dmA\r\n", askedTMLine.current[0]);
+    uart_print(UART_DEBUG, strToPrint_);
+    sprintf(strToPrint_, "Current MAX:\t%dmA\r\n", askedTMLine.current[1]);
+    uart_print(UART_DEBUG, strToPrint_);
+    sprintf(strToPrint_, "Current MIN:\t%dmA\r\n", askedTMLine.current[2]);
+    uart_print(UART_DEBUG, strToPrint_);
+    sprintf(strToPrint_, "State:\t\t%d\r\n", askedTMLine.state);
+    uart_print(UART_DEBUG, strToPrint_);
+    sprintf(strToPrint_, "Substate:\t%d\r\n", askedTMLine.sub_state);
+    uart_print(UART_DEBUG, strToPrint_);
+    sprintf(strToPrint_, "Switches:\t0x%02X\r\n", askedTMLine.switches_status);
+    uart_print(UART_DEBUG, strToPrint_);
+    sprintf(strToPrint_, "Errors:\t\t0x%04X\r\n", askedTMLine.errors);
+    uart_print(UART_DEBUG, strToPrint_);
+
+    //Now print altitude history
+    printAltitudeHistory();
 }
 
 /**
@@ -974,12 +1050,12 @@ void processMemoryCommand(char * command)
                                     readTelemetry.accZAxis[0],
                                     readTelemetry.accZAxis[1],
                                     readTelemetry.accZAxis[2],
-                                    readTelemetry.voltages[0],
-                                    readTelemetry.voltages[1],
-                                    readTelemetry.voltages[2],
-                                    readTelemetry.currents[0],
-                                    readTelemetry.currents[1],
-                                    readTelemetry.currents[2],
+                                    readTelemetry.voltage[0],
+                                    readTelemetry.voltage[1],
+                                    readTelemetry.voltage[2],
+                                    readTelemetry.current[0],
+                                    readTelemetry.current[1],
+                                    readTelemetry.current[2],
                                     readTelemetry.state,
                                     readTelemetry.sub_state,
                                     readTelemetry.switches_status,
@@ -1494,32 +1570,6 @@ int8_t terminal_readAndProcessCommands(void)
             //Perform a PUC reboot
             WDTCTL = 0xDEAD;
         }
-        else if (strcmp("uptime", (char *)command_) == 0)
-        {
-            uint32_t uptime = seconds_uptime();
-            sprintf(strToPrint_, "Uptime is %ld s\r\n", uptime);
-            uart_print(UART_DEBUG, strToPrint_);
-        }
-        else if (strcmp("unixtime", (char *)command_) == 0)
-        {
-            uint32_t unixtTimeNow = i2c_RTC_unixTime_now();
-            sprintf(strToPrint_, "%ld\r\n", unixtTimeNow);
-            uart_print(UART_DEBUG, strToPrint_);
-        }
-        else if (strcmp("date", (char *)command_) == 0)
-        {
-            uint32_t unixtTimeNow = i2c_RTC_unixTime_now();
-            struct RTCDateTime dateTime;
-            convert_from_unixTime(unixtTimeNow, &dateTime);
-            sprintf(strToPrint_, "Date is: 20%.2d/%.2d/%.2d %.2d:%.2d:%.2d\r\n",
-                    dateTime.year,
-                    dateTime.month,
-                    dateTime.date,
-                    dateTime.hours,
-                    dateTime.minutes,
-                    dateTime.seconds);
-            uart_print(UART_DEBUG, strToPrint_);
-        }
         else if (strncmp("uartdebug", (char *)command_, 9) == 0)
         {
             if(command_[10] == '1')
@@ -1554,6 +1604,32 @@ int8_t terminal_readAndProcessCommands(void)
             uint8_t *pointer;
             pointer = &command_[2];
             uart_print(confRegister_.debugUART, (char *)pointer);
+        }
+        else if (strcmp("uptime", (char *)command_) == 0)
+        {
+            uint32_t uptime = seconds_uptime();
+            sprintf(strToPrint_, "Uptime is %ld s\r\n", uptime);
+            uart_print(UART_DEBUG, strToPrint_);
+        }
+        else if (strcmp("unixtime", (char *)command_) == 0)
+        {
+            uint32_t unixtTimeNow = i2c_RTC_unixTime_now();
+            sprintf(strToPrint_, "%ld\r\n", unixtTimeNow);
+            uart_print(UART_DEBUG, strToPrint_);
+        }
+        else if (strcmp("date", (char *)command_) == 0)
+        {
+            uint32_t unixtTimeNow = i2c_RTC_unixTime_now();
+            struct RTCDateTime dateTime;
+            convert_from_unixTime(unixtTimeNow, &dateTime);
+            sprintf(strToPrint_, "Date is: 20%.2d/%.2d/%.2d %.2d:%.2d:%.2d\r\n",
+                    dateTime.year,
+                    dateTime.month,
+                    dateTime.date,
+                    dateTime.hours,
+                    dateTime.minutes,
+                    dateTime.seconds);
+            uart_print(UART_DEBUG, strToPrint_);
         }
         else if (strncmp("date", (char *)command_, 4) == 0)
         {
@@ -1618,6 +1694,10 @@ int8_t terminal_readAndProcessCommands(void)
         else if (strncmp("tm", (char *)command_, 2) == 0)
         {
             processTMCommand((char *) command_);
+        }
+        else if (strcmp("status", (char *)command_) == 0)
+        {
+            printStatus();
         }
         else if (strncmp("memory", (char *)command_, 6) == 0)
         {
