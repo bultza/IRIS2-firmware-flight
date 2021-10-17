@@ -734,36 +734,49 @@ void printStatus()
             dateTime.seconds);
     uart_print(UART_DEBUG, strToPrint_);
 
-    //Then start with the sensors
-    sprintf(strToPrint_, "Pressure:\t%.2fmbar\r\n", askedTMLine.pressure/100.0);
-    uart_print(UART_DEBUG, strToPrint_);
-    sprintf(strToPrint_, "Altitude:\t%.2fm\r\n", askedTMLine.altitude/100.0);
-    uart_print(UART_DEBUG, strToPrint_);
-    sprintf(strToPrint_, "Speed AVG:\t%.2fm/s\r\n", askedTMLine.verticalSpeed[0]/100.0);
-    uart_print(UART_DEBUG, strToPrint_);
-    sprintf(strToPrint_, "Speed MAX:\t%.2fm/s\r\n", askedTMLine.verticalSpeed[1]/100.0);
-    uart_print(UART_DEBUG, strToPrint_);
-    sprintf(strToPrint_, "Speed MIN:\t%.2fm/s\r\n", askedTMLine.verticalSpeed[2]/100.0);
-    uart_print(UART_DEBUG, strToPrint_);
-    sprintf(strToPrint_, "Temp CPU:\t%.1fºC\r\n", askedTMLine.temperatures[0]/10.0);
-    uart_print(UART_DEBUG, strToPrint_);
-    sprintf(strToPrint_, "Temp [1]:\t%.1fºC\r\n", askedTMLine.temperatures[1]/10.0);
-    uart_print(UART_DEBUG, strToPrint_);
-    sprintf(strToPrint_, "Temp [2]:\t%.1fºC\r\n", askedTMLine.temperatures[2]/10.0);
-    uart_print(UART_DEBUG, strToPrint_);
-    //TODO Acc adata
-    sprintf(strToPrint_, "Voltage AVG:\t%.2fV\r\n", askedTMLine.voltage[0]/100.0);
-    uart_print(UART_DEBUG, strToPrint_);
-    sprintf(strToPrint_, "Voltage MAX:\t%.2fV\r\n", askedTMLine.voltage[1]/100.0);
-    uart_print(UART_DEBUG, strToPrint_);
-    sprintf(strToPrint_, "Voltage MIN:\t%.2fV\r\n", askedTMLine.voltage[2]/100.0);
-    uart_print(UART_DEBUG, strToPrint_);
-    sprintf(strToPrint_, "Current AVG:\t%dmA\r\n", askedTMLine.current[0]);
-    uart_print(UART_DEBUG, strToPrint_);
-    sprintf(strToPrint_, "Current MAX:\t%dmA\r\n", askedTMLine.current[1]);
-    uart_print(UART_DEBUG, strToPrint_);
-    sprintf(strToPrint_, "Current MIN:\t%dmA\r\n", askedTMLine.current[2]);
-    uart_print(UART_DEBUG, strToPrint_);
+    /*{
+        // Print NOR memory pointer status
+        uint32_t n_tlmlines = (confRegister_.nor_telemetryAddress - NOR_TLM_ADDRESS) / sizeof(struct TelemetryLine);
+        uint32_t n_tlmlinesTotal = NOR_TLM_SIZE / sizeof(struct TelemetryLine);
+        float percentage_used = (float)n_tlmlines * 100.0 / (float) n_tlmlinesTotal;
+        sprintf(strToPrint_, " * %ld saved telemetry lines. %.2f%% used. Last address is %ld\r\n",
+                n_tlmlines,
+                percentage_used,
+                confRegister_.nor_telemetryAddress);
+        uart_print(UART_DEBUG, strToPrint_);
+
+        uint32_t n_events = (confRegister_.nor_eventAddress - NOR_EVENTS_ADDRESS) / sizeof(struct EventLine);
+        uint32_t n_eventsTotal = NOR_EVENTS_SIZE / sizeof(struct EventLine);
+        percentage_used = (float)n_events * 100.0 / (float) n_eventsTotal;
+        sprintf(strToPrint_, " * %ld saved events. %.2f%% used. Last address is %ld\r\n",
+                n_events,
+                percentage_used,
+                confRegister_.nor_eventAddress);
+        uart_print(UART_DEBUG, strToPrint_);
+    }
+    //else if (memoryType == MEM_TYPE_FRAM)
+    {
+        //Print FRAM memory status
+        uart_print(UART_DEBUG, "FRAM memory status: \r\n");
+        uart_print(UART_DEBUG, " * FRAM memory is ready\r\n");
+        uint16_t n_events = (confRegister_.fram_eventAddress - FRAM_EVENTS_ADDRESS) / sizeof(struct EventLine);
+        uint16_t n_eventsTotal = FRAM_EVENTS_SIZE / sizeof(struct EventLine);
+        float percentage_used = (float)n_events * 100.0 / (float) n_eventsTotal;
+        sprintf(strToPrint_, " * %d saved events. %.2f%% used. Last address is %ld\r\n",
+                n_events,
+                percentage_used,
+                confRegister_.fram_eventAddress);
+        uart_print(UART_DEBUG, strToPrint_);
+        n_events = (confRegister_.fram_telemetryAddress - FRAM_TLM_ADDRESS) / sizeof(struct TelemetryLine);
+        n_eventsTotal = FRAM_TLM_SIZE / sizeof(struct TelemetryLine);
+        percentage_used = (float)n_events * 100.0 / (float) n_eventsTotal;
+        sprintf(strToPrint_, " * %d saved telemetry. %.2f%% used. Last address is %ld\r\n",
+                n_events,
+                percentage_used,
+                confRegister_.fram_telemetryAddress);
+        uart_print(UART_DEBUG, strToPrint_);
+    }*/
+
     sprintf(strToPrint_, "State:\t\t%d\r\n", askedTMLine.state);
     uart_print(UART_DEBUG, strToPrint_);
     sprintf(strToPrint_, "Substate:\t%d\r\n", askedTMLine.sub_state);
@@ -771,6 +784,61 @@ void printStatus()
     sprintf(strToPrint_, "Switches:\t0x%02X\r\n", askedTMLine.switches_status);
     uart_print(UART_DEBUG, strToPrint_);
     sprintf(strToPrint_, "Errors:\t\t0x%04X\r\n", askedTMLine.errors);
+    uart_print(UART_DEBUG, strToPrint_);
+    sprintf(strToPrint_, "CPU Temp:\t%.1fºC\r\n", askedTMLine.temperatures[0]/10.0);
+    uart_print(UART_DEBUG, strToPrint_);
+    //Then start with the sensors
+    sprintf(strToPrint_, "Pressure:\t%.2fmbar\r\n", askedTMLine.pressure/100.0);
+    uart_print(UART_DEBUG, strToPrint_);
+    sprintf(strToPrint_, "Altitude:\t%.2fm\r\n", askedTMLine.altitude/100.0);
+    uart_print(UART_DEBUG, strToPrint_);
+    int32_t speed = getVerticalSpeed();
+    sprintf(strToPrint_, "Current Speed:\t%.3fm/s\r\n", (float)speed / 100.0);
+    uart_print(UART_DEBUG, strToPrint_);
+    //Sunrise GPIO
+    sprintf(strToPrint_, "Sunrise GPIO:\t");
+    uart_print(UART_DEBUG, strToPrint_);
+    if(askedTMLine.switches_status & BIT6)
+        uart_print(UART_DEBUG, "HIGH\r\n");
+    else
+        uart_print(UART_DEBUG, "LOW\r\n");
+    sprintf(strToPrint_, "Temp CPU:\t%.1fºC\r\n", askedTMLine.temperatures[0]/10.0);
+    uart_print(UART_DEBUG, strToPrint_);
+    sprintf(strToPrint_, "Temp [1]:\t%.1fºC\r\n", askedTMLine.temperatures[1]/10.0);
+    uart_print(UART_DEBUG, strToPrint_);
+    sprintf(strToPrint_, "Temp [2]:\t%.1fºC\r\n", askedTMLine.temperatures[2]/10.0);
+    uart_print(UART_DEBUG, strToPrint_);
+    uart_print(UART_DEBUG, "Statistics:\r\n\t\tMin\tAvg\tMax\r\n");
+    sprintf(strToPrint_, "Speed(m/s):\t%.2f\t%.2f\t%.2f\r\n",
+            askedTMLine.verticalSpeed[2]/100.0,
+            askedTMLine.verticalSpeed[0]/100.0,
+            askedTMLine.verticalSpeed[1]/100.0);
+    uart_print(UART_DEBUG, strToPrint_);
+    sprintf(strToPrint_, "Battery(V):\t%.2f\t%.2f\t%.2f\r\n",
+            askedTMLine.voltage[2]/100.0,
+            askedTMLine.voltage[0]/100.0,
+            askedTMLine.voltage[1]/100.0);
+    uart_print(UART_DEBUG, strToPrint_);
+    sprintf(strToPrint_, "Battery(mA):\t%d\t%d\t%d\r\n",
+            askedTMLine.current[2],
+            askedTMLine.current[0],
+            askedTMLine.current[1]);
+    uart_print(UART_DEBUG, strToPrint_);
+
+    sprintf(strToPrint_, "AccX(g):\t%.2f\t%.2f\t%.2f\r\n",
+            askedTMLine.accXAxis[2]/100.0,
+            askedTMLine.accXAxis[0]/100.0,
+            askedTMLine.accXAxis[1]/100.0);
+    uart_print(UART_DEBUG, strToPrint_);
+    sprintf(strToPrint_, "AccY(g):\t%.2f\t%.2f\t%.2f\r\n",
+            askedTMLine.accYAxis[2]/100.0,
+            askedTMLine.accYAxis[0]/100.0,
+            askedTMLine.accYAxis[1]/100.0);
+    uart_print(UART_DEBUG, strToPrint_);
+    sprintf(strToPrint_, "AccZ(g):\t%.2f\t%.2f\t%.2f\r\n",
+            askedTMLine.accZAxis[2]/100.0,
+            askedTMLine.accZAxis[0]/100.0,
+            askedTMLine.accZAxis[1]/100.0);
     uart_print(UART_DEBUG, strToPrint_);
 
     //Now print altitude history
@@ -835,7 +903,7 @@ void processMemoryCommand(char * command)
              */
             if (memorySubcommand == MEM_CMD_STATUS)
             {
-                if (memoryType == MEM_TYPE_NOR)
+                //if (memoryType == MEM_TYPE_NOR)
                 {
                     // Print NOR memory flag status
                     uint8_t busy = spi_NOR_checkWriteInProgress(confRegister_.nor_deviceSelected);
@@ -864,7 +932,7 @@ void processMemoryCommand(char * command)
                             confRegister_.nor_eventAddress);
                     uart_print(UART_DEBUG, strToPrint_);
                 }
-                else if (memoryType == MEM_TYPE_FRAM)
+                //else if (memoryType == MEM_TYPE_FRAM)
                 {
                     //Print FRAM memory status
                     uart_print(UART_DEBUG, "FRAM memory status: \r\n");

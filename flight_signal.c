@@ -13,6 +13,17 @@ uint32_t timeSignalEnded = 0;
 
 uint32_t lastSignalExpired = 0;
 
+/**
+ * It returns 1 if GPIO is high, 0 if is low
+ */
+uint8_t sunrise_GPIO_Read()
+{
+    if(P2IN & BIT2)
+        return 1;
+    else
+        return 0;
+}
+
 // Public functions
 uint8_t checkFlightSignal()
 {

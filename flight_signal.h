@@ -19,4 +19,6 @@
 // Public functions
 uint8_t checkFlightSignal();    // Returns 1 if a signal has been detected, always at End Of Signal.
 
+uint8_t sunrise_GPIO_Read();
+
 #endif /* FLIGHT_SIGNAL_H_ */

@@ -13,6 +13,7 @@ uint64_t lastTime_baroRead_ = 0;
 uint64_t lastTime_inaRead_ = 0;
 uint64_t lastTime_accRead_ = 0;
 uint64_t lastTime_tempRead_ = 0;
+uint64_t lastTime_gpioSunriseRead_ = 0;
 
 // How many times has a sensor been read per Telemetry Line? --> to compute avgs
 int16_t numTimes_baroRead_[2] = {0, 0};   // FRAM, NOR
@@ -32,26 +33,7 @@ struct AltitudesHistory
 struct AltitudesHistory altitudeHistory_[ALTITUDE_HISTORY];
 uint8_t altitudeHistoryIndex_ = 0;
 
-/**
- * When a sensor is read and its data put into a TM line, this function
- * updates the value of the uptime, unixtime, flight state and substate
- * of the TM line.
- */
-void addTimeAndStateMark()
-{
-    uint32_t unixtTimeNow = i2c_RTC_unixTime_now();
-    uint32_t uptime = millis_uptime();
-
-    currentTelemetryLine_[0].unixTime = unixtTimeNow;
-    currentTelemetryLine_[0].upTime = uptime;
-    currentTelemetryLine_[0].state = confRegister_.flightState;
-    currentTelemetryLine_[0].sub_state = confRegister_.flightSubState;
-
-    currentTelemetryLine_[1].unixTime = unixtTimeNow;
-    currentTelemetryLine_[1].upTime = uptime;
-    currentTelemetryLine_[1].state = confRegister_.flightState;
-    currentTelemetryLine_[1].sub_state = confRegister_.flightSubState;
-}
+uint8_t gpioSunriseLastStatus_ = 0;
 
 // PUBLIC FUNCTIONS
 
@@ -134,7 +116,7 @@ void searchAddressesNOR()
  * so the speed is in reality an average of the last 10 altitudes
  * The returned value is in m/s*100 = cm/s
  */
-int32_t calculateSpeed()
+int32_t getVerticalSpeed()
 {
     //Check if we have valid values
     uint8_t maxIndex = 0;
@@ -170,7 +152,7 @@ int32_t calculateSpeed()
                 int32_t distanceDelta = altitudeHistory_[0].altitude
                         - altitudeHistory_[ALTITUDE_HISTORY - 1].altitude;
 
-                sumOfSpeeds += (distanceDelta * timeDelta);
+                sumOfSpeeds += (distanceDelta * 1000/ timeDelta);
             }
         }
         else
@@ -183,7 +165,7 @@ int32_t calculateSpeed()
                 int32_t distanceDelta = altitudeHistory_[i].altitude
                         - altitudeHistory_[i - 1].altitude;
 
-                sumOfSpeeds += (distanceDelta * timeDelta);
+                sumOfSpeeds += (distanceDelta * 1000/ timeDelta);
             }
         }
     }
@@ -206,23 +188,139 @@ int32_t calculateSpeed()
 
     //timedelta is in ms, so we divide by 1000
     //distance is in cm, and remains like that
-    return (distanceDelta * timeDelta)/1000;
+    return (distanceDelta / (timeDelta/1000);
 
     */
 
-    return sumOfSpeeds / ((ALTITUDE_HISTORY - 1) * 1000L);
+    return sumOfSpeeds / ((ALTITUDE_HISTORY - 1) );
 }
 
-//uint32_t altDebug = 4000000;
+//uint32_t altDebug_ = 0;
+float inaCurrentAverages_[2];
+float inaVoltageAverages_[2];
+float verticalSpeedAverages_[2];
 
 /**
  * Checks if it is time to read the sensors and saves them into memory
  */
-void sensors_read()
+void sensorsRead()
 {
     uint64_t uptime = millis_uptime();
 
-    //We use nested if-else in order to avoid using the I2C twice at the same time
+    //Read GPIOs only once per second (like baro)
+    if(lastTime_gpioSunriseRead_ + confRegister_.baro_readPeriod < uptime)
+    {
+        uint8_t gpioStatus = sunrise_GPIO_Read();
+        //Do not listen to the GPIO if less than 10s of uptime
+        if(gpioStatus != gpioSunriseLastStatus_ && uptime > 10000)
+        {
+            uint8_t payload[5] = {0};
+            payload[0] = gpioStatus;
+            saveEventSimple(EVENT_SUNRISE_GPIO_CHANGE, payload);
+            //TODO implement here something to detect the change!
+        }
+
+        if(gpioStatus)
+        {
+            currentTelemetryLine_[0].switches_status |= BIT6;
+            currentTelemetryLine_[1].switches_status |= BIT6;
+        }
+        else
+        {
+            currentTelemetryLine_[0].switches_status &= ~BIT6;
+            currentTelemetryLine_[1].switches_status &= ~BIT6;
+        }
+
+        gpioSunriseLastStatus_ = gpioStatus;
+        lastTime_gpioSunriseRead_ = uptime;
+    }
+
+    //Add the rest of the thing of the switches:
+    //CAM1
+    if(P4OUT & BIT6)
+    {
+        currentTelemetryLine_[0].switches_status &= ~BIT0;
+        currentTelemetryLine_[1].switches_status &= ~BIT0;
+    }
+    else
+    {
+        currentTelemetryLine_[0].switches_status |= BIT0;
+        currentTelemetryLine_[1].switches_status |= BIT0;
+    }
+
+    //CAM2
+    if(P4OUT & BIT5)
+    {
+        currentTelemetryLine_[0].switches_status &= ~BIT1;
+        currentTelemetryLine_[1].switches_status &= ~BIT1;
+    }
+    else
+    {
+        currentTelemetryLine_[0].switches_status |= BIT1;
+        currentTelemetryLine_[1].switches_status |= BIT1;
+
+    }
+
+    //CAM3
+    if(P4OUT & BIT4)
+    {
+        currentTelemetryLine_[0].switches_status &= ~BIT2;
+        currentTelemetryLine_[1].switches_status &= ~BIT2;
+    }
+    else
+    {
+        currentTelemetryLine_[0].switches_status |= BIT2;
+        currentTelemetryLine_[1].switches_status |= BIT2;
+    }
+
+    //CAM4
+    if(P2OUT & BIT7)
+    {
+        currentTelemetryLine_[0].switches_status &= ~BIT3;
+        currentTelemetryLine_[1].switches_status &= ~BIT3;
+    }
+    else
+    {
+        currentTelemetryLine_[0].switches_status |= BIT3;
+        currentTelemetryLine_[1].switches_status |= BIT3;
+    }
+
+    //MUX Power
+    if(P2OUT & BIT3)
+    {
+        currentTelemetryLine_[0].switches_status &= ~BIT4;
+        currentTelemetryLine_[1].switches_status &= ~BIT4;
+    }
+    else
+    {
+        currentTelemetryLine_[0].switches_status |= BIT4;
+        currentTelemetryLine_[1].switches_status |= BIT4;
+    }
+
+    //MUX Status
+    if(P2OUT & BIT4)
+    {
+        currentTelemetryLine_[0].switches_status &= ~BIT5;
+        currentTelemetryLine_[1].switches_status &= ~BIT5;
+    }
+    else
+    {
+        currentTelemetryLine_[0].switches_status |= BIT5;
+        currentTelemetryLine_[1].switches_status |= BIT5;
+    }
+
+    //Acc interrupt
+    if(P3OUT & BIT7)
+    {
+        currentTelemetryLine_[0].switches_status |= BIT7;
+        currentTelemetryLine_[1].switches_status |= BIT7;
+    }
+    else
+    {
+        currentTelemetryLine_[0].switches_status &= ~BIT7;
+        currentTelemetryLine_[1].switches_status &= ~BIT7;
+    }
+
 
     //Time to read barometer?
     if(lastTime_baroRead_ + confRegister_.baro_readPeriod < uptime)
@@ -251,8 +349,8 @@ void sensors_read()
         //Convert baro to altitude
         altitude = calculateAltitude(pressure);
 
-        //altitude = altDebug;
-        //altDebug = altDebug - uptime;
+        //altitude = altDebug_;
+        //altDebug_ = altDebug_ + 210;
 
         //add altitude to altitude history
         altitudeHistory_[altitudeHistoryIndex_].time = (int32_t)uptime;
@@ -262,7 +360,7 @@ void sensors_read()
             altitudeHistoryIndex_ = 0;
 
         //Calculate speed
-        speed = calculateSpeed();
+        speed = getVerticalSpeed();
 
         uint8_t i;
         for (i = 0; i < 2; i++)
@@ -277,15 +375,20 @@ void sensors_read()
                 currentTelemetryLine_[i].verticalSpeed[AVG_INDEX] = 0;
                 currentTelemetryLine_[i].verticalSpeed[MAX_INDEX] = -32767; //int16 minimum value
                 currentTelemetryLine_[i].verticalSpeed[MIN_INDEX] = 32767; //int16 maximum value
+                verticalSpeedAverages_[i] = 0.0;
             }
             else
             {
                 //media = media + (newValue-media)/numberOfValues
 
-                int16_t newAverageVerticalSpeed = (speed -
-                        currentTelemetryLine_[i].verticalSpeed[AVG_INDEX])/numTimes_baroRead_[i];
+                //Wrong way of doing it because numTime_inaRead becomes very high
+                //int16_t newAverageVerticalSpeed = (speed -
+                //        currentTelemetryLine_[i].verticalSpeed[AVG_INDEX])/numTimes_baroRead_[i];
+                //currentTelemetryLine_[i].verticalSpeed[AVG_INDEX] += newAverageVerticalSpeed;
 
-                currentTelemetryLine_[i].verticalSpeed[AVG_INDEX] += newAverageVerticalSpeed;
+                float newAverageVerticalSpeed = ((float)speed - verticalSpeedAverages_[i]) / (float)numTimes_baroRead_[i];
+                verticalSpeedAverages_[i] += newAverageVerticalSpeed;
+                currentTelemetryLine_[i].verticalSpeed[AVG_INDEX] = verticalSpeedAverages_[i];
 
                 if (speed < currentTelemetryLine_[i].verticalSpeed[MIN_INDEX])
                     currentTelemetryLine_[i].verticalSpeed[MIN_INDEX] = speed;
@@ -297,8 +400,9 @@ void sensors_read()
 
         lastTime_baroRead_ = uptime;
     }
+
     //Time to read temperatures?
-    else if(lastTime_tempRead_ + confRegister_.temp_readPeriod < uptime)
+    if(lastTime_tempRead_ + confRegister_.temp_readPeriod < uptime)
     {
         int16_t temperatures[6];
         int8_t error = i2c_TMP75_getTemperatures(temperatures);
@@ -316,8 +420,9 @@ void sensors_read()
 
         lastTime_tempRead_ = uptime;
     }
+
     //Time to read voltages and currents?
-    else if(lastTime_inaRead_ + confRegister_.ina_readPeriod < uptime)
+    if(lastTime_inaRead_ + confRegister_.ina_readPeriod < uptime)
     {
         struct INAData inaData;
         int8_t error = i2c_INA_read(&inaData);
@@ -335,25 +440,34 @@ void sensors_read()
                 currentTelemetryLine_[i].current[AVG_INDEX] = 0;
                 currentTelemetryLine_[i].current[MAX_INDEX] = -32767;
                 currentTelemetryLine_[i].current[MIN_INDEX] = 32767;
+                inaCurrentAverages_[i] = 0.0;
+                inaVoltageAverages_[i] = 0.0;
             }
             else
             {
                 //media = media + (newValue-media)/numberOfValues
-                int16_t newAverageVoltage = (inaData.voltage -
-                        currentTelemetryLine_[i].voltage[AVG_INDEX])/numTimes_inaRead_[i];
 
-                currentTelemetryLine_[i].voltage[AVG_INDEX] += newAverageVoltage;
+                //Wrong way of doing it because numTime_inaRead becomes very high
+                //int16_t newAverageVoltage = (inaData.voltage -
+                //        currentTelemetryLine_[i].voltage[AVG_INDEX])/numTimes_inaRead_[i];
+                //currentTelemetryLine_[i].voltage[AVG_INDEX] += newAverageVoltage;
+
+                //We can only do it with floats accurately
+                float newAverageVoltage = ((float)inaData.voltage - inaVoltageAverages_[i])
+                                        / (float)numTimes_inaRead_[i];
+                inaVoltageAverages_[i] += newAverageVoltage;
+                currentTelemetryLine_[i].voltage[AVG_INDEX] = inaVoltageAverages_[i];
 
                 if (inaData.voltage < currentTelemetryLine_[i].voltage[MIN_INDEX])
                     currentTelemetryLine_[i].voltage[MIN_INDEX] = inaData.voltage;
                 if (inaData.voltage > currentTelemetryLine_[i].voltage[MAX_INDEX])
                     currentTelemetryLine_[i].voltage[MAX_INDEX] = inaData.voltage;
 
+                float newAverageCurrent = ((float)inaData.current -
+                        inaCurrentAverages_[i])/(float)numTimes_inaRead_[i];
+                inaCurrentAverages_[i] += newAverageCurrent;
+                currentTelemetryLine_[i].current[AVG_INDEX] = inaCurrentAverages_[i];
 
-                int16_t newAverageCurrent = (inaData.current -
-                        currentTelemetryLine_[i].current[AVG_INDEX])/numTimes_inaRead_[i];
-
-                currentTelemetryLine_[i].current[AVG_INDEX] += newAverageCurrent;
                 if (inaData.current < currentTelemetryLine_[i].current[MIN_INDEX])
                     currentTelemetryLine_[i].current[MIN_INDEX] = inaData.current;
                 if (inaData.current > currentTelemetryLine_[i].current[MAX_INDEX])
@@ -365,8 +479,9 @@ void sensors_read()
 
         lastTime_inaRead_ = uptime;
     }
+
     //Time to read accelerations?
-    else if(lastTime_accRead_ + confRegister_.acc_readPeriod < uptime)
+    if(lastTime_accRead_ + confRegister_.acc_readPeriod < uptime)
     {
         // COMMENTED WHILE ACCELEROMETER NOT PRESENT ON PCB
 
@@ -440,10 +555,11 @@ void sensors_read()
 
             numTimes_accRead_[i]++;
         }
-
-        lastTime_accRead_ = uptime;
         */
+        lastTime_accRead_ = uptime;
     }
+
+
 }
 
 int8_t returnCurrentTMLines(struct TelemetryLine tmLines[2])
@@ -760,14 +876,14 @@ void printAltitudeHistory()
     uint8_t i;
     for(i = 0; i < ALTITUDE_HISTORY; i++)
     {
-        sprintf(strToPrint, "\t[%d]: %.3fs\t %.2fm\r\n",
+        sprintf(strToPrint, "  [%d]:\t%.3fs\t %.2fm\r\n",
                 i,
                 (float)altitudeHistory_[i].time / 1000.0,
                 (float)altitudeHistory_[i].altitude / 100.0);
         uart_print(UART_DEBUG, strToPrint);
     }
 
-    int32_t speed = calculateSpeed();
+    int32_t speed = getVerticalSpeed();
     sprintf(strToPrint, "Current Speed:\t%.3fm/s\r\n", (float)speed / 100.0);
     uart_print(UART_DEBUG, strToPrint);
 }

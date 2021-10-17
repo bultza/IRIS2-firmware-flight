@@ -21,6 +21,7 @@
 #include "i2c_ADXL345.h"
 #include "i2c_DS1338Z.h"
 #include "spi_NOR.h"
+#include "flight_signal.h"
 
 #define MEMORY_NOR      0
 #define MEMORY_FRAM     1
@@ -63,6 +64,7 @@
 #define EVENT_CAMERA4_OFF                   22
 #define EVENT_TERMINAL_START                23
 #define EVENT_I2C_ERROR_RESET               24
+#define EVENT_SUNRISE_GPIO_CHANGE           100
 
 #define AVG_INDEX               0
 #define MAX_INDEX               1
@@ -167,7 +169,7 @@ struct EventLine
 void searchAddressesNOR();
 
 //Public functions to read all sensors periodically and return TM Lines
-void sensors_read();
+void sensorsRead();
 int8_t returnCurrentTMLines(struct TelemetryLine *tmLines);
 
 //Public Functions to save data permanently
@@ -190,5 +192,6 @@ int8_t addTelemetryNOR(struct TelemetryLine *newTelemetry, uint32_t *address);
 int8_t getTelemetryNOR(uint32_t pointer, struct TelemetryLine *savedTelemetry);
 
 void printAltitudeHistory();
+int32_t getVerticalSpeed();
 
 #endif /* DATALOGGER_H_ */

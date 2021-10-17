@@ -140,6 +140,9 @@ void init_board()
     //Configure LED on P3.6, 5, 4
     P3DIR |= BIT4 | BIT5 | BIT6;
 
+    //Configure interrupt from ACC as input
+    P3DIR &= ~BIT7;
+
     //Mux contollers for CAMs 3 and 4
     P2DIR |= BIT3;
     P2DIR |= BIT4;
@@ -277,7 +280,7 @@ int main(void)
 	    uint64_t uptime = millis_uptime();
 
 	    //UnixTime now:
-	    uint32_t unixtTimeNow = i2c_RTC_unixTime_now();
+	    //uint32_t unixtTimeNow = i2c_RTC_unixTime_now();
 
 	    //Read UART Debug:
 	    terminal_readAndProcessCommands();
@@ -286,7 +289,7 @@ int main(void)
 	    cameraFSMcheck();
 
 	    //Read all sensors
-	    sensors_read();
+	    sensorsRead();
 
 	    //Save telemetry periodically
 	    saveTelemetry();
@@ -301,7 +304,7 @@ int main(void)
 	        LED_ON;
 
 	    //Blink LED
-        if((uptime + 100) % 1000 > 100)
+        /*if((uptime + 100) % 1000 > 100)
             LED_R_OFF;
         else
             LED_R_ON;
@@ -316,7 +319,7 @@ int main(void)
         if((uptime + 300) % 1000 > 100)
             LED_B_OFF;
         else
-            LED_B_ON;
+            LED_B_ON;*/
 	};
 	
 	return 0;
