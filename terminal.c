@@ -1474,7 +1474,8 @@ int8_t terminal_start(void)
     rebootReasonDecoded(confRegister_.hardwareRebootReason, rebootReason);
     sprintf(strToPrint_, "Last Reboot reason was 0x%02X, '%s'.\r\n", confRegister_.hardwareRebootReason, rebootReason);
     uart_print(UART_DEBUG, strToPrint_);
-    uart_print(UART_DEBUG,"IRIS:/# ");
+    //uart_print(UART_DEBUG,"IRIS:/# ");
+    uart_print(UART_DEBUG,"# ");
 
     return 0;
 }
@@ -1543,7 +1544,8 @@ int8_t terminal_readAndProcessCommands(void)
             uart_print(UART_DEBUG, "                              "); //Clean
             uart_print(UART_DEBUG, strToPrint_); //put cursor on start
             //print terminal:
-            uart_print(UART_DEBUG,"IRIS:/# ");
+            //uart_print(UART_DEBUG,"IRIS:/# ");
+            uart_print(UART_DEBUG,"# ");
             //print selected command:
             sprintf(strToPrint_, "%s", commandHistory_[cmdSelector_]);
             uart_print(UART_DEBUG, strToPrint_);
@@ -1568,7 +1570,7 @@ int8_t terminal_readAndProcessCommands(void)
             uart_print(UART_DEBUG, "                              "); //Clean
             uart_print(UART_DEBUG, strToPrint_); //put cursor on start
             //print terminal:
-            uart_print(UART_DEBUG,"IRIS:/# ");
+            uart_print(UART_DEBUG,"# ");;
             //print selected command:
             sprintf(strToPrint_, "%s", commandHistory_[cmdSelector_]);
             uart_print(UART_DEBUG, strToPrint_);
@@ -1800,7 +1802,8 @@ int8_t terminal_readAndProcessCommands(void)
                 for (i = 0; i < CMD_MAX_LEN; i++)
                     lastIssuedCommand_[i] = command_[i];
             }
-            uart_print(UART_DEBUG,"IRIS:/# ");
+            //uart_print(UART_DEBUG,"IRIS:/# ");
+            uart_print(UART_DEBUG,"# ");
         }
 
         bufferSizeNow_ = 0;

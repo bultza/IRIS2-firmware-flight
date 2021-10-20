@@ -368,25 +368,58 @@ int8_t cameraFSMcheck()
                 releaseButton(i);
                 cameraStatus_[i].fsmStatus = FSM_CAM_CONF_1;
                 cameraStatus_[i].lastCommandTime = uptime;
-                cameraStatus_[i].sleepTime = CAM_WAIT_CONF_CHANGE;
+                cameraStatus_[i].sleepTime = CAM_WAIT_CONF_CHANGE * 3;
                 break;
             case FSM_CAM_CONF_1:
-                uart_print(i + 1, CAM_AUTO_POWER_DOWN_NEVER);
+                {
+                    //This works:
+                    //YY00072100232016011100000001000000000000000000000000000000000001000007E50A14020A0B
+                    struct RTCDateTime dateTime;
+                    char * dateTimePLD = CAM_PAYLOAD_SET_DATETIME;
+                    char dateTimeCmd[100];
+                    i2c_RTC_getClockData(&dateTime);
+                    //sprintf(dateTimeCmd, "YY000721002320160111000000010002000101000000000000000000000000010100%02X%02X%02X%02X%02X%02X%02X\n",
+                      sprintf(dateTimeCmd, "YY000721002320160111000000020000000101000000000000000000000000010100%02X%02X%02X%02X%02X%02X%02X\n",
+                            (uint8_t)((2000 + (uint16_t)dateTime.year)/256),
+                            (uint8_t)((2000 + (uint16_t)dateTime.year)%256),
+                            dateTime.month,
+                            dateTime.date,
+                            dateTime.hours,
+                            dateTime.minutes,
+                            dateTime.seconds);
+                    uart_print(i + 1, dateTimeCmd);
+                    uart_print(UART_DEBUG, "Send to camera: '");
+                    uart_print(UART_DEBUG, dateTimeCmd);
+                    uart_print(UART_DEBUG, "'\r\n");
+                }
                 cameraStatus_[i].fsmStatus = FSM_CAM_CONF_2;
                 cameraStatus_[i].lastCommandTime = uptime;
                 cameraStatus_[i].sleepTime = CAM_WAIT_CONF_CHANGE;
                 break;
             case FSM_CAM_CONF_2:
-                {
-                    struct RTCDateTime dateTime;
-                    char * dateTimePLD = CAM_PAYLOAD_SET_DATETIME;
-                    char dateTimeCmd[40];
-                    i2c_RTC_getClockData(&dateTime);
-                    sprintf(dateTimeCmd, "%s 20 %2d %2d %2d %2d %2d %2d\n", dateTimePLD,
-                            dateTime.year, dateTime.month, dateTime.date,
-                            dateTime.hours, dateTime.minutes, dateTime.seconds);
-                    uart_print(i + 1, dateTimeCmd);
-                }
+                //Captura video ultra wide 4:3 with 48FPS
+                /*uart_print(i + 1, CAM_SET_VIDEO_MODE);
+                sleep_ms(100);
+                uart_print(i + 1, CAM_PAYLOAD_VIDEO_RES_FPS_FOV);
+                uart_print(i + 1, CAM_VIDEO_RES_1440);
+                uart_print(i + 1, CAM_VIDEO_FPS_48);
+                uart_print(i + 1, CAM_VIDEO_FOV_WIDE);
+                uart_print(i + 1, "\n");*/
+
+                //Captura video ultra wide 16:9 with 100FPS 720p
+                uart_print(i + 1, CAM_SET_VIDEO_MODE);
+                sleep_ms(100);
+                uart_print(i + 1, CAM_PAYLOAD_VIDEO_RES_FPS_FOV);
+                uart_print(i + 1, CAM_VIDEO_RES_720_SUPERVIEW);
+                uart_print(i + 1, CAM_VIDEO_FPS_100);
+                uart_print(i + 1, CAM_VIDEO_FOV_WIDE);
+                uart_print(i + 1, "\n");
+
+                //Captura foto:
+                /*uart_print(i + 1, CAM_SET_PHOTO_MODE);
+                uart_print(i + 1, CAM_PHOTO_RES_12MP_WIDE);*/
+
+
                 cameraStatus_[i].fsmStatus = FSM_CAM_DONOTHING;
                 cameraStatus_[i].cameraStatus = CAM_STATUS_ON;
                 break;
