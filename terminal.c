@@ -588,8 +588,14 @@ void processCameraCommand(char * command)
 
     if (strcmp("on", cameraSubcommand) == 0)
     {
-        gopros_cameraRawPowerOn(selectedCamera);
+        //gopros_cameraRawPowerOn(selectedCamera);
+        cameraPowerOn(selectedCamera);
         sprintf(strToPrint_, "Camera %c booting...\r\n", command[7]);
+    }
+    else if (strcmp("rawon", cameraSubcommand) == 0)
+    {
+        gopros_cameraRawPowerOn(selectedCamera);
+        sprintf(strToPrint_, "Camera %c RAW booting...\r\n", command[7]);
     }
     else if (strcmp("pic", cameraSubcommand) == 0)
     {
@@ -630,7 +636,7 @@ void processCameraCommand(char * command)
     }
     else if (strcmp("off", cameraSubcommand) == 0)
     {
-        gopros_cameraRawSafePowerOff(selectedCamera);
+        cameraPowerOff(selectedCamera);
         sprintf(strToPrint_, "Camera %c powered off.\r\n", command[7]);
     }
     else
@@ -1672,6 +1678,7 @@ int8_t terminal_readAndProcessCommands(void)
             uint8_t *pointer;
             pointer = &command_[2];
             uart_print(confRegister_.debugUART, (char *)pointer);
+            uart_print(confRegister_.debugUART, "\n");
         }
         else if (strcmp("uptime", (char *)command_) == 0)
         {

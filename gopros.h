@@ -43,6 +43,11 @@
 #define FSM_CAM_PRESSBTNOFF         7
 #define FSM_CAM_PRESSBTNOFF_WAIT    8
 #define FSM_CAM_POWEROFF_WAIT       9
+#define FSM_CAM_CONF_1              20
+#define FSM_CAM_CONF_2              21
+#define FSM_CAM_CONF_3              22
+#define FSM_CAM_CONF_4              23
+#define FSM_CAM_CONF_5              24
 
 #define CAM_STATUS_OFF      0
 #define CAM_STATUS_ON       1

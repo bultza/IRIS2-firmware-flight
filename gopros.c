@@ -15,11 +15,11 @@ uint8_t cameraHasStarted[4] = {0};
 int8_t gopros_cameraInit(uint8_t selectedCamera)
 {
 
-    if (!cameraHasStarted[selectedCamera])
-    {
+    //if (!cameraHasStarted[selectedCamera])
+    //{
         uart_init(selectedCamera + 1, BR_57600);
         cameraHasStarted[selectedCamera] = 1;
-    }
+    //}
 
     return 0;
 }
@@ -101,26 +101,8 @@ int8_t gopros_cameraRawPowerOn(uint8_t selectedCamera)
 
     sleep_ms(5000);
 
-    // Set default mode to video.
-    uart_print(selectedCamera + 1, CAM_DEF_MODE_VIDEO);
-    sleep_ms(CAM_WAIT_CONF_CHANGE);
-
-    // Set video format to NTSC.
-    uart_print(selectedCamera + 1, CAM_VIDEO_FORMAT_NTSC);
-    sleep_ms(CAM_WAIT_CONF_CHANGE);
-
     // Never auto power down.
     uart_print(selectedCamera + 1, CAM_AUTO_POWER_DOWN_NEVER);
-    sleep_ms(CAM_WAIT_CONF_CHANGE);
-
-    // Set video resolution to 4K, FPS to 15, and FOV to Wide.
-    char * videoPLD = CAM_PAYLOAD_VIDEO_RES_FPS_FOV;
-    char * videoRes = CAM_VIDEO_RES_4K;
-    char * videoFPS = CAM_VIDEO_FPS_15;
-    char * videoFOV = CAM_VIDEO_FOV_WIDE;
-    char videoDataCmd[28];
-    sprintf(videoDataCmd, "%s %s %s %s\n", videoPLD, videoRes, videoFPS, videoFOV);
-    uart_print(selectedCamera + 1, videoDataCmd);
     sleep_ms(CAM_WAIT_CONF_CHANGE);
 
     // Set date and time in camera.
@@ -180,6 +162,24 @@ int8_t gopros_cameraRawTakePicture(uint8_t selectedCamera)
  */
 int8_t gopros_cameraRawStartRecordingVideo(uint8_t selectedCamera)
 {
+    // Set default mode to video.
+    uart_print(selectedCamera + 1, CAM_DEF_MODE_VIDEO);
+    sleep_ms(CAM_WAIT_CONF_CHANGE);
+
+    // Set video format to NTSC.
+    uart_print(selectedCamera + 1, CAM_VIDEO_FORMAT_NTSC);
+    sleep_ms(CAM_WAIT_CONF_CHANGE);
+
+    // Set video resolution to 4K, FPS to 15, and FOV to Wide.
+    char * videoPLD = CAM_PAYLOAD_VIDEO_RES_FPS_FOV;
+    char * videoRes = CAM_VIDEO_RES_4K;
+    char * videoFPS = CAM_VIDEO_FPS_15;
+    char * videoFOV = CAM_VIDEO_FOV_WIDE;
+    char videoDataCmd[28];
+    sprintf(videoDataCmd, "%s %s %s %s\n", videoPLD, videoRes, videoFPS, videoFOV);
+    uart_print(selectedCamera + 1, videoDataCmd);
+    sleep_ms(CAM_WAIT_CONF_CHANGE);
+
     uart_print(selectedCamera + 1, CAM_SET_VIDEO_MODE);
     sleep_ms(CAM_WAIT_CONF_CHANGE);
     uart_print(selectedCamera + 1, CAM_VIDEO_START_REC);
@@ -294,6 +294,7 @@ int8_t cameraPowerOn(uint8_t selectedCamera)
     if(cameraStatus_[selectedCamera].cameraStatus > CAM_STATUS_OFF)
         return -1;  //Return error
 
+    //Provide Power
     cameraStatus_[selectedCamera].fsmStatus = FSM_CAM_POWERON;
     switch(selectedCamera)
     {
@@ -312,6 +313,9 @@ int8_t cameraPowerOn(uint8_t selectedCamera)
     default:
         break;
     }
+    //Init UART
+    gopros_cameraInit(selectedCamera);
+    //Start FSM
     cameraStatus_[selectedCamera].fsmStatus = FSM_CAM_POWERON_WAIT;
     cameraStatus_[selectedCamera].lastCommandTime = millis_uptime();
     cameraStatus_[selectedCamera].sleepTime = CAM_WAIT_POWER;
@@ -327,16 +331,19 @@ int8_t cameraPowerOff(uint8_t selectedCamera)
     if(cameraStatus_[selectedCamera].cameraStatus == CAM_STATUS_OFF)
         return -1;  //Return error
 
+    //Send the command to power off
+    uart_print(selectedCamera + 1, CAM_POWEROFF);
+
     cameraStatus_[selectedCamera].fsmStatus = FSM_CAM_PRESSBTNOFF;
     pressButton(selectedCamera);
     cameraStatus_[selectedCamera].fsmStatus = FSM_CAM_PRESSBTNOFF_WAIT;
     cameraStatus_[selectedCamera].lastCommandTime = millis_uptime();
-    cameraStatus_[selectedCamera].sleepTime = CAM_WAIT_BUTTON;
+    cameraStatus_[selectedCamera].sleepTime = CAM_WAIT_BUTTON + 1000;
     return 0;
 }
 
 /**
- * This function must be called continiuosly
+ * This function must be called continuously
  */
 int8_t cameraFSMcheck()
 {
@@ -359,6 +366,27 @@ int8_t cameraFSMcheck()
                 break;
             case FSM_CAM_PRESSBTN_WAIT:
                 releaseButton(i);
+                cameraStatus_[i].fsmStatus = FSM_CAM_CONF_1;
+                cameraStatus_[i].lastCommandTime = uptime;
+                cameraStatus_[i].sleepTime = CAM_WAIT_CONF_CHANGE;
+                break;
+            case FSM_CAM_CONF_1:
+                uart_print(i + 1, CAM_AUTO_POWER_DOWN_NEVER);
+                cameraStatus_[i].fsmStatus = FSM_CAM_CONF_2;
+                cameraStatus_[i].lastCommandTime = uptime;
+                cameraStatus_[i].sleepTime = CAM_WAIT_CONF_CHANGE;
+                break;
+            case FSM_CAM_CONF_2:
+                {
+                    struct RTCDateTime dateTime;
+                    char * dateTimePLD = CAM_PAYLOAD_SET_DATETIME;
+                    char dateTimeCmd[40];
+                    i2c_RTC_getClockData(&dateTime);
+                    sprintf(dateTimeCmd, "%s 20 %2d %2d %2d %2d %2d %2d\n", dateTimePLD,
+                            dateTime.year, dateTime.month, dateTime.date,
+                            dateTime.hours, dateTime.minutes, dateTime.seconds);
+                    uart_print(i + 1, dateTimeCmd);
+                }
                 cameraStatus_[i].fsmStatus = FSM_CAM_DONOTHING;
                 cameraStatus_[i].cameraStatus = CAM_STATUS_ON;
                 break;
@@ -366,7 +394,7 @@ int8_t cameraFSMcheck()
                 releaseButton(i);
                 cameraStatus_[i].fsmStatus = FSM_CAM_POWEROFF_WAIT;
                 cameraStatus_[i].lastCommandTime = uptime;
-                cameraStatus_[i].sleepTime = CAM_WAIT_BUTTON;
+                cameraStatus_[i].sleepTime = CAM_WAIT_BUTTON + 3000;
                 break;
             case FSM_CAM_POWEROFF_WAIT:
                 cutPower(i);
