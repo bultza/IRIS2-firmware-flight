@@ -91,23 +91,12 @@
 #include "spi_NOR.h"
 #include "datalogger.h"
 #include "terminal.h"
+#include "flight_sequence.h"
 
 
 #define LED_ON          (P1OUT |= BIT0)
 #define LED_OFF         (P1OUT &= ~BIT0)
 #define LED_TOGGLE      (P1OUT ^= BIT0)
-
-#define LED_R_OFF       (P3OUT |= BIT6)
-#define LED_R_ON        (P3OUT &= ~BIT6)
-#define LED_R_TOGGLE    (P3OUT ^= BIT6)
-
-#define LED_G_OFF       (P3OUT |= BIT5)
-#define LED_G_ON        (P3OUT &= ~BIT5)
-#define LED_G_TOGGLE    (P3OUT ^= BIT5)
-
-#define LED_B_OFF       (P3OUT |= BIT4)
-#define LED_B_ON        (P3OUT &= ~BIT4)
-#define LED_B_TOGGLE    (P3OUT ^= BIT4)
 
 /*
  * Init all GPIO and MCU subsystems
@@ -260,14 +249,14 @@ int main(void)
 
 	///////////////////////////////////////////////////////////////////////////
 	//DEBUG, KEEP THIS COMMENTED ON FLIGHT
-	char strLine[100];
+	/*char strLine[100];
 	uint16_t size = (uint32_t)sizeof(struct TelemetryLine);
 	sprintf(strLine, "Size of TelemetryLine is %d\r\n", size);
 	uart_print(UART_DEBUG, strLine);
 	size = (uint32_t)sizeof(struct EventLine);
     sprintf(strLine, "Size of EventLine is %d\r\n", size);
     uart_print(UART_DEBUG, strLine);
-	//TODO
+	*/
 	//END OF DEBUG
 	///////////////////////////////////////////////////////////////////////////
 
@@ -295,7 +284,7 @@ int main(void)
 	    saveTelemetry();
 
 	    //Fligh sequence
-	    //TODO
+	    checkFlightSequence();
 
 	    //Blink LED
 	    if(uptime % 1000 > 100)

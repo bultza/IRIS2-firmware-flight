@@ -50,6 +50,8 @@ int8_t uart_print(uint8_t uart_name,
 uint8_t uart_read(uint8_t uart_name);
 
 int16_t uart_available(uint8_t uart_name);
+int16_t uart_tx_onWait(uint8_t uart_name);
+void uart_flush(uint8_t uart_name);
 void uart_clear_buffer(uint8_t uart_name);
 
 

@@ -288,6 +288,45 @@ int16_t uart_available(uint8_t uart_name)
 }
 
 /*
+ * Returns the number of bytes that have not yet been sent
+ */
+int16_t uart_tx_onWait(uint8_t uart_name)
+{
+    return bufferSize(1, uart_name);
+}
+
+uint8_t pointerTimes = 0;
+uint32_t timesDebug[30];
+
+/*
+ * It blocks execution until uart is empty, or after 20ms
+ */
+void uart_flush(uint8_t uart_name)
+{
+    uint32_t timeStart = (uint32_t)millis_uptime();
+    while(uart_tx_onWait(uart_name))
+    {
+        uint32_t timeNow = (uint32_t)millis_uptime();
+        if(timeStart + 20 < timeNow)
+        {
+            timesDebug[pointerTimes] = timeNow - timeStart;
+            pointerTimes++;
+            if(pointerTimes >= 30)
+                pointerTimes = 0;
+            return;//break execution just in case
+        }
+    }
+
+    uint32_t timeNow = (uint32_t)millis_uptime();
+    timesDebug[pointerTimes] = timeNow - timeStart;
+    pointerTimes++;
+    if(pointerTimes >= 30)
+        pointerTimes = 0;
+
+    sleep_ms(2);
+}
+
+/*
  * Returns the last byte in buffer
  */
 uint8_t uart_read(uint8_t uart_name)

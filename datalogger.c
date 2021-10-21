@@ -321,6 +321,11 @@ void sensorsRead()
         currentTelemetryLine_[1].switches_status &= ~BIT7;
     }
 
+    currentTelemetryLine_[0].state = confRegister_.flightState;
+    currentTelemetryLine_[1].state = confRegister_.flightState;
+
+    currentTelemetryLine_[0].sub_state = confRegister_.flightSubState;
+    currentTelemetryLine_[1].sub_state = confRegister_.flightSubState;
 
     //Time to read barometer?
     if(lastTime_baroRead_ + confRegister_.baro_readPeriod < uptime)

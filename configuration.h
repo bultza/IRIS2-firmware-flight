@@ -12,6 +12,18 @@
 #include "spi_NOR.h"
 #include "datalogger.h"
 
+#define LED_B_OFF       (P3OUT |= BIT6)
+#define LED_B_ON        (P3OUT &= ~BIT6)
+#define LED_B_TOGGLE    (P3OUT ^= BIT6)
+
+#define LED_G_OFF       (P3OUT |= BIT5)
+#define LED_G_ON        (P3OUT &= ~BIT5)
+#define LED_G_TOGGLE    (P3OUT ^= BIT5)
+
+#define LED_R_OFF       (P3OUT |= BIT4)
+#define LED_R_ON        (P3OUT &= ~BIT4)
+#define LED_R_TOGGLE    (P3OUT ^= BIT4)
+
 #define MAGICWORD           0xBABE
 #define FWVERSION           4
 //#define FRAM_TLM_SAVEPERIOD 600     //seconds period to save on FRAM
@@ -22,6 +34,15 @@
 #define TEMP_READPERIOD     1000    //Milliseconds period to read temperatures
 #define INA_READPERIOD      100     //Milliseconds period to read INA Voltage and currents
 #define ACC_READPERIOD      100     //Milliseconds period to read Accelerometer
+#define TIMELAPSE_PERIOD    30      //Seconds
+
+#define FLIGHTSTATE_DEBUG           0
+#define FLIGHTSTATE_WAITFORLAUNCH   1
+#define FLIGHTSTATE_LAUNCH          2
+#define FLIGHTSTATE_TIMELAPSE       3
+#define FLIGHTSTATE_LANDING         4
+#define FLIGHTSTATE_TIMELAPSE_LAND  5
+#define FLIGHTSTATE_RECOVERY        6
 
 
 struct ConfigurationRegister
@@ -30,13 +51,19 @@ struct ConfigurationRegister
     uint16_t numberReboots;
     uint16_t swVersion;
     //Put here all the configuration parameters
-    //TODO
     uint16_t nor_tlmSavePeriod;
     uint16_t fram_tlmSavePeriod;
     uint16_t baro_readPeriod;
     uint16_t temp_readPeriod;
     uint16_t ina_readPeriod;
     uint16_t acc_readPeriod;
+    uint16_t timelapse_period;
+
+    //Put here all the configuration of the gopros
+    uint8_t gopro_beeps;        //01 = 70%, 02 = off
+    uint8_t gopro_leds;         //00 = off, 01 = 2, 02 = 4
+    uint8_t gopro_model[4];     //00 = Gopro Black, 01 = Gopro White
+
 
     //Put here all the current execution status
     uint8_t nor_deviceSelected;

@@ -7,18 +7,20 @@
 #include "gopros.h"
 
 struct CameraStatus cameraStatus_[4] = {0};
-uint8_t cameraHasStarted[4] = {0};
+uint8_t cameraHasStarted_[4] = {0};
+uint8_t cameraMode_ = CAMERAMODE_PIC;
 
 /*
  * Begins an UART communication with the selected camera.
  */
-int8_t gopros_cameraInit(uint8_t selectedCamera)
+int8_t gopros_cameraInit(uint8_t selectedCamera, uint8_t cameraMode)
 {
 
     //if (!cameraHasStarted[selectedCamera])
     //{
         uart_init(selectedCamera + 1, BR_57600);
-        cameraHasStarted[selectedCamera] = 1;
+        cameraHasStarted_[selectedCamera] = 1;
+        cameraMode_ = cameraMode;
     //}
 
     return 0;
@@ -99,7 +101,7 @@ int8_t gopros_cameraRawPowerOn(uint8_t selectedCamera)
         P5DIR &= ~BIT6;      // Define button as input - high impedance
     }
 
-    sleep_ms(5000);
+    /*sleep_ms(5000);
 
     // Never auto power down.
     uart_print(selectedCamera + 1, CAM_AUTO_POWER_DOWN_NEVER);
@@ -113,7 +115,7 @@ int8_t gopros_cameraRawPowerOn(uint8_t selectedCamera)
     sprintf(dateTimeCmd, "%s %2d %2d %2d %2d %2d %2d\n", dateTimePLD,
             dateTime.year, dateTime.month, dateTime.date,
             dateTime.hours, dateTime.minutes, dateTime.seconds);
-    uart_print(selectedCamera + 1, dateTimeCmd);
+    uart_print(selectedCamera + 1, dateTimeCmd);*/
 
     return 0;
 }
@@ -140,7 +142,7 @@ int8_t gopros_cameraRawSafePowerOff(uint8_t selectedCamera)
     else if (selectedCamera == CAMERA04)
         CAMERA04_OFF;
 
-    cameraHasStarted[selectedCamera] = 0;
+    cameraHasStarted_[selectedCamera] = 0;
 
     return 0;
 }
@@ -151,8 +153,10 @@ int8_t gopros_cameraRawSafePowerOff(uint8_t selectedCamera)
 int8_t gopros_cameraRawTakePicture(uint8_t selectedCamera)
 {
     uart_print(selectedCamera + 1, CAM_SET_PHOTO_MODE);
+    uart_flush(selectedCamera + 1);
     sleep_ms(CAM_WAIT_CONF_CHANGE);
     uart_print(selectedCamera + 1, CAM_PHOTO_TAKE_PIC);
+    uart_flush(selectedCamera + 1);
 
     return 0;
 }
@@ -206,6 +210,16 @@ int8_t gopros_cameraRawSendCommand(uint8_t selectedCamera, char * cmd)
 {
     uart_print(selectedCamera + 1, cmd);
 
+    return 0;
+}
+
+/**
+ * It sends the command to take the picture
+ */
+int8_t cameraTakePic(uint8_t selectedCamera)
+{
+    uart_print(selectedCamera + 1, CAM_PHOTO_TAKE_PIC);
+    uart_flush(selectedCamera + 1);
     return 0;
 }
 
@@ -313,8 +327,6 @@ int8_t cameraPowerOn(uint8_t selectedCamera)
     default:
         break;
     }
-    //Init UART
-    gopros_cameraInit(selectedCamera);
     //Start FSM
     cameraStatus_[selectedCamera].fsmStatus = FSM_CAM_POWERON_WAIT;
     cameraStatus_[selectedCamera].lastCommandTime = millis_uptime();
@@ -333,6 +345,7 @@ int8_t cameraPowerOff(uint8_t selectedCamera)
 
     //Send the command to power off
     uart_print(selectedCamera + 1, CAM_POWEROFF);
+    uart_flush(selectedCamera + 1);
 
     cameraStatus_[selectedCamera].fsmStatus = FSM_CAM_PRESSBTNOFF;
     pressButton(selectedCamera);
@@ -368,18 +381,20 @@ int8_t cameraFSMcheck()
                 releaseButton(i);
                 cameraStatus_[i].fsmStatus = FSM_CAM_CONF_1;
                 cameraStatus_[i].lastCommandTime = uptime;
-                cameraStatus_[i].sleepTime = CAM_WAIT_CONF_CHANGE * 3;
+                cameraStatus_[i].sleepTime = CAM_WAIT_POWER - 1000;
                 break;
             case FSM_CAM_CONF_1:
                 {
                     //This works:
                     //YY00072100232016011100000001000000000000000000000000000000000001000007E50A14020A0B
                     struct RTCDateTime dateTime;
-                    char * dateTimePLD = CAM_PAYLOAD_SET_DATETIME;
                     char dateTimeCmd[100];
                     i2c_RTC_getClockData(&dateTime);
                     //sprintf(dateTimeCmd, "YY000721002320160111000000010002000101000000000000000000000000010100%02X%02X%02X%02X%02X%02X%02X\n",
-                      sprintf(dateTimeCmd, "YY000721002320160111000000020000000101000000000000000000000000010100%02X%02X%02X%02X%02X%02X%02X\n",
+                    sprintf(dateTimeCmd, "YY000721002320160111000000%02X00%02X00010100000000000000000000000001%02X00%02X%02X%02X%02X%02X%02X%02X\n",
+                            confRegister_.gopro_beeps,
+                            confRegister_.gopro_leds,
+                            cameraMode_,
                             (uint8_t)((2000 + (uint16_t)dateTime.year)/256),
                             (uint8_t)((2000 + (uint16_t)dateTime.year)%256),
                             dateTime.month,
@@ -388,37 +403,75 @@ int8_t cameraFSMcheck()
                             dateTime.minutes,
                             dateTime.seconds);
                     uart_print(i + 1, dateTimeCmd);
-                    uart_print(UART_DEBUG, "Send to camera: '");
-                    uart_print(UART_DEBUG, dateTimeCmd);
-                    uart_print(UART_DEBUG, "'\r\n");
+                    uart_flush(i + 1);
+                    //uart_print(UART_DEBUG, "Sent to camera: '");
+                    //uart_print(UART_DEBUG, dateTimeCmd);
+                    //uart_print(UART_DEBUG, "'\r\n");
                 }
                 cameraStatus_[i].fsmStatus = FSM_CAM_CONF_2;
                 cameraStatus_[i].lastCommandTime = uptime;
                 cameraStatus_[i].sleepTime = CAM_WAIT_CONF_CHANGE;
                 break;
             case FSM_CAM_CONF_2:
-                //Captura video ultra wide 4:3 with 48FPS
-                /*uart_print(i + 1, CAM_SET_VIDEO_MODE);
-                sleep_ms(100);
-                uart_print(i + 1, CAM_PAYLOAD_VIDEO_RES_FPS_FOV);
-                uart_print(i + 1, CAM_VIDEO_RES_1440);
-                uart_print(i + 1, CAM_VIDEO_FPS_48);
-                uart_print(i + 1, CAM_VIDEO_FOV_WIDE);
-                uart_print(i + 1, "\n");*/
+                if(cameraMode_ == CAMERAMODE_VID)
+                {
+                    //Configure video:
+                    //Depends of camera model:
+                    if(confRegister_.gopro_model[i] == 0)
+                    {
+                        uart_print(i + 1, CAM_SET_VIDEO_MODE);
+                        uart_flush(i + 1);
+                        sleep_ms(50);
 
-                //Captura video ultra wide 16:9 with 100FPS 720p
-                uart_print(i + 1, CAM_SET_VIDEO_MODE);
-                sleep_ms(100);
-                uart_print(i + 1, CAM_PAYLOAD_VIDEO_RES_FPS_FOV);
-                uart_print(i + 1, CAM_VIDEO_RES_720_SUPERVIEW);
-                uart_print(i + 1, CAM_VIDEO_FPS_100);
-                uart_print(i + 1, CAM_VIDEO_FOV_WIDE);
-                uart_print(i + 1, "\n");
+                        //Captura video ultra wide 4:3 with 48FPS
+                        //uart_print(i + 1, CAM_PAYLOAD_VIDEO_RES_FPS_FOV);
+                        //uart_print(i + 1, CAM_VIDEO_RES_1440);
+                        //uart_print(i + 1, CAM_VIDEO_FPS_48);
+                        //uart_print(i + 1, CAM_VIDEO_FOV_WIDE);
+                        //uart_print(i + 1, "\n");
+                        //uart_flush(i + 1);
 
-                //Captura foto:
-                /*uart_print(i + 1, CAM_SET_PHOTO_MODE);
-                uart_print(i + 1, CAM_PHOTO_RES_12MP_WIDE);*/
+                        //GOPRO Hero4 Black
+                        uart_print(i + 1, CAM_PAYLOAD_VIDEO_RES_FPS_FOV);
+                        uart_print(i + 1, CAM_VIDEO_RES_2_7K_4_3);
+                        uart_print(i + 1, CAM_VIDEO_FPS_30);
+                        uart_print(i + 1, CAM_VIDEO_FOV_WIDE);
+                        uart_print(i + 1, "\n");
+                        uart_flush(i + 1);
+                    }
+                    else
+                    {
+                        uart_print(i + 1, CAM_SET_VIDEO_MODE);
+                        uart_flush(i + 1);
+                        sleep_ms(50);
 
+                        //Captura video ultra wide 16:9 with 100FPS 720p
+                        //uart_print(i + 1, CAM_PAYLOAD_VIDEO_RES_FPS_FOV);
+                        //uart_print(i + 1, CAM_VIDEO_RES_720_SUPERVIEW);
+                        //uart_print(i + 1, CAM_VIDEO_FPS_100);
+                        //uart_print(i + 1, CAM_VIDEO_FOV_WIDE);
+                        //uart_print(i + 1, "\n");
+                        //uart_flush(i + 1);
+
+                        //GOPRO Hero4 Silver is less capable unfortunately
+                        uart_print(i + 1, CAM_PAYLOAD_VIDEO_RES_FPS_FOV);
+                        uart_print(i + 1, CAM_VIDEO_RES_1440);
+                        uart_print(i + 1, CAM_VIDEO_FPS_48);
+                        uart_print(i + 1, CAM_VIDEO_FOV_WIDE);
+                        uart_print(i + 1, "\n");
+                        uart_flush(i + 1);
+                    }
+
+                }
+                else if(cameraMode_ == CAMERAMODE_PIC)
+                {
+                    //Configure picture: easypeasy
+                    uart_print(i + 1, CAM_SET_PHOTO_MODE);
+                    uart_flush(i + 1);
+                    sleep_ms(50);
+                    uart_print(i + 1, CAM_PHOTO_RES_12MP_WIDE);
+                    uart_flush(i + 1);
+                }
 
                 cameraStatus_[i].fsmStatus = FSM_CAM_DONOTHING;
                 cameraStatus_[i].cameraStatus = CAM_STATUS_ON;
@@ -440,3 +493,20 @@ int8_t cameraFSMcheck()
     return 0;
 }
 
+/**
+ * Checks if all the cameras are ready for making a picture
+ */
+int8_t cameraReadyStatus()
+{
+    uint8_t i;
+    uint8_t result = 0;
+    for(i = 0; i < 4; i++)
+    {
+        uint8_t bit = 1 << i;
+        if(cameraStatus_[i].cameraStatus == CAM_STATUS_ON)
+            result |= bit;
+        else
+            result &= ~bit;
+    }
+    return result;
+}

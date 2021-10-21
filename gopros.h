@@ -19,6 +19,9 @@
 #define CAMERA03 2
 #define CAMERA04 3
 
+#define CAMERAMODE_PIC  0
+#define CAMERAMODE_VID  1
+
 #define MUX_OFF         (P2OUT |=  BIT3)
 #define CAMERA01_OFF    (P4OUT |=  BIT6)
 #define CAMERA01_ON     (P4OUT &= ~BIT6)
@@ -29,9 +32,9 @@
 #define CAMERA04_OFF    (P2OUT |=  BIT7)
 #define CAMERA04_ON     (P2OUT &= ~BIT7)
 
-#define CAM_WAIT_POWER 5000
-#define CAM_WAIT_BUTTON 50
-#define CAM_WAIT_CONF_CHANGE 2000
+#define CAM_WAIT_POWER          5000
+#define CAM_WAIT_BUTTON         50
+#define CAM_WAIT_CONF_CHANGE    3000
 
 #define FSM_CAM_DONOTHING           0
 #define FSM_CAM_POWERON             1
@@ -206,7 +209,7 @@ argv[34]: second
 
 
 // Functions
-int8_t gopros_cameraInit(uint8_t selectedCamera);
+int8_t gopros_cameraInit(uint8_t selectedCamera, uint8_t cameraMode);
 int8_t gopros_cameraRawPowerOn(uint8_t selectedCamera);
 int8_t gopros_cameraRawSafePowerOff(uint8_t selectedCamera);
 int8_t gopros_cameraRawTakePicture(uint8_t selectedCamera);
@@ -215,6 +218,8 @@ int8_t gopros_cameraRawStopRecordingVideo(uint8_t selectedCamera);
 int8_t gopros_cameraRawSendCommand(uint8_t selectedCamera, char * cmd);
 int8_t cameraPowerOn(uint8_t selectedCamera);
 int8_t cameraPowerOff(uint8_t selectedCamera);
+int8_t cameraTakePic(uint8_t selectedCamera);
 int8_t cameraFSMcheck();
+int8_t cameraReadyStatus();
 
 #endif /* GOPROS_H_ */

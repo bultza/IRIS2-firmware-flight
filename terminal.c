@@ -579,16 +579,18 @@ void processCameraCommand(char * command)
             sprintf(strToPrint_, "Error, no correct camera was selected...\r\n");
     }
 
-    // Initialised UART comms with camera
-    gopros_cameraInit(selectedCamera);
-
     // Extract the subcommand from camera control command
     char cameraSubcommand[CMD_MAX_LEN] = {0};
     extractCommandPart((char *) command, 2, (char *) cameraSubcommand);
 
     if (strcmp("on", cameraSubcommand) == 0)
     {
-        //gopros_cameraRawPowerOn(selectedCamera);
+        // Initialised UART comms with camera in PICture mode
+        gopros_cameraInit(selectedCamera, CAMERAMODE_PIC);
+
+        // Initialised UART comms with camera in VIDeo mode
+        //gopros_cameraInit(selectedCamera, CAMERAMODE_VID);
+
         cameraPowerOn(selectedCamera);
         sprintf(strToPrint_, "Camera %c booting...\r\n", command[7]);
     }
@@ -727,11 +729,12 @@ void printStatus()
     uint32_t unixtTimeNow = i2c_RTC_unixTime_now();
 
     //Put first the general status of the board
+    uart_print(UART_DEBUG, "================================\r\n");
     sprintf(strToPrint_, "Uptime:\t\t%.3fs\r\n", uptime/1000.0);
     uart_print(UART_DEBUG, strToPrint_);
     struct RTCDateTime dateTime;
     convert_from_unixTime(unixtTimeNow, &dateTime);
-    sprintf(strToPrint_, "Time:\t\t20%.2d/%.2d/%.2d %.2d:%.2d:%.2d\r\n",
+    sprintf(strToPrint_, "Time:\t\t\t20%.2d/%.2d/%.2d %.2d:%.2d:%.2d\r\n",
             dateTime.year,
             dateTime.month,
             dateTime.date,
@@ -783,7 +786,7 @@ void printStatus()
         uart_print(UART_DEBUG, strToPrint_);
     }*/
 
-    sprintf(strToPrint_, "State:\t\t%d\r\n", askedTMLine.state);
+    sprintf(strToPrint_, "State:\t\t\t%d\r\n", askedTMLine.state);
     uart_print(UART_DEBUG, strToPrint_);
     sprintf(strToPrint_, "Substate:\t%d\r\n", askedTMLine.sub_state);
     uart_print(UART_DEBUG, strToPrint_);
@@ -814,7 +817,7 @@ void printStatus()
     uart_print(UART_DEBUG, strToPrint_);
     sprintf(strToPrint_, "Temp [2]:\t%.1fºC\r\n", askedTMLine.temperatures[2]/10.0);
     uart_print(UART_DEBUG, strToPrint_);
-    uart_print(UART_DEBUG, "Statistics:\r\n\t\tMin\tAvg\tMax\r\n");
+    uart_print(UART_DEBUG, "Statistics:\r\n\t\t\tMin\tAvg\tMax\r\n");
     sprintf(strToPrint_, "Speed(m/s):\t%.2f\t%.2f\t%.2f\r\n",
             askedTMLine.verticalSpeed[2]/100.0,
             askedTMLine.verticalSpeed[0]/100.0,
