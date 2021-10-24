@@ -1599,48 +1599,34 @@ int8_t terminal_readAndProcessCommands(void)
         }
         else if (strcmp("help", (char *)command_) == 0)
         {
-            uart_print(UART_DEBUG, "help --> Returns this list of commands.\r\n");
-            uart_print(UART_DEBUG, "...Terminal:\r\n");
-            uart_print(UART_DEBUG, "terminal begin --> Starts Terminal session.\r\n");
-            uart_print(UART_DEBUG, "terminal count --> Returns number of issued commands.\r\n");
-            uart_print(UART_DEBUG, "terminal last --> Returns last command.\r\n");
-            uart_print(UART_DEBUG, "terminal end --> Ends Terminal session.\r\n");
-            uart_print(UART_DEBUG, "...CPU:\r\n");
-            uart_print(UART_DEBUG, "reboot --> Reboots IRIS 2 CPU.\r\n");
-            uart_print(UART_DEBUG, "fsw mode --> Returns Flight Software (FSW) mode\r\n");
-            uart_print(UART_DEBUG, "\t 0: flight mode / 1: simulation mode (simulator enabled).\r\n");
-            uart_print(UART_DEBUG, "fsw state --> Returns FSW state.\r\n");
-            uart_print(UART_DEBUG, "fsw substate --> Returns FSW substate.\r\n");
-            uart_print(UART_DEBUG, "conf --> If no parameter is passed, returns actual FSW configuration\r\n");
-            uart_print(UART_DEBUG, "\t If [get] is passed, returns only desired parameter.\r\n");
-            uart_print(UART_DEBUG, "\t If [set] is passed, sets value to desired parameter.\r\n");
-            uart_print(UART_DEBUG, "...Time:\r\n");
-            uart_print(UART_DEBUG, "uptime --> Returns elapsed seconds since boot.\r\n");
-            uart_print(UART_DEBUG, "unixtime --> Returns actual UNIX time.\r\n");
-            uart_print(UART_DEBUG, "date --> Returns actual date and time from IRIS 2 CLK or sets it\r\n");
-            uart_print(UART_DEBUG, "\t Format for setting the date: YYYY/MM/DD HH:mm:ss.\r\n");
-            uart_print(UART_DEBUG, "i2c rtc --> Returns actual date and time from RTC.\r\n");
-            uart_print(UART_DEBUG, "...Sensors:\r\n");
-            uart_print(UART_DEBUG, "i2c temp --> Returns temperature in tenths of deg C.\r\n");
-            uart_print(UART_DEBUG, "i2c baro --> Returns atmospheric pressure in hundredths of mbar and altitude in cm.\r\n");
-            uart_print(UART_DEBUG, "i2c ina --> Returns the INA voltage in hundredths of V and currents in mA.\r\n");
-            uart_print(UART_DEBUG, "...Cameras:\r\n");
-            uart_print(UART_DEBUG, "camera x on --> Powers on and boots camera x (where x in [1,2,3,4]).\r\n");
-            uart_print(UART_DEBUG, "camera x pic --> Takes a picture with camera x using default configuration.\r\n");
-            uart_print(UART_DEBUG, "camera x video_start --> Starts recording video with camera x.\r\n");
-            uart_print(UART_DEBUG, "camera x video_off --> Stops video recording with camera x.\r\n");
-            uart_print(UART_DEBUG, "camera x send_cmd y --> Sends command y (do not include line feed at the end!) to camera x.\r\n");
-            uart_print(UART_DEBUG, "camera x off --> Safely powers off camera x.\r\n");
-            uart_print(UART_DEBUG, "...Telemetry:\r\n");
-            uart_print(UART_DEBUG, "tm nor --> Returns current Telemetry Line to be saved in NOR memory.\r\n");
-            uart_print(UART_DEBUG, "tm fram --> Returns current Telemetry Line to be saved in FRAM memory.\r\n");
-            uart_print(UART_DEBUG, "...Memory:\r\n");
-            uart_print(UART_DEBUG, "memory [status/read/dump/write/erase] [nor/fram]\r\n");
-            uart_print(UART_DEBUG, "\t if status --> Returns the status of the NOR or FRAM memory.\r\n");
-            uart_print(UART_DEBUG, "\t if read, add: [tlm/event] [OPTIONAL line_start] [OPTIONAL line_end] --> Reads num bytes starting at address.\r\n");
-            uart_print(UART_DEBUG, "\t if dump, add: [line_start] [num bytes] [hex/bin] --> Reads all Telemetry Lines or Event Lines in HEX/CSV format.\r\n");
-            uart_print(UART_DEBUG, "\t if write, add: [address] [num bytes] [data] --> Writes num bytes of data starting at address.\r\n");
-            uart_print(UART_DEBUG, "\t if erase, add: [sector] [num sector] or [bulk] --> Erases a sector of data (0-255) or whole memory.\r\n");
+            uart_print(UART_DEBUG, "Available commands:\r\n");
+            uart_print(UART_DEBUG, "  help\r\n");
+            uart_print(UART_DEBUG, "  status\r\n");
+            uart_print(UART_DEBUG, "  reboot\r\n");
+            uart_print(UART_DEBUG, "  conf\r\n");
+            uart_print(UART_DEBUG, "  conf set [parameter] [value]\r\n");
+            uart_print(UART_DEBUG, "  uptime\r\n");
+            uart_print(UART_DEBUG, "  unixtime\r\n");
+            uart_print(UART_DEBUG, "  date\r\n");
+            uart_print(UART_DEBUG, "  date [YYYY/MM/DD HH:mm:ss]\r\n");
+            uart_print(UART_DEBUG, "  i2c rtc\r\n");
+            uart_print(UART_DEBUG, "  i2c temp\r\n");
+            uart_print(UART_DEBUG, "  i2c baro\r\n");
+            uart_print(UART_DEBUG, "  i2c ina\r\n");
+            uart_print(UART_DEBUG, "  i2c acc\r\n");
+            uart_print(UART_DEBUG, "  camera x on\r\n");
+            uart_print(UART_DEBUG, "  camera x picture_mode\r\n");
+            uart_print(UART_DEBUG, "  camera x video_mode\r\n");
+            uart_print(UART_DEBUG, "  camera x pic\r\n");
+            uart_print(UART_DEBUG, "  camera x video_start\r\n");
+            uart_print(UART_DEBUG, "  camera x video_end\r\n");
+            uart_print(UART_DEBUG, "  camera x send_cmd y\r\n");
+            uart_print(UART_DEBUG, "  camera x off\r\n");
+            uart_print(UART_DEBUG, "  tm nor\r\n");
+            uart_print(UART_DEBUG, "  tm fram\r\n");
+            uart_print(UART_DEBUG, "  memory [status/read/dump/erase] [nor/fram] [tlm/events/bulk] [start] [end]\r\n");
+            uart_print(UART_DEBUG, "  uarddebug [Uart number]\r\n");
+            uart_print(UART_DEBUG, "  u [data]\r\n");
         }
         else if (strncmp("terminal", (char *)command_, 8) == 0)
         {
