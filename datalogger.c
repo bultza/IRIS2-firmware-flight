@@ -199,6 +199,9 @@ int32_t getVerticalSpeed()
 float inaCurrentAverages_[2];
 float inaVoltageAverages_[2];
 float verticalSpeedAverages_[2];
+float accXAverages_[2];
+float accYAverages_[2];
+float accZAverages_[2];
 
 /**
  * Checks if it is time to read the sensors and saves them into memory
@@ -488,79 +491,73 @@ void sensorsRead()
     //Time to read accelerations?
     if(lastTime_accRead_ + confRegister_.acc_readPeriod < uptime)
     {
-        // COMMENTED WHILE ACCELEROMETER NOT PRESENT ON PCB
-
-        /*
-        //Time to read accelerations
-
-        struct Accelerations accData;
-        i2c_ADXL345_getAccelerations(&accData);
+        struct ACCData accData;
+        int8_t error = i2c_ADXL345_getAccelerations(&accData);
 
         uint8_t i;
         for (i = 0; i < 2; i++)
         {
-            // Save accelerations
-            if (i == 0 && numTimes_accRead_[0] == 0)
+            // Save accs
+            if (numTimes_accRead_[i] == 0)
             {
-                currentTelemetryLineFRAMandNOR_[0].accXAxis[AVG_INDEX] = accData.XAxis;
-                currentTelemetryLineFRAMandNOR_[0].accXAxis[MAX_INDEX] = accData.XAxis;
-                currentTelemetryLineFRAMandNOR_[0].accXAxis[MIN_INDEX] = accData.XAxis;
+                currentTelemetryLine_[i].accXAxis[AVG_INDEX] = 0;
+                currentTelemetryLine_[i].accXAxis[MAX_INDEX] = -32767;
+                currentTelemetryLine_[i].accXAxis[MIN_INDEX] = 32767;
 
-                currentTelemetryLineFRAMandNOR_[0].accYAxis[AVG_INDEX] = accData.YAxis;
-                currentTelemetryLineFRAMandNOR_[0].accYAxis[MAX_INDEX] = accData.YAxis;
-                currentTelemetryLineFRAMandNOR_[0].accYAxis[MIN_INDEX] = accData.YAxis;
+                currentTelemetryLine_[i].accYAxis[AVG_INDEX] = 0;
+                currentTelemetryLine_[i].accYAxis[MAX_INDEX] = -32767;
+                currentTelemetryLine_[i].accYAxis[MIN_INDEX] = 32767;
 
-                currentTelemetryLineFRAMandNOR_[0].accZAxis[AVG_INDEX] = accData.ZAxis;
-                currentTelemetryLineFRAMandNOR_[0].accZAxis[MAX_INDEX] = accData.ZAxis;
-                currentTelemetryLineFRAMandNOR_[0].accZAxis[MIN_INDEX] = accData.ZAxis;
-            }
-            else if (i == 1 && numTimes_accRead_[1] == 0)
-            {
-                currentTelemetryLineFRAMandNOR_[1].accXAxis[AVG_INDEX] = accData.XAxis;
-                currentTelemetryLineFRAMandNOR_[1].accXAxis[MAX_INDEX] = accData.XAxis;
-                currentTelemetryLineFRAMandNOR_[1].accXAxis[MIN_INDEX] = accData.XAxis;
+                currentTelemetryLine_[i].accZAxis[AVG_INDEX] = 0;
+                currentTelemetryLine_[i].accZAxis[MAX_INDEX] = -32767;
+                currentTelemetryLine_[i].accZAxis[MIN_INDEX] = 32767;
 
-                currentTelemetryLineFRAMandNOR_[1].accYAxis[AVG_INDEX] = accData.YAxis;
-                currentTelemetryLineFRAMandNOR_[1].accYAxis[MAX_INDEX] = accData.YAxis;
-                currentTelemetryLineFRAMandNOR_[1].accYAxis[MIN_INDEX] = accData.YAxis;
-
-                currentTelemetryLineFRAMandNOR_[1].accZAxis[AVG_INDEX] = accData.ZAxis;
-                currentTelemetryLineFRAMandNOR_[1].accZAxis[MAX_INDEX] = accData.ZAxis;
-                currentTelemetryLineFRAMandNOR_[1].accZAxis[MIN_INDEX] = accData.ZAxis;
+                accXAverages_[i] = 0.0;
+                accYAverages_[i] = 0.0;
+                accZAverages_[i] = 0.0;
             }
             else
             {
-                uint32_t newAverageAccXAxis = (accData.XAxis -
-                        currentTelemetryLineFRAMandNOR_[i].accXAxis[AVG_INDEX])/numTimes_accRead_[i];
+                //media = media + (newValue-media)/numberOfValues
 
-                currentTelemetryLineFRAMandNOR_[i].accXAxis[AVG_INDEX] += newAverageAccXAxis;
-                if (accData.XAxis < currentTelemetryLineFRAMandNOR_[i].accXAxis[MIN_INDEX])
-                    currentTelemetryLineFRAMandNOR_[i].accXAxis[MIN_INDEX] = accData.XAxis;
-                if (accData.XAxis > currentTelemetryLineFRAMandNOR_[i].accXAxis[MAX_INDEX])
-                    currentTelemetryLineFRAMandNOR_[i].accXAxis[MAX_INDEX] = accData.XAxis;
+                float newAverageAcc = ((float)accData.x - accXAverages_[i])
+                                        / (float)numTimes_accRead_[i];
+                accXAverages_[i] += newAverageAcc;
+                currentTelemetryLine_[i].accXAxis[AVG_INDEX] = accXAverages_[i];
 
-                uint32_t newAverageAccYAxis = (accData.YAxis -
-                        currentTelemetryLineFRAMandNOR_[i].accYAxis[AVG_INDEX])/numTimes_accRead_[i];
+                if (accData.x < currentTelemetryLine_[i].accXAxis[MIN_INDEX])
+                    currentTelemetryLine_[i].accXAxis[MIN_INDEX] = accData.x;
+                if (accData.x > currentTelemetryLine_[i].accXAxis[MAX_INDEX])
+                    currentTelemetryLine_[i].accXAxis[MAX_INDEX] = accData.x;
 
-                currentTelemetryLineFRAMandNOR_[i].accYAxis[AVG_INDEX] += newAverageAccYAxis;
-                if (accData.YAxis < currentTelemetryLineFRAMandNOR_[i].accYAxis[MIN_INDEX])
-                    currentTelemetryLineFRAMandNOR_[i].accYAxis[MIN_INDEX] = accData.YAxis;
-                if (accData.YAxis > currentTelemetryLineFRAMandNOR_[i].accYAxis[MAX_INDEX])
-                    currentTelemetryLineFRAMandNOR_[i].accYAxis[MAX_INDEX] = accData.YAxis;
+                //Y Axys
 
-                uint32_t newAverageAccZAxis = (accData.ZAxis -
-                        currentTelemetryLineFRAMandNOR_[i].accZAxis[AVG_INDEX])/numTimes_accRead_[i];
+                newAverageAcc = ((float)accData.y - accYAverages_[i])
+                                        / (float)numTimes_accRead_[i];
+                accYAverages_[i] += newAverageAcc;
+                currentTelemetryLine_[i].accYAxis[AVG_INDEX] = accYAverages_[i];
 
-                currentTelemetryLineFRAMandNOR_[i].accZAxis[AVG_INDEX] += newAverageAccZAxis;
-                if (accData.ZAxis < currentTelemetryLineFRAMandNOR_[i].accZAxis[MIN_INDEX])
-                    currentTelemetryLineFRAMandNOR_[i].accZAxis[MIN_INDEX] = accData.ZAxis;
-                if (accData.ZAxis > currentTelemetryLineFRAMandNOR_[i].accZAxis[MAX_INDEX])
-                    currentTelemetryLineFRAMandNOR_[i].accZAxis[MAX_INDEX] = accData.ZAxis;
+                if (accData.y < currentTelemetryLine_[i].accYAxis[MIN_INDEX])
+                    currentTelemetryLine_[i].accYAxis[MIN_INDEX] = accData.y;
+                if (accData.y > currentTelemetryLine_[i].accYAxis[MAX_INDEX])
+                    currentTelemetryLine_[i].accYAxis[MAX_INDEX] = accData.y;
+
+                //Z Axys
+
+                newAverageAcc = ((float)accData.z - accZAverages_[i])
+                                        / (float)numTimes_accRead_[i];
+                accZAverages_[i] += newAverageAcc;
+                currentTelemetryLine_[i].accZAxis[AVG_INDEX] = accZAverages_[i];
+
+                if (accData.z < currentTelemetryLine_[i].accZAxis[MIN_INDEX])
+                    currentTelemetryLine_[i].accZAxis[MIN_INDEX] = accData.z;
+                if (accData.z > currentTelemetryLine_[i].accZAxis[MAX_INDEX])
+                    currentTelemetryLine_[i].accZAxis[MAX_INDEX] = accData.z;
+
             }
 
             numTimes_accRead_[i]++;
         }
-        */
         lastTime_accRead_ = uptime;
     }
 

@@ -55,7 +55,7 @@ int8_t i2c_ADXL345_init(void)
 }
 
 /**
- *
+ * Returns the x, y, z readings of the acc in g
  */
 int8_t i2c_ADXL345_getAccelerations(struct ACCData *data)
 {
@@ -69,29 +69,35 @@ int8_t i2c_ADXL345_getAccelerations(struct ACCData *data)
 
     // Retrieve XAXIS0, XAXIS1, YAXIS0, YAXIS1, ZAXIS0, ZAXIS1
     ack |= i2c_requestFrom(I2C_BUS00, ADXL345_ADDRESS, adxlData, 6, 0);
-    /*
-    data->x = (float) ((int16_t) ((adxlData[1] << 8) | adxlData[0])) * (32.0/(2^13));
-    data->y = (float) ((int16_t) ((adxlData[3] << 8) | adxlData[2])) * (32.0/(2^13));
-    data->z = (float) ((int16_t) ((adxlData[5] << 8) | adxlData[4])) * (32.0/(2^13));
-    */
-    data->x = ((float) ((int16_t) ((adxlData[1] << 8) | adxlData[0])) * 4.0) / 1000.0;
-    data->y = ((float) ((int16_t) ((adxlData[3] << 8) | adxlData[2])) * 4.0) / 1000.0;
-    data->z = ((float) ((int16_t) ((adxlData[5] << 8) | adxlData[4])) * 4.0) / 1000.0;
+
+    data->x = (((int16_t) ((adxlData[1] << 8) | adxlData[0])) * 4);
+    data->y = (((int16_t) ((adxlData[3] << 8) | adxlData[2])) * 4);
+    data->z = (((int16_t) ((adxlData[5] << 8) | adxlData[4])) * 4);
     return ack;
 }
 
 /**
- *
+ * Returns the free fall interrupt information
  */
-int8_t i2c_ADXL345_setAxesOffsets(int16_t xAxisOffset, int16_t yAxisOffset, int16_t zAxisOffset)
+int8_t i2c_ADXL345_getIntStatus(uint8_t *interruptRegister,
+                                uint8_t *interruptDetected,
+                                uint8_t *gpioStatus)
 {
-    /*uint8_t const adxlRegister = ADXL345_REG_XAXISOFF;
-    uint8_t adxlData[4] = {adxlRegister, xAxisOffset, yAxisOffset, zAxisOffset};
+    uint8_t adxlRegister = ADXL345_INT_SOURCE;
+    int8_t ack = i2c_write(I2C_BUS00, ADXL345_ADDRESS, &adxlRegister, 1, 0);
 
-    int8_t ack = i2c_write(I2C_BUS00, ADXL345_ADDRESS, adxlData, 4, 0);
+    if (ack)
+        return ack; //There was an error, return the error
 
-    return ack;*/
+    // Retrieve register
+    ack |= i2c_requestFrom(I2C_BUS00, ADXL345_ADDRESS, interruptRegister, 1, 0);
+
+    if(P3IN & BIT7)
+        *gpioStatus = 1;
+    else
+        *gpioStatus = 0;
+
+    //TODO add the interrupt reader information
+
+    return ack;
 }
-
-
-

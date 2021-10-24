@@ -291,24 +291,6 @@ int main(void)
 	        LED_OFF;
 	    else
 	        LED_ON;
-
-	    //Blink LED
-        /*if((uptime + 100) % 1000 > 100)
-            LED_R_OFF;
-        else
-            LED_R_ON;
-
-        //Blink LED
-        if((uptime + 200) % 1000 > 100)
-            LED_G_OFF;
-        else
-            LED_G_ON;
-
-        //Blink LED
-        if((uptime + 300) % 1000 > 100)
-            LED_B_OFF;
-        else
-            LED_B_ON;*/
 	};
 
 	//It should never reach here

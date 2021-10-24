@@ -47,61 +47,19 @@
 #define ADXL345_FIFO_CTL 0x38
 #define ADXL345_FIFO_STATUS 0x39
 
-#define ADXL345_BW_1600 0xF // 1111
-#define ADXL345_BW_800  0xE // 1110
-#define ADXL345_BW_400  0xD // 1101
-#define ADXL345_BW_200  0xC // 1100
-#define ADXL345_BW_100  0xB // 1011
-#define ADXL345_BW_50   0xA // 1010
-#define ADXL345_BW_25   0x9 // 1001
-#define ADXL345_BW_12   0x8 // 1000
-#define ADXL345_BW_6    0x7 // 0111
-#define ADXL345_BW_3    0x6 // 0110
-
-
-/*
- Interrupt PINs
- INT1: 0
- INT2: 1
- */
-#define ADXL345_INT1_PIN 0x00
-#define ADXL345_INT2_PIN 0x01
-
-/*Interrupt bit position*/
-#define ADXL345_INT_DATA_READY_BIT 0x07
-#define ADXL345_INT_SINGLE_TAP_BIT 0x06
-#define ADXL345_INT_DOUBLE_TAP_BIT 0x05
-#define ADXL345_INT_ACTIVITY_BIT   0x04
-#define ADXL345_INT_INACTIVITY_BIT 0x03
-#define ADXL345_INT_FREE_FALL_BIT  0x02
-#define ADXL345_INT_WATERMARK_BIT  0x01
-#define ADXL345_INT_OVERRUNY_BIT   0x00
-
-#define ADXL345_DATA_READY 0x07
-#define ADXL345_SINGLE_TAP 0x06
-#define ADXL345_DOUBLE_TAP 0x05
-#define ADXL345_ACTIVITY   0x04
-#define ADXL345_INACTIVITY 0x03
-#define ADXL345_FREE_FALL  0x02
-#define ADXL345_WATERMARK  0x01
-#define ADXL345_OVERRUNY   0x00
-
-#define ADXL345_OK    1 // no error
-#define ADXL345_ERROR 0 // indicates error is predent
-
-#define ADXL345_NO_ERROR   0 // initial state
-#define ADXL345_READ_ERROR 1 // problem reading accel
-#define ADXL345_BAD_ARG    2 // bad method argument
 
 struct ACCData
 {
-    float x;
-    float y;
-    float z;
+    int16_t x;
+    int16_t y;
+    int16_t z;
 };
 
 int8_t i2c_ADXL345_init(void);
 int8_t i2c_ADXL345_getAccelerations(struct ACCData *data);
-int8_t i2c_ADXL345_setAxesOffsets(int16_t xAxisOffset, int16_t yAxisOffset, int16_t zAxisOffset);
+int8_t i2c_ADXL345_getIntStatus(uint8_t *interruptRegister,
+                                uint8_t *interruptDetected,
+                                uint8_t *gpioStatus);
+
 
 #endif /* I2C_ADXL345_H_ */

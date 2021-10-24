@@ -541,10 +541,17 @@ void processI2CCommand(char * command)
         if(error != 0)
             sprintf(strToPrint_, "I2C ACC: Error code %d!\r\n", error);
         else
-            sprintf(strToPrint_, "I2C ACC (x, y, z): %.2fg, %.2fg, %.2fg\r\n",
-                    accData.x,
-                    accData.y,
-                    accData.z);
+        {
+            uint8_t codes[3];
+            i2c_ADXL345_getIntStatus(&codes[0], &codes[1], &codes[2]);
+            sprintf(strToPrint_, "I2C ACC (x, y, z), (code, int, gpio): %.2fg, %.2fg, %.2fg, %u, %u, %u\r\n",
+                    (float)accData.x / 1000.0,
+                    (float)accData.y / 1000.0,
+                    (float)accData.z / 1000.0,
+                    codes[0],
+                    codes[1],
+                    codes[2]);
+        }
     }
     else
         sprintf(strToPrint_, "Device or sensor %s not recognised in I2C devices list.\r\n", i2cSubcommand);
@@ -839,19 +846,19 @@ void printStatus()
     uart_print(UART_DEBUG, strToPrint_);
 
     sprintf(strToPrint_, "AccX(g):        %.2f\t%.2f\t%.2f\r\n",
-            askedTMLine.accXAxis[2]/100.0,
-            askedTMLine.accXAxis[0]/100.0,
-            askedTMLine.accXAxis[1]/100.0);
+            askedTMLine.accXAxis[2]/1000.0,
+            askedTMLine.accXAxis[0]/1000.0,
+            askedTMLine.accXAxis[1]/1000.0);
     uart_print(UART_DEBUG, strToPrint_);
     sprintf(strToPrint_, "AccY(g):        %.2f\t%.2f\t%.2f\r\n",
-            askedTMLine.accYAxis[2]/100.0,
-            askedTMLine.accYAxis[0]/100.0,
-            askedTMLine.accYAxis[1]/100.0);
+            askedTMLine.accYAxis[2]/1000.0,
+            askedTMLine.accYAxis[0]/1000.0,
+            askedTMLine.accYAxis[1]/1000.0);
     uart_print(UART_DEBUG, strToPrint_);
     sprintf(strToPrint_, "AccZ(g):        %.2f\t%.2f\t%.2f\r\n",
-            askedTMLine.accZAxis[2]/100.0,
-            askedTMLine.accZAxis[0]/100.0,
-            askedTMLine.accZAxis[1]/100.0);
+            askedTMLine.accZAxis[2]/1000.0,
+            askedTMLine.accZAxis[0]/1000.0,
+            askedTMLine.accZAxis[1]/1000.0);
     uart_print(UART_DEBUG, strToPrint_);
 
     //Now print altitude history
