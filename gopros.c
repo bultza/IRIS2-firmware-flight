@@ -270,7 +270,7 @@ int8_t cameraFSMcheck()
                 releaseButton(i);
                 cameraStatus_[i].fsmStatus = FSM_CAM_CONF_1;
                 cameraStatus_[i].lastCommandTime = uptime;
-                cameraStatus_[i].sleepTime = CAM_WAIT_POWER - 1000;
+                cameraStatus_[i].sleepTime = CAM_WAIT_POWER/* - 1000*/;
                 break;
             case FSM_CAM_CONF_1:
                 {
