@@ -37,9 +37,11 @@ int8_t configuration_init(void)
         confRegister_.gopro_leds = 01;
 
         //00 = Gopro Black, 01 = Gopro White
-        confRegister_.gopro_model[0] = 01;
+        //confRegister_.gopro_model[0] = 01;
+        confRegister_.gopro_model[0] = 00;
         confRegister_.gopro_model[1] = 00;
-        confRegister_.gopro_model[2] = 01;
+        //confRegister_.gopro_model[2] = 01;
+        confRegister_.gopro_model[2] = 00;
         confRegister_.gopro_model[3] = 00;
 
         confRegister_.baro_readPeriod = BARO_READPERIOD;

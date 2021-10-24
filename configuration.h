@@ -25,7 +25,7 @@
 #define LED_R_TOGGLE    (P3OUT ^= BIT4)
 
 #define MAGICWORD           0xBABE
-#define FWVERSION           4
+#define FWVERSION           5
 //#define FRAM_TLM_SAVEPERIOD 599     //seconds period to save on FRAM
 #define FRAM_TLM_SAVEPERIOD 599     //Only for Debug TODO
 #define NOR_TLM_SAVEPERIOD  10      //seconds period to save on NOR Flash
@@ -33,7 +33,8 @@
 #define TEMP_READPERIOD     1000    //Milliseconds period to read temperatures
 #define INA_READPERIOD      100     //Milliseconds period to read INA Voltage and currents
 #define ACC_READPERIOD      100     //Milliseconds period to read Accelerometer
-#define TIMELAPSE_PERIOD    30      //Seconds
+//#define TIMELAPSE_PERIOD    30      //Seconds
+#define TIMELAPSE_PERIOD    179      //Seconds
 
 #define FLIGHTSTATE_DEBUG           0
 #define FLIGHTSTATE_WAITFORLAUNCH   1

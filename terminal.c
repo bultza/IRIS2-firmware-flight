@@ -4,53 +4,6 @@
  *
  */
 
-/*
- * COMMANDS:
- * help --> Returns this list of commands
- * ...Terminal:
- * terminal begin --> Starts Terminal session
- * terminal count --> Returns number of issued commands
- * terminal last --> Returns last command
- * terminal end --> Ends Terminal session
- * ...CPU:
- * reboot --> Reboots IRIS 2 CPU
- * fsw mode --> Returns Flight Software (FSW) mode
- *              0: flight mode / 1: simulation mode (simulator enabled)
- * fsw state --> Returns FSW state
- * fsw substate --> Returns FSW substate
- * conf --> If no parameter is passed, returns actual FSW configuration
- *      If [get] is passed, returns only desired parameter
- *      If [set] is passed, sets value to desired parameter
- * ...Time:
- * uptime --> Returns elapsed seconds since boot
- * unixtime --> Returns actual UNIX time
- * date --> Returns actual date and time from IRIS 2 CLK or sets it
- *          Format for setting the date: YYYY/MM/DD HH:mm:ss
- * i2c rtc --> Returns actual date and time from RTC
- * ...Sensors:
- * i2c temp --> Returns temperature in tenths of deg C.
- * i2c baro --> Returns atmospheric pressure in hundredths of mbar and altitude in cm
- * i2c ina --> Returns the INA voltage in hundredths of V and currents in mA
- * ...Cameras:
- * camera x on --> Powers on and boots camera x (where x in [1,2,3,4])
- * camera x pic --> Takes a picture with camera x using default configuration
- * camera x video_start --> Starts recording video with camera x
- * camera x video_off --> Stops video recording with camera x
- * camera x send_cmd y --> Sends command y (do not include \n!!!) to camera x
- * camera x off --> Safely powers off camera x
- * ...Telemetry:
- * tm nor --> Returns current Telemetry Line to be saved in NOR memory
- * tm fram --> Returns current Telemetry Line to be saved in FRAM memory
- * ...Memory:
- * memory [status/read/dump/write/erase] [nor/fram]
- *  if status --> Returns the status of the NOR or FRAM memory.
- *  if read, add: [tlm/event] [OPTIONAL line_start] [OPTIONAL line_end] --> Reads num bytes starting at address.
- *  if dump, add: [line_start] [num bytes] [hex/bin] --> Reads all Telemetry Lines or Event Lines in HEX/CSV format.
- *  if write, add: [address] [num bytes] [data] --> Writes num bytes of data starting at address.
- *  if erase, add: [sector] [num sector] or [bulk] --> Erases a sector of data (0-255) or whole memory.
- *
- */
-
 #include "terminal.h"
 
 uint8_t beginFlag_ = 0;
@@ -269,41 +222,21 @@ void processConfCommand(char * command)
     //Extract the subcommand (get/set) from conf command
     char confSubcommand[CMD_MAX_LEN] = {0};
     extractCommandPart((char *) command, 1, (char *) confSubcommand);
-    int8_t typeOfOperation = 0;
 
     if (confSubcommand[0] == '\0')
     {
-        typeOfOperation = 0;
-        sprintf(strToPrint_, "magicWord = %X\r\n", confRegister_.magicWord);
-        uart_print(UART_DEBUG, strToPrint_);
-        sprintf(strToPrint_, "swVersion = %d\r\n", confRegister_.swVersion);
-        uart_print(UART_DEBUG, strToPrint_);
         sprintf(strToPrint_, "simulatorEnabled = %d\r\n", confRegister_.simulatorEnabled);
         uart_print(UART_DEBUG, strToPrint_);
         sprintf(strToPrint_, "flightState = %d\r\n", confRegister_.flightState);
         uart_print(UART_DEBUG, strToPrint_);
         sprintf(strToPrint_, "flightSubState = %d\r\n", confRegister_.flightSubState);
         uart_print(UART_DEBUG, strToPrint_);
-
-        uart_print(UART_DEBUG, "\r\n");
-
-        sprintf(strToPrint_, "fram_telemetryAddress = %ld\r\n", confRegister_.fram_telemetryAddress);
-        uart_print(UART_DEBUG, strToPrint_);
-        sprintf(strToPrint_, "fram_eventAddress = %ld\r\n", confRegister_.fram_eventAddress);
-        uart_print(UART_DEBUG, strToPrint_);
         sprintf(strToPrint_, "fram_tlmSavePeriod = %d\r\n", confRegister_.fram_tlmSavePeriod);
         uart_print(UART_DEBUG, strToPrint_);
         sprintf(strToPrint_, "nor_deviceSelected = %d\r\n", confRegister_.nor_deviceSelected);
         uart_print(UART_DEBUG, strToPrint_);
-        sprintf(strToPrint_, "nor_telemetryAddress = %ld\r\n", confRegister_.nor_telemetryAddress);
-        uart_print(UART_DEBUG, strToPrint_);
-        sprintf(strToPrint_, "nor_eventAddress = %ld\r\n", confRegister_.nor_eventAddress);
-        uart_print(UART_DEBUG, strToPrint_);
         sprintf(strToPrint_, "nor_tlmSavePeriod = %d\r\n", confRegister_.nor_tlmSavePeriod);
         uart_print(UART_DEBUG, strToPrint_);
-
-        uart_print(UART_DEBUG, "\r\n");
-
         sprintf(strToPrint_, "baro_readPeriod = %d\r\n", confRegister_.baro_readPeriod);
         uart_print(UART_DEBUG, strToPrint_);
         sprintf(strToPrint_, "ina_readPeriod = %d\r\n", confRegister_.ina_readPeriod);
@@ -312,166 +245,138 @@ void processConfCommand(char * command)
         uart_print(UART_DEBUG, strToPrint_);
         sprintf(strToPrint_, "temp_readPeriod = %d\r\n", confRegister_.temp_readPeriod);
         uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "timelapse_period = %d\r\n", confRegister_.timelapse_period);
+        uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "gopro_model[0] = %d\r\n", confRegister_.gopro_model[0]);
+        uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "gopro_model[1] = %d\r\n", confRegister_.gopro_model[1]);
+        uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "gopro_model[2] = %d\r\n", confRegister_.gopro_model[2]);
+        uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "gopro_model[3] = %d\r\n", confRegister_.gopro_model[3]);
+        uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "gopro_beeps = %d\r\n", confRegister_.gopro_beeps);
+        uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "gopro_leds = %d\r\n", confRegister_.gopro_leds);
+        uart_print(UART_DEBUG, strToPrint_);
+        return;
     }
-    else if (strncmp("get", (char *)confSubcommand, 3) == 0)
-        typeOfOperation = 1;
-    else if (strncmp("set", (char *)confSubcommand, 3) == 0)
-        typeOfOperation = 2;
-    else
-        uart_print(UART_DEBUG, "Invalid command parameter. Use: conf or conf [get/set] for a particular value.\r\n");
-
-    // GET OR SET OPERATION
-    if (typeOfOperation > 0)
+    else if (strncmp("set", (char *)confSubcommand, 3) != 0)
     {
-        // Extract parameter to get/set
-        char selectedParameter[CMD_MAX_LEN] = {0};
-        extractCommandPart((char *) command, 2, (char *) selectedParameter);
-
-        // SET OPERATION
-        uint32_t valueToSet;
-        if (typeOfOperation == 2)
-        {
-            // Extract value to set
-            char valueToSetChar[CMD_MAX_LEN] = {0};
-            extractCommandPart((char *) command, 3, (char *) valueToSetChar);
-            if (valueToSetChar[0] != '\0')
-                valueToSet = atol(valueToSetChar);
-            else
-            {
-                uart_print(UART_DEBUG, "Invalid command format. Use: conf set [parameter] [value].\r\n");
-            }
-        }
-
-        // Evaluate parameter to get/set
-        uint8_t parameterOk = 1;
-        if (strncmp("magicWord", (char *)selectedParameter, 9) == 0)
-        {
-            if (typeOfOperation == 1)
-                sprintf(strToPrint_, "magicWord = %X\r\n", confRegister_.magicWord);
-            else if (typeOfOperation == 2)
-                confRegister_.magicWord = valueToSet;
-        }
-        else if (strncmp("swVersion", (char *)selectedParameter, 9) == 0)
-        {
-            if (typeOfOperation == 1)
-                sprintf(strToPrint_, "swVersion = %d\r\n", confRegister_.swVersion);
-            else if (typeOfOperation == 2)
-                confRegister_.swVersion = valueToSet;
-        }
-        else if (strncmp("simulatorEnabled", (char *)selectedParameter, 16) == 0)
-        {
-            if (typeOfOperation == 1)
-                sprintf(strToPrint_, "simulatorEnabled = %d\r\n", confRegister_.simulatorEnabled);
-            else if (typeOfOperation == 2)
-                confRegister_.simulatorEnabled = valueToSet;
-        }
-        else if (strncmp("flightState", (char *)selectedParameter, 11) == 0)
-        {
-            if (typeOfOperation == 1)
-                sprintf(strToPrint_, "flightState = %d\r\n", confRegister_.flightState);
-            else if (typeOfOperation == 2)
-                confRegister_.flightState = valueToSet;
-        }
-        else if (strncmp("flightSubState", (char *)selectedParameter, 14) == 0)
-        {
-            if (typeOfOperation == 1)
-                sprintf(strToPrint_, "flightSubState = %d\r\n", confRegister_.flightSubState);
-            else if (typeOfOperation == 2)
-                confRegister_.flightSubState = valueToSet;
-        }
-        else if (strncmp("fram_telemetryAddress", (char *)selectedParameter, 21) == 0)
-        {
-            if (typeOfOperation == 1)
-                sprintf(strToPrint_, "fram_telemetryAddress = %ld\r\n", confRegister_.fram_telemetryAddress);
-            else if (typeOfOperation == 2)
-                confRegister_.fram_telemetryAddress = valueToSet;
-        }
-        else if (strncmp("fram_eventAddress", (char *)selectedParameter, 17) == 0)
-        {
-            if (typeOfOperation == 1)
-                sprintf(strToPrint_, "fram_eventAddress = %ld\r\n", confRegister_.fram_eventAddress);
-            else if (typeOfOperation == 2)
-                confRegister_.fram_eventAddress = valueToSet;
-        }
-        else if (strncmp("fram_tlmSavePeriod", (char *)selectedParameter, 18) == 0)
-        {
-            if (typeOfOperation == 1)
-                sprintf(strToPrint_, "fram_tlmSavePeriod = %d\r\n", confRegister_.fram_tlmSavePeriod);
-            else if (typeOfOperation == 2)
-                confRegister_.fram_tlmSavePeriod = valueToSet;
-        }
-        else if (strncmp("nor_deviceSelected", (char *)selectedParameter, 18) == 0)
-        {
-            if (typeOfOperation == 1)
-                sprintf(strToPrint_, "nor_deviceSelected = %d\r\n", confRegister_.nor_deviceSelected);
-            else if (typeOfOperation == 2)
-                confRegister_.nor_deviceSelected = valueToSet;
-        }
-        else if (strncmp("nor_telemetryAddress", (char *)selectedParameter, 20) == 0)
-        {
-            if (typeOfOperation == 1)
-                sprintf(strToPrint_, "nor_telemetryAddress = %ld\r\n", confRegister_.nor_telemetryAddress);
-            else if (typeOfOperation == 2)
-                confRegister_.nor_telemetryAddress = valueToSet;
-        }
-        else if (strncmp("nor_eventAddress", (char *)selectedParameter, 16) == 0)
-        {
-            if (typeOfOperation == 1)
-                sprintf(strToPrint_, "nor_eventAddress = %ld\r\n", confRegister_.nor_eventAddress);
-            else if (typeOfOperation == 2)
-                confRegister_.nor_eventAddress = valueToSet;
-        }
-        else if (strncmp("nor_tlmSavePeriod", (char *)selectedParameter, 17) == 0)
-        {
-            if (typeOfOperation == 1)
-                sprintf(strToPrint_, "nor_tlmSavePeriod = %d\r\n", confRegister_.nor_tlmSavePeriod);
-            else if (typeOfOperation == 2)
-                confRegister_.nor_tlmSavePeriod = valueToSet;
-        }
-        else if (strncmp("baro_readPeriod", (char *)selectedParameter, 15) == 0)
-        {
-            if (typeOfOperation == 1)
-                sprintf(strToPrint_, "baro_readPeriod = %d\r\n", confRegister_.baro_readPeriod);
-            else if (typeOfOperation == 2)
-                confRegister_.baro_readPeriod = valueToSet;
-        }
-        else if (strncmp("ina_readPeriod", (char *)selectedParameter, 14) == 0)
-        {
-            if (typeOfOperation == 1)
-                sprintf(strToPrint_, "ina_readPeriod = %d\r\n", confRegister_.ina_readPeriod);
-            else if (typeOfOperation == 2)
-                confRegister_.ina_readPeriod = valueToSet;
-        }
-        else if (strncmp("acc_readPeriod", (char *)selectedParameter, 14) == 0)
-        {
-            if (typeOfOperation == 1)
-                sprintf(strToPrint_, "acc_readPeriod = %d\r\n", confRegister_.acc_readPeriod);
-            else if (typeOfOperation == 2)
-                confRegister_.acc_readPeriod = valueToSet;
-        }
-        else if (strncmp("temp_readPeriod", (char *)selectedParameter, 15) == 0)
-        {
-            if (typeOfOperation == 1)
-                sprintf(strToPrint_, "temp_readPeriod = %d\r\n", confRegister_.temp_readPeriod);
-            else if (typeOfOperation == 2)
-                confRegister_.temp_readPeriod = valueToSet;
-        }
-        else
-        {
-            parameterOk = 0;
-            uart_print(UART_DEBUG, "Invalid command format. Use: conf [get/set] [parameter].\r\n");
-        }
-
-        if (parameterOk != 0)
-        {
-            if (typeOfOperation == 2)
-            {
-                sprintf(strToPrint_, "Selected parameter %s has been set to %ld.\r\n", selectedParameter, valueToSet);
-            }
-            uart_print(UART_DEBUG, strToPrint_);
-        }
+        uart_print(UART_DEBUG, "Invalid command parameter. Use: conf or conf [get/set] for a particular value.\r\n");
+        return;
     }
 
+    // Extract parameter to get/set
+    char selectedParameter[CMD_MAX_LEN] = {0};
+    extractCommandPart((char *) command, 2, (char *) selectedParameter);
+    uint16_t stringSize = strlen(selectedParameter);
+    if(stringSize > 0)
+        selectedParameter[stringSize - 1] = '\0';
+
+    // SET OPERATION
+    uint32_t valueToSet;
+
+    // Extract value to set
+    char valueToSetChar[CMD_MAX_LEN] = {0};
+    extractCommandPart((char *) command, 3, (char *) valueToSetChar);
+    if (valueToSetChar[0] != '\0')
+    {
+        valueToSet = atol(valueToSetChar);
+    }
+    else
+    {
+        uart_print(UART_DEBUG, "Invalid command format. Use: conf set [parameter] [value].\r\n");
+        return;
+    }
+
+    if (strncmp("simulatorEnabled", (char *)selectedParameter, 16) == 0)
+    {
+        confRegister_.simulatorEnabled = valueToSet;
+    }
+    else if (strncmp("flightState", (char *)selectedParameter, 11) == 0)
+    {
+        confRegister_.flightState = valueToSet;
+    }
+    else if (strncmp("flightSubState", (char *)selectedParameter, 14) == 0)
+    {
+        confRegister_.flightSubState = valueToSet;
+    }
+    else if (strncmp("fram_tlmSavePeriod", (char *)selectedParameter, 18) == 0)
+    {
+        confRegister_.fram_tlmSavePeriod = valueToSet;
+    }
+    else if (strncmp("nor_deviceSelected", (char *)selectedParameter, 18) == 0)
+    {
+        confRegister_.nor_deviceSelected = valueToSet;
+    }
+    else if (strncmp("nor_tlmSavePeriod", (char *)selectedParameter, 17) == 0)
+    {
+        confRegister_.nor_tlmSavePeriod = valueToSet;
+    }
+    else if (strncmp("baro_readPeriod", (char *)selectedParameter, 15) == 0)
+    {
+        confRegister_.baro_readPeriod = valueToSet;
+    }
+    else if (strncmp("ina_readPeriod", (char *)selectedParameter, 14) == 0)
+    {
+        confRegister_.ina_readPeriod = valueToSet;
+    }
+    else if (strncmp("acc_readPeriod", (char *)selectedParameter, 14) == 0)
+    {
+        confRegister_.acc_readPeriod = valueToSet;
+    }
+    else if (strncmp("temp_readPeriod", (char *)selectedParameter, 15) == 0)
+    {
+        confRegister_.temp_readPeriod = valueToSet;
+    }
+    else if (strcmp("timelapse_period", (char *)selectedParameter) == 0)
+    {
+        confRegister_.timelapse_period = valueToSet;
+    }
+    else if (strcmp("gopro_model[0]", (char *)selectedParameter) == 0)
+    {
+        confRegister_.gopro_model[0] = valueToSet;
+    }
+    else if (strcmp("gopro_model[1]", (char *)selectedParameter) == 0)
+    {
+        confRegister_.gopro_model[1] = valueToSet;
+    }
+    else if (strcmp("gopro_model[2]", (char *)selectedParameter) == 0)
+    {
+        confRegister_.gopro_model[2] = valueToSet;
+    }
+    else if (strcmp("gopro_model[3]", (char *)selectedParameter) == 0)
+    {
+        confRegister_.gopro_model[3] = valueToSet;
+    }
+    else if (strcmp("gopro_beeps", (char *)selectedParameter) == 0)
+    {
+        confRegister_.gopro_beeps = valueToSet;
+    }
+    else if (strcmp("gopro_leds", (char *)selectedParameter) == 0)
+    {
+        confRegister_.gopro_leds = valueToSet;
+    }
+    else
+    {
+        uart_print(UART_DEBUG, "Invalid command format. Use: conf set [parameter] [value]. Use: conf, to see all available parameters\r\n");
+
+        sprintf(strToPrint_, "Selected parameter '%s' was not found to value '%ld'.\r\n", selectedParameter, valueToSet);
+        uart_print(UART_DEBUG, strToPrint_);
+        return;
+    }
+
+    uint8_t payload[5] = {0};
+    payload[0] = selectedParameter[0];
+    payload[1] = selectedParameter[1];
+    payload[2] = selectedParameter[2];
+    payload[3] = selectedParameter[3];
+    payload[4] = (uint8_t)valueToSet;
+    saveEventSimple(EVENT_CONFIGURATION_CHANGED, payload);
+
+    sprintf(strToPrint_, "Selected parameter '%s' has been set to '%ld'.\r\n", selectedParameter, valueToSet);
+    uart_print(UART_DEBUG, strToPrint_);
 }
 
 /**
@@ -609,6 +514,9 @@ void processCameraCommand(char * command)
 
         cameraPowerOn(selectedCamera);
         sprintf(strToPrint_, "Camera %c booting...\r\n", command[7]);
+        uint8_t payload[5] = {0};
+        payload[0] = selectedCamera;
+        saveEventSimple(EVENT_CAMERA_ON, payload);
     }
     else if (strcmp("pic", cameraSubcommand) == 0)
     {
@@ -617,6 +525,9 @@ void processCameraCommand(char * command)
             sprintf(strToPrint_, "Camera %c took a picture.\r\n", command[7]);
         else
             sprintf(strToPrint_, "ERROR Camera %c is not switched on.\r\n", command[7]);
+        uint8_t payload[5] = {0};
+        payload[0] = selectedCamera;
+        saveEventSimple(EVENT_CAMERA_PICTURE, payload);
     }
     else if (strcmp("video_mode", cameraSubcommand) == 0)
     {
@@ -625,6 +536,9 @@ void processCameraCommand(char * command)
             sprintf(strToPrint_, "Camera %c set to video mode.\r\n", command[7]);
         else
             sprintf(strToPrint_, "ERROR Camera %c is not switched on.\r\n", command[7]);
+        uint8_t payload[5] = {0};
+        payload[0] = selectedCamera;
+        saveEventSimple(EVENT_CAMERA_VIDEOMODE, payload);
     }
     else if (strcmp("picture_mode", cameraSubcommand) == 0)
     {
@@ -633,6 +547,9 @@ void processCameraCommand(char * command)
             sprintf(strToPrint_, "Camera %c set picture mode.\r\n", command[7]);
         else
             sprintf(strToPrint_, "ERROR Camera %c is not switched on.\r\n", command[7]);
+        uint8_t payload[5] = {0};
+        payload[0] = selectedCamera;
+        saveEventSimple(EVENT_CAMERA_PICMODE, payload);
     }
     else if (strcmp("video_start", cameraSubcommand) == 0)
     {
@@ -641,6 +558,9 @@ void processCameraCommand(char * command)
             sprintf(strToPrint_, "Camera %c started recording video.\r\n", command[7]);
         else
             sprintf(strToPrint_, "ERROR Camera %c is not switched on.\r\n", command[7]);
+        uint8_t payload[5] = {0};
+        payload[0] = selectedCamera;
+        saveEventSimple(EVENT_CAMERA_VIDEO_START, payload);
     }
     else if (strcmp("video_end", cameraSubcommand) == 0)
     {
@@ -649,6 +569,9 @@ void processCameraCommand(char * command)
             sprintf(strToPrint_, "Camera %c stopped recording video.\r\n", command[7]);
         else
             sprintf(strToPrint_, "ERROR Camera %c is not switched on.\r\n", command[7]);
+        uint8_t payload[5] = {0};
+        payload[0] = selectedCamera;
+        saveEventSimple(EVENT_CAMERA_VIDEO_END, payload);
     }
     else if (strncmp("send_cmd", cameraSubcommand, 8) == 0)
     {
@@ -682,6 +605,9 @@ void processCameraCommand(char * command)
             sprintf(strToPrint_, "Camera %c powered off.\r\n", command[7]);
         else
             sprintf(strToPrint_, "ERROR Camera %c is not switched on.\r\n", command[7]);
+        uint8_t payload[5] = {0};
+        payload[0] = selectedCamera;
+        saveEventSimple(EVENT_CAMERA_OFF, payload);
     }
     else
         sprintf(strToPrint_, "Camera subcommand %s not recognised...\r\n", cameraSubcommand);
@@ -784,49 +710,6 @@ void printStatus()
             dateTime.minutes,
             dateTime.seconds);
     uart_print(UART_DEBUG, strToPrint_);
-
-    /*{
-        // Print NOR memory pointer status
-        uint32_t n_tlmlines = (confRegister_.nor_telemetryAddress - NOR_TLM_ADDRESS) / sizeof(struct TelemetryLine);
-        uint32_t n_tlmlinesTotal = NOR_TLM_SIZE / sizeof(struct TelemetryLine);
-        float percentage_used = (float)n_tlmlines * 100.0 / (float) n_tlmlinesTotal;
-        sprintf(strToPrint_, " * %ld saved telemetry lines. %.2f%% used. Last address is %ld\r\n",
-                n_tlmlines,
-                percentage_used,
-                confRegister_.nor_telemetryAddress);
-        uart_print(UART_DEBUG, strToPrint_);
-
-        uint32_t n_events = (confRegister_.nor_eventAddress - NOR_EVENTS_ADDRESS) / sizeof(struct EventLine);
-        uint32_t n_eventsTotal = NOR_EVENTS_SIZE / sizeof(struct EventLine);
-        percentage_used = (float)n_events * 100.0 / (float) n_eventsTotal;
-        sprintf(strToPrint_, " * %ld saved events. %.2f%% used. Last address is %ld\r\n",
-                n_events,
-                percentage_used,
-                confRegister_.nor_eventAddress);
-        uart_print(UART_DEBUG, strToPrint_);
-    }
-    //else if (memoryType == MEM_TYPE_FRAM)
-    {
-        //Print FRAM memory status
-        uart_print(UART_DEBUG, "FRAM memory status: \r\n");
-        uart_print(UART_DEBUG, " * FRAM memory is ready\r\n");
-        uint16_t n_events = (confRegister_.fram_eventAddress - FRAM_EVENTS_ADDRESS) / sizeof(struct EventLine);
-        uint16_t n_eventsTotal = FRAM_EVENTS_SIZE / sizeof(struct EventLine);
-        float percentage_used = (float)n_events * 100.0 / (float) n_eventsTotal;
-        sprintf(strToPrint_, " * %d saved events. %.2f%% used. Last address is %ld\r\n",
-                n_events,
-                percentage_used,
-                confRegister_.fram_eventAddress);
-        uart_print(UART_DEBUG, strToPrint_);
-        n_events = (confRegister_.fram_telemetryAddress - FRAM_TLM_ADDRESS) / sizeof(struct TelemetryLine);
-        n_eventsTotal = FRAM_TLM_SIZE / sizeof(struct TelemetryLine);
-        percentage_used = (float)n_events * 100.0 / (float) n_eventsTotal;
-        sprintf(strToPrint_, " * %d saved telemetry. %.2f%% used. Last address is %ld\r\n",
-                n_events,
-                percentage_used,
-                confRegister_.fram_telemetryAddress);
-        uart_print(UART_DEBUG, strToPrint_);
-    }*/
 
     sprintf(strToPrint_, "State:          %d\r\n", askedTMLine.state);
     uart_print(UART_DEBUG, strToPrint_);
@@ -1628,7 +1511,10 @@ int8_t terminal_readAndProcessCommands(void)
             uart_print(UART_DEBUG, "  camera x off\r\n");
             uart_print(UART_DEBUG, "  tm nor\r\n");
             uart_print(UART_DEBUG, "  tm fram\r\n");
-            uart_print(UART_DEBUG, "  memory [status/read/dump/erase] [nor/fram] [tlm/events/bulk] [start] [end]\r\n");
+            uart_print(UART_DEBUG, "  memory status\r\n");
+            uart_print(UART_DEBUG, "  memory dump [nor/fram] [start] [end]\r\n");
+            uart_print(UART_DEBUG, "  memory read [nor/fram] [tlm/events] [start] [end]\r\n");
+            uart_print(UART_DEBUG, "  memory erase [nor/fram] bulk\r\n");
             uart_print(UART_DEBUG, "  uarddebug [Uart number]\r\n");
             uart_print(UART_DEBUG, "  u [data]\r\n");
         }

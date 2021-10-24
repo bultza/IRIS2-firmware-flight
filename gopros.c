@@ -45,8 +45,36 @@ int8_t gopros_cameraSetVideoMode(uint8_t selectedCamera)
 {
     if (!cameraHasStarted_[selectedCamera])
         return -1;
-    uart_print(selectedCamera + 1, CAM_SET_VIDEO_MODE);
-    uart_flush(selectedCamera + 1);
+
+    if(confRegister_.gopro_model[selectedCamera] == 0)
+    {
+        uart_print(selectedCamera + 1, CAM_SET_VIDEO_MODE);
+        uart_flush(selectedCamera + 1);
+        sleep_ms(50);
+
+        //GOPRO Hero4 Black
+        uart_print(selectedCamera + 1, CAM_PAYLOAD_VIDEO_RES_FPS_FOV);
+        uart_print(selectedCamera + 1, CAM_VIDEO_RES_2_7K_4_3);
+        uart_print(selectedCamera + 1, CAM_VIDEO_FPS_30);
+        uart_print(selectedCamera + 1, CAM_VIDEO_FOV_WIDE);
+        uart_print(selectedCamera + 1, "\n");
+        uart_flush(selectedCamera + 1);
+    }
+    else
+    {
+        uart_print(selectedCamera + 1, CAM_SET_VIDEO_MODE);
+        uart_flush(selectedCamera + 1);
+        sleep_ms(50);
+
+        //GOPRO Hero4 Silver is less capable unfortunately
+        uart_print(selectedCamera + 1, CAM_PAYLOAD_VIDEO_RES_FPS_FOV);
+        uart_print(selectedCamera + 1, CAM_VIDEO_RES_1440);
+        uart_print(selectedCamera + 1, CAM_VIDEO_FPS_48);
+        uart_print(selectedCamera + 1, CAM_VIDEO_FOV_WIDE);
+        uart_print(selectedCamera + 1, "\n");
+        uart_flush(selectedCamera + 1);
+    }
+
     return 0;
 }
 

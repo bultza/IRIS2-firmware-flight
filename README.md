@@ -52,16 +52,11 @@ These are the currently implemented commands:
 
 |Command      | Comment     |
 |-------------|-------------|
-|`help`           |It returns informations on commands and its use|
-|`terminal begin` |It starts Terminal session (required before sending any command)|
-|`terminal count` |It returns number of issued commands|
-|`terminal last`  |It eturns last command|
-|`terminal end`   |It ends Terminal session|
+|`help`         |It returns informations on commands and its use|
+|`status`       |It returns all the status and telemetry of IRIS2|
 |`reboot`       |It performs a PUC reboot of the MCU|
-|`fsw mode`     |It returns Flight Software (FSW) mode|
-|`fsw state`    |It returns FSW state|
-|`fsw substate` |It returns FSW substate|
-|`conf`         |It returns or sets actual FSW configuration|
+|`conf`         |It returns all the available configuration parameters|
+|`conf set [parameter] [value]` |It sets a value to a configuration parameter|
 |`uptime`       |It returns the up time in seconds|
 |`unixtime`     |It returns the current unixtime  |
 |`date`         |It returns the current system date|
@@ -69,15 +64,24 @@ These are the currently implemented commands:
 |`i2c rtc`      |It returns the current RTC date on the external RTC|
 |`i2c baro`     |It returns the current barometric pressure and calculated Altitude|
 |`i2c ina`      |It returns the current Voltage and Current input power values|
-|`camera x on`  |It switches on the X camera|
-|`camera x pic` |It takes a picture with the X camera|
-|`camera x video_start` |It makes a video on the X camera|
-|`camera x video_end`   |It stops a video on the X camera|
-|`camera x send_cmd y`   |Sends command y (do not include line feed at the end!) to camera x|
-|`camera x off` |It switches off the X camera|
+|`i2c acc`      |It returns the current Accelerometer values|
+|`camera [x] on`  |It switches on the [x] camera|
+|`camera [x] picture_mode`|It sets the [x] camera to picture mode|
+|`camera [x] video_mode`  |It sets the [x] camera to video mode|
+|`camera [x] pic` |It takes a picture with the [x] camera|
+|`camera [x] video_start` |It makes a video on the [x] camera|
+|`camera [x] video_end`   |It stops a video on the [x] camera|
+|`camera [x] send_cmd y`   |Sends command y (do not include line feed at the end!) to camera x|
+|`camera [x] off` |It switches off the [x] camera|
 |`tm nor`       |It returns current Telemetry Line to be saved in NOR memory|
 |`tm fram`      |It returns current Telemetry Line to be saved in FRAM memory|
-|`memory [status/read/dump/write/erase] [nor/fram]` |It interacts with NOR/FRAM memories of the CPU|
+|`memory status` |It returns the current status of the memories|
+|`memory dump [nor/fram] [start] [end]` |It dumps the contents of the NOR/FRAM memories of the CPU|
+|`memory read [nor/fram] [events/tlm] [start] [end]` |It reads the contents of the NOR/FRAM memories and shows them in CSV|
+|`memory erase [nor/fram] bulk` |It erases the NOR/FRAM memory of the CPU|
+|`uartdebug [x]` |All characters received of the [x] UART will be dumped on the console|
+|`u [data]` |[data] will be dumped to the uart selected as debug|
+
 
 ## Authors
 * Aitor Conde <aitorconde@gmail.com>

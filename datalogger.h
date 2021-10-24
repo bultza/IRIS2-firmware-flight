@@ -42,15 +42,17 @@
 #define EVENT_BOOT                          69
 #define EVENT_CONFIGURATION_CHANGED         1
 #define EVENT_NOR_CLEAN                     2
-#define EVENT_CAMERA_ON                     3
-#define EVENT_CAMERA_PICTURE                7
-#define EVENT_CAMERA_VIDEO_START            11
-#define EVENT_CAMERA_VIDEO_END              15
-#define EVENT_CAMERA_OFF                    19
-#define EVENT_TERMINAL_START                23
-#define EVENT_I2C_ERROR_RESET               24
+#define EVENT_CAMERA_ON                     10
+#define EVENT_CAMERA_PICTURE                11
+#define EVENT_CAMERA_VIDEO_START            12
+#define EVENT_CAMERA_VIDEO_END              13
+#define EVENT_CAMERA_OFF                    14
+#define EVENT_CAMERA_TIMELAPSE_PIC          15
+#define EVENT_CAMERA_VIDEOMODE              16
+#define EVENT_CAMERA_PICMODE                17
+#define EVENT_I2C_ERROR_RESET               99
 #define EVENT_SUNRISE_GPIO_CHANGE           100
-#define EVENT_BATTERY_CUTOUT                255
+#define EVENT_BATTERY_CUTOUT                200
 
 #define AVG_INDEX               0
 #define MAX_INDEX               1
