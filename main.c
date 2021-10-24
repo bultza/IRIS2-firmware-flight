@@ -286,11 +286,17 @@ int main(void)
 	    //Fligh sequence
 	    checkFlightSequence();
 
-	    //Blink LED
-	    if(uptime % 1000 > 100)
+	    //Blink CPU LED
+	    if(uptime % 1000 > 50)
 	        LED_OFF;
 	    else
 	        LED_ON;
+
+	    //Blink FP Green LED once per 5s
+        if(uptime % 5000 > 10)
+            LED_G_OFF;
+        else
+            LED_G_ON;
 	};
 
 	//It should never reach here

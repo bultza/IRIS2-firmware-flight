@@ -48,7 +48,7 @@ void checkStateOnWaiting()
     if(cameraReadyStatus() != 0x0F)
         return;
 
-    LED_G_ON;
+    //LED_G_ON;
     //Time to make picture!
     uint8_t i;
     for(i = 0; i < 4; i++)
@@ -73,8 +73,8 @@ void checkStatePicWaiting()
     if(lastTimeAction_ + 4000 > timeNow)
         return;
 
-    LED_G_OFF;
-    LED_B_ON;
+    //LED_G_OFF;
+    //LED_B_ON;
     //Time to switch off cameras!
     uint8_t i;
     for(i = 0; i < 4; i++)
@@ -93,7 +93,7 @@ void checkStateOffWaiting()
     if(cameraReadyStatus())
         return;
     flightSubState_ = SUBSTATE_OFF;
-    LED_B_OFF;
+    //LED_B_OFF;
     LED_R_OFF;
 }
 
