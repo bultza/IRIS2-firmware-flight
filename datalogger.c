@@ -889,7 +889,7 @@ void printAltitudeHistory()
     }
 
     int32_t speed = getVerticalSpeed();
-    sprintf(strToPrint, "Current Speed:\t%.3fm/s\r\n", (float)speed / 100.0);
+    sprintf(strToPrint, "Current Speed:   %.3fm/s\r\n", (float)speed / 100.0);
     uart_print(UART_DEBUG, strToPrint);
 }
 

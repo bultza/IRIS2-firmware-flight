@@ -51,13 +51,6 @@
  *
  */
 
-/*
- * FUTURE COMMANDS (TODO):
- * Acceleration X,Y,Z axes (i2c acc).
- * Camera 1,2,3,4 change resolution.
- * Camera 1,2,3,4 change frames per second.
- */
-
 #include "terminal.h"
 
 uint8_t beginFlag_ = 0;
@@ -482,7 +475,7 @@ void processConfCommand(char * command)
 }
 
 /**
- * TODO please complete
+ * Process I2C raw commands
  */
 void processI2CCommand(char * command)
 {
@@ -540,6 +533,18 @@ void processI2CCommand(char * command)
             sprintf(strToPrint_, "I2C INA: %.2f V, %d mA\r\n",
                     ((float)inaData.voltage/100.0),
                     inaData.current);
+    }
+    else if (strcmp("acc", (char *) i2cSubcommand) == 0)
+    {
+        struct ACCData accData;
+        int8_t error = i2c_ADXL345_getAccelerations(&accData);
+        if(error != 0)
+            sprintf(strToPrint_, "I2C ACC: Error code %d!\r\n", error);
+        else
+            sprintf(strToPrint_, "I2C ACC (x, y, z): %.2fg, %.2fg, %.2fg\r\n",
+                    accData.x,
+                    accData.y,
+                    accData.z);
     }
     else
         sprintf(strToPrint_, "Device or sensor %s not recognised in I2C devices list.\r\n", i2cSubcommand);
@@ -730,11 +735,11 @@ void printStatus()
 
     //Put first the general status of the board
     uart_print(UART_DEBUG, "================================\r\n");
-    sprintf(strToPrint_, "Uptime:\t\t%.3fs\r\n", uptime/1000.0);
+    sprintf(strToPrint_, "Uptime:         %.3fs\r\n", uptime/1000.0);
     uart_print(UART_DEBUG, strToPrint_);
     struct RTCDateTime dateTime;
     convert_from_unixTime(unixtTimeNow, &dateTime);
-    sprintf(strToPrint_, "Time:\t\t\t20%.2d/%.2d/%.2d %.2d:%.2d:%.2d\r\n",
+    sprintf(strToPrint_, "Time:           20%.2d/%.2d/%.2d %.2d:%.2d:%.2d\r\n",
             dateTime.year,
             dateTime.month,
             dateTime.date,
@@ -786,65 +791,64 @@ void printStatus()
         uart_print(UART_DEBUG, strToPrint_);
     }*/
 
-    sprintf(strToPrint_, "State:\t\t\t%d\r\n", askedTMLine.state);
+    sprintf(strToPrint_, "State:          %d\r\n", askedTMLine.state);
     uart_print(UART_DEBUG, strToPrint_);
-    sprintf(strToPrint_, "Substate:\t%d\r\n", askedTMLine.sub_state);
+    sprintf(strToPrint_, "Substate:       %d\r\n", askedTMLine.sub_state);
     uart_print(UART_DEBUG, strToPrint_);
-    sprintf(strToPrint_, "Switches:\t0x%02X\r\n", askedTMLine.switches_status);
+    sprintf(strToPrint_, "Switches:       0x%02X\r\n", askedTMLine.switches_status);
     uart_print(UART_DEBUG, strToPrint_);
-    sprintf(strToPrint_, "Errors:\t\t0x%04X\r\n", askedTMLine.errors);
+    sprintf(strToPrint_, "Errors:         0x%04X\r\n", askedTMLine.errors);
     uart_print(UART_DEBUG, strToPrint_);
-    sprintf(strToPrint_, "CPU Temp:\t%.1fºC\r\n", askedTMLine.temperatures[0]/10.0);
+    sprintf(strToPrint_, "CPU Temp:       %.1fºC\r\n", askedTMLine.temperatures[0]/10.0);
     uart_print(UART_DEBUG, strToPrint_);
     //Then start with the sensors
-    sprintf(strToPrint_, "Pressure:\t%.2fmbar\r\n", askedTMLine.pressure/100.0);
+    sprintf(strToPrint_, "Pressure:       %.2fmbar\r\n", askedTMLine.pressure/100.0);
     uart_print(UART_DEBUG, strToPrint_);
-    sprintf(strToPrint_, "Altitude:\t%.2fm\r\n", askedTMLine.altitude/100.0);
+    sprintf(strToPrint_, "Altitude:       %.2fm\r\n", askedTMLine.altitude/100.0);
     uart_print(UART_DEBUG, strToPrint_);
     int32_t speed = getVerticalSpeed();
-    sprintf(strToPrint_, "Current Speed:\t%.3fm/s\r\n", (float)speed / 100.0);
+    sprintf(strToPrint_, "Current Speed:  %.3fm/s\r\n", (float)speed / 100.0);
     uart_print(UART_DEBUG, strToPrint_);
     //Sunrise GPIO
-    sprintf(strToPrint_, "Sunrise GPIO:\t");
-    uart_print(UART_DEBUG, strToPrint_);
+    uart_print(UART_DEBUG, "Sunrise GPIO:   ");
     if(askedTMLine.switches_status & BIT6)
         uart_print(UART_DEBUG, "HIGH\r\n");
     else
         uart_print(UART_DEBUG, "LOW\r\n");
-    sprintf(strToPrint_, "Temp CPU:\t%.1fºC\r\n", askedTMLine.temperatures[0]/10.0);
+    sprintf(strToPrint_, "Temp CPU:       %.1fºC\r\n", askedTMLine.temperatures[0]/10.0);
     uart_print(UART_DEBUG, strToPrint_);
-    sprintf(strToPrint_, "Temp [1]:\t%.1fºC\r\n", askedTMLine.temperatures[1]/10.0);
+    sprintf(strToPrint_, "Temp [1]:       %.1fºC\r\n", askedTMLine.temperatures[1]/10.0);
     uart_print(UART_DEBUG, strToPrint_);
-    sprintf(strToPrint_, "Temp [2]:\t%.1fºC\r\n", askedTMLine.temperatures[2]/10.0);
+    sprintf(strToPrint_, "Temp [2]:       %.1fºC\r\n", askedTMLine.temperatures[2]/10.0);
     uart_print(UART_DEBUG, strToPrint_);
-    uart_print(UART_DEBUG, "Statistics:\r\n\t\t\tMin\tAvg\tMax\r\n");
-    sprintf(strToPrint_, "Speed(m/s):\t%.2f\t%.2f\t%.2f\r\n",
+    uart_print(UART_DEBUG, "Statistics:\r\n                Min\tAvg\tMax\r\n");
+    sprintf(strToPrint_, "Speed(m/s):     %.2f\t%.2f\t%.2f\r\n",
             askedTMLine.verticalSpeed[2]/100.0,
             askedTMLine.verticalSpeed[0]/100.0,
             askedTMLine.verticalSpeed[1]/100.0);
     uart_print(UART_DEBUG, strToPrint_);
-    sprintf(strToPrint_, "Battery(V):\t%.2f\t%.2f\t%.2f\r\n",
+    sprintf(strToPrint_, "Battery(V):     %.2f\t%.2f\t%.2f\r\n",
             askedTMLine.voltage[2]/100.0,
             askedTMLine.voltage[0]/100.0,
             askedTMLine.voltage[1]/100.0);
     uart_print(UART_DEBUG, strToPrint_);
-    sprintf(strToPrint_, "Battery(mA):\t%d\t%d\t%d\r\n",
+    sprintf(strToPrint_, "Battery(mA):    %d\t%d\t%d\r\n",
             askedTMLine.current[2],
             askedTMLine.current[0],
             askedTMLine.current[1]);
     uart_print(UART_DEBUG, strToPrint_);
 
-    sprintf(strToPrint_, "AccX(g):\t%.2f\t%.2f\t%.2f\r\n",
+    sprintf(strToPrint_, "AccX(g):        %.2f\t%.2f\t%.2f\r\n",
             askedTMLine.accXAxis[2]/100.0,
             askedTMLine.accXAxis[0]/100.0,
             askedTMLine.accXAxis[1]/100.0);
     uart_print(UART_DEBUG, strToPrint_);
-    sprintf(strToPrint_, "AccY(g):\t%.2f\t%.2f\t%.2f\r\n",
+    sprintf(strToPrint_, "AccY(g):        %.2f\t%.2f\t%.2f\r\n",
             askedTMLine.accYAxis[2]/100.0,
             askedTMLine.accYAxis[0]/100.0,
             askedTMLine.accYAxis[1]/100.0);
     uart_print(UART_DEBUG, strToPrint_);
-    sprintf(strToPrint_, "AccZ(g):\t%.2f\t%.2f\t%.2f\r\n",
+    sprintf(strToPrint_, "AccZ(g):        %.2f\t%.2f\t%.2f\r\n",
             askedTMLine.accZAxis[2]/100.0,
             askedTMLine.accZAxis[0]/100.0,
             askedTMLine.accZAxis[1]/100.0);

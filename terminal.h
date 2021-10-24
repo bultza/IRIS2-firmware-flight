@@ -19,6 +19,7 @@
 #include "i2c_TMP75C.h"
 #include "i2c_MS5611.h"
 #include "i2c_INA.h"
+#include "i2c_ADXL345.h"
 #include "datalogger.h"
 #include "gopros.h"
 

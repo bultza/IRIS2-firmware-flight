@@ -186,7 +186,7 @@ void init_board()
     i2c_RTC_init();
 
     //Init Accelerometer
-    //i2c_ADXL345_init();
+    i2c_ADXL345_init();
 
     //Init Barometer
     i2c_MS5611_init();
@@ -269,7 +269,7 @@ int main(void)
 	    uint64_t uptime = millis_uptime();
 
 	    //UnixTime now:
-	    //uint32_t unixtTimeNow = i2c_RTC_unixTime_now();
+	    uint32_t unixtTimeNow = i2c_RTC_unixTime_now();
 
 	    //Read UART Debug:
 	    terminal_readAndProcessCommands();
@@ -310,6 +310,6 @@ int main(void)
         else
             LED_B_ON;*/
 	};
-	
-	//return 0;
+
+	//It should never reach here
 }
