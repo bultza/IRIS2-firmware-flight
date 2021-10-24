@@ -337,7 +337,8 @@ void sensorsRead()
         int32_t pressure;
         int32_t altitude;
         int32_t speed;
-        int8_t error = i2c_MS5611_getPressure(&pressure);
+        int32_t temperature;
+        int8_t error = i2c_MS5611_getPressure(&pressure, &temperature);
         if (error != 0)
         {
             //Try to reboot the i2c!!!
@@ -356,6 +357,8 @@ void sensorsRead()
 
         //Convert baro to altitude
         altitude = calculateAltitude(pressure);
+        currentTelemetryLine_[0].temperatures[1] = temperature/10; //Baro
+        currentTelemetryLine_[1].temperatures[1] = temperature/10; //Baro
 
         //altitude = altDebug_;
         //altDebug_ = altDebug_ + 210;
@@ -420,8 +423,8 @@ void sensorsRead()
         {
             // Save temperature
             currentTelemetryLine_[i].temperatures[0] = temperatures[0]; //PCB
-            currentTelemetryLine_[i].temperatures[1] = temperatures[1]; //Baro
-            currentTelemetryLine_[i].temperatures[2] = temperatures[2]; //External 01
+            //currentTelemetryLine_[i].temperatures[1] = temperatures[1]; //Baro
+            //currentTelemetryLine_[i].temperatures[2] = temperatures[2]; //External 01
             //currentTelemetryLine_[i].temperatures[3] = temperatures[3]; //External 02
             //currentTelemetryLineFRAMandNOR_[i].temperatures[4] = temperatures[4]; //External 03
         }

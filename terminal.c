@@ -512,15 +512,17 @@ void processI2CCommand(char * command)
     else if (strcmp("baro", (char *) i2cSubcommand) == 0)
     {
         int32_t pressure, altitude;
-        int8_t error = i2c_MS5611_getPressure(&pressure);
+        int32_t temperature;
+        int8_t error = i2c_MS5611_getPressure(&pressure, &temperature);
         if(error != 0)
             sprintf(strToPrint_, "I2C BARO: Error code %d!\r\n", error);
         else
         {
             altitude = calculateAltitude(pressure);
-            sprintf(strToPrint_, "I2C BARO: Pressure: %.2f mbar, Altitude: %.2f m\r\n",
+            sprintf(strToPrint_, "I2C BARO: Pressure: %.2f mbar, Altitude: %.2f m, Temperature %.2f\r\n",
                     ((float)pressure/100.0),
-                    ((float)altitude/100.0));
+                    ((float)altitude/100.0),
+                    (float)temperature/100.0);
         }
     }
     else if (strcmp("ina", (char *) i2cSubcommand) == 0)

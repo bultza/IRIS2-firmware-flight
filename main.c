@@ -228,9 +228,11 @@ void init_board()
     for(i = 0; i < 10; i++)
     {
         LED_TOGGLE;
+        LED_G_TOGGLE;
         __delay_cycles(400000);
     }
     LED_OFF;
+    LED_G_OFF;
 }
 
 /**

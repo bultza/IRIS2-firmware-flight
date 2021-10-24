@@ -10,9 +10,18 @@
 //Private functions:
 int8_t ms5611_readCalibrationData(void);
 int8_t ms5611_readDigitalPresAndTempData(uint32_t * dCoefficients);
-int8_t ms5611_calculateTemperature(uint32_t * dCoefficients, int32_t * dT, int32_t * temp);
-int8_t ms5611_secondOrderTemperatureCompensation(int32_t * dT, int32_t * temp, int64_t * off2, int64_t * sens2, int64_t * p2);
-int8_t ms5611_calculateTempAndCompensatedPres(int64_t * off, int64_t * sens, int32_t * p);
+int8_t ms5611_calculateTemperature(uint32_t * dCoefficients,
+                                   int32_t * dT,
+                                   int32_t * temp);
+int8_t ms5611_secondOrderTemperatureCompensation(int32_t * dT,
+                                                 int32_t * temp,
+                                                 int64_t * off2,
+                                                 int64_t * sens2,
+                                                 int64_t * p2);
+int8_t ms5611_calculateTempAndCompensatedPres(int64_t * off,
+                                              int64_t * sens,
+                                              int32_t * p,
+                                              int32_t * temperature);
 
 // Constant
 uint16_t C_COEFFICIENTS[6];
@@ -155,22 +164,28 @@ int8_t ms5611_secondOrderTemperatureCompensation(int32_t * dT, int32_t * temp, i
     return 0;
 }
 
-int8_t ms5611_calculateTempAndCompensatedPres(int64_t * off, int64_t * sens, int32_t * p)
+/**
+ *
+ */
+int8_t ms5611_calculateTempAndCompensatedPres(int64_t * off,
+                                              int64_t * sens,
+                                              int32_t * p,
+                                              int32_t * temperature)
 {
     uint32_t dCoefficients[2];
-    int32_t dT, temp;
-    int8_t error = ms5611_calculateTemperature(dCoefficients, &dT, &temp);
+    int32_t dT;
+    int8_t error = ms5611_calculateTemperature(dCoefficients, &dT, temperature);
 
     if(error != 0)
         return error;
 
     int64_t t2, off2, sens2;
-    error = ms5611_secondOrderTemperatureCompensation(&dT, &temp, &t2, &off2, &sens2);
+    error = ms5611_secondOrderTemperatureCompensation(&dT, temperature, &t2, &off2, &sens2);
 
     if(error != 0)
         return error;
 
-    temp = temp - t2;
+    *temperature = *temperature - t2;
 
     // Offset at actual temperature
     *off = (int64_t)C_COEFFICIENTS[1] * 65536 + ((int64_t)C_COEFFICIENTS[3] * dT) / 128;
@@ -190,11 +205,11 @@ int8_t ms5611_calculateTempAndCompensatedPres(int64_t * off, int64_t * sens, int
  * Returns the pressure in hundredths of mbar (10^-2 mbar).
  * Function takes between 27-28 ms to compute pressure.
  */
-int8_t i2c_MS5611_getPressure(int32_t * pressure)
+int8_t i2c_MS5611_getPressure(int32_t * pressure, int32_t * temperature)
 {
     int64_t off, sens;
 
-    return ms5611_calculateTempAndCompensatedPres(&off, &sens, pressure);
+    return ms5611_calculateTempAndCompensatedPres(&off, &sens, pressure, temperature);
 }
 
 /**
