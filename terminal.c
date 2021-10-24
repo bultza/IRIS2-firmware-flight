@@ -595,6 +595,8 @@ void processCameraCommand(char * command)
     char cameraSubcommand[CMD_MAX_LEN] = {0};
     extractCommandPart((char *) command, 2, (char *) cameraSubcommand);
 
+    int8_t returnCode;
+
     if (strcmp("on", cameraSubcommand) == 0)
     {
         // Initialised UART comms with camera in PICture mode
@@ -606,25 +608,45 @@ void processCameraCommand(char * command)
         cameraPowerOn(selectedCamera);
         sprintf(strToPrint_, "Camera %c booting...\r\n", command[7]);
     }
-    else if (strcmp("rawon", cameraSubcommand) == 0)
-    {
-        gopros_cameraRawPowerOn(selectedCamera);
-        sprintf(strToPrint_, "Camera %c RAW booting...\r\n", command[7]);
-    }
     else if (strcmp("pic", cameraSubcommand) == 0)
     {
-        gopros_cameraRawTakePicture(selectedCamera);
-        sprintf(strToPrint_, "Camera %c took a picture.\r\n", command[7]);
+        returnCode = gopros_cameraTakePicture(selectedCamera);
+        if(returnCode == 0)
+            sprintf(strToPrint_, "Camera %c took a picture.\r\n", command[7]);
+        else
+            sprintf(strToPrint_, "ERROR Camera %c is not switched on.\r\n", command[7]);
+    }
+    else if (strcmp("video_mode", cameraSubcommand) == 0)
+    {
+        returnCode = gopros_cameraSetVideoMode(selectedCamera);
+        if(returnCode == 0)
+            sprintf(strToPrint_, "Camera %c set to video mode.\r\n", command[7]);
+        else
+            sprintf(strToPrint_, "ERROR Camera %c is not switched on.\r\n", command[7]);
+    }
+    else if (strcmp("picture_mode", cameraSubcommand) == 0)
+    {
+        returnCode = gopros_cameraSetPictureMode(selectedCamera);
+        if(returnCode == 0)
+            sprintf(strToPrint_, "Camera %c set picture mode.\r\n", command[7]);
+        else
+            sprintf(strToPrint_, "ERROR Camera %c is not switched on.\r\n", command[7]);
     }
     else if (strcmp("video_start", cameraSubcommand) == 0)
     {
-        gopros_cameraRawStartRecordingVideo(selectedCamera);
-        sprintf(strToPrint_, "Camera %c started recording video.\r\n", command[7]);
+        returnCode = gopros_cameraStartRecordingVideo(selectedCamera);
+        if(returnCode == 0)
+            sprintf(strToPrint_, "Camera %c started recording video.\r\n", command[7]);
+        else
+            sprintf(strToPrint_, "ERROR Camera %c is not switched on.\r\n", command[7]);
     }
     else if (strcmp("video_end", cameraSubcommand) == 0)
     {
-        gopros_cameraRawStopRecordingVideo(selectedCamera);
-        sprintf(strToPrint_, "Camera %c stopped recording video.\r\n", command[7]);
+        returnCode = gopros_cameraStopRecordingVideo(selectedCamera);
+        if(returnCode == 0)
+            sprintf(strToPrint_, "Camera %c stopped recording video.\r\n", command[7]);
+        else
+            sprintf(strToPrint_, "ERROR Camera %c is not switched on.\r\n", command[7]);
     }
     else if (strncmp("send_cmd", cameraSubcommand, 8) == 0)
     {
@@ -645,13 +667,19 @@ void processCameraCommand(char * command)
             }
         }
 
-        gopros_cameraRawSendCommand(selectedCamera, goProCommand);
-        sprintf(strToPrint_, "Command %s sent to camera %c.\r\n", goProCommandNEOL, command[7]);
+        returnCode = gopros_cameraRawSendCommand(selectedCamera, goProCommand);
+        if(returnCode == 0)
+            sprintf(strToPrint_, "Command %s sent to camera %c.\r\n", goProCommandNEOL, command[7]);
+        else
+            sprintf(strToPrint_, "ERROR Camera %c is not switched on.\r\n", command[7]);
     }
     else if (strcmp("off", cameraSubcommand) == 0)
     {
-        cameraPowerOff(selectedCamera);
-        sprintf(strToPrint_, "Camera %c powered off.\r\n", command[7]);
+        returnCode = cameraPowerOff(selectedCamera);
+        if(returnCode == 0)
+            sprintf(strToPrint_, "Camera %c powered off.\r\n", command[7]);
+        else
+            sprintf(strToPrint_, "ERROR Camera %c is not switched on.\r\n", command[7]);
     }
     else
         sprintf(strToPrint_, "Camera subcommand %s not recognised...\r\n", cameraSubcommand);

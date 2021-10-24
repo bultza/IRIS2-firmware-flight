@@ -210,11 +210,11 @@ argv[34]: second
 
 // Functions
 int8_t gopros_cameraInit(uint8_t selectedCamera, uint8_t cameraMode);
-int8_t gopros_cameraRawPowerOn(uint8_t selectedCamera);
-int8_t gopros_cameraRawSafePowerOff(uint8_t selectedCamera);
-int8_t gopros_cameraRawTakePicture(uint8_t selectedCamera);
-int8_t gopros_cameraRawStartRecordingVideo(uint8_t selectedCamera);
-int8_t gopros_cameraRawStopRecordingVideo(uint8_t selectedCamera);
+int8_t gopros_cameraSetPictureMode(uint8_t selectedCamera);
+int8_t gopros_cameraSetVideoMode(uint8_t selectedCamera);
+int8_t gopros_cameraTakePicture(uint8_t selectedCamera);
+int8_t gopros_cameraStartRecordingVideo(uint8_t selectedCamera);
+int8_t gopros_cameraStopRecordingVideo(uint8_t selectedCamera);
 int8_t gopros_cameraRawSendCommand(uint8_t selectedCamera, char * cmd);
 int8_t cameraPowerOn(uint8_t selectedCamera);
 int8_t cameraPowerOff(uint8_t selectedCamera);

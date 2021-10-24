@@ -16,7 +16,7 @@ uint8_t cameraMode_ = CAMERAMODE_PIC;
 int8_t gopros_cameraInit(uint8_t selectedCamera, uint8_t cameraMode)
 {
 
-    //if (!cameraHasStarted[selectedCamera])
+    //if (!cameraHasStarted_[selectedCamera])
     //{
         uart_init(selectedCamera + 1, BR_57600);
         cameraHasStarted_[selectedCamera] = 1;
@@ -26,180 +26,63 @@ int8_t gopros_cameraInit(uint8_t selectedCamera, uint8_t cameraMode)
     return 0;
 }
 
-/*
- * Sends power to camera and boots it. UART communication not needed.
+/**
+ * It sets the camera in Picture Mode
  */
-int8_t gopros_cameraRawPowerOn(uint8_t selectedCamera)
+int8_t gopros_cameraSetPictureMode(uint8_t selectedCamera)
 {
-    if (selectedCamera == CAMERA01)
-    {
-        // INITIAL STATE
-        CAMERA01_ON;
-
-        P7DIR &= ~BIT5;      // Define button as input - high impedance
-        sleep_ms(CAM_WAIT_POWER);
-
-        // PRESS BUTTON
-        P7OUT &= ~BIT5;     // Put output bit to 0
-        P7DIR |= BIT5;      // Define button as output
-
-        sleep_ms(CAM_WAIT_BUTTON);
-
-        // RETURN TO INITIAL STATE - "UNPRESS BUTTON"
-        P7DIR &= ~BIT5;      // Define button as input - high impedance
-    }
-    else if(selectedCamera == CAMERA02)
-    {
-        // INITIAL STATE
-        CAMERA02_ON;
-
-        P7DIR &= ~BIT6;      // Define button as input - high impedance
-        sleep_ms(CAM_WAIT_POWER);
-
-        // PRESS BUTTON
-        P7OUT &= ~BIT6;     // Put output bit to 0
-        P7DIR |= BIT6;      // Define button as output
-
-        sleep_ms(CAM_WAIT_BUTTON);
-
-        // RETURN TO INITIAL STATE - "UNPRESS BUTTON"
-        P7DIR &= ~BIT6;      // Define button as input - high impedance
-
-    }
-    else if(selectedCamera == CAMERA03)
-    {
-        // INITIAL STATE
-        CAMERA03_ON;
-
-        P7DIR &= ~BIT7;      // Define button as input - high impedance
-        sleep_ms(CAM_WAIT_POWER);
-
-        // PRESS BUTTON
-        P7OUT &= ~BIT7;     // Put output bit to 0
-        P7DIR |= BIT7;      // Define button as output
-
-        sleep_ms(CAM_WAIT_BUTTON);
-
-        // RETURN TO INITIAL STATE - "UNPRESS BUTTON"
-        P7DIR &= ~BIT7;      // Define button as input - high impedance
-    }
-    else if(selectedCamera == CAMERA04)
-    {
-        // INITIAL STATE
-        CAMERA04_ON;
-
-        P5DIR &= ~BIT6;      // Define button as input - high impedance
-        sleep_ms(CAM_WAIT_POWER);
-
-        // PRESS BUTTON
-        P5OUT &= ~BIT6;     // Put output bit to 0
-        P5DIR |= BIT6;      // Define button as output
-
-        sleep_ms(CAM_WAIT_BUTTON);
-
-        // RETURN TO INITIAL STATE - "UNPRESS BUTTON"
-        P5DIR &= ~BIT6;      // Define button as input - high impedance
-    }
-
-    /*sleep_ms(5000);
-
-    // Never auto power down.
-    uart_print(selectedCamera + 1, CAM_AUTO_POWER_DOWN_NEVER);
-    sleep_ms(CAM_WAIT_CONF_CHANGE);
-
-    // Set date and time in camera.
-    struct RTCDateTime dateTime;
-    char * dateTimePLD = CAM_PAYLOAD_SET_DATETIME;
-    char dateTimeCmd[40];
-    i2c_RTC_getClockData(&dateTime);
-    sprintf(dateTimeCmd, "%s %2d %2d %2d %2d %2d %2d\n", dateTimePLD,
-            dateTime.year, dateTime.month, dateTime.date,
-            dateTime.hours, dateTime.minutes, dateTime.seconds);
-    uart_print(selectedCamera + 1, dateTimeCmd);*/
-
+    if (!cameraHasStarted_[selectedCamera])
+        return -1;
+    uart_print(selectedCamera + 1, CAM_SET_PHOTO_MODE);
+    uart_flush(selectedCamera + 1);
     return 0;
 }
 
-/*
- * Sends power off command and removes power. UART communication required.
+/**
+ * It sets the camera in Video Mode
  */
-int8_t gopros_cameraRawSafePowerOff(uint8_t selectedCamera)
+int8_t gopros_cameraSetVideoMode(uint8_t selectedCamera)
 {
-    //Send the command to power off
-    uart_print(selectedCamera + 1, CAM_POWEROFF);
-    sleep_ms(CAM_WAIT_POWER);
-
-    //We need to close the UART otherwise we are losing power through
-    //the opened UART port to the MewPro
-    uart_close(selectedCamera + 1);
-
-    if (selectedCamera == CAMERA01)
-        CAMERA01_OFF;
-    else if (selectedCamera == CAMERA02)
-        CAMERA02_OFF;
-    else if (selectedCamera == CAMERA03)
-        CAMERA03_OFF;
-    else if (selectedCamera == CAMERA04)
-        CAMERA04_OFF;
-
-    cameraHasStarted_[selectedCamera] = 0;
-
+    if (!cameraHasStarted_[selectedCamera])
+        return -1;
+    uart_print(selectedCamera + 1, CAM_SET_VIDEO_MODE);
+    uart_flush(selectedCamera + 1);
     return 0;
 }
 
 /*
  * Takes a picture with selected camera.
  */
-int8_t gopros_cameraRawTakePicture(uint8_t selectedCamera)
+int8_t gopros_cameraTakePicture(uint8_t selectedCamera)
 {
-    uart_print(selectedCamera + 1, CAM_SET_PHOTO_MODE);
-    uart_flush(selectedCamera + 1);
-    sleep_ms(CAM_WAIT_CONF_CHANGE);
+    if (!cameraHasStarted_[selectedCamera])
+        return -1;
     uart_print(selectedCamera + 1, CAM_PHOTO_TAKE_PIC);
     uart_flush(selectedCamera + 1);
-
     return 0;
 }
 
 /*
  * Starts recording video with selected camera.
  */
-int8_t gopros_cameraRawStartRecordingVideo(uint8_t selectedCamera)
+int8_t gopros_cameraStartRecordingVideo(uint8_t selectedCamera)
 {
-    // Set default mode to video.
-    uart_print(selectedCamera + 1, CAM_DEF_MODE_VIDEO);
-    sleep_ms(CAM_WAIT_CONF_CHANGE);
-
-    // Set video format to NTSC.
-    uart_print(selectedCamera + 1, CAM_VIDEO_FORMAT_NTSC);
-    sleep_ms(CAM_WAIT_CONF_CHANGE);
-
-    // Set video resolution to 4K, FPS to 15, and FOV to Wide.
-    char * videoPLD = CAM_PAYLOAD_VIDEO_RES_FPS_FOV;
-    char * videoRes = CAM_VIDEO_RES_4K;
-    char * videoFPS = CAM_VIDEO_FPS_15;
-    char * videoFOV = CAM_VIDEO_FOV_WIDE;
-    char videoDataCmd[28];
-    sprintf(videoDataCmd, "%s %s %s %s\n", videoPLD, videoRes, videoFPS, videoFOV);
-    uart_print(selectedCamera + 1, videoDataCmd);
-    sleep_ms(CAM_WAIT_CONF_CHANGE);
-
-    uart_print(selectedCamera + 1, CAM_SET_VIDEO_MODE);
-    sleep_ms(CAM_WAIT_CONF_CHANGE);
+    if (!cameraHasStarted_[selectedCamera])
+        return -1;
     uart_print(selectedCamera + 1, CAM_VIDEO_START_REC);
-
+    uart_flush(selectedCamera + 1);
     return 0;
 }
 
 /*
  * End video recording in selected camera.
  */
-int8_t gopros_cameraRawStopRecordingVideo(uint8_t selectedCamera)
+int8_t gopros_cameraStopRecordingVideo(uint8_t selectedCamera)
 {
-    uart_print(selectedCamera + 1, CAM_SET_VIDEO_MODE);
-    sleep_ms(CAM_WAIT_CONF_CHANGE);
+    if (!cameraHasStarted_[selectedCamera])
+        return -1;
     uart_print(selectedCamera + 1, CAM_VIDEO_STOP_REC);
-
+    uart_flush(selectedCamera + 1);
     return 0;
 }
 
@@ -208,8 +91,10 @@ int8_t gopros_cameraRawStopRecordingVideo(uint8_t selectedCamera)
  */
 int8_t gopros_cameraRawSendCommand(uint8_t selectedCamera, char * cmd)
 {
+    if (!cameraHasStarted_[selectedCamera])
+        return -1;
     uart_print(selectedCamera + 1, cmd);
-
+    uart_flush(selectedCamera + 1);
     return 0;
 }
 
@@ -218,6 +103,8 @@ int8_t gopros_cameraRawSendCommand(uint8_t selectedCamera, char * cmd)
  */
 int8_t cameraTakePic(uint8_t selectedCamera)
 {
+    if (!cameraHasStarted_[selectedCamera])
+        return -1;
     uart_print(selectedCamera + 1, CAM_PHOTO_TAKE_PIC);
     uart_flush(selectedCamera + 1);
     return 0;
@@ -298,6 +185,8 @@ void cutPower(uint8_t camera)
         CAMERA04_OFF;
         break;
     }
+
+    cameraHasStarted_[camera] = 0;
 }
 
 /**
