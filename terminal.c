@@ -1296,62 +1296,7 @@ void processMemoryCommand(char * command)
              */
             else if (memorySubcommand == MEM_CMD_WRITE)
             {
-                //Code disabled until not tested
-                /*uint8_t error = 0;
-
-                // EXTRACT WRITE ADDRESS
-                char writeAddressStr[CMD_MAX_LEN] = {0};
-                uint32_t * writeAddress;
-                extractCommandPart((char *) command, 3, (char *) writeAddressStr);
-
-                if (writeAddressStr[0] != '\0')
-                    writeAddress = (uint32_t *) atol(writeAddressStr);
-                else
-                {
-                    uart_print(UART_DEBUG, "Please specify the writing address. Use: memory write [nor/fram] [address].\r\n");
-                    error--;
-                }
-
-                // EXTRACT NUMBER OF BYTES to write
-                char numBytesStr[CMD_MAX_LEN] = {0};
-                uint16_t numBytes = 0;
-                extractCommandPart((char *) command, 4, (char *) numBytesStr);
-
-                if (numBytesStr[0] != '\0')
-                    numBytes = atoi(numBytesStr);
-                else
-                {
-                    uart_print(UART_DEBUG, "Please specify the number of bytes to write. Use: memory write [nor/fram] [address] [num_bytes].\r\n");
-                    error--;
-                }
-
-                //TODO: Implement Write protection to make sure that nothing is overwritten
-
-                int8_t i;
-                for (i = 0; i < numBytes; i++)
-                {
-                    // Extract i'th byte to write
-                    char byteToWrite[CMD_MAX_LEN] = {0};
-                    extractCommandPart((char *) command, 5+i, (char *) byteToWrite);
-
-                    if (byteToWrite[0] != '\0')
-                    {
-                        // Depending on memory type, we write one way or the other
-                        if (memoryType == MEM_TYPE_NOR)
-                        {
-                            int8_t errorWrite = spi_NOR_writeToAddress(*writeAddress, (uint8_t*) &byteToWrite, 1, confRegister_.nor_deviceSelected);
-                            if (errorWrite != 0)
-                            {
-                                sprintf(strToPrint_, "Error while trying to write to address %ld from NOR memory.\r\n", *writeAddress);
-                                uart_print(UART_DEBUG, strToPrint_);
-                            }
-                        }
-                        else if (memoryType == MEM_TYPE_FRAM)
-                            *writeAddress = *byteToWrite;
-                    }
-                    else
-                        break; // We are done here...
-                }*/
+                //Not to implement please
             }
             /* * *
              * Memory Erase
@@ -1359,8 +1304,6 @@ void processMemoryCommand(char * command)
              */
             else if (memorySubcommand == MEM_CMD_ERASE)
             {
-                //TODO: Implement FRAM erasing... or not?
-
                 uint8_t error = 0;
                 char eraseType[CMD_MAX_LEN] = {0};
                 extractCommandPart((char *) command, 3, (char *) eraseType);
@@ -1449,8 +1392,31 @@ void processMemoryCommand(char * command)
                     }
                     else if (memoryType == MEM_TYPE_FRAM)
                     {
-                        // TODO: Bulk erase the FRAM memory
-                        uart_print(UART_DEBUG, "FRAM memory bulk erasing not implemented.\r\n");
+                        //Enable write on FRAM
+                        MPUCTL0 = MPUPW;
+                        uint32_t i;
+                        for(i = FRAM_TLM_ADDRESS; i < FRAM_TLM_ADDRESS + FRAM_TLM_SIZE; i++)
+                        {
+                            uint8_t *pointer;
+                            pointer = (uint8_t *)i;
+                            *pointer = 0xFF;
+                        }
+
+                        for(i = FRAM_EVENTS_ADDRESS; i < FRAM_EVENTS_ADDRESS + FRAM_EVENTS_SIZE; i++)
+                        {
+                            uint8_t *pointer;
+                            pointer = (uint8_t *)i;
+                            *pointer = 0xFF;
+                        }
+
+                        //Reset all the counters:
+                        confRegister_.fram_telemetryAddress = FRAM_TLM_ADDRESS;
+                        confRegister_.fram_eventAddress = FRAM_EVENTS_ADDRESS;
+
+                        //Put back protection flags to FRAM code area
+                        MPUCTL0 = MPUPW | MPUENA;
+
+                        uart_print(UART_DEBUG, "FRAM memory bulk erasing completed.\r\n");
                     }
                 }
                 else
