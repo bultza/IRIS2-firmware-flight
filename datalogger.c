@@ -438,6 +438,15 @@ void sensorsRead()
         struct INAData inaData;
         int8_t error = i2c_INA_read(&inaData);
 
+        if(inaData.current < 0)
+        {
+            //Negative current means that power supply has been disconnected
+            uint8_t payload[5] = {0};
+            memcpy(&payload[0], &inaData.current, sizeof(inaData.current));
+            memcpy(&payload[2], &inaData.voltage, sizeof(inaData.voltage));
+            saveEventSimple(EVENT_BATTERY_CUTOUT, payload);
+        }
+
         uint8_t i;
         for (i = 0; i < 2; i++)
         {
@@ -574,11 +583,23 @@ int8_t returnCurrentTMLines(struct TelemetryLine tmLines[2])
     return 0;
 }
 
+struct EventLine lastEvent = {0};
+
 /**
  * It saves an Event Line on the FRAM and NOR memories.
  */
 int8_t saveEvent(struct EventLine newEvent)
 {
+    if(lastEvent.event == newEvent.event
+            && lastEvent.unixTime + 5 > newEvent.unixTime)
+    {
+        //Ignore repetitive event if it is in less than 5s
+        return 0;
+    }
+
+    //Copy last event
+    lastEvent = newEvent;
+
     //First save on the FRAM which is much faster:
     addEventFRAM(newEvent, &confRegister_.fram_eventAddress);
 
@@ -586,7 +607,7 @@ int8_t saveEvent(struct EventLine newEvent)
     int8_t error = addEventNOR(newEvent, &confRegister_.nor_eventAddress);
 
     if(error)
-        uart_print(UART_DEBUG, "ERROR: NOR memory was busy, we could not write events in.");
+        uart_print(UART_DEBUG, "ERROR: NOR memory was busy, we could not write events in.\r\n");
 
     return 0;
 }

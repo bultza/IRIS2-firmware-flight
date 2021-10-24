@@ -938,7 +938,7 @@ void processMemoryCommand(char * command)
             memoryType = MEM_TYPE_NOR;
         else if (strncmp("fram", (char *)memoryTypeStr, 4) == 0)
             memoryType = MEM_TYPE_FRAM;
-        else
+        else if (memorySubcommand != MEM_CMD_STATUS)
         {
             memoryType = -1;
             uart_print(UART_DEBUG, "Incorrect desired memory. Use: memory [status/read/dump/write/erase] [nor/fram].\r\n");
@@ -987,21 +987,23 @@ void processMemoryCommand(char * command)
                     //Print FRAM memory status
                     uart_print(UART_DEBUG, "FRAM memory status: \r\n");
                     uart_print(UART_DEBUG, " * FRAM memory is ready\r\n");
-                    uint16_t n_events = (confRegister_.fram_eventAddress - FRAM_EVENTS_ADDRESS) / sizeof(struct EventLine);
-                    uint16_t n_eventsTotal = FRAM_EVENTS_SIZE / sizeof(struct EventLine);
+
+                    uint16_t n_events = (confRegister_.fram_telemetryAddress - FRAM_TLM_ADDRESS) / sizeof(struct TelemetryLine);
+                    uint16_t n_eventsTotal = FRAM_TLM_SIZE / sizeof(struct TelemetryLine);
                     float percentage_used = (float)n_events * 100.0 / (float) n_eventsTotal;
-                    sprintf(strToPrint_, " * %d saved events. %.2f%% used. Last address is %ld\r\n",
-                            n_events,
-                            percentage_used,
-                            confRegister_.fram_eventAddress);
-                    uart_print(UART_DEBUG, strToPrint_);
-                    n_events = (confRegister_.fram_telemetryAddress - FRAM_TLM_ADDRESS) / sizeof(struct TelemetryLine);
-                    n_eventsTotal = FRAM_TLM_SIZE / sizeof(struct TelemetryLine);
-                    percentage_used = (float)n_events * 100.0 / (float) n_eventsTotal;
                     sprintf(strToPrint_, " * %d saved telemetry. %.2f%% used. Last address is %ld\r\n",
                             n_events,
                             percentage_used,
                             confRegister_.fram_telemetryAddress);
+                    uart_print(UART_DEBUG, strToPrint_);
+
+                    n_events = (confRegister_.fram_eventAddress - FRAM_EVENTS_ADDRESS) / sizeof(struct EventLine);
+                    n_eventsTotal = FRAM_EVENTS_SIZE / sizeof(struct EventLine);
+                    percentage_used = (float)n_events * 100.0 / (float) n_eventsTotal;
+                    sprintf(strToPrint_, " * %d saved events. %.2f%% used. Last address is %ld\r\n",
+                            n_events,
+                            percentage_used,
+                            confRegister_.fram_eventAddress);
                     uart_print(UART_DEBUG, strToPrint_);
                 }
             }

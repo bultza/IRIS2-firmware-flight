@@ -58,7 +58,11 @@ void checkStateOnWaiting()
 
     //Write event
     uint8_t payload[5] = {0};
-    saveEventSimple(EVENT_CAMERA1_PICTURE, payload);
+    payload[0] = 1;
+    payload[1] = 1;
+    payload[2] = 1;
+    payload[3] = 1;
+    saveEventSimple(EVENT_CAMERA_PICTURE, payload);
 
     flightSubState_ = SUBSTATE_PIC_WAITING;
     lastTimeAction_ = millis_uptime();
