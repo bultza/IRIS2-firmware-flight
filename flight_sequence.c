@@ -23,7 +23,7 @@ void checkStateOff()
     if(lastTimePicture_ + confRegister_.timelapse_period > uptime)
         return; //Continue waiting
 
-    LED_R_ON;
+    //LED_R_ON;
     //Time to make another picture:
     uint8_t i;
 
@@ -98,7 +98,7 @@ void checkStateOffWaiting()
         return;
     flightSubState_ = SUBSTATE_OFF;
     //LED_B_OFF;
-    LED_R_OFF;
+    //LED_R_OFF;
 }
 
 /**

@@ -299,6 +299,15 @@ int main(void)
             LED_G_OFF;
         else
             LED_G_ON;
+
+        //Keep the Red LED On if there is power on the cameras
+        if((P4OUT & BIT6) &&
+                (P4OUT & BIT5) &&
+                (P4OUT & BIT4) &&
+                (P2OUT & BIT7))
+            LED_R_OFF;
+        else
+            LED_R_ON;
 	};
 
 	//It should never reach here
