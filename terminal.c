@@ -964,7 +964,7 @@ void processMemoryCommand(char * command)
                     {
                         uart_print(UART_DEBUG, "address,date,unixtime,uptime,pressure,altitude,"
                                 "verticalSpeedAVG,verticalSpeedMAX,verticalSpeedMIN,"
-                                "temperatures0,temperatures1,temperatures2,temperatures3,temperatures4,"
+                                "temperatures0,temperatures1,temperatures2,"
                                 "accXAxisAVG,accXAxisMAX,accXAxisMIN,accYAxisAVG,accYAxisMAX,accYAxisMIN,"
                                 "accZAxisAVG,accZAxisMAX,accZAxisMIN,voltagesAVG,voltagesMAX,voltagesMIN,"
                                 "currentsAVG,currentsMAX,currentsMIN,state,sub_state,"
@@ -1486,6 +1486,8 @@ int8_t terminal_readAndProcessCommands(void)
         }
         else if (strcmp("help", (char *)command_) == 0)
         {
+            uart_print(UART_DEBUG, "More detailed information at: "
+                    "https://github.com/bultza/IRIS2-firmware-flight/blob/main/README.md\r\n");
             uart_print(UART_DEBUG, "Available commands:\r\n");
             uart_print(UART_DEBUG, "  help\r\n");
             uart_print(UART_DEBUG, "  status\r\n");
