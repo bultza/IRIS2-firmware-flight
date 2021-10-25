@@ -1,0 +1,8 @@
+conf set flightState 0
+conf set gopro_model[0] 1
+conf set gopro_model[1] 0
+conf set gopro_model[2] 1
+conf set gopro_model[3] 0
+conf set timelapse_period 299
+conf set flightState 3
+
