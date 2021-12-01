@@ -43,3 +43,6 @@ python3 loadFile.py 20211120_tlm.csv
 Connect to grafana at http://localhost:3000/ Click on the "+" button and Import from JSON, use the IRIS2_dashboard.json file
 
 Probably you need to configure the database access from the left configuration arrow, datasources, usually the default values are enough
+
+## Docker Alternative
+I tried to install grafana and influx with docker-compose unsuccessfully, access permisions need to be fixed between dockers to make them work
