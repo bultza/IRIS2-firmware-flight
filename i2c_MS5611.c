@@ -232,30 +232,30 @@ int8_t i2c_MS5611_getPressure(int32_t * pressure, int32_t * temperature)
  *   Con ln=Logaritmo Neperiano, las presiones en Pascales,
  *   las Temperaturas en Kelvin, y P la presion medida.
  */
-int32_t calculateAltitude(int32_t pressure)
+int32_t calculateAltitude(int32_t pressureInt)
 {
-    int32_t altitude = 0;
-
-    if(pressure > 22632)  //11km
+    float pressure = (float)pressureInt / 100.0;
+    float altitude;
+    if(pressure > 226.32)  //11km
     {
-      //We are at troposphere
-      //Z=(T0/L)*[(P/P0)^(-R*L/g)-1];
-      altitude = (-4433080 * (pow(pressure / 101325., 0.190163) - 1.));
+        //We are at troposphere
+        //Z=(T0/L)*[(P/P0)^(-R*L/g)-1];
+        altitude = (-44330.8 * (pow(pressure / 1013.25, 0.190163) - 1.0));
     }
-    else if(pressure > 2481)  //25km??
+    else if(pressure > 24.81)  //25km??
     {
-      //We are at stratosphere
-      //Z=11000-(R*T11k/g)*ln(P/P11k)
-      altitude = (1100000 - (6338.282 * log(pressure / 22552.)));
+        //We are at stratosphere
+        //Z=11000-(R*T11k/g)*ln(P/P11k)
+        altitude = (11000.0 - (6338.282 * log(pressure / 225.52)));
     }
-    else if(pressure > 111)  //47km
+    else if(pressure > 1.1091)  //47km
     {
-      //We are at high stratosphere
-      //Z=25000+(T25k/L)*[(P/P25k)^(-R*L/g)-1]
-      altitude = (2500000 + (-33330.8 * (pow(pressure/2481., 0.190163) - 1.)));
+        //We are at high stratosphere
+        //Z=25000+(T25k/L)*[(P/P25k)^(-R*L/g)-1]
+        altitude = (25000.0 + (-33330.8 * (pow(pressure/24.81, 0.190163) - 1.0)));
     }
     else
-      altitude = 5000000;  //Return a veeery high altitude
+        altitude = 50000.0;  //Return a veeery high altitude
 
-    return altitude;
+    return (int32_t)(altitude * 100.0);
 }
