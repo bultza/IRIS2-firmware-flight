@@ -26,12 +26,6 @@
 #define MS5611_CONVERT_D2 0x58
 #define MS5611_ADC_READ 0x00
 
-#define Pmin 10     // 10 mbar
-#define Pmax 1200   // 1200 mbar
-#define Tmin -40    // -40 deg C
-#define Tmax 85     // 85 deg C
-#define Tref 20     // 20 deg C
-
 int8_t i2c_MS5611_init(void);
 int8_t i2c_MS5611_getPressure(int32_t * pressure, int32_t * temperature);
 int32_t calculateAltitude(int32_t pressureInt);
