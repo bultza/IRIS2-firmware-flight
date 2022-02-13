@@ -82,6 +82,8 @@ These are the currently implemented commands:
 |`uartdebug [x]` |All characters received of the [x] UART will be dumped on the console|
 |`u [data]` |[data] will be dumped to the uart selected as debug|
 
+## Telemetry
+On the folder telemetry you find the needed scripts to visualize the telemetry in a Grafana dashboard
 
 ## Authors
 * Aitor Conde <aitorconde@gmail.com>
