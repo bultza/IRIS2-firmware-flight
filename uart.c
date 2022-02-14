@@ -323,7 +323,7 @@ void uart_flush(uint8_t uart_name)
     if(pointerTimes >= 30)
         pointerTimes = 0;
 
-    sleep_ms(2);
+    sleep_ms(5);
 }
 
 /*
