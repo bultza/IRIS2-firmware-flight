@@ -513,7 +513,8 @@ void processCameraCommand(char * command)
         //gopros_cameraInit(selectedCamera, CAMERAMODE_VID);
 
         cameraPowerOn(selectedCamera);
-        sprintf(strToPrint_, "Camera %c booting...\r\n", command[7]);
+        uint64_t uptime = millis_uptime();
+        sprintf(strToPrint_, "%.3fs: Camera %c booting...\r\n", uptime/1000.0, command[7]);
         uint8_t payload[5] = {0};
         payload[0] = selectedCamera;
         saveEventSimple(EVENT_CAMERA_ON, payload);
@@ -1517,7 +1518,7 @@ int8_t terminal_readAndProcessCommands(void)
             uart_print(UART_DEBUG, "  memory dump [nor/fram] [start] [end]\r\n");
             uart_print(UART_DEBUG, "  memory read [nor/fram] [tlm/events] [start] [end]\r\n");
             uart_print(UART_DEBUG, "  memory erase [nor/fram] bulk\r\n");
-            uart_print(UART_DEBUG, "  uarddebug [Uart number]\r\n");
+            uart_print(UART_DEBUG, "  uartdebug [Uart number]\r\n");
             uart_print(UART_DEBUG, "  u [data]\r\n");
         }
         else if (strncmp("terminal", (char *)command_, 8) == 0)
@@ -1553,6 +1554,11 @@ int8_t terminal_readAndProcessCommands(void)
             {
                 confRegister_.debugUART = 4;
                 uart_init(4, BR_57600);
+            }
+            else if(command_[10] == '5')
+            {
+                confRegister_.debugUART = 5;
+                //This is just to show extra gopro thingies
             }
             else
                 confRegister_.debugUART = 0;
