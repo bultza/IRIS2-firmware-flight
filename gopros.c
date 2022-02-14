@@ -247,7 +247,8 @@ int8_t cameraPowerOn(uint8_t selectedCamera)
     //Start FSM
     cameraStatus_[selectedCamera].fsmStatus = FSM_CAM_POWERON_WAIT;
     cameraStatus_[selectedCamera].lastCommandTime = millis_uptime();
-    cameraStatus_[selectedCamera].sleepTime = CAM_WAIT_POWER;
+    //cameraStatus_[selectedCamera].sleepTime = /*CAM_WAIT_POWER - 2000*/ 2000;
+    cameraStatus_[selectedCamera].sleepTime = 1500;
 
     return 0;
 }
@@ -268,7 +269,7 @@ int8_t cameraPowerOff(uint8_t selectedCamera)
     pressButton(selectedCamera);
     cameraStatus_[selectedCamera].fsmStatus = FSM_CAM_PRESSBTNOFF_WAIT;
     cameraStatus_[selectedCamera].lastCommandTime = millis_uptime();
-    cameraStatus_[selectedCamera].sleepTime = CAM_WAIT_BUTTON + 1000;
+    cameraStatus_[selectedCamera].sleepTime = CAM_WAIT_BUTTON /*+ 1000*/;
     return 0;
 }
 
@@ -293,12 +294,26 @@ int8_t cameraFSMcheck()
                 cameraStatus_[i].fsmStatus = FSM_CAM_PRESSBTN_WAIT;
                 cameraStatus_[i].lastCommandTime = uptime;
                 cameraStatus_[i].sleepTime = CAM_WAIT_BUTTON;
+                if(confRegister_.debugUART == 5)
+                {
+                    char strToPrint[50];
+                    uint64_t uptime = millis_uptime();
+                    sprintf(strToPrint, "%.3fs: Camera Start pressing button.\r\n# ", uptime/1000.0);
+                    uart_print(UART_DEBUG, strToPrint);
+                }
                 break;
             case FSM_CAM_PRESSBTN_WAIT:
                 releaseButton(i);
                 cameraStatus_[i].fsmStatus = FSM_CAM_CONF_1;
                 cameraStatus_[i].lastCommandTime = uptime;
-                cameraStatus_[i].sleepTime = CAM_WAIT_POWER/* - 1000*/;
+                cameraStatus_[i].sleepTime = /*CAM_WAIT_POWER*/ 2500;
+                if(confRegister_.debugUART == 5)
+                {
+                    char strToPrint[50];
+                    uint64_t uptime = millis_uptime();
+                    sprintf(strToPrint, "%.3fs: Camera Stop pressing button.\r\n# ", uptime/1000.0);
+                    uart_print(UART_DEBUG, strToPrint);
+                }
                 break;
             case FSM_CAM_CONF_1:
                 {
@@ -321,13 +336,24 @@ int8_t cameraFSMcheck()
                             dateTime.seconds);
                     uart_print(i + 1, dateTimeCmd);
                     uart_flush(i + 1);
-                    //uart_print(UART_DEBUG, "Sent to camera: '");
-                    //uart_print(UART_DEBUG, dateTimeCmd);
-                    //uart_print(UART_DEBUG, "'\r\n");
+                    if(confRegister_.debugUART == 5)
+                    {
+                        uart_print(UART_DEBUG, "Sent to camera: '");
+                        uart_print(UART_DEBUG, dateTimeCmd);
+                        uart_print(UART_DEBUG, "'\r\n# ");
+                    }
                 }
                 cameraStatus_[i].fsmStatus = FSM_CAM_CONF_2;
                 cameraStatus_[i].lastCommandTime = uptime;
-                cameraStatus_[i].sleepTime = CAM_WAIT_CONF_CHANGE;
+                //cameraStatus_[i].sleepTime = CAM_WAIT_CONF_CHANGE;
+                cameraStatus_[i].sleepTime = 1500;
+                if(confRegister_.debugUART == 5)
+                {
+                    char strToPrint[50];
+                    uint64_t uptime = millis_uptime();
+                    sprintf(strToPrint, "%.3fs: Camera is Configured.\r\n# ", uptime/1000.0);
+                    uart_print(UART_DEBUG, strToPrint);
+                }
                 break;
             case FSM_CAM_CONF_2:
                 if(cameraMode_ == CAMERAMODE_VID)
@@ -392,17 +418,31 @@ int8_t cameraFSMcheck()
 
                 cameraStatus_[i].fsmStatus = FSM_CAM_DONOTHING;
                 cameraStatus_[i].cameraStatus = CAM_STATUS_ON;
+                if(confRegister_.debugUART == 5)
+                {
+                    char strToPrint[50];
+                    uint64_t uptime = millis_uptime();
+                    sprintf(strToPrint, "%.3fs: Camera is Ready.\r\n# ", uptime/1000.0);
+                    uart_print(UART_DEBUG, strToPrint);
+                }
                 break;
             case FSM_CAM_PRESSBTNOFF_WAIT:
                 releaseButton(i);
                 cameraStatus_[i].fsmStatus = FSM_CAM_POWEROFF_WAIT;
                 cameraStatus_[i].lastCommandTime = uptime;
-                cameraStatus_[i].sleepTime = CAM_WAIT_BUTTON + 3000;
+                cameraStatus_[i].sleepTime = 3500; //3.5s to power off
                 break;
             case FSM_CAM_POWEROFF_WAIT:
                 cutPower(i);
                 cameraStatus_[i].fsmStatus = FSM_CAM_DONOTHING;
                 cameraStatus_[i].cameraStatus = CAM_STATUS_OFF;
+                if(confRegister_.debugUART == 5)
+                {
+                    char strToPrint[50];
+                    uint64_t uptime = millis_uptime();
+                    sprintf(strToPrint, "%.3fs: Camera is Off.\r\n# ", uptime/1000.0);
+                    uart_print(UART_DEBUG, strToPrint);
+                }
                 break;
             }
         }
