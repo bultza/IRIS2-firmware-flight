@@ -20,7 +20,7 @@ void checkStateOff()
 {
     //Read Uptime:
     uint32_t uptime = seconds_uptime();
-    if(lastTimePicture_ + confRegister_.timelapse_period > uptime)
+    if(lastTimePicture_ + confRegister_.flight_timelapse_period > uptime)
         return; //Continue waiting
 
     //LED_R_ON;
@@ -118,6 +118,30 @@ void checkFlightSequence()
     if(confRegister_.flightState == FLIGHTSTATE_DEBUG)
         return;
 
+    if(confRegister_.flightState == FLIGHTSTATE_WAITFORLAUNCH)
+    {
+        //Is it time to make another picture?
+        switch(flightSubState_)
+        {
+        //TODO
+        default:
+            flightSubState_ = SUBSTATE_OFF;
+            break;
+        }
+    }
+
+    if(confRegister_.flightState == FLIGHTSTATE_LAUNCH)
+    {
+        //Is it time to make another picture?
+        switch(flightSubState_)
+        {
+        //TODO
+        default:
+            flightSubState_ = SUBSTATE_OFF;
+            break;
+        }
+    }
+
     if(confRegister_.flightState == FLIGHTSTATE_TIMELAPSE)
     {
         //Is it time to make another picture?
@@ -141,4 +165,42 @@ void checkFlightSequence()
             break;
         }
     }
+
+    if(confRegister_.flightState == FLIGHTSTATE_LANDING)
+    {
+        //Is it time to make another picture?
+        switch(flightSubState_)
+        {
+        //TODO
+        default:
+            flightSubState_ = SUBSTATE_OFF;
+            break;
+        }
+    }
+
+    if(confRegister_.flightState == FLIGHTSTATE_TIMELAPSE_LAND)
+    {
+        //Is it time to make another picture?
+        switch(flightSubState_)
+        {
+        //TODO
+        default:
+            flightSubState_ = SUBSTATE_OFF;
+            break;
+        }
+    }
+
+    if(confRegister_.flightState == FLIGHTSTATE_RECOVERY)
+    {
+        //Is it time to make another picture?
+        switch(flightSubState_)
+        {
+        //TODO
+        default:
+            flightSubState_ = SUBSTATE_OFF;
+            break;
+        }
+    }
+
+
 }

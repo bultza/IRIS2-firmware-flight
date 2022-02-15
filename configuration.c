@@ -18,9 +18,11 @@ int8_t configuration_init(void)
         //We need to load the default configuration!!
         confRegister_.magicWord = MAGICWORD;
         confRegister_.swVersion = FWVERSION;
-        confRegister_.simulatorEnabled = 0;
+
         confRegister_.flightState = 0;
         confRegister_.flightSubState = 0;
+        confRegister_.lastStateTime = 0;
+        confRegister_.lastSubStateTime = 0;
 
         confRegister_.fram_telemetryAddress = FRAM_TLM_ADDRESS;
         confRegister_.fram_eventAddress = FRAM_EVENTS_ADDRESS;
@@ -37,8 +39,8 @@ int8_t configuration_init(void)
         confRegister_.gopro_leds = 01;
 
         //00 = Gopro Black, 01 = Gopro White
-        //confRegister_.gopro_model[0] = 01;
-        confRegister_.gopro_model[0] = 00;
+        confRegister_.gopro_model[0] = 01;
+        //confRegister_.gopro_model[0] = 00;
         confRegister_.gopro_model[1] = 00;
         //confRegister_.gopro_model[2] = 01;
         confRegister_.gopro_model[2] = 00;
@@ -49,9 +51,54 @@ int8_t configuration_init(void)
         confRegister_.acc_readPeriod = ACC_READPERIOD;
         confRegister_.temp_readPeriod = TEMP_READPERIOD;
         confRegister_.debugUART = 0;
-        confRegister_.timelapse_period = TIMELAPSE_PERIOD;
+        confRegister_.simulatorEnabled = 0;
 
-        //TODO
+
+        //Launch Configuration
+        confRegister_.launch_heightThreshold = 3000;    //3km
+        confRegister_.launch_climbThreshold = 2;        //On IRIS1 it was recorded 7.8m/s
+        confRegister_.launch_videoDurationLong = 7200;  //2 hours
+        confRegister_.launch_videoDurationShort = 3600; //1h
+        confRegister_.launch_camerasLong[0] = 0;
+        confRegister_.launch_camerasLong[1] = 1;
+        confRegister_.launch_camerasLong[2] = 0;
+        confRegister_.launch_camerasLong[3] = 0;
+        confRegister_.launch_camerasShort[0] = 1;
+        confRegister_.launch_camerasShort[1] = 0;
+        confRegister_.launch_camerasShort[2] = 1;
+        confRegister_.launch_camerasShort[3] = 1;
+        confRegister_.launch_timeClimbMaximum = 43200;  //12hours
+
+        //Timelapse Configuration
+        confRegister_.flight_timelapse_period = TIMELAPSE_PERIOD;
+        confRegister_.flight_camerasFirstLeg[0] = 1;
+        confRegister_.flight_camerasFirstLeg[1] = 1;
+        confRegister_.flight_camerasFirstLeg[2] = 1;
+        confRegister_.flight_camerasFirstLeg[3] = 1;
+        confRegister_.flight_camerasSecondLeg[0] = 1;
+        confRegister_.flight_camerasSecondLeg[1] = 1;
+        confRegister_.flight_camerasSecondLeg[2] = 1;
+        confRegister_.flight_camerasSecondLeg[3] = 0;
+        confRegister_.flight_timeSecondLeg = 86400;     //24 hours
+
+        //Landing Configuration
+        confRegister_.landing_heightThreshold = 25000;         //Under this height, the video starts recording
+        confRegister_.landing_heightSecurityThreshold = 32000; //Over this height, the vertical speeds are ignored
+        confRegister_.landing_speedThreshold = -15;         //On IRIS1 it measured -55m/s at 31.5km height
+        confRegister_.landing_videoDurationLong = 3600;     //On IRIS1 decend was 50 minutes
+        confRegister_.landing_videoDurationShort = 900;     //This is 15min, on IRIS1 it landed in 10 minutes
+        confRegister_.landing_camerasLong[0] = 1;
+        confRegister_.landing_camerasLong[1] = 1;
+        confRegister_.landing_camerasLong[2] = 0;
+        confRegister_.landing_camerasLong[3] = 1;
+        confRegister_.landing_camerasShort[0] = 0;
+        confRegister_.landing_camerasShort[1] = 0;
+        confRegister_.landing_camerasShort[2] = 1;
+        confRegister_.landing_camerasShort[3] = 1;
+        confRegister_.landing_heightShortStart = 3000;  //3000km, on IRIS1 it landed 10 minutes later
+
+        //Landed Configuration
+        confRegister_.recovery_videoDuration = 300;     //5 minutes of video
 
         //Reboot counter moves up
         confRegister_.numberReboots++;

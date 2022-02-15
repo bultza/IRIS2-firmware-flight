@@ -25,7 +25,7 @@
 #define LED_R_TOGGLE    (P3OUT ^= BIT4)
 
 #define MAGICWORD           0xBABE
-#define FWVERSION           5
+#define FWVERSION           7
 //#define FRAM_TLM_SAVEPERIOD 599     //seconds period to save on FRAM
 #define FRAM_TLM_SAVEPERIOD 599     //Only for Debug TODO
 #define NOR_TLM_SAVEPERIOD  10      //seconds period to save on NOR Flash
@@ -34,7 +34,7 @@
 #define INA_READPERIOD      100     //Milliseconds period to read INA Voltage and currents
 #define ACC_READPERIOD      100     //Milliseconds period to read Accelerometer
 //#define TIMELAPSE_PERIOD    30      //Seconds
-#define TIMELAPSE_PERIOD    179      //Seconds
+#define TIMELAPSE_PERIOD    30      //Seconds
 
 #define FLIGHTSTATE_DEBUG           0
 #define FLIGHTSTATE_WAITFORLAUNCH   1
@@ -57,12 +57,11 @@ struct ConfigurationRegister
     uint16_t temp_readPeriod;
     uint16_t ina_readPeriod;
     uint16_t acc_readPeriod;
-    uint16_t timelapse_period;
 
     //Put here all the configuration of the gopros
     uint8_t gopro_beeps;        //01 = 70%, 02 = off
     uint8_t gopro_leds;         //00 = off, 01 = 2, 02 = 4
-    uint8_t gopro_model[4];     //00 = Gopro Black, 01 = Gopro White
+    uint8_t gopro_model[4];     //00 = Gopro Black, 01 = Gopro White (TouchScreen)
 
 
     //Put here all the current execution status
@@ -71,13 +70,45 @@ struct ConfigurationRegister
     uint32_t nor_telemetryAddress;
     uint32_t fram_eventAddress;
     uint32_t fram_telemetryAddress;
-    //TODO
-    uint8_t simulatorEnabled;
-    uint8_t flightState;
-    uint8_t flightSubState;
     uint16_t hardwareRebootReason;
 
+    //States
+    uint8_t flightState;
+    uint8_t flightSubState;
+    uint64_t lastStateTime;
+    uint64_t lastSubStateTime;
+
+    //Launch Configuration
+    uint16_t launch_heightThreshold;    //m
+    uint16_t launch_climbThreshold;     //m/s
+    uint16_t launch_videoDurationLong;  //s
+    uint16_t launch_videoDurationShort; //s
+    uint8_t  launch_camerasLong[4];
+    uint8_t  launch_camerasShort[4];
+    uint16_t launch_timeClimbMaximum;   //s
+
+    //Timelapse Configuration
+    uint16_t flight_timelapse_period;   //s
+    uint8_t  flight_camerasFirstLeg[4];
+    uint8_t  flight_camerasSecondLeg[4];
+    uint32_t flight_timeSecondLeg;      //s
+
+    //Landing Configuration
+    uint16_t landing_heightThreshold;         //m Under this height, the video starts recording
+    uint16_t landing_heightSecurityThreshold; //m Over this height, the vertical speeds are ignored
+    int16_t  landing_speedThreshold;          //m/s
+    uint16_t landing_videoDurationLong;       //s
+    uint16_t landing_videoDurationShort;      //s
+    uint8_t  landing_camerasLong[4];
+    uint8_t  landing_camerasShort[4];
+    uint16_t landing_heightShortStart;        //m ->3000m
+
+    //Landed Configuration
+    uint16_t recovery_videoDuration;
+
+    //For debug
     uint8_t debugUART;
+    uint8_t simulatorEnabled;
 };
 
 //******************************************************************************

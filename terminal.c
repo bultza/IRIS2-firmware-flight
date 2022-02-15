@@ -245,7 +245,7 @@ void processConfCommand(char * command)
         uart_print(UART_DEBUG, strToPrint_);
         sprintf(strToPrint_, "temp_readPeriod = %d\r\n", confRegister_.temp_readPeriod);
         uart_print(UART_DEBUG, strToPrint_);
-        sprintf(strToPrint_, "timelapse_period = %d\r\n", confRegister_.timelapse_period);
+        sprintf(strToPrint_, "timelapse_period = %d\r\n", confRegister_.flight_timelapse_period);
         uart_print(UART_DEBUG, strToPrint_);
         sprintf(strToPrint_, "gopro_model[0] = %d\r\n", confRegister_.gopro_model[0]);
         uart_print(UART_DEBUG, strToPrint_);
@@ -332,7 +332,7 @@ void processConfCommand(char * command)
     }
     else if (strcmp("timelapse_period", (char *)selectedParameter) == 0)
     {
-        confRegister_.timelapse_period = valueToSet;
+        confRegister_.flight_timelapse_period = valueToSet;
     }
     else if (strcmp("gopro_model[0]", (char *)selectedParameter) == 0)
     {
