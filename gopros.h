@@ -64,6 +64,7 @@ struct CameraStatus
     uint8_t fsmStatus;
     uint64_t lastCommandTime;
     uint64_t sleepTime;
+    uint64_t timeoutTime;
 };
 
 struct CameraFSM

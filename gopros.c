@@ -274,16 +274,40 @@ int8_t cameraPowerOff(uint8_t selectedCamera)
 }
 
 /**
+ * It searches a particular flag in order to tell if the camera successfully booted up
+ */
+int8_t searchInUart(uint8_t uartIndex, uint8_t flag)
+{
+    uint16_t nchars = uart_available(uartIndex + 1);
+    if(nchars < 1)
+        return 0;
+    uint16_t i;
+    for(i = 0; i < nchars; i++)
+    {
+        //Search the flag
+        if(uart_read(uartIndex + 1) == flag)
+            return 1;
+    }
+    return 0;
+}
+
+/**
  * This function must be called continuously
  */
 int8_t cameraFSMcheck()
 {
     uint64_t uptime = millis_uptime();
+    char strToPrint[50];
     uint8_t i;
     for(i = 0; i < 4; i++)
     {
         if(cameraStatus_[i].fsmStatus == FSM_CAM_DONOTHING)
-            continue;   //Camera is fine like it is :)
+        {
+            //Flush anything that is on the UART:
+            searchInUart(i, 0);
+            //Camera is fine like it is :)
+            continue;
+        }
         if(cameraStatus_[i].lastCommandTime + cameraStatus_[i].sleepTime < uptime)
         {
             //Move to next step!
@@ -296,9 +320,8 @@ int8_t cameraFSMcheck()
                 cameraStatus_[i].sleepTime = CAM_WAIT_BUTTON;
                 if(confRegister_.debugUART == 5)
                 {
-                    char strToPrint[50];
                     uint64_t uptime = millis_uptime();
-                    sprintf(strToPrint, "%.3fs: Camera Start pressing button.\r\n# ", uptime/1000.0);
+                    sprintf(strToPrint, "%.3fs: Camera %d Start pressing button.\r\n# ", uptime/1000.0, i+1);
                     uart_print(UART_DEBUG, strToPrint);
                 }
                 break;
@@ -306,17 +329,34 @@ int8_t cameraFSMcheck()
                 releaseButton(i);
                 cameraStatus_[i].fsmStatus = FSM_CAM_CONF_1;
                 cameraStatus_[i].lastCommandTime = uptime;
-                cameraStatus_[i].sleepTime = /*CAM_WAIT_POWER*/ 2500;
+                //cameraStatus_[i].sleepTime = /*CAM_WAIT_POWER*/ 2500;
+                cameraStatus_[i].sleepTime = 0;
+                cameraStatus_[i].timeoutTime = 3000;
                 if(confRegister_.debugUART == 5)
                 {
-                    char strToPrint[50];
                     uint64_t uptime = millis_uptime();
-                    sprintf(strToPrint, "%.3fs: Camera Stop pressing button.\r\n# ", uptime/1000.0);
+                    sprintf(strToPrint, "%.3fs: Camera %d Stop pressing button.\r\n# ", uptime/1000.0, i+1);
                     uart_print(UART_DEBUG, strToPrint);
                 }
                 break;
             case FSM_CAM_CONF_1:
                 {
+                    //Time out?
+                    if(cameraStatus_[i].lastCommandTime + cameraStatus_[i].timeoutTime < uptime)
+                    {
+                        uint64_t uptime = millis_uptime();
+                        sprintf(strToPrint, "%.3fs: Camera %d timeout :(\r\n# ", uptime/1000.0, i+1);
+                        uart_print(UART_DEBUG, strToPrint);
+                        //It is timeout however we continue with the rest of the configuration as blind
+                    }
+                    //Wait for uart to answer:
+                    else if(searchInUart(i, '@') == 0)
+                        continue; //Continue to the next camera
+
+                    //With 10ms delay we dont have collisions but conf not always arrives
+                    //With 50m delay seems that it never loses the conf
+                    sleep_ms(50);
+
                     //This works:
                     //YY00072100232016011100000001000000000000000000000000000000000001000007E50A14020A0B
                     struct RTCDateTime dateTime;
@@ -338,20 +378,21 @@ int8_t cameraFSMcheck()
                     uart_flush(i + 1);
                     if(confRegister_.debugUART == 5)
                     {
-                        uart_print(UART_DEBUG, "Sent to camera: '");
+                        uint64_t uptime = millis_uptime();
+                        sprintf(strToPrint, "%.3fs: Camera %d conf: '", uptime/1000.0, i+1);
+                        uart_print(UART_DEBUG, strToPrint);
                         uart_print(UART_DEBUG, dateTimeCmd);
                         uart_print(UART_DEBUG, "'\r\n# ");
                     }
                 }
                 cameraStatus_[i].fsmStatus = FSM_CAM_CONF_2;
                 cameraStatus_[i].lastCommandTime = uptime;
-                //cameraStatus_[i].sleepTime = CAM_WAIT_CONF_CHANGE;
-                cameraStatus_[i].sleepTime = 1500;
+                //cameraStatus_[i].sleepTime = 1500;
+                cameraStatus_[i].sleepTime = 500;
                 if(confRegister_.debugUART == 5)
                 {
-                    char strToPrint[50];
                     uint64_t uptime = millis_uptime();
-                    sprintf(strToPrint, "%.3fs: Camera is Configured.\r\n# ", uptime/1000.0);
+                    sprintf(strToPrint, "%.3fs: Camera %d is Configured.\r\n# ", uptime/1000.0, i+1);
                     uart_print(UART_DEBUG, strToPrint);
                 }
                 break;
@@ -364,7 +405,7 @@ int8_t cameraFSMcheck()
                     {
                         uart_print(i + 1, CAM_SET_VIDEO_MODE);
                         uart_flush(i + 1);
-                        sleep_ms(50);
+                        sleep_ms(100);
 
                         //Captura video ultra wide 4:3 with 48FPS
                         //uart_print(i + 1, CAM_PAYLOAD_VIDEO_RES_FPS_FOV);
@@ -386,7 +427,7 @@ int8_t cameraFSMcheck()
                     {
                         uart_print(i + 1, CAM_SET_VIDEO_MODE);
                         uart_flush(i + 1);
-                        sleep_ms(50);
+                        sleep_ms(100);
 
                         //Captura video ultra wide 16:9 with 100FPS 720p
                         //uart_print(i + 1, CAM_PAYLOAD_VIDEO_RES_FPS_FOV);
@@ -411,7 +452,7 @@ int8_t cameraFSMcheck()
                     //Configure picture: easypeasy
                     uart_print(i + 1, CAM_SET_PHOTO_MODE);
                     uart_flush(i + 1);
-                    sleep_ms(50);
+                    sleep_ms(100);
                     uart_print(i + 1, CAM_PHOTO_RES_12MP_WIDE);
                     uart_flush(i + 1);
                 }
@@ -420,9 +461,8 @@ int8_t cameraFSMcheck()
                 cameraStatus_[i].cameraStatus = CAM_STATUS_ON;
                 if(confRegister_.debugUART == 5)
                 {
-                    char strToPrint[50];
                     uint64_t uptime = millis_uptime();
-                    sprintf(strToPrint, "%.3fs: Camera is Ready.\r\n# ", uptime/1000.0);
+                    sprintf(strToPrint, "%.3fs: Camera %d is Ready.\r\n# ", uptime/1000.0, i+1);
                     uart_print(UART_DEBUG, strToPrint);
                 }
                 break;
@@ -430,6 +470,7 @@ int8_t cameraFSMcheck()
                 releaseButton(i);
                 cameraStatus_[i].fsmStatus = FSM_CAM_POWEROFF_WAIT;
                 cameraStatus_[i].lastCommandTime = uptime;
+                //cameraStatus_[i].sleepTime = 4500; //4.5s to power off
                 cameraStatus_[i].sleepTime = 3500; //3.5s to power off
                 break;
             case FSM_CAM_POWEROFF_WAIT:
@@ -438,9 +479,8 @@ int8_t cameraFSMcheck()
                 cameraStatus_[i].cameraStatus = CAM_STATUS_OFF;
                 if(confRegister_.debugUART == 5)
                 {
-                    char strToPrint[50];
                     uint64_t uptime = millis_uptime();
-                    sprintf(strToPrint, "%.3fs: Camera is Off.\r\n# ", uptime/1000.0);
+                    sprintf(strToPrint, "%.3fs: Camera %d is Off.\r\n# ", uptime/1000.0, i+1);
                     uart_print(UART_DEBUG, strToPrint);
                 }
                 break;

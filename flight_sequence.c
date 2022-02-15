@@ -45,7 +45,15 @@ void checkStateOff()
  */
 void checkStateOnWaiting()
 {
+    uint64_t timeNow = millis_uptime();
     if(cameraReadyStatus() != 0x0F)
+    {
+        lastTimeAction_ = timeNow;
+        return;
+    }
+
+    //Wait 1s after cameras are ready
+    if(lastTimeAction_ + 1000 > timeNow)
         return;
 
     //LED_G_ON;
@@ -74,7 +82,7 @@ void checkStateOnWaiting()
 void checkStatePicWaiting()
 {
     uint64_t timeNow = millis_uptime();
-    if(lastTimeAction_ + 4000 > timeNow)
+    if(lastTimeAction_ + 1000 > timeNow)
         return;
 
     //LED_G_OFF;
