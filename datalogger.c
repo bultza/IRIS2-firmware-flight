@@ -201,13 +201,13 @@ int32_t getVerticalSpeed()
 int32_t getAltitude()
 {
     //REturn the last recorded altitude:
-    uint8_t altitudeIndex;
+    uint8_t previousAltitudeIndex;
     if(altitudeHistoryIndex_ == 0)
-        altitudeIndex = ALTITUDE_HISTORY - 1;
+        previousAltitudeIndex = ALTITUDE_HISTORY - 1;
     else
-        altitudeIndex = altitudeHistoryIndex_ - 1;
+        previousAltitudeIndex = altitudeHistoryIndex_ - 1;
 
-    return altitudeHistory_[altitudeHistoryIndex_].altitude;
+    return altitudeHistory_[previousAltitudeIndex].altitude;
 }
 
 
@@ -732,7 +732,7 @@ int8_t addEventFRAM(struct EventLine newEvent, uint32_t *address)
 {
     //Avoid saving the timelapse pictures because of lack of space
     if(newEvent.event == EVENT_CAMERA_TIMELAPSE_PIC)
-        return;
+        return 0;
 
     //Sanity check:
     if(*address < FRAM_EVENTS_ADDRESS ||
