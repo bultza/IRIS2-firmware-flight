@@ -195,6 +195,40 @@ int32_t getVerticalSpeed()
     return sumOfSpeeds / ((ALTITUDE_HISTORY - 1) );
 }
 
+/**
+ * It returns the last recorded altitude in cm
+ */
+int32_t getAltitude()
+{
+    //REturn the last recorded altitude:
+    uint8_t altitudeIndex;
+    if(altitudeHistoryIndex_ == 0)
+        altitudeIndex = ALTITUDE_HISTORY - 1;
+    else
+        altitudeIndex = altitudeHistoryIndex_ - 1;
+
+    return altitudeHistory_[altitudeHistoryIndex_].altitude;
+}
+
+
+/**
+ * It returns 1 if the signal has been detected, or a 0 if not detected
+ */
+uint8_t getSunriseSignalActivated()
+{
+    uint32_t uptime = seconds_uptime();
+    if(uptime < 15)
+        return 0;   //If uptime is <15s, return always zero
+
+    //Signal is low, it means that the signal has been actually sent!
+    if(gpioSunriseLastStatus_ == 0)
+        return 1;
+
+    //Signal is high, so no signal yet detected
+    return 0;
+}
+
+
 //uint32_t altDebug_ = 0;
 float inaCurrentAverages_[2];
 float inaVoltageAverages_[2];
@@ -696,6 +730,10 @@ int8_t saveTelemetry()
  */
 int8_t addEventFRAM(struct EventLine newEvent, uint32_t *address)
 {
+    //Avoid saving the timelapse pictures because of lack of space
+    if(newEvent.event == EVENT_CAMERA_TIMELAPSE_PIC)
+        return;
+
     //Sanity check:
     if(*address < FRAM_EVENTS_ADDRESS ||
             (*address + sizeof(newEvent)) > (FRAM_EVENTS_ADDRESS + FRAM_EVENTS_SIZE))

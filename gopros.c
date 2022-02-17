@@ -220,13 +220,14 @@ void cutPower(uint8_t camera)
 /**
  * Stars the Power On sequence
  */
-int8_t cameraPowerOn(uint8_t selectedCamera)
+int8_t cameraPowerOn(uint8_t selectedCamera, uint8_t slowMode)
 {
     if(cameraStatus_[selectedCamera].cameraStatus > CAM_STATUS_OFF)
         return -1;  //Return error
 
     //Provide Power
     cameraStatus_[selectedCamera].fsmStatus = FSM_CAM_POWERON;
+    cameraStatus_[selectedCamera].slowMode = slowMode;
     switch(selectedCamera)
     {
     case CAMERA01:
@@ -247,8 +248,11 @@ int8_t cameraPowerOn(uint8_t selectedCamera)
     //Start FSM
     cameraStatus_[selectedCamera].fsmStatus = FSM_CAM_POWERON_WAIT;
     cameraStatus_[selectedCamera].lastCommandTime = millis_uptime();
-    //cameraStatus_[selectedCamera].sleepTime = /*CAM_WAIT_POWER - 2000*/ 2000;
-    cameraStatus_[selectedCamera].sleepTime = 1500;
+
+    if(cameraStatus_[selectedCamera].slowMode)
+        cameraStatus_[selectedCamera].sleepTime = 2500;
+    else
+        cameraStatus_[selectedCamera].sleepTime = 1500;
 
     return 0;
 }
@@ -270,6 +274,17 @@ int8_t cameraPowerOff(uint8_t selectedCamera)
     cameraStatus_[selectedCamera].fsmStatus = FSM_CAM_PRESSBTNOFF_WAIT;
     cameraStatus_[selectedCamera].lastCommandTime = millis_uptime();
     cameraStatus_[selectedCamera].sleepTime = CAM_WAIT_BUTTON /*+ 1000*/;
+    return 0;
+}
+
+/**
+ * You should never use this way as you might corrupt the SDCard!!!
+ */
+int8_t cameraPowerOffUnsafe(uint8_t selectedCamera)
+{
+    cutPower(selectedCamera);
+    cameraStatus_[selectedCamera].fsmStatus = FSM_CAM_DONOTHING;
+    cameraStatus_[selectedCamera].cameraStatus = CAM_STATUS_OFF;
     return 0;
 }
 
@@ -330,8 +345,14 @@ int8_t cameraFSMcheck()
                 cameraStatus_[i].fsmStatus = FSM_CAM_CONF_1;
                 cameraStatus_[i].lastCommandTime = uptime;
                 //cameraStatus_[i].sleepTime = /*CAM_WAIT_POWER*/ 2500;
-                cameraStatus_[i].sleepTime = 0;
+                if(cameraStatus_[i].slowMode)
+                    cameraStatus_[i].sleepTime = 4000;
+                else
+                    cameraStatus_[i].sleepTime = 0; //No need to wait because we wait for the UART answers
+
+                //It usually takes between 2.1 and 2.7s, more than that is a timeout
                 cameraStatus_[i].timeoutTime = 3000;
+
                 if(confRegister_.debugUART == 5)
                 {
                     uint64_t uptime = millis_uptime();
@@ -355,7 +376,11 @@ int8_t cameraFSMcheck()
 
                     //With 10ms delay we dont have collisions but conf not always arrives
                     //With 50m delay seems that it never loses the conf
-                    sleep_ms(50);
+                    if(cameraStatus_[i].slowMode)
+                        sleep_ms(200);
+                    else
+                        sleep_ms(50);
+
 
                     //This works:
                     //YY00072100232016011100000001000000000000000000000000000000000001000007E50A14020A0B
@@ -387,8 +412,11 @@ int8_t cameraFSMcheck()
                 }
                 cameraStatus_[i].fsmStatus = FSM_CAM_CONF_2;
                 cameraStatus_[i].lastCommandTime = uptime;
-                //cameraStatus_[i].sleepTime = 1500;
-                cameraStatus_[i].sleepTime = 500;
+                if(cameraStatus_[i].slowMode)
+                    cameraStatus_[i].sleepTime = 2000;
+                else
+                    cameraStatus_[i].sleepTime = 500;
+
                 if(confRegister_.debugUART == 5)
                 {
                     uint64_t uptime = millis_uptime();
@@ -405,15 +433,7 @@ int8_t cameraFSMcheck()
                     {
                         uart_print(i + 1, CAM_SET_VIDEO_MODE);
                         uart_flush(i + 1);
-                        sleep_ms(100);
-
-                        //Captura video ultra wide 4:3 with 48FPS
-                        //uart_print(i + 1, CAM_PAYLOAD_VIDEO_RES_FPS_FOV);
-                        //uart_print(i + 1, CAM_VIDEO_RES_1440);
-                        //uart_print(i + 1, CAM_VIDEO_FPS_48);
-                        //uart_print(i + 1, CAM_VIDEO_FOV_WIDE);
-                        //uart_print(i + 1, "\n");
-                        //uart_flush(i + 1);
+                        sleep_ms(200);
 
                         //GOPRO Hero4 Black
                         uart_print(i + 1, CAM_PAYLOAD_VIDEO_RES_FPS_FOV);
@@ -427,15 +447,7 @@ int8_t cameraFSMcheck()
                     {
                         uart_print(i + 1, CAM_SET_VIDEO_MODE);
                         uart_flush(i + 1);
-                        sleep_ms(100);
-
-                        //Captura video ultra wide 16:9 with 100FPS 720p
-                        //uart_print(i + 1, CAM_PAYLOAD_VIDEO_RES_FPS_FOV);
-                        //uart_print(i + 1, CAM_VIDEO_RES_720_SUPERVIEW);
-                        //uart_print(i + 1, CAM_VIDEO_FPS_100);
-                        //uart_print(i + 1, CAM_VIDEO_FOV_WIDE);
-                        //uart_print(i + 1, "\n");
-                        //uart_flush(i + 1);
+                        sleep_ms(200);
 
                         //GOPRO Hero4 Silver is less capable unfortunately
                         uart_print(i + 1, CAM_PAYLOAD_VIDEO_RES_FPS_FOV);
@@ -452,8 +464,26 @@ int8_t cameraFSMcheck()
                     //Configure picture: easypeasy
                     uart_print(i + 1, CAM_SET_PHOTO_MODE);
                     uart_flush(i + 1);
-                    sleep_ms(100);
+                    if(cameraStatus_[i].slowMode)
+                        sleep_ms(200);
+                    else
+                        sleep_ms(100);
                     uart_print(i + 1, CAM_PHOTO_RES_12MP_WIDE);
+                    uart_flush(i + 1);
+                }
+                else if(cameraMode_ == CAMERAMODE_VID_HIGHSPEED)
+                {
+                    //Configure video in high speed mode:
+                    uart_print(i + 1, CAM_SET_VIDEO_MODE);
+                    uart_flush(i + 1);
+                    sleep_ms(200);
+
+                    //GOPRO Hero4 Black
+                    uart_print(i + 1, CAM_PAYLOAD_VIDEO_RES_FPS_FOV);
+                    uart_print(i + 1, CAM_VIDEO_RES_960);
+                    uart_print(i + 1, CAM_VIDEO_FPS_120);
+                    uart_print(i + 1, CAM_VIDEO_FOV_WIDE);
+                    uart_print(i + 1, "\n");
                     uart_flush(i + 1);
                 }
 
@@ -470,8 +500,10 @@ int8_t cameraFSMcheck()
                 releaseButton(i);
                 cameraStatus_[i].fsmStatus = FSM_CAM_POWEROFF_WAIT;
                 cameraStatus_[i].lastCommandTime = uptime;
-                //cameraStatus_[i].sleepTime = 4500; //4.5s to power off
-                cameraStatus_[i].sleepTime = 3500; //3.5s to power off
+                if(cameraStatus_[i].slowMode)
+                    cameraStatus_[i].sleepTime = 5000;
+                else
+                    cameraStatus_[i].sleepTime = 3500;
                 break;
             case FSM_CAM_POWEROFF_WAIT:
                 cutPower(i);

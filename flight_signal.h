@@ -16,8 +16,6 @@
                                     // to consider that we have a new, different signal.
 #define SIG_TIME            30     //[s] -> Time that a signal must be HIGH to be considered.
 
-// Public functions
-uint8_t checkFlightSignal();    // Returns 1 if a signal has been detected, always at End Of Signal.
 
 uint8_t sunrise_GPIO_Read();
 

@@ -19,8 +19,9 @@
 #define CAMERA03 2
 #define CAMERA04 3
 
-#define CAMERAMODE_PIC  0
-#define CAMERAMODE_VID  1
+#define CAMERAMODE_PIC              0
+#define CAMERAMODE_VID              1
+#define CAMERAMODE_VID_HIGHSPEED    2
 
 #define MUX_OFF         (P2OUT |=  BIT3)
 #define CAMERA01_OFF    (P4OUT |=  BIT6)
@@ -65,6 +66,7 @@ struct CameraStatus
     uint64_t lastCommandTime;
     uint64_t sleepTime;
     uint64_t timeoutTime;
+    uint8_t slowMode;       //If 1, the camera will boot slower (Safest for videos)
 };
 
 struct CameraFSM
@@ -217,8 +219,9 @@ int8_t gopros_cameraTakePicture(uint8_t selectedCamera);
 int8_t gopros_cameraStartRecordingVideo(uint8_t selectedCamera);
 int8_t gopros_cameraStopRecordingVideo(uint8_t selectedCamera);
 int8_t gopros_cameraRawSendCommand(uint8_t selectedCamera, char * cmd);
-int8_t cameraPowerOn(uint8_t selectedCamera);
+int8_t cameraPowerOn(uint8_t selectedCamera, uint8_t slowMode);
 int8_t cameraPowerOff(uint8_t selectedCamera);
+int8_t cameraPowerOffUnsafe(uint8_t selectedCamera);
 int8_t cameraTakePic(uint8_t selectedCamera);
 int8_t cameraFSMcheck();
 int8_t cameraReadyStatus();

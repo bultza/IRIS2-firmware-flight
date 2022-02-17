@@ -512,7 +512,7 @@ void processCameraCommand(char * command)
         // Initialised UART comms with camera in VIDeo mode
         //gopros_cameraInit(selectedCamera, CAMERAMODE_VID);
 
-        cameraPowerOn(selectedCamera);
+        cameraPowerOn(selectedCamera, 0);
         uint64_t uptime = millis_uptime();
         sprintf(strToPrint_, "%.3fs: Camera %c booting...\r\n", uptime/1000.0, command[7]);
         uint8_t payload[5] = {0};

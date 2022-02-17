@@ -79,8 +79,8 @@ struct ConfigurationRegister
     uint64_t lastSubStateTime;
 
     //Launch Configuration
-    uint16_t launch_heightThreshold;    //m
-    uint16_t launch_climbThreshold;     //m/s
+    int32_t launch_heightThreshold;    //m
+    int32_t launch_climbThreshold;     //m/s
     uint16_t launch_videoDurationLong;  //s
     uint16_t launch_videoDurationShort; //s
     uint8_t  launch_camerasLong[4];
@@ -94,14 +94,14 @@ struct ConfigurationRegister
     uint32_t flight_timeSecondLeg;      //s
 
     //Landing Configuration
-    uint16_t landing_heightThreshold;         //m Under this height, the video starts recording
-    uint16_t landing_heightSecurityThreshold; //m Over this height, the vertical speeds are ignored
-    int16_t  landing_speedThreshold;          //m/s
+    int32_t landing_heightThreshold;         //m Under this height, the video starts recording
+    int32_t landing_heightSecurityThreshold; //m Over this height, the vertical speeds are ignored
+    int32_t  landing_speedThreshold;          //m/s
     uint16_t landing_videoDurationLong;       //s
     uint16_t landing_videoDurationShort;      //s
     uint8_t  landing_camerasLong[4];
     uint8_t  landing_camerasShort[4];
-    uint16_t landing_heightShortStart;        //m ->3000m
+    int32_t landing_heightShortStart;        //m ->3000m
 
     //Landed Configuration
     uint16_t recovery_videoDuration;
