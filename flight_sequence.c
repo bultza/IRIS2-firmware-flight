@@ -15,6 +15,14 @@
 #define SUBSTATE_LAUNCH_VIDEO_OFF_SHORTS     3
 #define SUBSTATE_LAUNCH_VIDEO_END            4
 
+#define SUBSTATE_LANDING_OFF                  0
+#define SUBSTATE_LANDING_VIDEO_ON_WAITING     1
+#define SUBSTATE_LANDING_VIDEO_RECORDING      2
+#define SUBSTATE_LANDING_VIDEO_OFF_SHORTS     3
+#define SUBSTATE_LANDING_VIDEO_ON_WAITING_SHORTS     4
+#define SUBSTATE_LANDING_VIDEO_END            5
+#define SUBSTATE_LANDING_VIDEO_END_POWERCUT   6
+
 uint32_t lastTimePicture_ = 0;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -195,7 +203,7 @@ void launch_checkStateOnWaiting()
 void launch_checkStateVideoWaiting_01()
 {
     uint64_t timeNow = millis_uptime();
-    if(confRegister_.lastSubStateTime + confRegister_.launch_videoDurationShort > timeNow)
+    if(confRegister_.lastSubStateTime + confRegister_.launch_videoDurationShort * 1000 > timeNow)
         return;
 
     //Time to switch off some cameras!
@@ -224,6 +232,7 @@ void launch_checkStateVideoWaiting_01()
     saveEventSimple(EVENT_CAMERA_VIDEO_END, payload);
 
     confRegister_.flightSubState = SUBSTATE_LAUNCH_VIDEO_OFF_SHORTS;
+    confRegister_.lastSubStateTime = millis_uptime();
 }
 
 /**
@@ -232,7 +241,7 @@ void launch_checkStateVideoWaiting_01()
 void launch_checkStateVideoWaiting_02()
 {
     uint64_t timeNow = millis_uptime();
-    if(confRegister_.lastSubStateTime + confRegister_.launch_videoDurationLong > timeNow)
+    if(confRegister_.lastSubStateTime + confRegister_.launch_videoDurationLong * 1000 > timeNow)
         return;
 
     //Time to switch off some cameras!
@@ -259,12 +268,236 @@ void launch_checkStateVideoWaiting_02()
     saveEventSimple(EVENT_CAMERA_VIDEO_END, payload);
 
     confRegister_.flightSubState = SUBSTATE_LAUNCH_VIDEO_END;
+    confRegister_.lastSubStateTime = millis_uptime();
 }
 
 /**
  *
  */
 uint8_t launch_checkStateOffWaiting()
+{
+    if(cameraReadyStatus())
+        return 0;
+
+    //Return that it is time to move on
+    return 1;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// Functions for the Landing video
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Start launch video!
+ */
+void landing_checkStateOff()
+{
+
+    //LED_R_ON;
+    //Time to make another picture:
+    uint8_t i;
+
+    //Switch on Cameras
+    for(i = 0; i < 4; i++)
+    {
+        if(confRegister_.landing_camerasLong[i] == 1)
+        {
+            gopros_cameraInit(i, CAMERAMODE_VID);
+            cameraPowerOn(i, 1);    //In slow mode
+        }
+        else if(confRegister_.landing_camerasShort[i] == 1)
+        {
+            gopros_cameraInit(i, CAMERAMODE_VID_HIGHSPEED);
+            cameraPowerOn(i, 1);    //In slow mode
+        }
+    }
+
+    confRegister_.flightSubState = SUBSTATE_LANDING_VIDEO_ON_WAITING;
+    confRegister_.lastSubStateTime = millis_uptime();
+
+    //Make sure we did it correctly:
+    lastTimePicture_ = seconds_uptime();
+}
+
+/**
+ *
+ */
+void landing_checkStateOnWaiting()
+{
+    uint64_t timeNow = millis_uptime();
+
+
+    //Wait 8s after cameras are ready
+    if(confRegister_.lastSubStateTime + 8000 > timeNow)
+        return;
+
+    //LED_G_ON;
+    //Time to START VIDEO
+    uint8_t i;
+    for(i = 0; i < 4; i++)
+    {
+        if(confRegister_.landing_camerasShort[i] == 1
+            || confRegister_.landing_camerasLong[i] == 1 )
+        {
+            gopros_cameraStartRecordingVideo(i);
+        }
+    }
+
+    //Write event
+    uint8_t payload[5] = {0};
+    payload[0] = confRegister_.landing_camerasShort[0] + 2 * confRegister_.landing_camerasLong[0];
+    payload[1] = confRegister_.landing_camerasShort[1] + 2 * confRegister_.landing_camerasLong[1];
+    payload[2] = confRegister_.landing_camerasShort[2] + 2 * confRegister_.landing_camerasLong[2];
+    payload[3] = confRegister_.landing_camerasShort[3] + 2 * confRegister_.landing_camerasLong[3];
+    saveEventSimple(EVENT_CAMERA_VIDEO_START, payload);
+
+    confRegister_.flightSubState = SUBSTATE_LANDING_VIDEO_RECORDING;
+    confRegister_.lastSubStateTime = millis_uptime();
+}
+
+/**
+ *
+ */
+void landing_checkStateVideoWaiting_01()
+{
+    uint64_t timeNow = millis_uptime();
+    if(confRegister_.lastSubStateTime + confRegister_.landing_videoDurationShort * 1000 > timeNow)
+        return;
+
+    //Time to switch off some cameras!
+    uint8_t i;
+    for(i = 0; i < 4; i++)
+    {
+        //Send command to stop:
+        if(confRegister_.landing_camerasShort[i] == 1)
+            gopros_cameraStopRecordingVideo(i);
+    }
+
+    //Sleep 100ms and switch off
+    sleep_ms(100);
+
+    for(i = 0; i < 4; i++)
+    {
+        if(confRegister_.landing_camerasShort[i] == 1)
+            cameraPowerOff(i);
+    }
+
+    uint8_t payload[5] = {0};
+    payload[0] = confRegister_.landing_camerasShort[0];
+    payload[1] = confRegister_.landing_camerasShort[1];
+    payload[2] = confRegister_.landing_camerasShort[2];
+    payload[3] = confRegister_.landing_camerasShort[3];
+    saveEventSimple(EVENT_CAMERA_VIDEO_END, payload);
+
+    confRegister_.flightSubState = SUBSTATE_LANDING_VIDEO_OFF_SHORTS;
+    confRegister_.lastSubStateTime = millis_uptime();
+}
+
+/**
+ *
+ */
+void landing_checkStateVideoWaiting_02()
+{
+    uint64_t timeNow = millis_uptime();
+    int32_t altitude = getAltitude();
+    if(confRegister_.lastSubStateTime + confRegister_.landing_videoDurationLong * 1000 > timeNow
+            || altitude < confRegister_.landing_heightShortStart * 100)
+        return;
+
+    //Time to switch on some cameras!
+    uint8_t i;
+    for(i = 0; i < 4; i++)
+    {
+        if(confRegister_.landing_camerasShort[i] == 1)
+        {
+            gopros_cameraInit(i, CAMERAMODE_VID);
+            cameraPowerOn(i, 1);    //In slow mode
+        }
+    }
+
+    uint8_t payload[5] = {0};
+    memcpy(payload, (const uint8_t*)&altitude, 4);
+    saveEventSimple(EVENT_LOW_ALTITUDE_DETECTED, payload);
+
+    confRegister_.flightSubState = SUBSTATE_LANDING_VIDEO_ON_WAITING_SHORTS;
+    confRegister_.lastSubStateTime = millis_uptime();
+}
+
+/**
+ *
+ */
+void landing_checkStateVideoWaiting_03()
+{
+    uint64_t timeNow = millis_uptime();
+
+    //Wait 8s after cameras are ready
+    if(confRegister_.lastSubStateTime + 8000 > timeNow)
+        return;
+
+    //LED_G_ON;
+    //Time to START VIDEO
+    uint8_t i;
+    for(i = 0; i < 4; i++)
+    {
+        if(confRegister_.landing_camerasShort[i] == 1)
+        {
+            gopros_cameraStartRecordingVideo(i);
+        }
+    }
+
+    //Write event
+    uint8_t payload[5] = {0};
+    payload[0] = confRegister_.landing_camerasShort[0];
+    payload[1] = confRegister_.landing_camerasShort[1];
+    payload[2] = confRegister_.landing_camerasShort[2];
+    payload[3] = confRegister_.landing_camerasShort[3];
+    saveEventSimple(EVENT_CAMERA_VIDEO_START, payload);
+
+    confRegister_.flightSubState = SUBSTATE_LANDING_VIDEO_END;
+    confRegister_.lastSubStateTime = millis_uptime();
+}
+
+/**
+ *
+ */
+void landing_checkStateVideoWaiting_04()
+{
+    uint64_t timeNow = millis_uptime();
+    if(confRegister_.lastSubStateTime + confRegister_.landing_videoDurationLong * 1000)
+        return;
+
+    //Time to switch off some cameras!
+    uint8_t i;
+    for(i = 0; i < 4; i++)
+    {
+        //Send command to stop:
+        gopros_cameraStopRecordingVideo(i);
+    }
+
+    //Sleep 100ms and switch off
+    sleep_ms(100);
+
+    for(i = 0; i < 4; i++)
+    {
+        cameraPowerOff(i);
+    }
+
+    uint8_t payload[5] = {0};
+    payload[0] = confRegister_.landing_camerasShort[0] + 2 * confRegister_.landing_camerasLong[0];
+    payload[1] = confRegister_.landing_camerasShort[1] + 2 * confRegister_.landing_camerasLong[1];
+    payload[2] = confRegister_.landing_camerasShort[2] + 2 * confRegister_.landing_camerasLong[2];
+    payload[3] = confRegister_.landing_camerasShort[3] + 2 * confRegister_.landing_camerasLong[3];
+    saveEventSimple(EVENT_CAMERA_VIDEO_END, payload);
+
+    confRegister_.flightSubState = SUBSTATE_LANDING_VIDEO_END_POWERCUT;
+    confRegister_.lastSubStateTime = millis_uptime();
+}
+
+/**
+ *
+ */
+uint8_t landing_checkStateOffWaiting()
 {
     if(cameraReadyStatus())
         return 0;
@@ -424,9 +657,40 @@ void checkFlightSequence()
         //Is it time to make another picture?
         switch(confRegister_.flightSubState)
         {
-        //TODO
+        case (SUBSTATE_LANDING_OFF):
+            landing_checkStateOff();
+            break;
+        case (SUBSTATE_LANDING_VIDEO_ON_WAITING):
+            landing_checkStateOnWaiting();
+            break;
+        case (SUBSTATE_LANDING_VIDEO_RECORDING):
+            landing_checkStateVideoWaiting_01();
+            break;
+        case (SUBSTATE_LANDING_VIDEO_OFF_SHORTS):
+            landing_checkStateVideoWaiting_02();
+            break;
+        case (SUBSTATE_LANDING_VIDEO_ON_WAITING_SHORTS):
+            landing_checkStateVideoWaiting_03();
+            break;
+        case (SUBSTATE_LANDING_VIDEO_END):
+            landing_checkStateVideoWaiting_04();
+            break;
+        case (SUBSTATE_LANDING_VIDEO_END_POWERCUT):
+            if(landing_checkStateOffWaiting())
+            {
+                //Cameras are off, we move to the next step:
+                confRegister_.flightState = FLIGHTSTATE_TIMELAPSE_LAND;
+                confRegister_.lastStateTime = uptime;
+                //Reset the substate
+                confRegister_.flightSubState = 0;
+                confRegister_.lastSubStateTime = uptime;
+                uint8_t payload[5] = {0};
+                payload[0] = FLIGHTSTATE_TIMELAPSE_LAND;
+                saveEventSimple(EVENT_STATE_CHANGED, payload);
+            }
+            break;
         default:
-            confRegister_.flightSubState = SUBSTATE_OFF;
+            confRegister_.flightSubState = SUBSTATE_LANDING_OFF;
             break;
         }
     }

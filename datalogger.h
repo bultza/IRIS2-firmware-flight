@@ -51,6 +51,7 @@
 #define EVENT_CAMERA_VIDEOMODE              16
 #define EVENT_CAMERA_PICMODE                17
 #define EVENT_STATE_CHANGED                 20
+#define EVENT_LOW_ALTITUDE_DETECTED         30
 #define EVENT_I2C_ERROR_RESET               99
 #define EVENT_SUNRISE_GPIO_CHANGE           100
 #define EVENT_BATTERY_CUTOUT                200
