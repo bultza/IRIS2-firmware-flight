@@ -200,6 +200,10 @@ int32_t getVerticalSpeed()
  */
 int32_t getAltitude()
 {
+    if(confRegister_.sim_enabled)
+    {
+        return confRegister_.sim_altitude * 100;
+    }
     //REturn the last recorded altitude:
     uint8_t previousAltitudeIndex;
     if(altitudeHistoryIndex_ == 0)
@@ -391,8 +395,8 @@ void sensorsRead()
 
         //Convert baro to altitude
         altitude = calculateAltitude(pressure);
-        currentTelemetryLine_[0].temperatures[1] = temperature/10; //Baro
-        currentTelemetryLine_[1].temperatures[1] = temperature/10; //Baro
+        //currentTelemetryLine_[0].temperatures[1] = temperature/10; //Baro
+        //currentTelemetryLine_[1].temperatures[1] = temperature/10; //Baro
 
         //altitude = altDebug_;
         //altDebug_ = altDebug_ + 210;
@@ -457,8 +461,8 @@ void sensorsRead()
         {
             // Save temperature
             currentTelemetryLine_[i].temperatures[0] = temperatures[0]; //PCB
-            //currentTelemetryLine_[i].temperatures[1] = temperatures[1]; //Baro
-            //currentTelemetryLine_[i].temperatures[2] = temperatures[2]; //External 01
+            currentTelemetryLine_[i].temperatures[1] = temperatures[1]; //External 01
+            currentTelemetryLine_[i].temperatures[2] = temperatures[2]; //External 02
             //currentTelemetryLine_[i].temperatures[3] = temperatures[3]; //External 02
             //currentTelemetryLineFRAMandNOR_[i].temperatures[4] = temperatures[4]; //External 03
         }

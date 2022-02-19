@@ -203,7 +203,7 @@ void processFSWCommand(char * command)
     extractCommandPart((char *) command, 1, (char *) fswSubcommand);
 
     if (strcmp("mode", (char *)fswSubcommand) == 0)
-        sprintf(strToPrint_, "FSW mode: %d\r\n", confRegister_.simulatorEnabled);
+        sprintf(strToPrint_, "FSW mode: %d\r\n", confRegister_.sim_enabled);
     else if (strcmp("state", (char *)fswSubcommand) == 0)
         sprintf(strToPrint_, "FSW state: %d\r\n", confRegister_.flightState);
     else if (strcmp("substate", (char *)fswSubcommand) == 0)
@@ -225,7 +225,9 @@ void processConfCommand(char * command)
 
     if (confSubcommand[0] == '\0')
     {
-        sprintf(strToPrint_, "simulatorEnabled = %d\r\n", confRegister_.simulatorEnabled);
+        sprintf(strToPrint_, "sim_enabled = %d\r\n", confRegister_.sim_enabled);
+        uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "sim_altitude = %d\r\n", confRegister_.sim_altitude);
         uart_print(UART_DEBUG, strToPrint_);
         sprintf(strToPrint_, "flightState = %d\r\n", confRegister_.flightState);
         uart_print(UART_DEBUG, strToPrint_);
@@ -290,9 +292,13 @@ void processConfCommand(char * command)
         return;
     }
 
-    if (strncmp("simulatorEnabled", (char *)selectedParameter, 16) == 0)
+    if (strncmp("sim_enabled", (char *)selectedParameter, 11) == 0)
     {
-        confRegister_.simulatorEnabled = valueToSet;
+        confRegister_.sim_enabled = valueToSet;
+    }
+    else if (strncmp("sim_altitude", (char *)selectedParameter, 12) == 0)
+    {
+        confRegister_.sim_altitude = valueToSet;
     }
     else if (strncmp("flightState", (char *)selectedParameter, 11) == 0)
     {
@@ -725,7 +731,8 @@ void printStatus()
     //Then start with the sensors
     sprintf(strToPrint_, "Pressure:       %.2fmbar\r\n", askedTMLine.pressure/100.0);
     uart_print(UART_DEBUG, strToPrint_);
-    sprintf(strToPrint_, "Altitude:       %.2fm\r\n", askedTMLine.altitude/100.0);
+    //sprintf(strToPrint_, "Altitude:       %.2fm\r\n", askedTMLine.altitude/100.0);
+    sprintf(strToPrint_, "Altitude:       %.2fm\r\n", getAltitude()/100.0);
     uart_print(UART_DEBUG, strToPrint_);
     int32_t speed = getVerticalSpeed();
     sprintf(strToPrint_, "Current Speed:  %.3fm/s\r\n", (float)speed / 100.0);
@@ -1573,6 +1580,41 @@ int8_t terminal_readAndProcessCommands(void)
             pointer = &command_[2];
             uart_print(confRegister_.debugUART, (char *)pointer);
             uart_print(confRegister_.debugUART, "\n");
+        }
+        else if (strncmp("p ", (char *)command_, 2) == 0)
+        {
+            if(command_[2] == '1')
+            {
+                P7OUT &= ~BIT5;     // Put output bit to 0
+                P7DIR |= BIT5;      // Define button as output
+                sleep_ms(250);
+                P7DIR &= ~BIT5;      // Define button as input - high impedance
+            }
+            else if(command_[2] == '2')
+            {
+                P7OUT &= ~BIT6;     // Put output bit to 0
+                P7DIR |= BIT6;      // Define button as output
+                sleep_ms(250);
+                P7DIR &= ~BIT6;      // Define button as input - high impedance
+            }
+            else if(command_[2] == '3')
+            {
+                P7OUT &= ~BIT7;     // Put output bit to 0
+                P7DIR |= BIT7;      // Define button as output
+                sleep_ms(250);
+                P7DIR &= ~BIT7;      // Define button as input - high impedance
+            }
+            else if(command_[2] == '4')
+            {
+                P5OUT &= ~BIT6;     // Put output bit to 0
+                P5DIR |= BIT6;      // Define button as output
+                sleep_ms(250);
+                P5DIR &= ~BIT6;      // Define button as input - high impedance
+            }
+
+            sprintf(strToPrint_, "Button of camera %d pressed\r\n",
+                    confRegister_.debugUART);
+            uart_print(UART_DEBUG, strToPrint_);
         }
         else if (strcmp("uptime", (char *)command_) == 0)
         {
