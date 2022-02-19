@@ -33,8 +33,8 @@
 #define TEMP_READPERIOD     1000    //Milliseconds period to read temperatures
 #define INA_READPERIOD      100     //Milliseconds period to read INA Voltage and currents
 #define ACC_READPERIOD      100     //Milliseconds period to read Accelerometer
+#define TIMELAPSE_PERIOD    120      //Seconds
 //#define TIMELAPSE_PERIOD    30      //Seconds
-#define TIMELAPSE_PERIOD    30      //Seconds
 
 #define FLIGHTSTATE_DEBUG           0
 #define FLIGHTSTATE_WAITFORLAUNCH   1
@@ -108,7 +108,8 @@ struct ConfigurationRegister
 
     //For debug
     uint8_t debugUART;
-    uint8_t simulatorEnabled;
+    uint8_t sim_enabled;
+    int32_t sim_altitude;
 };
 
 //******************************************************************************

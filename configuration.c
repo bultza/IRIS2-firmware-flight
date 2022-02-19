@@ -39,7 +39,7 @@ int8_t configuration_init(void)
         confRegister_.gopro_leds = 01;
 
         //00 = Gopro Black, 01 = Gopro White
-        confRegister_.gopro_model[0] = 01;
+        confRegister_.gopro_model[0] = 00;
         //confRegister_.gopro_model[0] = 00;
         confRegister_.gopro_model[1] = 00;
         //confRegister_.gopro_model[2] = 01;
@@ -51,14 +51,16 @@ int8_t configuration_init(void)
         confRegister_.acc_readPeriod = ACC_READPERIOD;
         confRegister_.temp_readPeriod = TEMP_READPERIOD;
         confRegister_.debugUART = 0;
-        confRegister_.simulatorEnabled = 0;
+        confRegister_.sim_enabled = 0;
 
 
         //Launch Configuration
         confRegister_.launch_heightThreshold = 3000;    //3km
         confRegister_.launch_climbThreshold = 2;        //On IRIS1 it was recorded 7.8m/s
         confRegister_.launch_videoDurationLong = 7200;  //2 hours
+        //confRegister_.launch_videoDurationLong = 120;  //2 hours
         confRegister_.launch_videoDurationShort = 3600; //1h
+        //confRegister_.launch_videoDurationShort = 60; //1h
         confRegister_.launch_camerasLong[0] = 0;
         confRegister_.launch_camerasLong[1] = 1;
         confRegister_.launch_camerasLong[2] = 0;
@@ -87,10 +89,12 @@ int8_t configuration_init(void)
         confRegister_.landing_speedThreshold = -15;         //On IRIS1 it measured -55m/s at 31.5km height
         confRegister_.landing_videoDurationLong = 3600;     //On IRIS1 decend was 50 minutes
         confRegister_.landing_videoDurationShort = 900;     //This is 15min, on IRIS1 it landed in 10 minutes
+        //confRegister_.landing_videoDurationLong = 300;
+        //confRegister_.landing_videoDurationShort = 30;
         confRegister_.landing_camerasLong[0] = 1;
         confRegister_.landing_camerasLong[1] = 1;
         confRegister_.landing_camerasLong[2] = 0;
-        confRegister_.landing_camerasLong[3] = 1;
+        confRegister_.landing_camerasLong[3] = 0;
         confRegister_.landing_camerasShort[0] = 0;
         confRegister_.landing_camerasShort[1] = 0;
         confRegister_.landing_camerasShort[2] = 1;

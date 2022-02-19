@@ -54,11 +54,15 @@ int8_t gopros_cameraSetVideoMode(uint8_t selectedCamera)
 
         //GOPRO Hero4 Black
         uart_print(selectedCamera + 1, CAM_PAYLOAD_VIDEO_RES_FPS_FOV);
-        uart_print(selectedCamera + 1, CAM_VIDEO_RES_2_7K_4_3);
+        //uart_print(selectedCamera + 1, CAM_VIDEO_RES_2_7K_4_3);
+        //uart_print(selectedCamera + 1, CAM_VIDEO_FPS_30);
+        //uart_print(selectedCamera + 1, CAM_VIDEO_FOV_WIDE);
+        uart_print(selectedCamera + 1, CAM_VIDEO_RES_720);
         uart_print(selectedCamera + 1, CAM_VIDEO_FPS_30);
-        uart_print(selectedCamera + 1, CAM_VIDEO_FOV_WIDE);
+        uart_print(selectedCamera + 1, CAM_VIDEO_FOV_NARROW);
         uart_print(selectedCamera + 1, "\n");
         uart_flush(selectedCamera + 1);
+        //TODO
     }
     else
     {
@@ -437,9 +441,12 @@ int8_t cameraFSMcheck()
 
                         //GOPRO Hero4 Black
                         uart_print(i + 1, CAM_PAYLOAD_VIDEO_RES_FPS_FOV);
-                        uart_print(i + 1, CAM_VIDEO_RES_2_7K_4_3);
+                        //uart_print(i + 1, CAM_VIDEO_RES_2_7K_4_3);
+                        //uart_print(i + 1, CAM_VIDEO_FPS_30);
+                        //uart_print(i + 1, CAM_VIDEO_FOV_WIDE);
+                        uart_print(i + 1, CAM_VIDEO_RES_720);
                         uart_print(i + 1, CAM_VIDEO_FPS_30);
-                        uart_print(i + 1, CAM_VIDEO_FOV_WIDE);
+                        uart_print(i + 1, CAM_VIDEO_FOV_NARROW);
                         uart_print(i + 1, "\n");
                         uart_flush(i + 1);
                     }

@@ -170,7 +170,7 @@ void launch_checkStateOnWaiting()
     }*/
 
     //Wait 8s after cameras are ready
-    if(confRegister_.lastSubStateTime + 8000 > timeNow)
+    if(confRegister_.lastSubStateTime + 15000 > timeNow)
         return;
 
     //LED_G_ON;
@@ -329,7 +329,7 @@ void landing_checkStateOnWaiting()
 
 
     //Wait 8s after cameras are ready
-    if(confRegister_.lastSubStateTime + 8000 > timeNow)
+    if(confRegister_.lastSubStateTime + 15000 > timeNow)
         return;
 
     //LED_G_ON;
@@ -432,7 +432,7 @@ void landing_checkStateVideoWaiting_03()
     uint64_t timeNow = millis_uptime();
 
     //Wait 8s after cameras are ready
-    if(confRegister_.lastSubStateTime + 8000 > timeNow)
+    if(confRegister_.lastSubStateTime + 15000 > timeNow)
         return;
 
     //LED_G_ON;
