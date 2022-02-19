@@ -20,8 +20,8 @@ int8_t i2c_TMP75_init(void)
     i2c_write(I2C_BUS00, TMP75_ADDRESS01, buffer, 2, 0);
 
     //Temperature on external bus
-    i2c_write(I2C_BUS01, TMP75_ADDRESS01, buffer, 2, 0);
-    //i2c_write(I2C_BUS01, TMP75_ADDRESS02, buffer, 2, 0);
+    i2c_write(I2C_BUS01, TMP75_ADDRESS02, buffer, 2, 0);
+    i2c_write(I2C_BUS01, TMP75_ADDRESS03, buffer, 2, 0);
     //i2c_write(I2C_BUS01, TMP75_ADDRESS03, buffer, 2, 0);
     //i2c_write(I2C_BUS01, TMP75_ADDRESS04, buffer, 2, 0);
 
@@ -66,11 +66,11 @@ int8_t i2c_TMP75_getTemperatures(int16_t *temperatures)
     error += i2c_TMP75_getTemperature(I2C_BUS00, TMP75_ADDRESS01, &temperature);
     temperatures[0] = (temperature*10)/16;
 
-    //error += i2c_TMP75_getTemperature(I2C_BUS01, TMP75_ADDRESS02, &temperature);
-    //temperatures[1] = (temperature*10)/16;
+    error += i2c_TMP75_getTemperature(I2C_BUS01, TMP75_ADDRESS02, &temperature);
+    temperatures[1] = (temperature*10)/16;
 
-    //error += i2c_TMP75_getTemperature(I2C_BUS01, TMP75_ADDRESS03, &temperature);
-    //temperatures[2] = (temperature*10)/16;
+    error += i2c_TMP75_getTemperature(I2C_BUS01, TMP75_ADDRESS03, &temperature);
+    temperatures[2] = (temperature*10)/16;
 
     //error += i2c_TMP75_getTemperature(I2C_BUS01, TMP75_ADDRESS04, &temperature);
     //temperatures[3] = (temperature*10)/16;

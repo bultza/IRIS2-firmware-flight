@@ -13,11 +13,13 @@
 #include "i2c.h"
 
 #define TMP75_ADDRESS01 0x48
+#define TMP75_ADDRESS02 0x4C
+#define TMP75_ADDRESS03 0x4D
 
-#define TMP75_ADDRESS02 0x4a
-#define TMP75_ADDRESS03 0x4b
-#define TMP75_ADDRESS04 0x4c
-#define TMP75_ADDRESS05 0x4d
+//#define TMP75_ADDRESS02 0x4a
+//#define TMP75_ADDRESS03 0x4b
+//#define TMP75_ADDRESS04 0x4c
+//#define TMP75_ADDRESS05 0x4d
 
 #define TMP75_REG_TEMP  0x00
 #define TMP75_REG_CONF  0x01
