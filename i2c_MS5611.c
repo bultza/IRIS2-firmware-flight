@@ -233,14 +233,14 @@ int32_t calculateAltitude(int32_t pressureInt)
         //Z=11000-(R*T11k/g)*ln(P/P11k)
         altitude = (11000.0 - (6338.282 * log(pressure / 225.52)));
     }
-    else if(pressure > 1.1091)  //47km
+    else if(pressure > 1.1091)  //39.869km
     {
         //We are at high stratosphere
         //Z=25000+(T25k/L)*[(P/P25k)^(-R*L/g)-1]
         altitude = (25000.0 + (-33330.8 * (pow(pressure/24.81, 0.190163) - 1.0)));
     }
     else
-        altitude = 50000.0;  //Return a veeery high altitude
+        altitude = 39870.0;  //Clip at that hight
 
     return (int32_t)(altitude * 100.0);
 }
