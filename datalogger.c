@@ -174,24 +174,6 @@ int32_t getVerticalSpeed()
     if(altitudeHistory_[maxIndex].time + 20000 < timeNow)
         return 0;
 
-    /*
-
-    //Time to calculate speed:
-    int32_t timeDelta = altitudeHistory_[maxIndex].time
-            - altitudeHistory_[minIndex].time;
-    int32_t distanceDelta = altitudeHistory_[maxIndex].altitude
-            - altitudeHistory_[minIndex].altitude;
-
-    //Sanity check, timeDelta should be of only 15s
-    if(timeDelta > ALTITUDE_HISTORY * 1500L)
-        return 0;
-
-    //timedelta is in ms, so we divide by 1000
-    //distance is in cm, and remains like that
-    return (distanceDelta / (timeDelta/1000);
-
-    */
-
     return sumOfSpeeds / ((ALTITUDE_HISTORY - 1) );
 }
 
@@ -202,7 +184,7 @@ int32_t getAltitude()
 {
     if(confRegister_.sim_enabled)
     {
-        return confRegister_.sim_altitude * 100;
+        return confRegister_.sim_altitude * 100L;
     }
     //REturn the last recorded altitude:
     uint8_t previousAltitudeIndex;
@@ -258,7 +240,6 @@ void sensorsRead()
             uint8_t payload[5] = {0};
             payload[0] = gpioStatus;
             saveEventSimple(EVENT_SUNRISE_GPIO_CHANGE, payload);
-            //TODO implement here something to detect the change!
         }
 
         if(gpioStatus)
@@ -395,11 +376,11 @@ void sensorsRead()
 
         //Convert baro to altitude
         altitude = calculateAltitude(pressure);
-        //currentTelemetryLine_[0].temperatures[1] = temperature/10; //Baro
-        //currentTelemetryLine_[1].temperatures[1] = temperature/10; //Baro
-
-        //altitude = altDebug_;
-        //altDebug_ = altDebug_ + 210;
+        if(confRegister_.sim_enabled)
+        {
+            altitude = confRegister_.sim_altitude * 100;
+            confRegister_.sim_altitude += 200;
+        }
 
         //add altitude to altitude history
         altitudeHistory_[altitudeHistoryIndex_].time = (int32_t)uptime;
@@ -437,12 +418,27 @@ void sensorsRead()
 
                 float newAverageVerticalSpeed = ((float)speed - verticalSpeedAverages_[i]) / (float)numTimes_baroRead_[i];
                 verticalSpeedAverages_[i] += newAverageVerticalSpeed;
-                currentTelemetryLine_[i].verticalSpeed[AVG_INDEX] = verticalSpeedAverages_[i];
+                if(verticalSpeedAverages_[i] < -32767.0)
+                    currentTelemetryLine_[i].verticalSpeed[AVG_INDEX] = -32767; //Clipped to -327m/s
+                else if(verticalSpeedAverages_[i] > 32767.0)
+                    currentTelemetryLine_[i].verticalSpeed[AVG_INDEX] = 32767;  //Clipped to +327m/s
+                else
+                    currentTelemetryLine_[i].verticalSpeed[AVG_INDEX] = verticalSpeedAverages_[i];
 
                 if (speed < currentTelemetryLine_[i].verticalSpeed[MIN_INDEX])
-                    currentTelemetryLine_[i].verticalSpeed[MIN_INDEX] = speed;
+                {
+                    if(speed > -32767)
+                        currentTelemetryLine_[i].verticalSpeed[MIN_INDEX] = speed;
+                    else
+                        currentTelemetryLine_[i].verticalSpeed[MIN_INDEX] = -32767; //Clipped to -327m/s
+                }
                 if (speed > currentTelemetryLine_[i].verticalSpeed[MAX_INDEX])
-                    currentTelemetryLine_[i].verticalSpeed[MAX_INDEX] = speed;
+                {
+                    if(speed < 32767)
+                        currentTelemetryLine_[i].verticalSpeed[MAX_INDEX] = speed;
+                    else
+                        currentTelemetryLine_[i].verticalSpeed[MAX_INDEX] = 32767; //Clipped to +327m/s
+                }
             }
             numTimes_baroRead_[i]++;
         }

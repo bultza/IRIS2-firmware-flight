@@ -227,7 +227,7 @@ void processConfCommand(char * command)
     {
         sprintf(strToPrint_, "sim_enabled = %d\r\n", confRegister_.sim_enabled);
         uart_print(UART_DEBUG, strToPrint_);
-        sprintf(strToPrint_, "sim_altitude = %d\r\n", confRegister_.sim_altitude);
+        sprintf(strToPrint_, "sim_altitude = %ld\r\n", confRegister_.sim_altitude);
         uart_print(UART_DEBUG, strToPrint_);
         sprintf(strToPrint_, "flightState = %d\r\n", confRegister_.flightState);
         uart_print(UART_DEBUG, strToPrint_);
@@ -734,6 +734,8 @@ void printStatus()
     //sprintf(strToPrint_, "Altitude:       %.2fm\r\n", askedTMLine.altitude/100.0);
     sprintf(strToPrint_, "Altitude:       %.2fm\r\n", getAltitude()/100.0);
     uart_print(UART_DEBUG, strToPrint_);
+    //sprintf(strToPrint_, "Altitudi:       %ldm\r\n", getAltitude()/100L);
+    //uart_print(UART_DEBUG, strToPrint_);
     int32_t speed = getVerticalSpeed();
     sprintf(strToPrint_, "Current Speed:  %.3fm/s\r\n", (float)speed / 100.0);
     uart_print(UART_DEBUG, strToPrint_);
