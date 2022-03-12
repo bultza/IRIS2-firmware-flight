@@ -194,6 +194,11 @@ int8_t i2c_MS5611_getPressure(int32_t * pressure, int32_t * temperature)
     // Temperature compensated pressure (10 ... 1200 mbar with 0.01 mbar resolution)
     *pressure = ((int64_t)rawPressure * (int64_t)(sens) / 2097152 - (int64_t)(off)) / 32768;
 
+    if(confRegister_.sim_enabled)
+    {
+        *pressure = confRegister_.sim_pressure;
+    }
+
     return error;
 }
 

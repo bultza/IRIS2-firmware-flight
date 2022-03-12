@@ -182,10 +182,10 @@ int32_t getVerticalSpeed()
  */
 int32_t getAltitude()
 {
-    if(confRegister_.sim_enabled)
-    {
-        return confRegister_.sim_altitude * 100L;
-    }
+    //if(confRegister_.sim_enabled)
+    //{
+    //    return confRegister_.sim_altitude * 100L;
+    //}
     //REturn the last recorded altitude:
     uint8_t previousAltitudeIndex;
     if(altitudeHistoryIndex_ == 0)
@@ -376,11 +376,6 @@ void sensorsRead()
 
         //Convert baro to altitude
         altitude = calculateAltitude(pressure);
-        if(confRegister_.sim_enabled)
-        {
-            altitude = confRegister_.sim_altitude * 100;
-            confRegister_.sim_altitude += 200;
-        }
 
         //add altitude to altitude history
         altitudeHistory_[altitudeHistoryIndex_].time = (int32_t)uptime;

@@ -227,7 +227,7 @@ void processConfCommand(char * command)
     {
         sprintf(strToPrint_, "sim_enabled = %d\r\n", confRegister_.sim_enabled);
         uart_print(UART_DEBUG, strToPrint_);
-        sprintf(strToPrint_, "sim_altitude = %ld\r\n", confRegister_.sim_altitude);
+        sprintf(strToPrint_, "sim_pressure = %ld\r\n", confRegister_.sim_pressure);
         uart_print(UART_DEBUG, strToPrint_);
         sprintf(strToPrint_, "flightState = %d\r\n", confRegister_.flightState);
         uart_print(UART_DEBUG, strToPrint_);
@@ -296,9 +296,9 @@ void processConfCommand(char * command)
     {
         confRegister_.sim_enabled = valueToSet;
     }
-    else if (strncmp("sim_altitude", (char *)selectedParameter, 12) == 0)
+    else if (strncmp("sim_pressure", (char *)selectedParameter, 12) == 0)
     {
-        confRegister_.sim_altitude = valueToSet;
+        confRegister_.sim_pressure = valueToSet;
     }
     else if (strncmp("flightState", (char *)selectedParameter, 11) == 0)
     {

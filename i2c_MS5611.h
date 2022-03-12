@@ -13,6 +13,7 @@
 #include <math.h>
 #include "i2c.h"
 #include "clock.h"
+#include "configuration.h"
 
 #define MS5611_ADDRESS 0x77
 #define MS5611_RESET 0x1E

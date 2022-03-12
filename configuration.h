@@ -109,7 +109,7 @@ struct ConfigurationRegister
     //For debug
     uint8_t debugUART;
     uint8_t sim_enabled;
-    int32_t sim_altitude;
+    int32_t sim_pressure;
 };
 
 //******************************************************************************
