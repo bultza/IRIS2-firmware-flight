@@ -1000,6 +1000,9 @@ void processMemoryCommand(char * command)
                     uint32_t i;
                     for (i = lineStart; i < lineStart + linesToRead; i++)
                     {
+                        //Kick WDT
+                        WDTCTL = WDTPW | DAE_WDTKICK;
+
                         // Retrieve line
                         if (memoryType == MEM_TYPE_NOR)
                         {
@@ -1174,6 +1177,9 @@ void processMemoryCommand(char * command)
                     uint32_t i;
                     for (i = 0; i < numBytes; i++)
                     {
+                        //Kick WDT
+                        WDTCTL = WDTPW | DAE_WDTKICK;
+
                         // Depending on memory type, we read one way or the other
                         if (memoryType == MEM_TYPE_NOR)
                         {

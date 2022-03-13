@@ -44,6 +44,15 @@
 #define FLIGHTSTATE_TIMELAPSE_LAND  5
 #define FLIGHTSTATE_RECOVERY        6
 
+//Select SMCLK as the source of wdt, clear WDT and set to 2^31 (268,43s)
+//#define DAE_WDTKICK     (WDTSSEL_0 + WDTCNTCL)
+//Select SMCLK as the source of wdt, clear WDT and set to 2^27 (16.77s)
+#define DAE_WDTKICK     (WDTSSEL_0 + WDTCNTCL + WDTIS0)
+//Select SMCLK as the source of wdt, clear WDT and set to 2^23 (1.04s)
+//#define DAE_WDTKICK     (WDTSSEL_0 + WDTCNTCL + WDTIS1)
+//Select SMCLK as the source of wdt, clear WDT and set to 2^19 (0.065s)
+//#define DAE_WDTKICK     (WDTSSEL_0 + WDTCNTCL + WDTIS1 + WDTIS0)
+
 
 struct ConfigurationRegister
 {

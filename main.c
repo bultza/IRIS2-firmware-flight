@@ -170,6 +170,9 @@ void init_board()
     //Init clock to 8MHz using internal DCO, millis etc
     clock_init();
 
+    //WDT Enabled
+    WDTCTL = WDTPW | DAE_WDTKICK;
+
     //Enable Interrupts
     _BIS_SR(GIE);
 
@@ -267,6 +270,9 @@ int main(void)
 
 	while(1)
 	{
+	    //Kick WDT
+        WDTCTL = WDTPW | DAE_WDTKICK;
+
 	    //Read Uptime:
 	    uint64_t uptime = millis_uptime();
 
