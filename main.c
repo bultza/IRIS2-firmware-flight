@@ -285,6 +285,9 @@ int main(void)
 	    //Save telemetry periodically
 	    saveTelemetry();
 
+	    //Save telemetry periodically
+        checkMemory();
+
 	    //Fligh sequence
 	    checkFlightSequence();
 

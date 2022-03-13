@@ -36,11 +36,9 @@ uint8_t timelapse_getCamerasFromLeg()
 {
     //Read Uptime:
     uint32_t uptime = seconds_uptime();
-    uint8_t areWeSecondLeg = 0;
     uint8_t result = 0;
     if(uptime > confRegister_.lastStateTime + confRegister_.flight_timeSecondLeg)
     {
-        areWeSecondLeg = 1;
         result =  confRegister_.flight_camerasSecondLeg[0]
                | (confRegister_.flight_camerasSecondLeg[1] << 1)
                | (confRegister_.flight_camerasSecondLeg[2] << 2)

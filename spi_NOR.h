@@ -10,6 +10,7 @@
 #include <stdint.h>
 #include "spi.h"
 #include "configuration.h"
+#include "clock.h"
 
 // Device is S70FS70FL01GS - 1 Gbit NOR Flash memory.
 // Device includes two smaller S25FL512 memories - 512 Mbit each.
@@ -38,6 +39,10 @@
 #define NOR_NUM_SECTORS     256
 #define NOR_NUM_PAGES       128000
 
+#define NOR_OPERATION_IDLE  0
+#define NOR_OPERATION_BULK  1
+#define NOR_OPERATION_DUMP  2
+
 // Structures
 struct RDIDInfo
 {
@@ -51,6 +56,12 @@ struct RDIDInfo
     int8_t asciiModelChars2;
 };
 
+struct NOR_Status
+{
+    int32_t timeStart;
+    uint8_t operationOngoing;
+};
+
 // Functions
 int8_t spi_NOR_init(uint8_t deviceSelect);
 int8_t spi_NOR_checkWriteInProgress(uint8_t deviceSelect);
@@ -59,5 +70,6 @@ int8_t spi_NOR_readFromAddress(uint32_t readAddress, uint8_t * buffer, uint16_t 
 int8_t spi_NOR_writeToAddress(uint32_t writeAddress, uint8_t * buffer, uint16_t numOfBytes, uint8_t deviceSelect);
 int8_t spi_NOR_sectorErase(uint32_t sectorAddress, uint8_t deviceSelect);
 int8_t spi_NOR_bulkErase(uint8_t deviceSelect);
+void checkMemory();
 
 #endif /* SPI_NOR_H_ */

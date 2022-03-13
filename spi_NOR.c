@@ -5,6 +5,8 @@
 
 #include "spi_NOR.h"
 
+struct NOR_Status nor_status_;
+
 // PRIVATE FUNCTIONS
 
 /**
@@ -259,13 +261,39 @@ int8_t spi_NOR_bulkErase(uint8_t deviceSelect)
     FLASH_CS1_OFF;
     FLASH_CS2_OFF;
 
-    // Wait until Sector Erase has finished
-    while(spi_NOR_checkWriteInProgress(deviceSelect));
+    nor_status_.operationOngoing = NOR_OPERATION_BULK;
+    nor_status_.timeStart = seconds_uptime();
 
-    // Disable Write Operations
-    NOR_writeEnableDisable(0, deviceSelect);
+    //// Wait until Sector Erase has finished
+    ////while(spi_NOR_checkWriteInProgress(deviceSelect));
+
+    //// Disable Write Operations
+    //NOR_writeEnableDisable(0, deviceSelect);
 
     LED_B_OFF;
 
     return 0;
+}
+
+/**
+ * It checks if there is any operation ongoing and pushes it
+ */
+void checkMemory()
+{
+    if(nor_status_.operationOngoing == NOR_OPERATION_IDLE)
+        return;
+
+    if(nor_status_.operationOngoing == NOR_OPERATION_BULK)
+    {
+        if(spi_NOR_checkWriteInProgress(confRegister_.nor_deviceSelected))
+            return; //still busy
+
+        //Finished!
+        NOR_writeEnableDisable(0, confRegister_.nor_deviceSelected);
+        int32_t eraseEnd = seconds_uptime();
+        char strToPrint[100];
+        sprintf(strToPrint, "NOR memory bulk erase completed in %ld seconds.\r\n# ", eraseEnd - nor_status_.timeStart);
+        uart_print(UART_DEBUG, strToPrint);
+        nor_status_.operationOngoing = NOR_OPERATION_IDLE;
+    }
 }

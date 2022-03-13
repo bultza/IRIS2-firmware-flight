@@ -25,7 +25,7 @@
 #define LED_R_TOGGLE    (P3OUT ^= BIT4)
 
 #define MAGICWORD           0xBABE
-#define FWVERSION           7
+#define FWVERSION           8
 //#define FRAM_TLM_SAVEPERIOD 599     //seconds period to save on FRAM
 #define FRAM_TLM_SAVEPERIOD 599     //Only for Debug TODO
 #define NOR_TLM_SAVEPERIOD  10      //seconds period to save on NOR Flash

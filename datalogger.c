@@ -705,7 +705,7 @@ int8_t saveTelemetry()
         //Time to save
         int8_t error = addTelemetryNOR(&currentTelemetryLine_[1], &confRegister_.nor_telemetryAddress);
         if(error)
-            uart_print(UART_DEBUG, "ERROR: NOR memory was busy, we could not write telemetry in.");
+            uart_print(UART_DEBUG, "ERROR: NOR memory was busy, we could not save telemetry.\r\n# ");
 
         lastTimeTelemetrySavedNOR_ = elapsedSeconds;
 

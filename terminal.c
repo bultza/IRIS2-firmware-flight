@@ -1305,10 +1305,10 @@ void processMemoryCommand(char * command)
                             confRegister_.nor_telemetryAddress = NOR_TLM_ADDRESS;
                             confRegister_.nor_eventAddress = NOR_EVENTS_ADDRESS;
 
-                            // We are done here
-                            int16_t eraseEnd = seconds_uptime();
-                            sprintf(strToPrint_, "NOR memory has been completely wiped out in %d seconds.\r\n", eraseEnd - eraseStart);
-                            uart_print(UART_DEBUG, strToPrint_);
+                            //// We are done here
+                            //int16_t eraseEnd = seconds_uptime();
+                            //sprintf(strToPrint_, "NOR memory has been completely wiped out in %d seconds.\r\n", eraseEnd - eraseStart);
+                            //uart_print(UART_DEBUG, strToPrint_);
                         }
                         else
                         {
