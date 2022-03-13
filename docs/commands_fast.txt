@@ -8,27 +8,44 @@ conf set timelapse_period 299
 conf set flightState 3
 
 
+//********************************
+//Simulate launch
 conf set sim_pressure 102400
-conf set sim_pressure 100000
 conf set sim_enabled 1
+conf set flightState 1
+
+conf set sim_pressure 100000
 status
 
 memory read nor tlm 380 450
 memory read fram tlm 0 20
 
+memory read nor events 0 300
+
 
 conf set sim_pressure 100500
 conf set sim_pressure 99900
 
+
+
+//********************************
 //Simulate descend
 conf set sim_pressure 700
 conf set sim_enabled 1
 
-
 conf set flightState 3
 status
 
+//31.4km
 conf set sim_pressure 800
+//3km
+conf set sim_pressure 70000
+//2km
+conf set sim_pressure 75000
+//0km
+conf set sim_pressure 100000
+
+
 
 //Format SDCards:
 uartdebug 1
