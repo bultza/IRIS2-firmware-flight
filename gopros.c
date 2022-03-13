@@ -266,8 +266,9 @@ int8_t cameraPowerOn(uint8_t selectedCamera, uint8_t slowMode)
  */
 int8_t cameraPowerOff(uint8_t selectedCamera)
 {
+    int8_t error = 0;
     if(cameraStatus_[selectedCamera].cameraStatus == CAM_STATUS_OFF)
-        return -1;  //Return error
+        error = -1;  //Return error
 
     //Send the command to power off
     uart_print(selectedCamera + 1, CAM_POWEROFF);
@@ -278,7 +279,7 @@ int8_t cameraPowerOff(uint8_t selectedCamera)
     cameraStatus_[selectedCamera].fsmStatus = FSM_CAM_PRESSBTNOFF_WAIT;
     cameraStatus_[selectedCamera].lastCommandTime = millis_uptime();
     cameraStatus_[selectedCamera].sleepTime = CAM_WAIT_BUTTON /*+ 1000*/;
-    return 0;
+    return error;
 }
 
 /**

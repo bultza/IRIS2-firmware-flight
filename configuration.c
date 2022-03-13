@@ -52,6 +52,11 @@ int8_t configuration_init(void)
         confRegister_.debugUART = 0;
         confRegister_.sim_enabled = 0;
 
+        //Remember camera configuration:
+        //CAMERA 1: Points the mirror assembly (frontplate)
+        //CAMERA 2: Points to the side (horizon + telescope)
+        //CAMERA 3: Points to the top (balloon)
+        //CAMERA 4: Points to the front (Just landscape and Sun)
 
         //Launch Configuration
         confRegister_.launch_heightThreshold = 3000;    //3km
@@ -60,15 +65,16 @@ int8_t configuration_init(void)
         confRegister_.launch_videoDurationLong = 120;   //TODO DELETE!************************************************************************
         confRegister_.launch_videoDurationShort = 3600; //1h
         confRegister_.launch_videoDurationShort = 30;   //TODO DELETE!************************************************************************
-        confRegister_.launch_camerasLong[0] = 0;
+        confRegister_.launch_camerasLong[0] = 1;
         confRegister_.launch_camerasLong[1] = 1;
         confRegister_.launch_camerasLong[2] = 0;
         confRegister_.launch_camerasLong[3] = 0;
-        confRegister_.launch_camerasShort[0] = 1;
+        confRegister_.launch_camerasShort[0] = 0;
         confRegister_.launch_camerasShort[1] = 0;
         confRegister_.launch_camerasShort[2] = 1;
         confRegister_.launch_camerasShort[3] = 1;
-        confRegister_.launch_timeClimbMaximum = 43200;  //12hours
+        confRegister_.launch_timeClimbMaximum = 14400;  //4hours (+ 2h of the launch video)
+        confRegister_.launch_timeClimbMaximum = 60;  //4hours (+ 2h of the launch video)
 
         //Timelapse Configuration
         confRegister_.flight_timelapse_period = TIMELAPSE_PERIOD;
@@ -78,11 +84,11 @@ int8_t configuration_init(void)
         confRegister_.flight_camerasFirstLeg[2] = 1;
         confRegister_.flight_camerasFirstLeg[3] = 1;
         confRegister_.flight_camerasSecondLeg[0] = 1;
-        confRegister_.flight_camerasSecondLeg[1] = 0;
-        confRegister_.flight_camerasSecondLeg[2] = 1;
-        confRegister_.flight_camerasSecondLeg[3] = 0;
+        confRegister_.flight_camerasSecondLeg[1] = 1;
+        confRegister_.flight_camerasSecondLeg[2] = 0;
+        confRegister_.flight_camerasSecondLeg[3] = 1;
         confRegister_.flight_timeSecondLeg = 86400;     //24 hours
-        confRegister_.flight_timeSecondLeg = 200;     //TODO DELETE!************************************************************************
+        confRegister_.flight_timeSecondLeg = 60;     //TODO DELETE!************************************************************************
 
         //Landing Configuration
         confRegister_.landing_heightThreshold = 25000;         //Under this height, the video starts recording
@@ -94,12 +100,12 @@ int8_t configuration_init(void)
         confRegister_.landing_videoDurationShort = 40;      //TODO DELETE!************************************************************************
         confRegister_.landing_camerasLong[0] = 0;
         confRegister_.landing_camerasLong[1] = 1;
-        confRegister_.landing_camerasLong[2] = 1;
-        confRegister_.landing_camerasLong[3] = 1;
+        confRegister_.landing_camerasLong[2] = 0;
+        confRegister_.landing_camerasLong[3] = 0;
         confRegister_.landing_camerasShort[0] = 1;
         confRegister_.landing_camerasShort[1] = 0;
-        confRegister_.landing_camerasShort[2] = 0;
-        confRegister_.landing_camerasShort[3] = 0;
+        confRegister_.landing_camerasShort[2] = 1;
+        confRegister_.landing_camerasShort[3] = 1;
         confRegister_.landing_heightShortStart = 3000;  //3000km, on IRIS1 it landed 10 minutes later
 
         //Landed Configuration
