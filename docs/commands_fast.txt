@@ -1,4 +1,5 @@
 conf set flightState 0
+conf set flightSubState 0
 conf set gopro_model[0] 1
 conf set gopro_model[1] 0
 conf set gopro_model[2] 1
@@ -6,3 +7,30 @@ conf set gopro_model[3] 0
 conf set timelapse_period 299
 conf set flightState 3
 
+
+conf set sim_pressure 102400
+conf set sim_pressure 100000
+conf set sim_enabled 1
+status
+
+memory read nor tlm 380 450
+memory read fram tlm 0 20
+
+
+conf set sim_pressure 100500
+conf set sim_pressure 99900
+
+//Simulate descend
+conf set sim_pressure 700
+conf set sim_enabled 1
+
+
+conf set flightState 3
+status
+
+conf set sim_pressure 800
+
+//Format SDCards:
+uartdebug 1
+camera 1 on
+u YY00090A0000

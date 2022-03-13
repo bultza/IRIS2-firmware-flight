@@ -1521,6 +1521,7 @@ int8_t terminal_readAndProcessCommands(void)
             uart_print(UART_DEBUG, "  camera x video_end\r\n");
             uart_print(UART_DEBUG, "  camera x send_cmd y\r\n");
             uart_print(UART_DEBUG, "  camera x off\r\n");
+            uart_print(UART_DEBUG, "  p x\r\n");
             uart_print(UART_DEBUG, "  tm nor\r\n");
             uart_print(UART_DEBUG, "  tm fram\r\n");
             uart_print(UART_DEBUG, "  memory status\r\n");

@@ -36,7 +36,7 @@ void checkStateOff()
 {
     //Read Uptime:
     uint32_t uptime = seconds_uptime();
-    if(lastTimePicture_ + confRegister_.flight_timelapse_period > uptime)
+    if(lastTimePicture_ + (uint32_t)confRegister_.flight_timelapse_period > uptime)
         return; //Continue waiting
 
     //LED_R_ON;
@@ -69,7 +69,7 @@ void checkStateOnWaiting()
     }
 
     //Wait 1s after cameras are ready
-    if(confRegister_.lastSubStateTime + 1000 > timeNow)
+    if(confRegister_.lastSubStateTime + 1000UL > timeNow)
         return;
 
     //LED_G_ON;
@@ -98,7 +98,7 @@ void checkStateOnWaiting()
 void checkStatePicWaiting()
 {
     uint64_t timeNow = millis_uptime();
-    if(confRegister_.lastSubStateTime + 1000 > timeNow)
+    if(confRegister_.lastSubStateTime + 1000UL > timeNow)
         return;
 
     //LED_G_OFF;
@@ -170,7 +170,7 @@ void launch_checkStateOnWaiting()
     }*/
 
     //Wait 8s after cameras are ready
-    if(confRegister_.lastSubStateTime + 15000 > timeNow)
+    if(confRegister_.lastSubStateTime + 15000UL > timeNow)
         return;
 
     //LED_G_ON;
@@ -203,7 +203,9 @@ void launch_checkStateOnWaiting()
 void launch_checkStateVideoWaiting_01()
 {
     uint64_t timeNow = millis_uptime();
-    if(confRegister_.lastSubStateTime + confRegister_.launch_videoDurationShort * 1000 > timeNow)
+    if(confRegister_.lastSubStateTime
+            + (uint64_t)confRegister_.launch_videoDurationShort * 1000UL
+            > timeNow)
         return;
 
     //Time to switch off some cameras!
@@ -241,7 +243,9 @@ void launch_checkStateVideoWaiting_01()
 void launch_checkStateVideoWaiting_02()
 {
     uint64_t timeNow = millis_uptime();
-    if(confRegister_.lastSubStateTime + confRegister_.launch_videoDurationLong * 1000 > timeNow)
+    if(confRegister_.lastSubStateTime
+            + (uint64_t)confRegister_.launch_videoDurationLong * 1000UL
+            > timeNow)
         return;
 
     //Time to switch off some cameras!
@@ -329,7 +333,7 @@ void landing_checkStateOnWaiting()
 
 
     //Wait 8s after cameras are ready
-    if(confRegister_.lastSubStateTime + 15000 > timeNow)
+    if(confRegister_.lastSubStateTime + 15000UL > timeNow)
         return;
 
     //LED_G_ON;
@@ -362,7 +366,9 @@ void landing_checkStateOnWaiting()
 void landing_checkStateVideoWaiting_01()
 {
     uint64_t timeNow = millis_uptime();
-    if(confRegister_.lastSubStateTime + confRegister_.landing_videoDurationShort * 1000 > timeNow)
+    if(confRegister_.lastSubStateTime
+            + (uint64_t)confRegister_.landing_videoDurationShort * 1000UL
+            > timeNow)
         return;
 
     //Time to switch off some cameras!
@@ -401,8 +407,10 @@ void landing_checkStateVideoWaiting_02()
 {
     uint64_t timeNow = millis_uptime();
     int32_t altitude = getAltitude();
-    if(confRegister_.lastSubStateTime + confRegister_.landing_videoDurationLong * 1000 > timeNow
-            || altitude < confRegister_.landing_heightShortStart * 100)
+    if(confRegister_.lastSubStateTime
+            + (uint64_t)confRegister_.landing_videoDurationLong * 1000UL
+            > timeNow
+            && altitude > confRegister_.landing_heightShortStart * 100L)
         return;
 
     //Time to switch on some cameras!
@@ -431,8 +439,10 @@ void landing_checkStateVideoWaiting_03()
 {
     uint64_t timeNow = millis_uptime();
 
+    //TODO, this is wrong, if the descend is infinite, it will remain for infinite time ...
+
     //Wait 8s after cameras are ready
-    if(confRegister_.lastSubStateTime + 15000 > timeNow)
+    if(confRegister_.lastSubStateTime + 15000UL > timeNow)
         return;
 
     //LED_G_ON;
@@ -464,7 +474,9 @@ void landing_checkStateVideoWaiting_03()
 void landing_checkStateVideoWaiting_04()
 {
     uint64_t timeNow = millis_uptime();
-    if(confRegister_.lastSubStateTime + confRegister_.landing_videoDurationLong * 1000)
+    if(confRegister_.lastSubStateTime
+            + (uint64_t)confRegister_.landing_videoDurationLong * 1000UL
+            > timeNow)
         return;
 
     //Time to switch off some cameras!
@@ -520,7 +532,7 @@ void checkFlightSequence()
     if(confRegister_.flightState == FLIGHTSTATE_WAITFORLAUNCH)
     {
         //Avoid measuring heights at switch on
-        if(uptime < 5000)
+        if(uptime < 10000)
             return;
 
         //Are we very high or climbing very fast?
@@ -610,7 +622,7 @@ void checkFlightSequence()
 
         int32_t verticalSpeed = getVerticalSpeed();
         int32_t altitude = getAltitude();
-        if(altitude > confRegister_.landing_heightSecurityThreshold)
+        if(altitude > confRegister_.landing_heightSecurityThreshold * 100)
             verticalSpeed = 0;  //avoid listening to vertical speeds when altitude is too high
 
 
@@ -654,6 +666,23 @@ void checkFlightSequence()
 
     if(confRegister_.flightState == FLIGHTSTATE_LANDING)
     {
+        //Lets add a safemode just in case that the descend is triggered by error
+        //This piece of code will jump into timelapse after 1.25 hours of landing video
+        if(confRegister_.lastStateTime + 4500000 < uptime)
+        {
+            //Cameras are off, we move to the next step:
+            confRegister_.flightState = FLIGHTSTATE_TIMELAPSE_LAND;
+            confRegister_.lastStateTime = uptime;
+            //Reset the substate
+            confRegister_.flightSubState = 0;
+            confRegister_.lastSubStateTime = uptime;
+            uint8_t payload[5] = {'0','E','R','R','O'};
+            payload[0] = FLIGHTSTATE_TIMELAPSE_LAND;
+            saveEventSimple(EVENT_STATE_CHANGED, payload);
+            //Exit from here now!
+            return;
+        }
+
         //Is it time to make another picture?
         switch(confRegister_.flightSubState)
         {

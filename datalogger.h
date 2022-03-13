@@ -81,7 +81,7 @@ struct TelemetryLine
     uint32_t unixTime;          // 4B - UNIX time [s]
     uint32_t upTime;            // 4B - Milliseconds since power on
                                 //      (it will roll over after 49 days)
-    uint32_t pressure;          // 4B - Atmospheric pressure [mb * 100]
+    int32_t pressure;           // 4B - Atmospheric pressure [mb * 100]
     int32_t altitude;           // 4B - Altitude [cm]
     int16_t verticalSpeed[3];   // 2B x 3 - Vertical Speed [cm/s]
                                 //      00 - Average value

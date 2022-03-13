@@ -8,7 +8,7 @@
 
 struct CameraStatus cameraStatus_[4] = {0};
 uint8_t cameraHasStarted_[4] = {0};
-uint8_t cameraMode_ = CAMERAMODE_PIC;
+uint8_t cameraMode_[4] = {CAMERAMODE_PIC};
 
 /*
  * Begins an UART communication with the selected camera.
@@ -20,7 +20,7 @@ int8_t gopros_cameraInit(uint8_t selectedCamera, uint8_t cameraMode)
     //{
         uart_init(selectedCamera + 1, BR_57600);
         cameraHasStarted_[selectedCamera] = 1;
-        cameraMode_ = cameraMode;
+        cameraMode_[selectedCamera] = cameraMode;
     //}
 
     return 0;
@@ -54,12 +54,12 @@ int8_t gopros_cameraSetVideoMode(uint8_t selectedCamera)
 
         //GOPRO Hero4 Black
         uart_print(selectedCamera + 1, CAM_PAYLOAD_VIDEO_RES_FPS_FOV);
-        //uart_print(selectedCamera + 1, CAM_VIDEO_RES_2_7K_4_3);
-        //uart_print(selectedCamera + 1, CAM_VIDEO_FPS_30);
-        //uart_print(selectedCamera + 1, CAM_VIDEO_FOV_WIDE);
-        uart_print(selectedCamera + 1, CAM_VIDEO_RES_720);
+        uart_print(selectedCamera + 1, CAM_VIDEO_RES_2_7K_4_3);
         uart_print(selectedCamera + 1, CAM_VIDEO_FPS_30);
-        uart_print(selectedCamera + 1, CAM_VIDEO_FOV_NARROW);
+        uart_print(selectedCamera + 1, CAM_VIDEO_FOV_WIDE);
+        //uart_print(selectedCamera + 1, CAM_VIDEO_RES_720);
+        //uart_print(selectedCamera + 1, CAM_VIDEO_FPS_30);
+        //uart_print(selectedCamera + 1, CAM_VIDEO_FOV_NARROW);
         uart_print(selectedCamera + 1, "\n");
         uart_flush(selectedCamera + 1);
         //TODO
@@ -395,7 +395,7 @@ int8_t cameraFSMcheck()
                     sprintf(dateTimeCmd, "YY000721002320160111000000%02X00%02X00010100000000000000000000000001%02X00%02X%02X%02X%02X%02X%02X%02X\n",
                             confRegister_.gopro_beeps,
                             confRegister_.gopro_leds,
-                            cameraMode_,
+                            cameraMode_[i],
                             (uint8_t)((2000 + (uint16_t)dateTime.year)/256),
                             (uint8_t)((2000 + (uint16_t)dateTime.year)%256),
                             dateTime.month,
@@ -429,7 +429,7 @@ int8_t cameraFSMcheck()
                 }
                 break;
             case FSM_CAM_CONF_2:
-                if(cameraMode_ == CAMERAMODE_VID)
+                if(cameraMode_[i] == CAMERAMODE_VID)
                 {
                     //Configure video:
                     //Depends of camera model:
@@ -441,12 +441,12 @@ int8_t cameraFSMcheck()
 
                         //GOPRO Hero4 Black
                         uart_print(i + 1, CAM_PAYLOAD_VIDEO_RES_FPS_FOV);
-                        //uart_print(i + 1, CAM_VIDEO_RES_2_7K_4_3);
-                        //uart_print(i + 1, CAM_VIDEO_FPS_30);
-                        //uart_print(i + 1, CAM_VIDEO_FOV_WIDE);
-                        uart_print(i + 1, CAM_VIDEO_RES_720);
+                        uart_print(i + 1, CAM_VIDEO_RES_2_7K_4_3);
                         uart_print(i + 1, CAM_VIDEO_FPS_30);
-                        uart_print(i + 1, CAM_VIDEO_FOV_NARROW);
+                        uart_print(i + 1, CAM_VIDEO_FOV_WIDE);
+                        //uart_print(i + 1, CAM_VIDEO_RES_720);
+                        //uart_print(i + 1, CAM_VIDEO_FPS_30);
+                        //uart_print(i + 1, CAM_VIDEO_FOV_NARROW);
                         uart_print(i + 1, "\n");
                         uart_flush(i + 1);
                     }
@@ -466,7 +466,7 @@ int8_t cameraFSMcheck()
                     }
 
                 }
-                else if(cameraMode_ == CAMERAMODE_PIC)
+                else if(cameraMode_[i] == CAMERAMODE_PIC)
                 {
                     //Configure picture: easypeasy
                     uart_print(i + 1, CAM_SET_PHOTO_MODE);
@@ -478,7 +478,7 @@ int8_t cameraFSMcheck()
                     uart_print(i + 1, CAM_PHOTO_RES_12MP_WIDE);
                     uart_flush(i + 1);
                 }
-                else if(cameraMode_ == CAMERAMODE_VID_HIGHSPEED)
+                else if(cameraMode_[i] == CAMERAMODE_VID_HIGHSPEED)
                 {
                     //Configure video in high speed mode:
                     uart_print(i + 1, CAM_SET_VIDEO_MODE);
