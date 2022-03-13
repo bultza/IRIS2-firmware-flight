@@ -3,6 +3,7 @@ Firmware for the IRIS2 CPU, that will fly as an instrument on the mission Sunris
 
 ## Prerequisites
 You should install Code Composer Studio (Version 10 or higher preffered) https://www.ti.com/tool/CCSTUDIO
+> :warning: **DEBUG_MODE**: In the configuration.h file, line 10 comment or uncomment to be in DEBUG mode. Always fly with Debug mode disabled!
 
 ## Programming the MCU
 You should have a programmer for MSP430, a launchpad is enough.
@@ -73,6 +74,7 @@ These are the currently implemented commands:
 |`camera [x] video_end`   |It stops a video on the [x] camera|
 |`camera [x] send_cmd y`   |Sends command y (do not include line feed at the end!) to camera x|
 |`camera [x] off` |It switches off the [x] camera|
+|`p [x]` |It presses the power button of the [x] camera|
 |`tm nor`       |It returns current Telemetry Line to be saved in NOR memory|
 |`tm fram`      |It returns current Telemetry Line to be saved in FRAM memory|
 |`memory status` |It returns the current status of the memories|

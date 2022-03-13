@@ -7,6 +7,10 @@
 #ifndef CONFIGURATION_H_
 #define CONFIGURATION_H_
 
+#define DEBUG_MODE
+#define MAGICWORD           0xBABE
+#define FWVERSION           8
+
 #include <stdint.h>
 #include <msp430.h>
 #include "spi_NOR.h"
@@ -24,8 +28,6 @@
 #define LED_R_ON        (P3OUT &= ~BIT4)
 #define LED_R_TOGGLE    (P3OUT ^= BIT4)
 
-#define MAGICWORD           0xBABE
-#define FWVERSION           8
 //#define FRAM_TLM_SAVEPERIOD 599     //seconds period to save on FRAM
 #define FRAM_TLM_SAVEPERIOD 599     //Only for Debug TODO
 #define NOR_TLM_SAVEPERIOD  10      //seconds period to save on NOR Flash

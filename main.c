@@ -252,6 +252,12 @@ int main(void)
 	//Print reboot message on UART debug
 	uart_print(UART_DEBUG, "\r\nIRIS2 is booting up...\r\n");
 
+#ifdef DEBUG_MODE
+	uart_print(UART_DEBUG, "*******************************************************************************\r\n");
+	uart_print(UART_DEBUG, "*WARNING! IRIS2 IS IN DEBUG MODE, YOU SHOULD NOT FLIGHT WITH THIS COMPILATION!*\r\n");
+	uart_print(UART_DEBUG, "*******************************************************************************\r\n");
+#endif
+
 	///////////////////////////////////////////////////////////////////////////
 	//DEBUG, KEEP THIS COMMENTED ON FLIGHT
 	/*char strLine[100];
