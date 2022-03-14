@@ -69,10 +69,12 @@ These are the currently implemented commands:
 |`i2c baro`     |It returns the current barometric pressure and calculated Altitude|
 |`i2c ina`      |It returns the current Voltage and Current input power values|
 |`i2c acc`      |It returns the current Accelerometer values|
+|`camera [x] pic`  |It makes automatically a picture with the [x] camera|
+|`camera [x] vid [sec]`  |It makes automatically a video with the [x] camera with a duration of [sec] seconds.|
 |`camera [x] on`  |It switches on the [x] camera|
 |`camera [x] picture_mode`|It sets the [x] camera to picture mode|
 |`camera [x] video_mode`  |It sets the [x] camera to video mode|
-|`camera [x] pic` |It takes a picture with the [x] camera|
+|`camera [x] pic_raw` |It takes a picture with the [x] camera|
 |`camera [x] video_start` |It makes a video on the [x] camera|
 |`camera [x] video_end`   |It stops a video on the [x] camera|
 |`camera [x] send_cmd y`   |Sends command y (do not include line feed at the end!) to camera x|

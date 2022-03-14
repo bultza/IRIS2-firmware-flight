@@ -33,7 +33,7 @@ int8_t configuration_init(void)
         confRegister_.nor_eventAddress = NOR_EVENTS_ADDRESS;
         confRegister_.nor_tlmSavePeriod = NOR_TLM_SAVEPERIOD;
 
-        confRegister_.leds = 0; //1 = on, 0 = off
+        confRegister_.leds = 1; //1 = on, 0 = off
 
         //01 = 70%, 02 = off
         confRegister_.gopro_beeps = 02;
@@ -107,7 +107,7 @@ int8_t configuration_init(void)
         confRegister_.sim_pressure = 101400;
 
         //01 = 70%, 02 = off
-        confRegister_.gopro_beeps = 01;
+        confRegister_.gopro_beeps = 02;
         //00 = off, 01 = 2, 02 = 4
         confRegister_.gopro_leds = 01;
 

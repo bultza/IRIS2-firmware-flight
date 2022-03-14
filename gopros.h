@@ -53,6 +53,13 @@
 #define FSM_CAM_CONF_4              23
 #define FSM_CAM_CONF_5              24
 
+#define FSMGLOBAL_CAM_DISABLED          0
+#define FSMGLOBAL_CAM_PICTURESTART      1
+#define FSMGLOBAL_CAM_PICTURESHOOT      2
+#define FSMGLOBAL_CAM_OFF               10
+#define FSMGLOBAL_CAM_VIDEOSTART        5
+#define FSMGLOBAL_CAM_VIDEOSTOP       6
+
 #define CAM_STATUS_OFF      0
 #define CAM_STATUS_ON       1
 #define CAM_STATUS_CONF     2
@@ -67,13 +74,11 @@ struct CameraStatus
     uint64_t sleepTime;
     uint64_t timeoutTime;
     uint8_t slowMode;       //If 1, the camera will boot slower (Safest for videos)
-};
 
-struct CameraFSM
-{
-    void (*cmdPt)(void);   // output function
-    uint32_t sleepTime;
-    uint8_t nextStates[3];
+    uint8_t fsmStatusGlobal;
+    uint64_t fsmStatusGlobalLastTime;
+    uint64_t fsmStatusGlobalsleepTime;
+    uint32_t videoDuration;
 };
 
 /*
@@ -212,18 +217,19 @@ argv[34]: second
 
 
 // Functions
-int8_t gopros_cameraInit(uint8_t selectedCamera, uint8_t cameraMode);
-int8_t gopros_cameraSetPictureMode(uint8_t selectedCamera);
-int8_t gopros_cameraSetVideoMode(uint8_t selectedCamera);
-int8_t gopros_cameraTakePicture(uint8_t selectedCamera);
-int8_t gopros_cameraStartRecordingVideo(uint8_t selectedCamera);
-int8_t gopros_cameraStopRecordingVideo(uint8_t selectedCamera);
-int8_t gopros_cameraRawSendCommand(uint8_t selectedCamera, char * cmd);
+int8_t gopros_raw_cameraInit(uint8_t selectedCamera, uint8_t cameraMode);
+int8_t gopros_raw_cameraSetPictureMode(uint8_t selectedCamera);
+int8_t gopros_raw_cameraSetVideoMode(uint8_t selectedCamera);
+int8_t gopros_raw_cameraTakePicture(uint8_t selectedCamera);
+int8_t gopros_raw_cameraStartRecordingVideo(uint8_t selectedCamera);
+int8_t gopros_raw_cameraStopRecordingVideo(uint8_t selectedCamera);
+int8_t gopros_raw_cameraRawSendCommand(uint8_t selectedCamera, char * cmd);
 int8_t cameraPowerOn(uint8_t selectedCamera, uint8_t slowMode);
 int8_t cameraPowerOff(uint8_t selectedCamera);
 int8_t cameraPowerOffUnsafe(uint8_t selectedCamera);
-int8_t cameraTakePic(uint8_t selectedCamera);
 int8_t cameraFSMcheck();
 int8_t cameraReadyStatus();
+int8_t cameraMakeVideo(uint8_t selectedCamera, uint8_t cameraMode, uint16_t duration);
+int8_t cameraTakePicture(uint8_t selectedCamera);
 
 #endif /* GOPROS_H_ */

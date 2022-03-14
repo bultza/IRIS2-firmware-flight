@@ -616,11 +616,12 @@ void processI2CCommand(char * command)
 void processCameraCommand(char * command)
 {
     // Process the selected camera
-    char selectedCameraChar[CMD_MAX_LEN] = {0};
-    extractCommandPart((char *) command, 1, (char *) selectedCameraChar);
+    char cameraSubcommand[CMD_MAX_LEN] = {0};
+    char cameraSubcommandExtra[CMD_MAX_LEN] = {0};
+    extractCommandPart((char *) command, 1, (char *) cameraSubcommand);
     uint8_t selectedCamera;
 
-    switch (selectedCameraChar[0])
+    switch (cameraSubcommand[0])
     {
         case '1':
             selectedCamera = CAMERA01;
@@ -643,15 +644,38 @@ void processCameraCommand(char * command)
     }
 
     // Extract the subcommand from camera control command
-    char cameraSubcommand[CMD_MAX_LEN] = {0};
     extractCommandPart((char *) command, 2, (char *) cameraSubcommand);
+    extractCommandPart((char *) command, 3, (char *) cameraSubcommandExtra);
 
     int8_t returnCode;
 
-    if (strcmp("on", cameraSubcommand) == 0)
+    if (strcmp("pic", cameraSubcommand) == 0)
+    {
+        returnCode = cameraTakePicture(selectedCamera);
+        if(returnCode == 0)
+            sprintf(strToPrint_, "Camera %c is taking a picture.\r\n", command[7]);
+        else
+            sprintf(strToPrint_, "ERROR Camera %c was busy.\r\n", command[7]);
+        uint8_t payload[5] = {0};
+        payload[0] = selectedCamera;
+        saveEventSimple(EVENT_CAMERA_PICTURE, payload);
+    }
+    else if (strncmp("vid", cameraSubcommand, 3) == 0)
+    {
+        uint16_t duration = atoi(cameraSubcommandExtra);
+        returnCode = cameraMakeVideo(selectedCamera, CAMERAMODE_VID, duration);
+        if(returnCode == 0)
+            sprintf(strToPrint_, "Camera %c is taking a video.\r\n", command[7]);
+        else
+            sprintf(strToPrint_, "ERROR Camera %c was busy.\r\n", command[7]);
+        uint8_t payload[5] = {0};
+        payload[0] = selectedCamera;
+        saveEventSimple(EVENT_CAMERA_PICTURE, payload);
+    }
+    else if (strcmp("on", cameraSubcommand) == 0)
     {
         // Initialised UART comms with camera in PICture mode
-        gopros_cameraInit(selectedCamera, CAMERAMODE_PIC);
+        gopros_raw_cameraInit(selectedCamera, CAMERAMODE_PIC);
 
         // Initialised UART comms with camera in VIDeo mode
         //gopros_cameraInit(selectedCamera, CAMERAMODE_VID);
@@ -663,9 +687,9 @@ void processCameraCommand(char * command)
         payload[0] = selectedCamera;
         saveEventSimple(EVENT_CAMERA_ON, payload);
     }
-    else if (strcmp("pic", cameraSubcommand) == 0)
+    else if (strcmp("pic_raw", cameraSubcommand) == 0)
     {
-        returnCode = gopros_cameraTakePicture(selectedCamera);
+        returnCode = gopros_raw_cameraTakePicture(selectedCamera);
         if(returnCode == 0)
             sprintf(strToPrint_, "Camera %c took a picture.\r\n", command[7]);
         else
@@ -676,7 +700,7 @@ void processCameraCommand(char * command)
     }
     else if (strcmp("video_mode", cameraSubcommand) == 0)
     {
-        returnCode = gopros_cameraSetVideoMode(selectedCamera);
+        returnCode = gopros_raw_cameraSetVideoMode(selectedCamera);
         if(returnCode == 0)
             sprintf(strToPrint_, "Camera %c set to video mode.\r\n", command[7]);
         else
@@ -687,7 +711,7 @@ void processCameraCommand(char * command)
     }
     else if (strcmp("picture_mode", cameraSubcommand) == 0)
     {
-        returnCode = gopros_cameraSetPictureMode(selectedCamera);
+        returnCode = gopros_raw_cameraSetPictureMode(selectedCamera);
         if(returnCode == 0)
             sprintf(strToPrint_, "Camera %c set picture mode.\r\n", command[7]);
         else
@@ -698,7 +722,7 @@ void processCameraCommand(char * command)
     }
     else if (strcmp("video_start", cameraSubcommand) == 0)
     {
-        returnCode = gopros_cameraStartRecordingVideo(selectedCamera);
+        returnCode = gopros_raw_cameraStartRecordingVideo(selectedCamera);
         if(returnCode == 0)
             sprintf(strToPrint_, "Camera %c started recording video.\r\n", command[7]);
         else
@@ -709,7 +733,7 @@ void processCameraCommand(char * command)
     }
     else if (strcmp("video_end", cameraSubcommand) == 0)
     {
-        returnCode = gopros_cameraStopRecordingVideo(selectedCamera);
+        returnCode = gopros_raw_cameraStopRecordingVideo(selectedCamera);
         if(returnCode == 0)
             sprintf(strToPrint_, "Camera %c stopped recording video.\r\n", command[7]);
         else
@@ -737,7 +761,7 @@ void processCameraCommand(char * command)
             }
         }
 
-        returnCode = gopros_cameraRawSendCommand(selectedCamera, goProCommand);
+        returnCode = gopros_raw_cameraRawSendCommand(selectedCamera, goProCommand);
         if(returnCode == 0)
             sprintf(strToPrint_, "Command %s sent to camera %c.\r\n", goProCommandNEOL, command[7]);
         else
@@ -1657,10 +1681,12 @@ int8_t terminal_readAndProcessCommands(void)
             uart_print(UART_DEBUG, "  i2c baro\r\n");
             uart_print(UART_DEBUG, "  i2c ina\r\n");
             uart_print(UART_DEBUG, "  i2c acc\r\n");
+            uart_print(UART_DEBUG, "  camera x pic\r\n");
+            uart_print(UART_DEBUG, "  camera x vid [sec]\r\n");
             uart_print(UART_DEBUG, "  camera x on\r\n");
             uart_print(UART_DEBUG, "  camera x picture_mode\r\n");
             uart_print(UART_DEBUG, "  camera x video_mode\r\n");
-            uart_print(UART_DEBUG, "  camera x pic\r\n");
+            uart_print(UART_DEBUG, "  camera x pic_raw\r\n");
             uart_print(UART_DEBUG, "  camera x video_start\r\n");
             uart_print(UART_DEBUG, "  camera x video_end\r\n");
             uart_print(UART_DEBUG, "  camera x send_cmd y\r\n");

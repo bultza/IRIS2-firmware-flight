@@ -13,7 +13,7 @@ uint8_t cameraMode_[4] = {CAMERAMODE_PIC};
 /*
  * Begins an UART communication with the selected camera.
  */
-int8_t gopros_cameraInit(uint8_t selectedCamera, uint8_t cameraMode)
+int8_t gopros_raw_cameraInit(uint8_t selectedCamera, uint8_t cameraMode)
 {
 
     //if (!cameraHasStarted_[selectedCamera])
@@ -29,7 +29,7 @@ int8_t gopros_cameraInit(uint8_t selectedCamera, uint8_t cameraMode)
 /**
  * It sets the camera in Picture Mode
  */
-int8_t gopros_cameraSetPictureMode(uint8_t selectedCamera)
+int8_t gopros_raw_cameraSetPictureMode(uint8_t selectedCamera)
 {
     if (!cameraHasStarted_[selectedCamera])
         return -1;
@@ -41,7 +41,7 @@ int8_t gopros_cameraSetPictureMode(uint8_t selectedCamera)
 /**
  * It sets the camera in Video Mode
  */
-int8_t gopros_cameraSetVideoMode(uint8_t selectedCamera)
+int8_t gopros_raw_cameraSetVideoMode(uint8_t selectedCamera)
 {
     if (!cameraHasStarted_[selectedCamera])
         return -1;
@@ -83,9 +83,9 @@ int8_t gopros_cameraSetVideoMode(uint8_t selectedCamera)
 }
 
 /*
- * Takes a picture with selected camera.
+ * It sends the command to take the picture
  */
-int8_t gopros_cameraTakePicture(uint8_t selectedCamera)
+int8_t gopros_raw_cameraTakePicture(uint8_t selectedCamera)
 {
     if (!cameraHasStarted_[selectedCamera])
         return -1;
@@ -94,10 +94,11 @@ int8_t gopros_cameraTakePicture(uint8_t selectedCamera)
     return 0;
 }
 
+
 /*
  * Starts recording video with selected camera.
  */
-int8_t gopros_cameraStartRecordingVideo(uint8_t selectedCamera)
+int8_t gopros_raw_cameraStartRecordingVideo(uint8_t selectedCamera)
 {
     if (!cameraHasStarted_[selectedCamera])
         return -1;
@@ -109,7 +110,7 @@ int8_t gopros_cameraStartRecordingVideo(uint8_t selectedCamera)
 /*
  * End video recording in selected camera.
  */
-int8_t gopros_cameraStopRecordingVideo(uint8_t selectedCamera)
+int8_t gopros_raw_cameraStopRecordingVideo(uint8_t selectedCamera)
 {
     if (!cameraHasStarted_[selectedCamera])
         return -1;
@@ -121,7 +122,7 @@ int8_t gopros_cameraStopRecordingVideo(uint8_t selectedCamera)
 /*
  * Send a customised command to the selected camera.
  */
-int8_t gopros_cameraRawSendCommand(uint8_t selectedCamera, char * cmd)
+int8_t gopros_raw_cameraRawSendCommand(uint8_t selectedCamera, char * cmd)
 {
     if (!cameraHasStarted_[selectedCamera])
         return -1;
@@ -130,17 +131,6 @@ int8_t gopros_cameraRawSendCommand(uint8_t selectedCamera, char * cmd)
     return 0;
 }
 
-/**
- * It sends the command to take the picture
- */
-int8_t cameraTakePic(uint8_t selectedCamera)
-{
-    if (!cameraHasStarted_[selectedCamera])
-        return -1;
-    uart_print(selectedCamera + 1, CAM_PHOTO_TAKE_PIC);
-    uart_flush(selectedCamera + 1);
-    return 0;
-}
 
 /**
  * Press the power on button
@@ -312,9 +302,9 @@ int8_t searchInUart(uint8_t uartIndex, uint8_t flag)
 }
 
 /**
- * This function must be called continuously
+ * It checks the low level tasks of the camera
  */
-int8_t cameraFSMcheck()
+int8_t cameraFSMlowLevelCheck()
 {
     uint64_t uptime = millis_uptime();
     char strToPrint[50];
@@ -531,6 +521,85 @@ int8_t cameraFSMcheck()
 }
 
 /**
+ * It checks the low level tasks of the camera
+ */
+int8_t cameraFSMhighLevelCheck()
+{
+    uint64_t uptime_ms = millis_uptime();
+    //char strToPrint[50];
+    uint8_t i;
+    for(i = 0; i < 4; i++)
+    {
+        if(cameraStatus_[i].fsmStatusGlobal == FSMGLOBAL_CAM_DISABLED)
+        {
+            //Camera is fine like it is :)
+            continue;
+        }
+
+        if(cameraStatus_[i].fsmStatusGlobalLastTime + cameraStatus_[i].fsmStatusGlobalsleepTime < uptime_ms)
+        {
+            //Move to next step!
+            switch(cameraStatus_[i].fsmStatusGlobal)
+            {
+            case FSMGLOBAL_CAM_PICTURESTART:
+                if(cameraStatus_[i].cameraStatus == CAM_STATUS_ON)
+                {
+                    cameraStatus_[i].fsmStatusGlobalLastTime = uptime_ms;
+                    //Wait 1s for sending the picture command:
+                    cameraStatus_[i].fsmStatusGlobalsleepTime = 1000;
+                    cameraStatus_[i].fsmStatusGlobal = FSMGLOBAL_CAM_PICTURESHOOT;
+                }
+                break;
+            case FSMGLOBAL_CAM_PICTURESHOOT:
+                gopros_raw_cameraTakePicture(i);
+                cameraStatus_[i].fsmStatusGlobalLastTime = uptime_ms;
+                //Wait 1s before sending the off command
+                cameraStatus_[i].fsmStatusGlobalsleepTime = 1000;
+                cameraStatus_[i].fsmStatusGlobal = FSMGLOBAL_CAM_OFF;
+                break;
+            case FSMGLOBAL_CAM_OFF:
+                cameraPowerOff(i);
+                cameraStatus_[i].fsmStatusGlobalLastTime = uptime_ms;
+                cameraStatus_[i].fsmStatusGlobalsleepTime = 0;
+                cameraStatus_[i].fsmStatusGlobal = FSMGLOBAL_CAM_DISABLED;
+                break;
+            case FSMGLOBAL_CAM_VIDEOSTART:
+                gopros_raw_cameraStartRecordingVideo(i);
+                cameraStatus_[i].fsmStatusGlobalLastTime = uptime_ms;
+                //Wait 1s for sending the picture command:
+                cameraStatus_[i].fsmStatusGlobalsleepTime = (uint64_t)cameraStatus_[i].videoDuration * 1000UL;
+                cameraStatus_[i].fsmStatusGlobal = FSMGLOBAL_CAM_VIDEOSTOP;
+                break;
+            case FSMGLOBAL_CAM_VIDEOSTOP:
+                gopros_raw_cameraStopRecordingVideo(i);
+                cameraStatus_[i].fsmStatusGlobalLastTime = uptime_ms;
+                //Wait 1s for sending the picture command:
+                cameraStatus_[i].fsmStatusGlobalsleepTime = 2000;
+                cameraStatus_[i].fsmStatusGlobal = FSMGLOBAL_CAM_OFF;
+                break;
+            default:
+                break;
+            }
+        }
+    }
+    return 0;
+}
+
+/**
+ * This function must be called continuously
+ */
+int8_t cameraFSMcheck()
+{
+    int8_t result = 0;
+    //Check low level stuff
+    result += cameraFSMlowLevelCheck();
+    //Check low level stuff
+    result += cameraFSMhighLevelCheck();
+
+    return result;
+}
+
+/**
  * Checks if all the cameras are ready for making a picture
  */
 int8_t cameraReadyStatus()
@@ -546,4 +615,51 @@ int8_t cameraReadyStatus()
             result &= ~bit;
     }
     return result;
+}
+
+/**
+ * It makes a video in a completely automatic way (from power on to power off)
+ */
+int8_t cameraMakeVideo(uint8_t selectedCamera, uint8_t cameraMode, uint16_t duration)
+{
+    if(cameraStatus_[selectedCamera].fsmStatusGlobal != FSMGLOBAL_CAM_DISABLED)
+        return -1; //Camera was busy, return error!
+
+    if(cameraStatus_[selectedCamera].fsmStatus != FSM_CAM_DONOTHING)
+        return -2; //Camera was busy, return error!
+
+    if(cameraStatus_[selectedCamera].cameraStatus != CAM_STATUS_OFF)
+        return -3; //Camera was busy, return error!
+
+    cameraStatus_[selectedCamera].fsmStatusGlobal = FSMGLOBAL_CAM_VIDEOSTART;
+    cameraStatus_[selectedCamera].fsmStatusGlobalsleepTime = 15000;
+    cameraStatus_[selectedCamera].fsmStatusGlobalLastTime = millis_uptime();
+    cameraStatus_[selectedCamera].videoDuration = duration;
+
+    //Start switching on the camera
+    gopros_raw_cameraInit(selectedCamera, CAMERAMODE_VID);
+    return cameraPowerOn(selectedCamera, 1);    //Slow mode...
+}
+
+/**
+ * It makes a picture in a completely automatic way (from power on to power off)
+ */
+int8_t cameraTakePicture(uint8_t selectedCamera)
+{
+    if(cameraStatus_[selectedCamera].fsmStatusGlobal != FSMGLOBAL_CAM_DISABLED)
+        return -1; //Camera was busy, return error!
+
+    if(cameraStatus_[selectedCamera].fsmStatus != FSM_CAM_DONOTHING)
+        return -2; //Camera was busy, return error!
+
+    if(cameraStatus_[selectedCamera].cameraStatus != CAM_STATUS_OFF)
+        return -3; //Camera was busy, return error!
+
+    cameraStatus_[selectedCamera].fsmStatusGlobal = FSMGLOBAL_CAM_PICTURESTART;
+    cameraStatus_[selectedCamera].fsmStatusGlobalsleepTime = 0;
+    cameraStatus_[selectedCamera].fsmStatusGlobalLastTime = millis_uptime();
+
+    //Start switching on the camera
+    gopros_raw_cameraInit(selectedCamera, CAMERAMODE_PIC);
+    return cameraPowerOn(selectedCamera, 0);
 }

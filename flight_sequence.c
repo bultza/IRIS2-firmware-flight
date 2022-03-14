@@ -55,7 +55,7 @@ void timelapse_checkStateOff()
         //Switch on depending on when it is now:
         if((camerasIndex >> i) & 1)
         {
-            gopros_cameraInit(i, CAMERAMODE_PIC);
+            gopros_raw_cameraInit(i, CAMERAMODE_PIC);
             cameraPowerOn(i, 0);
         }
     }
@@ -95,7 +95,7 @@ void timelapse_checkStateOnWaiting()
     for(i = 0; i < 4; i++)
     {
         if((camerasIndex >> i) & 1)
-            cameraTakePic(i);
+            gopros_raw_cameraTakePicture(i);
     }
 
     //Write event
@@ -163,7 +163,7 @@ void launch_checkStateOff()
         if((confRegister_.launch_camerasShort >> i) & 1
         || (confRegister_.launch_camerasLong >> i) & 1)
         {
-            gopros_cameraInit(i, CAMERAMODE_VID);
+            gopros_raw_cameraInit(i, CAMERAMODE_VID);
             cameraPowerOn(i, 1);    //In slow mode
         }
     }
@@ -199,7 +199,7 @@ void launch_checkStateOnWaiting()
         if((confRegister_.launch_camerasShort >> i) & 1
         || (confRegister_.launch_camerasLong >> i) & 1)
         {
-            gopros_cameraStartRecordingVideo(i);
+            gopros_raw_cameraStartRecordingVideo(i);
         }
     }
 
@@ -230,7 +230,7 @@ void launch_checkStateVideoWaiting_01()
     {
         //Send command to stop:
         if((confRegister_.launch_camerasShort >> i) & 1)
-            gopros_cameraStopRecordingVideo(i);
+            gopros_raw_cameraStopRecordingVideo(i);
     }
 
     //Sleep 100ms and switch off
@@ -266,7 +266,7 @@ void launch_checkStateVideoWaiting_02()
     for(i = 0; i < 4; i++)
     {
         //Send command to stop:
-        gopros_cameraStopRecordingVideo(i);
+        gopros_raw_cameraStopRecordingVideo(i);
     }
 
     //Sleep 100ms and switch off
@@ -317,17 +317,17 @@ void landing_checkStateOff()
     {
         if((confRegister_.landing_camerasLong >> i) & 1)
         {
-            gopros_cameraInit(i, CAMERAMODE_VID);
+            gopros_raw_cameraInit(i, CAMERAMODE_VID);
             cameraPowerOn(i, 1);    //In slow mode
         }
         else if((confRegister_.landing_camerasShort >> i) & 1)
         {
-            gopros_cameraInit(i, CAMERAMODE_VID);
+            gopros_raw_cameraInit(i, CAMERAMODE_VID);
             cameraPowerOn(i, 1);    //In slow mode
         }
         else if((confRegister_.landing_camerasHighSpeed >> i) & 1)
         {
-            gopros_cameraInit(i, CAMERAMODE_VID_HIGHSPEED);
+            gopros_raw_cameraInit(i, CAMERAMODE_VID_HIGHSPEED);
             cameraPowerOn(i, 1);    //In slow mode
         }
     }
@@ -360,7 +360,7 @@ void landing_checkStateOnWaiting()
             || (confRegister_.landing_camerasLong >> i) & 1
             || (confRegister_.landing_camerasHighSpeed >> i) & 1)
         {
-            gopros_cameraStartRecordingVideo(i);
+            gopros_raw_cameraStartRecordingVideo(i);
         }
     }
 
@@ -394,7 +394,7 @@ void landing_checkStateVideoWaiting_01()
         //Send command to stop:
         if((confRegister_.landing_camerasShort >> i) & 1
                 || (confRegister_.landing_camerasHighSpeed >> i) & 1)
-            gopros_cameraStopRecordingVideo(i);
+            gopros_raw_cameraStopRecordingVideo(i);
     }
 
     //Sleep 100ms and switch off
@@ -436,7 +436,7 @@ void landing_checkStateVideoWaiting_02()
         if((confRegister_.landing_camerasShort >> i) & 1
             || (confRegister_.landing_camerasHighSpeed >> i) & 1)
         {
-            gopros_cameraInit(i, CAMERAMODE_VID);
+            gopros_raw_cameraInit(i, CAMERAMODE_VID);
             cameraPowerOn(i, 1);    //In slow mode
         }
     }
@@ -470,7 +470,7 @@ void landing_checkStateVideoWaiting_03()
         if((confRegister_.landing_camerasShort >> i) & 1
                 || (confRegister_.landing_camerasHighSpeed >> i) & 1)
         {
-            gopros_cameraStartRecordingVideo(i);
+            gopros_raw_cameraStartRecordingVideo(i);
         }
     }
 
@@ -500,7 +500,7 @@ void landing_checkStateVideoWaiting_04()
     for(i = 0; i < 4; i++)
     {
         //Send command to stop:
-        gopros_cameraStopRecordingVideo(i);
+        gopros_raw_cameraStopRecordingVideo(i);
     }
 
     //Sleep 100ms and switch off
