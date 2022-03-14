@@ -25,123 +25,6 @@
 
 uint32_t lastTimePicture_ = 0;
 
-///////////////////////////////////////////////////////////////////////////////
-// Functions for the flight timelapse
-///////////////////////////////////////////////////////////////////////////////
-
-/**
- * Private function to see if it is time to start making pictures
- */
-void timelapse_checkStateOff()
-{
-    //Read Uptime:
-    uint32_t uptime_s = seconds_uptime();
-    if(lastTimePicture_ + (uint32_t)confRegister_.flight_timelapse_period > uptime_s)
-        return; //Continue waiting
-
-    //LED_R_ON;
-    //Time to make another picture:
-    uint8_t i;
-    uint8_t camerasIndex;
-
-    if(uptime_s > (confRegister_.lastStateTime/1000L + confRegister_.flight_timeSecondLeg))
-        camerasIndex =  confRegister_.flight_camerasSecondLeg;
-    else
-        camerasIndex =  confRegister_.flight_camerasFirstLeg;
-
-    //Switch on all Cameras?
-    for(i = 0; i < 4; i++)
-    {
-        //Switch on depending on when it is now:
-        if((camerasIndex >> i) & 1)
-        {
-            gopros_raw_cameraInit(i, CAMERAMODE_PIC);
-            cameraPowerOn(i, 0);
-        }
-    }
-
-    confRegister_.flightSubState = SUBSTATE_ON_WAITING;
-
-    //Make sure we did it correctly:
-    lastTimePicture_ = uptime_s;
-}
-
-/**
- *
- */
-void timelapse_checkStateOnWaiting()
-{
-    uint64_t uptime_ms = millis_uptime();
-    uint8_t camerasIndex;
-
-    if(uptime_ms > (confRegister_.lastStateTime + confRegister_.flight_timeSecondLeg * 1000))
-        camerasIndex =  confRegister_.flight_camerasSecondLeg;
-    else
-        camerasIndex =  confRegister_.flight_camerasFirstLeg;
-
-    if(cameraReadyStatus() != camerasIndex)
-    {
-        confRegister_.lastSubStateTime = uptime_ms;
-        return;
-    }
-
-    //Wait 1s after cameras are ready
-    if(confRegister_.lastSubStateTime + 1000UL > uptime_ms)
-        return;
-
-    //LED_G_ON;
-    //Time to make picture!
-    uint8_t i;
-    for(i = 0; i < 4; i++)
-    {
-        if((camerasIndex >> i) & 1)
-            gopros_raw_cameraTakePicture(i);
-    }
-
-    //Write event
-    uint8_t payload[5] = {0};
-    payload[0] = 1;
-    payload[1] = 1;
-    payload[2] = 1;
-    payload[3] = 1;
-    saveEventSimple(EVENT_CAMERA_TIMELAPSE_PIC, payload);
-
-    confRegister_.flightSubState = SUBSTATE_PIC_WAITING;
-    confRegister_.lastSubStateTime = millis_uptime();
-}
-
-/**
- *
- */
-void timelapse_checkStatePicWaiting()
-{
-    uint64_t timeNow = millis_uptime();
-    if(confRegister_.lastSubStateTime + 1000UL > timeNow)
-        return;
-
-    //LED_G_OFF;
-    //LED_B_ON;
-    //Time to switch off cameras!
-    uint8_t i;
-    for(i = 0; i < 4; i++)
-    {
-        cameraPowerOff(i);
-    }
-
-    confRegister_.flightSubState = SUBSTATE_OFF_WAITING;
-}
-
-/**
- *
- */
-void timelapse_checkStateOffWaiting()
-{
-    if(cameraReadyStatus())
-        return;
-    confRegister_.flightSubState = SUBSTATE_OFF;
-    //LED_B_OFF;
-    //LED_R_OFF;
-}
 
 ///////////////////////////////////////////////////////////////////////////////
 // Functions for the launch video
@@ -542,12 +425,12 @@ void checkFlightSequence()
     if(confRegister_.flightState == FLIGHTSTATE_DEBUG)
         return;
 
-    uint64_t uptime = millis_uptime();
+    uint64_t uptime_ms = millis_uptime();
 
     if(confRegister_.flightState == FLIGHTSTATE_WAITFORLAUNCH)
     {
         //Avoid measuring heights at switch on
-        if(uptime < 10000)
+        if(uptime_ms < 10000)
             return;
 
         //Are we very high or climbing very fast?
@@ -557,10 +440,10 @@ void checkFlightSequence()
         {
             //Lets move to the next state!!
             confRegister_.flightState = FLIGHTSTATE_LAUNCH;
-            confRegister_.lastStateTime = uptime;
+            confRegister_.lastStateTime = uptime_ms;
             //Reset the substate
             confRegister_.flightSubState = 0;
-            confRegister_.lastSubStateTime = uptime;
+            confRegister_.lastSubStateTime = uptime_ms;
             uint8_t payload[5] = {0};
             payload[0] = FLIGHTSTATE_LAUNCH;
             payload[1] = getAltitude() > (confRegister_.launch_heightThreshold * 100);
@@ -597,10 +480,10 @@ void checkFlightSequence()
             {
                 //Cameras are off, we move to the next step:
                 confRegister_.flightState = FLIGHTSTATE_TIMELAPSE;
-                confRegister_.lastStateTime = uptime;
+                confRegister_.lastStateTime = uptime_ms;
                 //Reset the substate
                 confRegister_.flightSubState = 0;
-                confRegister_.lastSubStateTime = uptime;
+                confRegister_.lastSubStateTime = uptime_ms;
                 uint8_t payload[5] = {0};
                 payload[0] = FLIGHTSTATE_TIMELAPSE;
                 saveEventSimple(EVENT_STATE_CHANGED, payload);
@@ -614,25 +497,32 @@ void checkFlightSequence()
 
     if(confRegister_.flightState == FLIGHTSTATE_TIMELAPSE)
     {
+        uint32_t uptime_s = (uptime_ms / 1000UL);
         //Is it time to make another picture?
-        switch(confRegister_.flightSubState)
+        if(lastTimePicture_ + (uint32_t)confRegister_.flight_timelapse_period < uptime_s)
         {
-        case (SUBSTATE_OFF):
-            //We are waiting if it is time to make picture
-            timelapse_checkStateOff();
-            break;
-        case (SUBSTATE_ON_WAITING):
-            timelapse_checkStateOnWaiting();
-            break;
-        case (SUBSTATE_PIC_WAITING):
-            timelapse_checkStatePicWaiting();
-            break;
-        case (SUBSTATE_OFF_WAITING):
-            timelapse_checkStateOffWaiting();
-            break;
-        default:
-            confRegister_.flightSubState = SUBSTATE_OFF;
-            break;
+            uint8_t i;
+            uint8_t camerasIndex;
+
+            //Decide on which cameras
+            if(uptime_s > (confRegister_.lastStateTime/1000UL + confRegister_.flight_timeSecondLeg))
+                camerasIndex =  confRegister_.flight_camerasSecondLeg;
+            else
+                camerasIndex =  confRegister_.flight_camerasFirstLeg;
+
+            for(i = 0; i < 4; i++)
+            {
+                //Switch on depending on when it is now:
+                if((camerasIndex >> i) & 1)
+                {
+                    cameraTakePicture(i);
+                }
+            }
+            //Write event
+            uint8_t payload[5] = {0};
+            payload[0] = camerasIndex;
+            saveEventSimple(EVENT_CAMERA_TIMELAPSE_PIC, payload);
+            lastTimePicture_ = uptime_s;
         }
 
         int32_t verticalSpeed = getVerticalSpeed();
@@ -647,29 +537,15 @@ void checkFlightSequence()
           )
         {
             //Move only if safe climbing time reached:
-            if(confRegister_.lastStateTime + confRegister_.launch_timeClimbMaximum * 1000 < uptime)
+            if(confRegister_.lastStateTime + (uint64_t)confRegister_.launch_timeClimbMaximum * 1000UL < uptime_ms)
             {
                 //Lets move to the next state!!
                 confRegister_.flightState = FLIGHTSTATE_LANDING;
-                confRegister_.lastStateTime = uptime;
-
-                if(confRegister_.flightSubState != SUBSTATE_OFF)
-                {
-                    //Joder!! Giouder!! we got the signal when doing a picture! Just cut the power please...
-                    //TODO Maybe change it to something without state machines, just with some delays...
-                    uint8_t i;
-                    for(i = 0; i < 4; i++)
-                    {
-                        //cameraPowerOffUnsafe(i);
-                        cameraPowerOff(i);
-                        //We have implemented a delay afterwards to avoid this :)
-                    }
-
-                }
+                confRegister_.lastStateTime = uptime_ms;
 
                 //Reset the substate
                 confRegister_.flightSubState = 0;
-                confRegister_.lastSubStateTime = uptime;
+                confRegister_.lastSubStateTime = uptime_ms;
 
                 uint8_t payload[5] = {0};
                 payload[0] = FLIGHTSTATE_LANDING;
@@ -688,7 +564,7 @@ void checkFlightSequence()
 
     if(confRegister_.flightState == FLIGHTSTATE_LANDING)
     {
-        if(confRegister_.lastStateTime + 10000 > uptime)
+        if(confRegister_.lastStateTime + 10000 > uptime_ms)
         {
             //During the first 10s after changing, do not start this sequence
             return;
@@ -696,14 +572,14 @@ void checkFlightSequence()
 
         //Lets add a safemode just in case that the descend is triggered by error
         //This piece of code will jump into timelapse after 1.25 hours of landing video
-        if(confRegister_.lastStateTime + 4500000 < uptime)
+        if(confRegister_.lastStateTime + 4500000 < uptime_ms)
         {
             //Cameras are off, we move to the next step:
             confRegister_.flightState = FLIGHTSTATE_TIMELAPSE_LAND;
-            confRegister_.lastStateTime = uptime;
+            confRegister_.lastStateTime = uptime_ms;
             //Reset the substate
             confRegister_.flightSubState = 0;
-            confRegister_.lastSubStateTime = uptime;
+            confRegister_.lastSubStateTime = uptime_ms;
             uint8_t payload[5] = {'0','E','R','R','O'};
             payload[0] = FLIGHTSTATE_TIMELAPSE_LAND;
             saveEventSimple(EVENT_STATE_CHANGED, payload);
@@ -737,10 +613,10 @@ void checkFlightSequence()
             {
                 //Cameras are off, we move to the next step:
                 confRegister_.flightState = FLIGHTSTATE_TIMELAPSE_LAND;
-                confRegister_.lastStateTime = uptime;
+                confRegister_.lastStateTime = uptime_ms;
                 //Reset the substate
                 confRegister_.flightSubState = 0;
-                confRegister_.lastSubStateTime = uptime;
+                confRegister_.lastSubStateTime = uptime_ms;
                 uint8_t payload[5] = {0};
                 payload[0] = FLIGHTSTATE_TIMELAPSE_LAND;
                 saveEventSimple(EVENT_STATE_CHANGED, payload);
@@ -754,26 +630,24 @@ void checkFlightSequence()
 
     if(confRegister_.flightState == FLIGHTSTATE_TIMELAPSE_LAND)
     {
-        //Is it time to make another picture?
-        switch(confRegister_.flightSubState)
-        {
-        case (SUBSTATE_OFF):
-            //We are waiting if it is time to make picture
-            timelapse_checkStateOff();
-            break;
-        case (SUBSTATE_ON_WAITING):
-            timelapse_checkStateOnWaiting();
-            break;
-        case (SUBSTATE_PIC_WAITING):
-            timelapse_checkStatePicWaiting();
-            break;
-        case (SUBSTATE_OFF_WAITING):
-            timelapse_checkStateOffWaiting();
-            break;
-        default:
-            confRegister_.flightSubState = SUBSTATE_OFF;
-            break;
-        }
+        uint32_t uptime_s = (uptime_ms / 1000UL);
+       //Is it time to make another picture?
+       if(lastTimePicture_ + (uint32_t)confRegister_.flight_timelapse_period < uptime_s)
+       {
+           uint8_t i;
+
+           for(i = 0; i < 4; i++)
+           {
+               //Switch on depending on when it is now:
+               cameraTakePicture(i);
+           }
+
+           //Write event
+           uint8_t payload[5] = {0};
+           payload[0] = 0x0F;   //All four cameras taking video
+           saveEventSimple(EVENT_CAMERA_TIMELAPSE_PIC, payload);
+           lastTimePicture_ = uptime_s;
+       }
 
         //TODO Detect the shaking so we start making video!!!
     }
