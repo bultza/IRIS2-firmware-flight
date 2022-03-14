@@ -247,7 +247,8 @@ void processConfCommand(char * command)
         uart_print(UART_DEBUG, strToPrint_);
         sprintf(strToPrint_, "temp_readPeriod = %d\r\n", confRegister_.temp_readPeriod);
         uart_print(UART_DEBUG, strToPrint_);
-        sprintf(strToPrint_, "timelapse_period = %d\r\n", confRegister_.flight_timelapse_period);
+        sprintf(strToPrint_, "leds = %d\r\n", confRegister_.leds);
+
         uart_print(UART_DEBUG, strToPrint_);
         sprintf(strToPrint_, "gopro_model[0] = %d\r\n", confRegister_.gopro_model[0]);
         uart_print(UART_DEBUG, strToPrint_);
@@ -261,6 +262,55 @@ void processConfCommand(char * command)
         uart_print(UART_DEBUG, strToPrint_);
         sprintf(strToPrint_, "gopro_leds = %d\r\n", confRegister_.gopro_leds);
         uart_print(UART_DEBUG, strToPrint_);
+
+        sprintf(strToPrint_, "launch_heightThreshold = %ld\r\n", confRegister_.launch_heightThreshold);
+        uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "launch_climbThreshold = %ld\r\n", confRegister_.launch_climbThreshold);
+        uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "launch_videoDurationLong = %d\r\n", confRegister_.launch_videoDurationLong);
+        uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "launch_videoDurationShort = %d\r\n", confRegister_.launch_videoDurationShort);
+        uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "launch_camerasLong = 0x%02X\r\n", confRegister_.launch_camerasLong);
+        uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "launch_camerasShort = 0x%02X\r\n", confRegister_.launch_camerasShort);
+        uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "launch_timeClimbMaximum = %d\r\n", confRegister_.launch_timeClimbMaximum);
+        uart_print(UART_DEBUG, strToPrint_);
+
+        sprintf(strToPrint_, "flight_timelapse_period = %d\r\n", confRegister_.flight_timelapse_period);
+        uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "flight_camerasFirstLeg = 0x%02X\r\n", confRegister_.flight_camerasFirstLeg);
+        uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "flight_camerasSecondLeg = 0x%02X\r\n", confRegister_.flight_camerasSecondLeg);
+        uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "flight_timeSecondLeg = %ld\r\n", confRegister_.flight_timeSecondLeg);
+        uart_print(UART_DEBUG, strToPrint_);
+
+        sprintf(strToPrint_, "landing_heightThreshold = %ld\r\n", confRegister_.landing_heightThreshold);
+        uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "landing_heightSecurityThreshold = %ld\r\n", confRegister_.landing_heightSecurityThreshold);
+        uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "landing_speedThreshold = %ld\r\n", confRegister_.landing_speedThreshold);
+        uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "landing_videoDurationLong = %d\r\n", confRegister_.landing_videoDurationLong);
+        uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "landing_videoDurationShort = %d\r\n", confRegister_.landing_videoDurationShort);
+        uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "landing_camerasLong = 0x%02X\r\n", confRegister_.landing_camerasLong);
+        uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "landing_camerasShort = 0x%02X\r\n", confRegister_.landing_camerasShort);
+        uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "landing_camerasHighSpeed = 0x%02X\r\n", confRegister_.landing_camerasHighSpeed);
+        uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "landing_heightShortStart = %ld\r\n", confRegister_.landing_heightShortStart);
+        uart_print(UART_DEBUG, strToPrint_);
+
+        sprintf(strToPrint_, "recovery_videoDuration = %d\r\n", confRegister_.recovery_videoDuration);
+        uart_print(UART_DEBUG, strToPrint_);
+
+
+
         return;
     }
     else if (strncmp("set", (char *)confSubcommand, 3) != 0)
@@ -336,7 +386,7 @@ void processConfCommand(char * command)
     {
         confRegister_.temp_readPeriod = valueToSet;
     }
-    else if (strcmp("timelapse_period", (char *)selectedParameter) == 0)
+    else if (strcmp("flight_timelapse_period", (char *)selectedParameter) == 0)
     {
         confRegister_.flight_timelapse_period = valueToSet;
     }
