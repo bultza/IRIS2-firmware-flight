@@ -11,6 +11,7 @@
 #include "spi.h"
 #include "configuration.h"
 #include "clock.h"
+#include "leds.h"
 
 // Device is S70FS70FL01GS - 1 Gbit NOR Flash memory.
 // Device includes two smaller S25FL512 memories - 512 Mbit each.

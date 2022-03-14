@@ -248,8 +248,8 @@ void processConfCommand(char * command)
         sprintf(strToPrint_, "temp_readPeriod = %d\r\n", confRegister_.temp_readPeriod);
         uart_print(UART_DEBUG, strToPrint_);
         sprintf(strToPrint_, "leds = %d\r\n", confRegister_.leds);
-
         uart_print(UART_DEBUG, strToPrint_);
+
         sprintf(strToPrint_, "gopro_model[0] = %d\r\n", confRegister_.gopro_model[0]);
         uart_print(UART_DEBUG, strToPrint_);
         sprintf(strToPrint_, "gopro_model[1] = %d\r\n", confRegister_.gopro_model[1]);
@@ -386,10 +386,6 @@ void processConfCommand(char * command)
     {
         confRegister_.temp_readPeriod = valueToSet;
     }
-    else if (strcmp("flight_timelapse_period", (char *)selectedParameter) == 0)
-    {
-        confRegister_.flight_timelapse_period = valueToSet;
-    }
     else if (strcmp("gopro_model[0]", (char *)selectedParameter) == 0)
     {
         confRegister_.gopro_model[0] = valueToSet;
@@ -413,6 +409,98 @@ void processConfCommand(char * command)
     else if (strcmp("gopro_leds", (char *)selectedParameter) == 0)
     {
         confRegister_.gopro_leds = valueToSet;
+    }
+    else if (strcmp("leds", (char *)selectedParameter) == 0)
+    {
+        confRegister_.leds = valueToSet;
+    }
+    else if (strcmp("flight_timelapse_period", (char *)selectedParameter) == 0)
+    {
+        confRegister_.flight_timelapse_period = valueToSet;
+    }
+    else if (strcmp("launch_heightThreshold", (char *)selectedParameter) == 0)
+    {
+        confRegister_.launch_heightThreshold = valueToSet;
+    }
+    else if (strcmp("launch_climbThreshold", (char *)selectedParameter) == 0)
+    {
+        confRegister_.launch_climbThreshold = valueToSet;
+    }
+    else if (strcmp("launch_videoDurationLong", (char *)selectedParameter) == 0)
+    {
+        confRegister_.launch_videoDurationLong = valueToSet;
+    }
+    else if (strcmp("launch_videoDurationShort", (char *)selectedParameter) == 0)
+    {
+        confRegister_.launch_videoDurationShort = valueToSet;
+    }
+    else if (strcmp("launch_camerasLong", (char *)selectedParameter) == 0)
+    {
+        confRegister_.launch_camerasLong = valueToSet;
+    }
+    else if (strcmp("launch_camerasShort", (char *)selectedParameter) == 0)
+    {
+        confRegister_.launch_camerasShort = valueToSet;
+    }
+    else if (strcmp("launch_timeClimbMaximum", (char *)selectedParameter) == 0)
+    {
+        confRegister_.launch_timeClimbMaximum = valueToSet;
+    }
+    else if (strcmp("flight_timelapse_period", (char *)selectedParameter) == 0)
+    {
+        confRegister_.flight_timelapse_period = valueToSet;
+    }
+    else if (strcmp("flight_camerasFirstLeg", (char *)selectedParameter) == 0)
+    {
+        confRegister_.flight_camerasFirstLeg = valueToSet;
+    }
+    else if (strcmp("flight_camerasSecondLeg", (char *)selectedParameter) == 0)
+    {
+        confRegister_.flight_camerasSecondLeg = valueToSet;
+    }
+    else if (strcmp("flight_timeSecondLeg", (char *)selectedParameter) == 0)
+    {
+        confRegister_.flight_timeSecondLeg = valueToSet;
+    }
+    else if (strcmp("landing_heightThreshold", (char *)selectedParameter) == 0)
+    {
+        confRegister_.landing_heightThreshold = valueToSet;
+    }
+    else if (strcmp("landing_heightSecurityThreshold", (char *)selectedParameter) == 0)
+    {
+        confRegister_.landing_heightSecurityThreshold = valueToSet;
+    }
+    else if (strcmp("landing_speedThreshold", (char *)selectedParameter) == 0)
+    {
+        confRegister_.landing_speedThreshold = valueToSet;
+    }
+    else if (strcmp("landing_videoDurationLong", (char *)selectedParameter) == 0)
+    {
+        confRegister_.landing_videoDurationLong = valueToSet;
+    }
+    else if (strcmp("landing_videoDurationShort", (char *)selectedParameter) == 0)
+    {
+        confRegister_.landing_videoDurationShort = valueToSet;
+    }
+    else if (strcmp("landing_camerasLong", (char *)selectedParameter) == 0)
+    {
+        confRegister_.landing_camerasLong = valueToSet;
+    }
+    else if (strcmp("landing_camerasShort", (char *)selectedParameter) == 0)
+    {
+        confRegister_.landing_camerasShort = valueToSet;
+    }
+    else if (strcmp("landing_camerasHighSpeed", (char *)selectedParameter) == 0)
+    {
+        confRegister_.landing_camerasHighSpeed = valueToSet;
+    }
+    else if (strcmp("landing_heightShortStart", (char *)selectedParameter) == 0)
+    {
+        confRegister_.landing_heightShortStart = valueToSet;
+    }
+    else if (strcmp("recovery_videoDuration", (char *)selectedParameter) == 0)
+    {
+        confRegister_.recovery_videoDuration = valueToSet;
     }
     else
     {
