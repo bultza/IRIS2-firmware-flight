@@ -1,3 +1,4 @@
+
 /**
  * IRIS2 CPU Flight Firmware
  * ==============================
@@ -92,11 +93,7 @@
 #include "datalogger.h"
 #include "terminal.h"
 #include "flight_sequence.h"
-
-
-#define LED_ON          (P1OUT |= BIT0)
-#define LED_OFF         (P1OUT &= ~BIT0)
-#define LED_TOGGLE      (P1OUT ^= BIT0)
+#include "leds.h"
 
 /*
  * Init all GPIO and MCU subsystems
@@ -104,10 +101,10 @@
 void init_board()
 {
     //Switch off everything on boot
-    LED_OFF;
-    LED_R_OFF;
-    LED_G_OFF;
-    LED_B_OFF;
+    led_off();
+    led_g_off();
+    led_r_off();
+    led_b_off();
     CAMERA01_OFF;
     CAMERA02_OFF;
     CAMERA03_OFF;
@@ -230,12 +227,12 @@ void init_board()
     uint8_t i;
     for(i = 0; i < 10; i++)
     {
-        LED_TOGGLE;
-        LED_G_TOGGLE;
+        led_toggle();
+        led_g_toggle();
         __delay_cycles(400000);
     }
-    LED_OFF;
-    LED_G_OFF;
+    led_off();;
+    led_g_off();
 }
 
 /**
@@ -305,24 +302,24 @@ int main(void)
 
 	    //Blink CPU LED
 	    if(uptime % 1000 > 50)
-	        LED_OFF;
+	        led_off();
 	    else
-	        LED_ON;
+	        led_on();
 
 	    //Blink FP Green LED once per 5s
         if(uptime % 5000 > 10)
-            LED_G_OFF;
+            led_g_off();
         else
-            LED_G_ON;
+            led_g_on();
 
         //Keep the Red LED On if there is power on the cameras
         if((P4OUT & BIT6) &&
                 (P4OUT & BIT5) &&
                 (P4OUT & BIT4) &&
                 (P2OUT & BIT7))
-            LED_R_OFF;
+            led_r_off();
         else
-            LED_R_ON;
+            led_r_on();
 	};
 
 	//It should never reach here

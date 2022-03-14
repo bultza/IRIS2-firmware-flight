@@ -14,7 +14,7 @@ struct NOR_Status nor_status_;
  */
 int8_t NOR_writeEnableDisable(uint8_t enabled, uint8_t deviceSelect)
 {
-    //LED_B_ON;
+    //led_b_on();
     if (deviceSelect == CS_FLASH1)
         FLASH_CS1_ON;
     else if (deviceSelect == CS_FLASH2)
@@ -28,7 +28,7 @@ int8_t NOR_writeEnableDisable(uint8_t enabled, uint8_t deviceSelect)
     FLASH_CS1_OFF;
     FLASH_CS2_OFF;
 
-    //LED_B_OFF;
+    //led_b_off();
 
     return 0;
 }
@@ -40,7 +40,7 @@ int8_t NOR_writeEnableDisable(uint8_t enabled, uint8_t deviceSelect)
  */
 int8_t spi_NOR_checkWriteInProgress(uint8_t deviceSelect)
 {
-    LED_B_ON;
+    led_b_on();
     if (deviceSelect == CS_FLASH1)
         FLASH_CS1_ON;
     else if (deviceSelect == CS_FLASH2)
@@ -53,7 +53,7 @@ int8_t spi_NOR_checkWriteInProgress(uint8_t deviceSelect)
     FLASH_CS1_OFF;
     FLASH_CS2_OFF;
 
-    LED_B_OFF;
+    led_b_off();
 
     if (bufferIn[0] & 0x01)
         return 1;
@@ -67,7 +67,7 @@ int8_t spi_NOR_checkWriteInProgress(uint8_t deviceSelect)
  */
 int8_t spi_NOR_getRDID(struct RDIDInfo *idInformation, uint8_t deviceSelect)
 {
-    LED_B_ON;
+    led_b_on();
     if (deviceSelect == CS_FLASH1)
         FLASH_CS1_ON;
     else if (deviceSelect == CS_FLASH2)
@@ -92,7 +92,7 @@ int8_t spi_NOR_getRDID(struct RDIDInfo *idInformation, uint8_t deviceSelect)
     idInformation->asciiModelChars1 = bufferIn[6];
     idInformation->asciiModelChars2 = bufferIn[7];
 
-    LED_B_OFF;
+    led_b_off();
 
     return 0;
 }
@@ -106,7 +106,7 @@ int8_t spi_NOR_readFromAddress(uint32_t readAddress, uint8_t * buffer, uint16_t 
     if (spi_NOR_checkWriteInProgress(deviceSelect))
         return -1;
 
-    LED_B_ON;
+    led_b_on();
     // Chip Select ON
     if (deviceSelect == CS_FLASH1)
         FLASH_CS1_ON;
@@ -128,7 +128,7 @@ int8_t spi_NOR_readFromAddress(uint32_t readAddress, uint8_t * buffer, uint16_t 
     FLASH_CS1_OFF;
     FLASH_CS2_OFF;
 
-    LED_B_OFF;
+    led_b_off();
 
     return 0;
 }
@@ -146,7 +146,7 @@ int8_t spi_NOR_writeToAddress(uint32_t writeAddress, uint8_t * buffer, uint16_t 
     if (spi_NOR_checkWriteInProgress(deviceSelect))
         return -1;
 
-    LED_B_ON;
+    led_b_on();
 
     // Enable Write Operations
     NOR_writeEnableDisable(1, deviceSelect);
@@ -182,7 +182,7 @@ int8_t spi_NOR_writeToAddress(uint32_t writeAddress, uint8_t * buffer, uint16_t 
     // Disable Write Operations
     NOR_writeEnableDisable(0, deviceSelect);
 
-    LED_B_OFF;
+    led_b_off();
 
     return 0;
 }
@@ -197,7 +197,7 @@ int8_t spi_NOR_sectorErase(uint32_t sectorAddress, uint8_t deviceSelect)
     if (spi_NOR_checkWriteInProgress(deviceSelect))
         return -1;
 
-    LED_B_ON;
+    led_b_on();
 
     // Enable Write Operations
     NOR_writeEnableDisable(1, deviceSelect);
@@ -229,7 +229,7 @@ int8_t spi_NOR_sectorErase(uint32_t sectorAddress, uint8_t deviceSelect)
     // Disable Write Operations
     NOR_writeEnableDisable(0, deviceSelect);
 
-    LED_B_OFF;
+    led_b_off();
 
     return 0;
 }
@@ -243,7 +243,7 @@ int8_t spi_NOR_bulkErase(uint8_t deviceSelect)
     if (spi_NOR_checkWriteInProgress(deviceSelect))
         return -1;
 
-    LED_B_ON;
+    led_b_on();
 
     // Enable Write Operations
     NOR_writeEnableDisable(1, deviceSelect);
@@ -270,7 +270,7 @@ int8_t spi_NOR_bulkErase(uint8_t deviceSelect)
     //// Disable Write Operations
     //NOR_writeEnableDisable(0, deviceSelect);
 
-    LED_B_OFF;
+    led_b_off();
 
     return 0;
 }
