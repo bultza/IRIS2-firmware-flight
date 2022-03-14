@@ -4,6 +4,9 @@ Firmware for the IRIS2 CPU, that will fly as an instrument on the mission Sunris
 ## Prerequisites
 You should install Code Composer Studio (Version 10 or higher preffered) https://www.ti.com/tool/CCSTUDIO
 > :warning: **DEBUG_MODE**: In the configuration.h file, line 10 comment or uncomment to be in DEBUG mode. Always fly with Debug mode disabled!
+```c
+#define DEBUG_MODE
+```
 
 ## Programming the MCU
 You should have a programmer for MSP430, a launchpad is enough.
