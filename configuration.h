@@ -16,18 +16,6 @@
 #include "spi_NOR.h"
 #include "datalogger.h"
 
-#define LED_B_OFF       (P3OUT |= BIT6)
-#define LED_B_ON        (P3OUT &= ~BIT6)
-#define LED_B_TOGGLE    (P3OUT ^= BIT6)
-
-#define LED_G_OFF       (P3OUT |= BIT5)
-#define LED_G_ON        (P3OUT &= ~BIT5)
-#define LED_G_TOGGLE    (P3OUT ^= BIT5)
-
-#define LED_R_OFF       (P3OUT |= BIT4)
-#define LED_R_ON        (P3OUT &= ~BIT4)
-#define LED_R_TOGGLE    (P3OUT ^= BIT4)
-
 //#define FRAM_TLM_SAVEPERIOD 599     //seconds period to save on FRAM
 #define FRAM_TLM_SAVEPERIOD 599     //Only for Debug TODO
 #define NOR_TLM_SAVEPERIOD  10      //seconds period to save on NOR Flash
@@ -68,6 +56,7 @@ struct ConfigurationRegister
     uint16_t temp_readPeriod;
     uint16_t ina_readPeriod;
     uint16_t acc_readPeriod;
+    uint8_t leds;
 
     //Put here all the configuration of the gopros
     uint8_t gopro_beeps;        //01 = 70%, 02 = off
@@ -94,14 +83,14 @@ struct ConfigurationRegister
     int32_t launch_climbThreshold;     //m/s
     uint16_t launch_videoDurationLong;  //s
     uint16_t launch_videoDurationShort; //s
-    uint8_t  launch_camerasLong[4];
-    uint8_t  launch_camerasShort[4];
+    uint8_t  launch_camerasLong;
+    uint8_t  launch_camerasShort;
     uint16_t launch_timeClimbMaximum;   //s
 
     //Timelapse Configuration
     uint16_t flight_timelapse_period;   //s
-    uint8_t  flight_camerasFirstLeg[4];
-    uint8_t  flight_camerasSecondLeg[4];
+    uint8_t  flight_camerasFirstLeg;
+    uint8_t  flight_camerasSecondLeg;
     uint32_t flight_timeSecondLeg;      //s
 
     //Landing Configuration
@@ -110,8 +99,9 @@ struct ConfigurationRegister
     int32_t  landing_speedThreshold;          //m/s
     uint16_t landing_videoDurationLong;       //s
     uint16_t landing_videoDurationShort;      //s
-    uint8_t  landing_camerasLong[4];
-    uint8_t  landing_camerasShort[4];
+    uint8_t  landing_camerasLong;
+    uint8_t  landing_camerasShort;
+    uint8_t  landing_camerasHighSpeed;
     int32_t landing_heightShortStart;        //m ->3000m
 
     //Landed Configuration

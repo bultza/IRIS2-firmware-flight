@@ -33,10 +33,12 @@ int8_t configuration_init(void)
         confRegister_.nor_eventAddress = NOR_EVENTS_ADDRESS;
         confRegister_.nor_tlmSavePeriod = NOR_TLM_SAVEPERIOD;
 
+        confRegister_.leds = 0; //1 = on, 0 = off
+
         //01 = 70%, 02 = off
         confRegister_.gopro_beeps = 02;
         //00 = off, 01 = 2, 02 = 4
-        confRegister_.gopro_leds = 01;
+        confRegister_.gopro_leds = 0;
 
         //00 = Gopro Black, 01 = Gopro White
         confRegister_.gopro_model[0] = 00;
@@ -62,27 +64,14 @@ int8_t configuration_init(void)
         confRegister_.launch_climbThreshold = 2;        //On IRIS1 it was recorded 7.8m/s
         confRegister_.launch_videoDurationLong = 7200;  //2 hours
         confRegister_.launch_videoDurationShort = 3600; //1h
-        confRegister_.launch_camerasLong[0] = 1;
-        confRegister_.launch_camerasLong[1] = 1;
-        confRegister_.launch_camerasLong[2] = 0;
-        confRegister_.launch_camerasLong[3] = 0;
-        confRegister_.launch_camerasShort[0] = 0;
-        confRegister_.launch_camerasShort[1] = 0;
-        confRegister_.launch_camerasShort[2] = 1;
-        confRegister_.launch_camerasShort[3] = 1;
+        confRegister_.launch_camerasLong = 0x03;        //Cameras 1 & 2
+        confRegister_.launch_camerasShort = 0x0C;       //Cameras 3 & 4
         confRegister_.launch_timeClimbMaximum = 14400;  //4hours (+ 2h of the launch video)
-        confRegister_.launch_timeClimbMaximum = 60;  //4hours (+ 2h of the launch video)
 
         //Timelapse Configuration
         confRegister_.flight_timelapse_period = TIMELAPSE_PERIOD;
-        confRegister_.flight_camerasFirstLeg[0] = 1;
-        confRegister_.flight_camerasFirstLeg[1] = 1;
-        confRegister_.flight_camerasFirstLeg[2] = 1;
-        confRegister_.flight_camerasFirstLeg[3] = 1;
-        confRegister_.flight_camerasSecondLeg[0] = 1;
-        confRegister_.flight_camerasSecondLeg[1] = 1;
-        confRegister_.flight_camerasSecondLeg[2] = 0;
-        confRegister_.flight_camerasSecondLeg[3] = 1;
+        confRegister_.flight_camerasFirstLeg = 0x0F;    //Cameras 1, 2, 3 & 4
+        confRegister_.flight_camerasSecondLeg = 0x0B;   //Cameras 1, 2 & 4
         confRegister_.flight_timeSecondLeg = 86400;     //24 hours
 
         //Landing Configuration
@@ -91,14 +80,10 @@ int8_t configuration_init(void)
         confRegister_.landing_speedThreshold = -15;         //On IRIS1 it measured -55m/s at 31.5km height
         confRegister_.landing_videoDurationLong = 3600;     //On IRIS1 decend was 50 minutes
         confRegister_.landing_videoDurationShort = 900;     //This is 15min, on IRIS1 it landed in 10 minutes
-        confRegister_.landing_camerasLong[0] = 0;
-        confRegister_.landing_camerasLong[1] = 1;
-        confRegister_.landing_camerasLong[2] = 0;
-        confRegister_.landing_camerasLong[3] = 0;
-        confRegister_.landing_camerasShort[0] = 1;
-        confRegister_.landing_camerasShort[1] = 0;
-        confRegister_.landing_camerasShort[2] = 1;
-        confRegister_.landing_camerasShort[3] = 1;
+        confRegister_.landing_camerasLong = 0x02;       //Camera 2
+        confRegister_.landing_camerasShort = 0x09;      //Camera 1 & 4
+        confRegister_.landing_camerasHighSpeed = 0x04;  //Camera 3
+
         confRegister_.landing_heightShortStart = 3000;  //3000km, on IRIS1 it landed 10 minutes later
 
         //Landed Configuration
@@ -108,17 +93,25 @@ int8_t configuration_init(void)
         confRegister_.numberReboots++;
 
 #ifdef DEBUG_MODE
-        #warning Debug Mode is active. You should never use this mode for the flight version!!
+        #warning "DEBUG MODE is active. You should never use this mode for the flight version!!"
         //This is just for easy testing in the lab. Disable DEBUG mode for flight!
         confRegister_.gopro_model[1] = 01;
         confRegister_.launch_videoDurationLong = 120;
         confRegister_.launch_videoDurationShort = 30;
+        confRegister_.launch_timeClimbMaximum = 60;  //4hours (+ 2h of the launch video)
         confRegister_.flight_timelapse_period = 40;
         confRegister_.flight_timeSecondLeg = 60;
         confRegister_.landing_videoDurationLong = 120;
         confRegister_.landing_videoDurationShort = 40;
         confRegister_.debugUART = 5;    //Report all activity on the COM
         confRegister_.sim_pressure = 101400;
+
+        //01 = 70%, 02 = off
+        confRegister_.gopro_beeps = 01;
+        //00 = off, 01 = 2, 02 = 4
+        confRegister_.gopro_leds = 01;
+
+        confRegister_.leds = 1; //1 = on, 0 = off
 #endif
 
         //Return with error
