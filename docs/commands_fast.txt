@@ -17,7 +17,7 @@ conf set flightState 1
 conf set sim_pressure 100000
 status
 
-memory read nor tlm 380 450
+memory read nor tlm 380 45000
 memory read fram tlm 0 20
 
 memory read nor events 0 300
@@ -32,6 +32,8 @@ conf set sim_pressure 99900
 //Simulate descend
 conf set sim_pressure 700
 conf set sim_enabled 1
+conf set launch_timeClimbMaximum 20
+conf set landing_videoDurationShort 25
 
 conf set flightState 3
 status
@@ -45,7 +47,9 @@ conf set sim_pressure 75000
 //0km
 conf set sim_pressure 100000
 
-
+//********************************
+//Simulate landed:
+conf set recovery_videoDuration 30
 
 //Format SDCards:
 uartdebug 1
