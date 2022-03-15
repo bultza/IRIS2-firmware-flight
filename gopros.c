@@ -637,7 +637,7 @@ int8_t cameraMakeVideo(uint8_t selectedCamera, uint8_t cameraMode, uint16_t dura
     cameraStatus_[selectedCamera].videoDuration = duration;
 
     //Start switching on the camera
-    gopros_raw_cameraInit(selectedCamera, CAMERAMODE_VID);
+    gopros_raw_cameraInit(selectedCamera, cameraMode);
     return cameraPowerOn(selectedCamera, 1);    //Slow mode...
 }
 
