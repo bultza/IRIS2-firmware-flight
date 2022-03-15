@@ -87,7 +87,7 @@ int8_t configuration_init(void)
         confRegister_.landing_heightShortStart = 3000;  //3000km, on IRIS1 it landed 10 minutes later
 
         //Landed Configuration
-        confRegister_.recovery_videoDuration = 300;     //5 minutes of video
+        confRegister_.recovery_videoDuration = 120;     //2 minutes of video
 
         //Reboot counter moves up
         confRegister_.numberReboots++;
@@ -95,12 +95,12 @@ int8_t configuration_init(void)
 #ifdef DEBUG_MODE
         #warning "DEBUG MODE is active. You should never use this mode for the flight version!!"
         //This is just for easy testing in the lab. Disable DEBUG mode for flight!
-        confRegister_.gopro_model[1] = 01;
+        confRegister_.gopro_model[3] = 01;
         confRegister_.launch_videoDurationLong = 120;
         confRegister_.launch_videoDurationShort = 30;
-        confRegister_.launch_timeClimbMaximum = 60;  //4hours (+ 2h of the launch video)
-        confRegister_.flight_timelapse_period = 40;
-        confRegister_.flight_timeSecondLeg = 60;
+        confRegister_.launch_timeClimbMaximum = 240;  //4hours (+ 2h of the launch video)
+        confRegister_.flight_timelapse_period = 30;
+        confRegister_.flight_timeSecondLeg = 95;
         confRegister_.landing_videoDurationLong = 120;
         confRegister_.landing_videoDurationShort = 40;
         confRegister_.debugUART = 5;    //Report all activity on the COM
