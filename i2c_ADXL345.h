@@ -11,6 +11,7 @@
 #include <msp430.h>
 #include <stdint.h>
 #include "i2c.h"
+#include "configuration.h"
 
 #define ADXL345_ADDRESS 0x1D
 
@@ -60,6 +61,9 @@ int8_t i2c_ADXL345_getAccelerations(struct ACCData *data);
 int8_t i2c_ADXL345_getIntStatus(uint8_t *interruptRegister,
                                 uint8_t *interruptDetected,
                                 uint8_t *gpioStatus);
+
+int8_t i2c_ADXL345_activateActivityDetection();
+int8_t i2c_ADXL345_getMovementDetected();
 
 
 #endif /* I2C_ADXL345_H_ */

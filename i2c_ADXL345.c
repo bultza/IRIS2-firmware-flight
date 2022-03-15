@@ -29,6 +29,7 @@ int8_t i2c_ADXL345_init(void)
         buffer[1] = 0x08;
         ack |= i2c_write(I2C_BUS00, ADXL345_ADDRESS, buffer, 2, 0);
 
+        /*
         //set values for what is considered freefall (0-255)
         //   adxl.setFreeFallThreshold(7); //(5 - 9) recommended - 62.5mg per increment
         buffer[0] = ADXL345_THRESH_FF;
@@ -45,11 +46,69 @@ int8_t i2c_ADXL345_init(void)
         buffer[1] = 0x00;
         ack |= i2c_write(I2C_BUS00, ADXL345_ADDRESS, buffer, 2, 0);
 
+
         //Activate only the Free Fall interrupt = 0x04
         buffer[0] = ADXL345_INT_ENABLE;
         buffer[1] = 0x04;
         ack |= i2c_write(I2C_BUS00, ADXL345_ADDRESS, buffer, 2, 0);
+
+        */
+
+        //Only activate interrupt if we have landed:
+        if(confRegister_.flightState == FLIGHTSTATE_TIMELAPSE_LAND)
+        {
+            i2c_ADXL345_activateActivityDetection();
+        }
+
+
     }
+
+    return ack;
+}
+
+/**
+ * Activate interrupt on the ADX
+ */
+int8_t i2c_ADXL345_activateActivityDetection()
+{
+    uint8_t buffer[2];
+    int8_t ack = 0;
+
+    //Disable all interrupts
+    buffer[0] = ADXL345_INT_ENABLE;
+    buffer[1] = 0x00;
+    ack |= i2c_write(I2C_BUS00, ADXL345_ADDRESS, buffer, 2, 0);
+
+    buffer[0] = ADXL345_THRESH_ACT;
+    //buffer[1] = 0x04;   //this is 0.0625*4 = 0.25g
+    buffer[1] = 32;   //this is 0.0625*16 = 1g
+    ack |= i2c_write(I2C_BUS00, ADXL345_ADDRESS, buffer, 2, 0);
+
+    buffer[0] = ADXL345_ACT_INACT_CTL;
+    buffer[1] = 0xF0;   //AC-coupled, and on the 3 axis
+    ack |= i2c_write(I2C_BUS00, ADXL345_ADDRESS, buffer, 2, 0);
+
+    //Set all interrupts to pin INT1 on the chip ( = 0x00)
+    buffer[0] = ADXL345_INT_MAP;
+    buffer[1] = 0x00;
+    ack |= i2c_write(I2C_BUS00, ADXL345_ADDRESS, buffer, 2, 0);
+
+    //Clear the register just in case
+    uint8_t adxlRegister = ADXL345_INT_SOURCE;
+    ack |= i2c_write(I2C_BUS00, ADXL345_ADDRESS, &adxlRegister, 1, 0);
+    ack |= i2c_requestFrom(I2C_BUS00, ADXL345_ADDRESS, &adxlRegister, 1, 0);
+
+    //Activate only the activity interrupt = 0x10
+    buffer[0] = ADXL345_INT_ENABLE;
+    buffer[1] = 0x10;
+    ack |= i2c_write(I2C_BUS00, ADXL345_ADDRESS, buffer, 2, 0);
+
+    //Enable interrupt
+    P3IE |= BIT7;
+    //Low to High edge
+    P3IES &= ~BIT7;
+    //Clear previous interrupts
+    P3IFG &= ~BIT7;
 
     return ack;
 }
@@ -73,8 +132,16 @@ int8_t i2c_ADXL345_getAccelerations(struct ACCData *data)
     data->x = (((int16_t) ((adxlData[1] << 8) | adxlData[0])) * 4);
     data->y = (((int16_t) ((adxlData[3] << 8) | adxlData[2])) * 4);
     data->z = (((int16_t) ((adxlData[5] << 8) | adxlData[4])) * 4);
+
+    //Clear the register just in case
+    adxlRegister = ADXL345_INT_SOURCE;
+    ack |= i2c_write(I2C_BUS00, ADXL345_ADDRESS, &adxlRegister, 1, 0);
+    ack |= i2c_requestFrom(I2C_BUS00, ADXL345_ADDRESS, &adxlRegister, 1, 0);
+
     return ack;
 }
+
+volatile uint8_t flagIMUDetection_ = 0;
 
 /**
  * Returns the free fall interrupt information
@@ -87,7 +154,7 @@ int8_t i2c_ADXL345_getIntStatus(uint8_t *interruptRegister,
     int8_t ack = i2c_write(I2C_BUS00, ADXL345_ADDRESS, &adxlRegister, 1, 0);
 
     if (ack)
-        return ack; //There was an error, return the error
+        return ack; //There wastatuss an error, return the error
 
     // Retrieve register
     ack |= i2c_requestFrom(I2C_BUS00, ADXL345_ADDRESS, interruptRegister, 1, 0);
@@ -98,6 +165,33 @@ int8_t i2c_ADXL345_getIntStatus(uint8_t *interruptRegister,
         *gpioStatus = 0;
 
     //TODO add the interrupt reader information
+    flagIMUDetection_ = 0;
 
     return ack;
 }
+
+/**
+ * It returns the status of the interrupt flag
+ */
+int8_t i2c_ADXL345_getMovementDetected()
+{
+    return flagIMUDetection_;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// Port 3 interrupt service routine
+#pragma vector=PORT3_VECTOR
+__interrupt void Port_3(void)
+{
+    if(P3IFG & BIT7)
+    {
+        if(seconds_uptime() > 10)
+        {
+            flagIMUDetection_++;
+            uart_print(UART_DEBUG, "***\r\n");
+        }
+        P3IFG &= ~BIT7;
+    }
+}
+
