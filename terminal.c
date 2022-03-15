@@ -672,6 +672,17 @@ void processCameraCommand(char * command)
         payload[0] = selectedCamera;
         saveEventSimple(EVENT_CAMERA_PICTURE, payload);
     }
+    else if (strncmp("interrupt", cameraSubcommand, 3) == 0)
+    {
+        returnCode = cameraInterruptVideo(selectedCamera);
+        if(returnCode == 0)
+            sprintf(strToPrint_, "Camera %c video was interrupted.\r\n", command[7]);
+        else
+            sprintf(strToPrint_, "ERROR Camera %c was not making video.\r\n", command[7]);
+        uint8_t payload[5] = {0};
+        payload[0] = selectedCamera;
+        saveEventSimple(EVENT_CAMERA_VIDEO_END, payload);
+    }
     else if (strcmp("on", cameraSubcommand) == 0)
     {
         // Initialised UART comms with camera in PICture mode
@@ -1681,24 +1692,25 @@ int8_t terminal_readAndProcessCommands(void)
             uart_print(UART_DEBUG, "  i2c baro\r\n");
             uart_print(UART_DEBUG, "  i2c ina\r\n");
             uart_print(UART_DEBUG, "  i2c acc\r\n");
-            uart_print(UART_DEBUG, "  camera x pic\r\n");
-            uart_print(UART_DEBUG, "  camera x vid [sec]\r\n");
-            uart_print(UART_DEBUG, "  camera x on\r\n");
-            uart_print(UART_DEBUG, "  camera x picture_mode\r\n");
-            uart_print(UART_DEBUG, "  camera x video_mode\r\n");
-            uart_print(UART_DEBUG, "  camera x pic_raw\r\n");
-            uart_print(UART_DEBUG, "  camera x video_start\r\n");
-            uart_print(UART_DEBUG, "  camera x video_end\r\n");
-            uart_print(UART_DEBUG, "  camera x send_cmd y\r\n");
-            uart_print(UART_DEBUG, "  camera x off\r\n");
-            uart_print(UART_DEBUG, "  p x\r\n");
+            uart_print(UART_DEBUG, "  camera [x] pic\r\n");
+            uart_print(UART_DEBUG, "  camera [x] vid [sec]\r\n");
+            uart_print(UART_DEBUG, "  camera [x] interrupt\r\n");
+            uart_print(UART_DEBUG, "  camera [x] on\r\n");
+            uart_print(UART_DEBUG, "  camera [x] picture_mode\r\n");
+            uart_print(UART_DEBUG, "  camera [x] video_mode\r\n");
+            uart_print(UART_DEBUG, "  camera [x] pic_raw\r\n");
+            uart_print(UART_DEBUG, "  camera [x] video_start\r\n");
+            uart_print(UART_DEBUG, "  camera [x] video_end\r\n");
+            uart_print(UART_DEBUG, "  camera [x] send_cmd [y]\r\n");
+            uart_print(UART_DEBUG, "  camera [x] off\r\n");
+            uart_print(UART_DEBUG, "  p [x]\r\n");
             uart_print(UART_DEBUG, "  tm nor\r\n");
             uart_print(UART_DEBUG, "  tm fram\r\n");
             uart_print(UART_DEBUG, "  memory status\r\n");
             uart_print(UART_DEBUG, "  memory dump [nor/fram] [start] [end]\r\n");
             uart_print(UART_DEBUG, "  memory read [nor/fram] [tlm/events] [start] [end]\r\n");
             uart_print(UART_DEBUG, "  memory erase [nor/fram] bulk\r\n");
-            uart_print(UART_DEBUG, "  uartdebug [Uart number]\r\n");
+            uart_print(UART_DEBUG, "  uartdebug [uart number]\r\n");
             uart_print(UART_DEBUG, "  u [data]\r\n");
         }
         else if (strncmp("terminal", (char *)command_, 8) == 0)
