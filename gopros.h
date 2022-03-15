@@ -230,6 +230,7 @@ int8_t cameraPowerOffUnsafe(uint8_t selectedCamera);
 int8_t cameraFSMcheck();
 int8_t cameraReadyStatus();
 int8_t cameraMakeVideo(uint8_t selectedCamera, uint8_t cameraMode, uint16_t duration);
+int8_t cameraInterruptVideo(uint8_t selectedCamera);
 int8_t cameraTakePicture(uint8_t selectedCamera);
 
 #endif /* GOPROS_H_ */

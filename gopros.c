@@ -642,6 +642,26 @@ int8_t cameraMakeVideo(uint8_t selectedCamera, uint8_t cameraMode, uint16_t dura
 }
 
 /**
+ * It interrupts the current video in order to turn into a safe spot
+ */
+int8_t cameraInterruptVideo(uint8_t selectedCamera)
+{
+    if(cameraStatus_[selectedCamera].fsmStatusGlobal == FSMGLOBAL_CAM_VIDEOSTART
+            || cameraStatus_[selectedCamera].fsmStatusGlobal == FSMGLOBAL_CAM_VIDEOSTOP)
+    {
+        //Make the video stop inmediately:
+        cameraStatus_[selectedCamera].fsmStatusGlobal = FSMGLOBAL_CAM_VIDEOSTOP;
+        cameraStatus_[selectedCamera].fsmStatusGlobalsleepTime = 0;
+        cameraStatus_[selectedCamera].fsmStatusGlobalLastTime = millis_uptime();
+        cameraStatus_[selectedCamera].videoDuration = 0;
+        return 0;
+    }
+
+    //Error the camera was not recording video (at least autonomously)
+    return -1;
+}
+
+/**
  * It makes a picture in a completely automatic way (from power on to power off)
  */
 int8_t cameraTakePicture(uint8_t selectedCamera)
