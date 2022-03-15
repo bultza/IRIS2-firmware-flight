@@ -33,8 +33,6 @@ struct AltitudesHistory
 struct AltitudesHistory altitudeHistory_[ALTITUDE_HISTORY];
 uint8_t altitudeHistoryIndex_ = 0;
 
-uint8_t gpioSunriseLastStatus_ = 0;
-
 // PUBLIC FUNCTIONS
 
 /**
@@ -196,25 +194,6 @@ int32_t getAltitude()
     return altitudeHistory_[previousAltitudeIndex].altitude;
 }
 
-
-/**
- * It returns 1 if the signal has been detected, or a 0 if not detected
- */
-uint8_t getSunriseSignalActivated()
-{
-    uint32_t uptime = seconds_uptime();
-    if(uptime < 15)
-        return 0;   //If uptime is <15s, return always zero
-
-    //Signal is low, it means that the signal has been actually sent!
-    if(gpioSunriseLastStatus_ == 0)
-        return 1;
-
-    //Signal is high, so no signal yet detected
-    return 0;
-}
-
-
 //uint32_t altDebug_ = 0;
 float inaCurrentAverages_[2];
 float inaVoltageAverages_[2];
@@ -233,14 +212,7 @@ void sensorsRead()
     //Read GPIOs only once per second (like baro)
     if(lastTime_gpioSunriseRead_ + confRegister_.baro_readPeriod < uptime)
     {
-        uint8_t gpioStatus = sunrise_GPIO_Read();
-        //Do not listen to the GPIO if less than 10s of uptime
-        if(gpioStatus != gpioSunriseLastStatus_ && uptime > 10000)
-        {
-            uint8_t payload[5] = {0};
-            payload[0] = gpioStatus;
-            saveEventSimple(EVENT_SUNRISE_GPIO_CHANGE, payload);
-        }
+        uint8_t gpioStatus = sunrise_GPIO_Read_RAW_no();
 
         if(gpioStatus)
         {
@@ -253,7 +225,6 @@ void sensorsRead()
             currentTelemetryLine_[1].switches_status &= ~BIT6;
         }
 
-        gpioSunriseLastStatus_ = gpioStatus;
         lastTime_gpioSunriseRead_ = uptime;
     }
 

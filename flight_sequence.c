@@ -31,7 +31,7 @@ void checkFlightSequence()
         //Are we very high or climbing very fast?
         if(   (getAltitude() > (confRegister_.launch_heightThreshold * 100))
            || (getVerticalSpeed() > (confRegister_.launch_climbThreshold * 100))
-           || getSunriseSignalActivated() )
+           || sunrise_GPIO_Read_Signal() )
         {
             //Start making video!!
             uint8_t i;
@@ -61,7 +61,7 @@ void checkFlightSequence()
             payload[0] = FLIGHTSTATE_LAUNCH;
             payload[1] = getAltitude() > (confRegister_.launch_heightThreshold * 100);
             payload[2] = getVerticalSpeed() > (confRegister_.launch_climbThreshold * 100);
-            payload[3] = getSunriseSignalActivated();
+            payload[3] = sunrise_GPIO_Read_Signal();
             saveEventSimple(EVENT_STATE_CHANGED, payload);
 
             //Write event
@@ -138,7 +138,7 @@ void checkFlightSequence()
 
         if(    (getAltitude() < (confRegister_.landing_heightThreshold * 100))
             || (verticalSpeed < (confRegister_.landing_speedThreshold * 100))
-            || getSunriseSignalActivated()
+            || sunrise_GPIO_Read_Signal()
           )
         {
             //Move only if safe descending time reached:
@@ -158,7 +158,7 @@ void checkFlightSequence()
                 payload[0] = FLIGHTSTATE_LANDING;
                 payload[1] = getAltitude() < (confRegister_.landing_heightThreshold * 100);
                 payload[2] = verticalSpeed < (confRegister_.landing_speedThreshold * 100);
-                payload[3] = getSunriseSignalActivated();
+                payload[3] = sunrise_GPIO_Read_Signal();
                 saveEventSimple(EVENT_STATE_CHANGED, payload);
             }
         }

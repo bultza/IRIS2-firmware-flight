@@ -54,6 +54,7 @@
 #define EVENT_LOW_ALTITUDE_DETECTED         30
 #define EVENT_I2C_ERROR_RESET               99
 #define EVENT_SUNRISE_GPIO_CHANGE           100
+#define EVENT_SUNRISE_SIGNAL_DETECTED       101
 #define EVENT_BATTERY_CUTOUT                200
 
 #define AVG_INDEX               0
@@ -184,6 +185,5 @@ int8_t getTelemetryNOR(uint32_t pointer, struct TelemetryLine *savedTelemetry);
 void printAltitudeHistory();
 int32_t getVerticalSpeed();
 int32_t getAltitude();
-uint8_t getSunriseSignalActivated();
 
 #endif /* DATALOGGER_H_ */
