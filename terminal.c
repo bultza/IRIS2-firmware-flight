@@ -656,9 +656,6 @@ void processCameraCommand(char * command)
             sprintf(strToPrint_, "Camera %c is taking a picture.\r\n", command[7]);
         else
             sprintf(strToPrint_, "ERROR Camera %c was busy.\r\n", command[7]);
-        uint8_t payload[5] = {0};
-        payload[0] = selectedCamera;
-        saveEventSimple(EVENT_CAMERA_PICTURE, payload);
     }
     else if (strncmp("vid", cameraSubcommand, 3) == 0)
     {
@@ -668,9 +665,6 @@ void processCameraCommand(char * command)
             sprintf(strToPrint_, "Camera %c is taking a video.\r\n", command[7]);
         else
             sprintf(strToPrint_, "ERROR Camera %c was busy.\r\n", command[7]);
-        uint8_t payload[5] = {0};
-        payload[0] = selectedCamera;
-        saveEventSimple(EVENT_CAMERA_PICTURE, payload);
     }
     else if (strncmp("interrupt", cameraSubcommand, 3) == 0)
     {
@@ -679,9 +673,6 @@ void processCameraCommand(char * command)
             sprintf(strToPrint_, "Camera %c video was interrupted.\r\n", command[7]);
         else
             sprintf(strToPrint_, "ERROR Camera %c was not making video.\r\n", command[7]);
-        uint8_t payload[5] = {0};
-        payload[0] = selectedCamera;
-        saveEventSimple(EVENT_CAMERA_VIDEO_END, payload);
     }
     else if (strcmp("on", cameraSubcommand) == 0)
     {

@@ -127,7 +127,7 @@ int32_t getVerticalSpeed()
     if(timeNow < ALTITUDE_HISTORY * 1500L)
         return 0;
 
-    int32_t sumOfSpeeds = 0;
+    float sumOfSpeeds = 0;
 
     //Search for the oldest and newest values
     for(i = 0; i < ALTITUDE_HISTORY; i++)
@@ -145,12 +145,12 @@ int32_t getVerticalSpeed()
             if(altitudeHistory_[0].time > altitudeHistory_[ALTITUDE_HISTORY - 1].time)
             {
                 //Time to calculate speed:
-                int32_t timeDelta = altitudeHistory_[0].time
-                        - altitudeHistory_[ALTITUDE_HISTORY - 1].time;
-                int32_t distanceDelta = altitudeHistory_[0].altitude
-                        - altitudeHistory_[ALTITUDE_HISTORY - 1].altitude;
+                float timeDelta = (float)altitudeHistory_[0].time
+                        - (float)altitudeHistory_[ALTITUDE_HISTORY - 1].time;
+                float distanceDelta = (float)altitudeHistory_[0].altitude
+                        - (float)altitudeHistory_[ALTITUDE_HISTORY - 1].altitude;
 
-                sumOfSpeeds += (distanceDelta * 1000/ timeDelta);
+                sumOfSpeeds += (distanceDelta * 1000.0/ timeDelta);
             }
         }
         else
@@ -158,12 +158,12 @@ int32_t getVerticalSpeed()
             if(altitudeHistory_[i].time > altitudeHistory_[i - 1].time)
             {
                 //Time to calculate speed:
-                int32_t timeDelta = altitudeHistory_[i].time
-                        - altitudeHistory_[i - 1].time;
-                int32_t distanceDelta = altitudeHistory_[i].altitude
-                        - altitudeHistory_[i - 1].altitude;
+                float timeDelta = (float)altitudeHistory_[i].time
+                        - (float)altitudeHistory_[i - 1].time;
+                float distanceDelta = (float)altitudeHistory_[i].altitude
+                        - (float)altitudeHistory_[i - 1].altitude;
 
-                sumOfSpeeds += (distanceDelta * 1000/ timeDelta);
+                sumOfSpeeds += (distanceDelta * 1000.0/ timeDelta);
             }
         }
     }
@@ -172,7 +172,7 @@ int32_t getVerticalSpeed()
     if(altitudeHistory_[maxIndex].time + 20000 < timeNow)
         return 0;
 
-    return sumOfSpeeds / ((ALTITUDE_HISTORY - 1) );
+    return (int32_t)((float)sumOfSpeeds / ((float)(ALTITUDE_HISTORY - 1) ));
 }
 
 /**
@@ -591,6 +591,7 @@ struct EventLine lastEvent = {0};
 int8_t saveEvent(struct EventLine newEvent)
 {
     if(lastEvent.event == newEvent.event
+            && lastEvent.payload[0] == newEvent.payload[0]
             && lastEvent.unixTime + 5 > newEvent.unixTime)
     {
         //Ignore repetitive event if it is in less than 5s

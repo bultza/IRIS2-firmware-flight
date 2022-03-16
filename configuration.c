@@ -13,6 +13,10 @@ struct ConfigurationRegister confRegister_ = {0};
  */
 int8_t configuration_init(void)
 {
+    //Time values always reset
+    confRegister_.lastStateTime = 0;
+    confRegister_.lastSubStateTime = 0;
+
     if(confRegister_.magicWord != MAGICWORD)
     {
         //We need to load the default configuration!!
@@ -21,8 +25,6 @@ int8_t configuration_init(void)
 
         confRegister_.flightState = 0;
         confRegister_.flightSubState = 0;
-        confRegister_.lastStateTime = 0;
-        confRegister_.lastSubStateTime = 0;
 
         confRegister_.fram_telemetryAddress = FRAM_TLM_ADDRESS;
         confRegister_.fram_eventAddress = FRAM_EVENTS_ADDRESS;

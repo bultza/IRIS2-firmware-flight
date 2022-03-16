@@ -7,9 +7,9 @@
 #ifndef CONFIGURATION_H_
 #define CONFIGURATION_H_
 
-#define DEBUG_MODE
+//#define DEBUG_MODE
 #define MAGICWORD           0xBABE
-#define FWVERSION           8
+#define FWVERSION           9
 
 #include <stdint.h>
 #include <msp430.h>
@@ -26,6 +26,7 @@
 #define TIMELAPSE_PERIOD    120      //Seconds
 //#define TIMELAPSE_PERIOD    30      //Seconds
 
+//Define all the flight status available for the flight plan
 #define FLIGHTSTATE_DEBUG           0
 #define FLIGHTSTATE_WAITFORLAUNCH   1
 #define FLIGHTSTATE_LAUNCH          2
@@ -34,6 +35,28 @@
 #define FLIGHTSTATE_TIMELAPSE_LAND  5
 #define FLIGHTSTATE_RECOVERY        6
 
+//Define all the events that we want to store on the memories
+#define EVENT_BOOT                          69
+#define EVENT_CONFIGURATION_CHANGED         1
+#define EVENT_NOR_CLEAN                     2
+#define EVENT_CAMERA_ON                     10
+#define EVENT_CAMERA_PICTURE                11
+#define EVENT_CAMERA_VIDEO_START            12
+#define EVENT_CAMERA_VIDEO_END              13
+#define EVENT_CAMERA_OFF                    14
+#define EVENT_CAMERA_TIMELAPSE_PIC          15
+#define EVENT_CAMERA_VIDEOMODE              16
+#define EVENT_CAMERA_PICMODE                17
+#define EVENT_CAMERA_VIDEO_INTERRUPT        18
+#define EVENT_STATE_CHANGED                 20
+#define EVENT_LOW_ALTITUDE_DETECTED         30
+#define EVENT_MOVEMENT_DETECTED             40
+#define EVENT_I2C_ERROR_RESET               99
+#define EVENT_SUNRISE_GPIO_CHANGE           100
+#define EVENT_SUNRISE_SIGNAL_DETECTED       101
+#define EVENT_BATTERY_CUTOUT                200
+
+//WDT configuration:
 //Select SMCLK as the source of wdt, clear WDT and set to 2^31 (268,43s)
 //#define DAE_WDTKICK     (WDTSSEL_0 + WDTCNTCL)
 //Select SMCLK as the source of wdt, clear WDT and set to 2^27 (16.77s)

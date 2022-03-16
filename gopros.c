@@ -573,9 +573,14 @@ int8_t cameraFSMhighLevelCheck()
             case FSMGLOBAL_CAM_VIDEOSTOP:
                 gopros_raw_cameraStopRecordingVideo(i);
                 cameraStatus_[i].fsmStatusGlobalLastTime = uptime_ms;
-                //Wait 1s for sending the picture command:
+                //Wait 2s for sending the picture command:
                 cameraStatus_[i].fsmStatusGlobalsleepTime = 2000;
                 cameraStatus_[i].fsmStatusGlobal = FSMGLOBAL_CAM_OFF;
+                {
+                    uint8_t payload[5] = {0};
+                    payload[0] = i;
+                    saveEventSimple(EVENT_CAMERA_VIDEO_INTERRUPT, payload);
+                }
                 break;
             default:
                 break;
@@ -636,6 +641,14 @@ int8_t cameraMakeVideo(uint8_t selectedCamera, uint8_t cameraMode, uint16_t dura
     cameraStatus_[selectedCamera].fsmStatusGlobalLastTime = millis_uptime();
     cameraStatus_[selectedCamera].videoDuration = duration;
 
+    uint8_t payload[5];
+    payload[0] = selectedCamera;
+    payload[1] = cameraMode;
+    payload[2] = 0;
+    payload[3] = (uint8_t) (0x00FF & (duration >> 8));
+    payload[4] = (uint8_t) (0x00FF & duration);
+    saveEventSimple(EVENT_CAMERA_VIDEO_START, payload);
+
     //Start switching on the camera
     gopros_raw_cameraInit(selectedCamera, cameraMode);
     return cameraPowerOn(selectedCamera, 1);    //Slow mode...
@@ -656,6 +669,14 @@ int8_t cameraInterruptVideo(uint8_t selectedCamera)
         cameraStatus_[selectedCamera].videoDuration = 0;
         return 0;
     }
+
+    uint8_t payload[5];
+    payload[0] = selectedCamera;
+    payload[1] = 0;
+    payload[2] = 0;
+    payload[3] = 0;
+    payload[4] = 0;
+    saveEventSimple(EVENT_CAMERA_VIDEO_INTERRUPT, payload);
 
     //Error the camera was not recording video (at least autonomously)
     return -1;
@@ -678,6 +699,14 @@ int8_t cameraTakePicture(uint8_t selectedCamera)
     cameraStatus_[selectedCamera].fsmStatusGlobal = FSMGLOBAL_CAM_PICTURESTART;
     cameraStatus_[selectedCamera].fsmStatusGlobalsleepTime = 0;
     cameraStatus_[selectedCamera].fsmStatusGlobalLastTime = millis_uptime();
+
+    uint8_t payload[5];
+    payload[0] = selectedCamera;
+    payload[1] = 0;
+    payload[2] = 0;
+    payload[3] = 0;
+    payload[4] = 0;
+    saveEventSimple(EVENT_CAMERA_TIMELAPSE_PIC, payload);
 
     //Start switching on the camera
     gopros_raw_cameraInit(selectedCamera, CAMERAMODE_PIC);

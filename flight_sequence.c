@@ -10,6 +10,11 @@
 
 uint32_t lastTimePicture_ = 0;
 
+int32_t launchHeight_ = 0;
+uint8_t  launchDetectedFromSunrise_ = 0;
+
+int32_t landingHeight_ = 0;
+uint8_t  landingDetectedFromSunrise_ = 0;
 
 /**
  * Checks if there are any activities to be performed during the flight
@@ -28,10 +33,12 @@ void checkFlightSequence()
         if(uptime_ms < 10000)
             return;
 
+        uint8_t sunriseGpioSignal = sunrise_GPIO_Read_Signal();
+
         //Are we very high or climbing very fast?
         if(   (getAltitude() > (confRegister_.launch_heightThreshold * 100))
            || (getVerticalSpeed() > (confRegister_.launch_climbThreshold * 100))
-           || sunrise_GPIO_Read_Signal() )
+           ||  sunriseGpioSignal)
         {
             //Start making video!!
             uint8_t i;
@@ -51,26 +58,34 @@ void checkFlightSequence()
                 }
             }
 
+            uint8_t payload[5] = {0};
+            payload[0] = FLIGHTSTATE_LAUNCH;
+            payload[1] = getAltitude() > (confRegister_.launch_heightThreshold * 100);
+            payload[2] = getVerticalSpeed() > (confRegister_.launch_climbThreshold * 100);
+            payload[3] = sunriseGpioSignal;
+            saveEventSimple(EVENT_STATE_CHANGED, payload);
+
             //Lets move to the next state!!
             confRegister_.flightState = FLIGHTSTATE_LAUNCH;
             confRegister_.lastStateTime = uptime_ms;
             //Reset the substate
             confRegister_.flightSubState = 0;
             confRegister_.lastSubStateTime = uptime_ms;
-            uint8_t payload[5] = {0};
-            payload[0] = FLIGHTSTATE_LAUNCH;
-            payload[1] = getAltitude() > (confRegister_.launch_heightThreshold * 100);
-            payload[2] = getVerticalSpeed() > (confRegister_.launch_climbThreshold * 100);
-            payload[3] = sunrise_GPIO_Read_Signal();
-            saveEventSimple(EVENT_STATE_CHANGED, payload);
 
             //Write event
-            payload[0] = confRegister_.launch_camerasShort;
+            /*payload[0] = confRegister_.launch_camerasShort;
             payload[1] = confRegister_.launch_camerasLong;
             payload[2] = 0;
             payload[3] = 0;
             payload[4] = 0;
-            saveEventSimple(EVENT_CAMERA_VIDEO_START, payload);
+            saveEventSimple(EVENT_CAMERA_VIDEO_START, payload);*/
+
+            if(sunriseGpioSignal)
+            {
+                //TRigger was Sunrise, register it just in case we have to go back
+                launchDetectedFromSunrise_ = 1;
+                launchHeight_ = getAltitude(); //In cm!!
+            }
         }
         else
         {
@@ -87,15 +102,46 @@ void checkFlightSequence()
                 + 30000
                 < uptime_ms)
         {
+            uint8_t payload[5] = {0};
+            payload[0] = FLIGHTSTATE_TIMELAPSE;
+            saveEventSimple(EVENT_STATE_CHANGED, payload);
+
             //Cameras are off, we move to the next step:
             confRegister_.flightState = FLIGHTSTATE_TIMELAPSE;
             confRegister_.lastStateTime = uptime_ms;
             //Reset the substate
             confRegister_.flightSubState = 0;
             confRegister_.lastSubStateTime = uptime_ms;
-            uint8_t payload[5] = {0};
-            payload[0] = FLIGHTSTATE_TIMELAPSE;
-            saveEventSimple(EVENT_STATE_CHANGED, payload);
+        }
+        else
+        {
+            if(launchDetectedFromSunrise_
+                    && confRegister_.lastStateTime  + 600000L < uptime_ms)
+            {
+                int32_t currentAltitude = getAltitude();
+                if(currentAltitude - launchHeight_ < 10000L)
+                {
+                    //On Sunrise 1 it measured > 4km in 10min, here
+                    //we did less than 100m in 10min, so interrupt
+                    uint8_t i;
+                    for(i = 0; i < 4; i++)
+                    {
+                        cameraInterruptVideo(i);
+                    }
+
+                    uint8_t payload[5] = {0};
+                    payload[0] = FLIGHTSTATE_WAITFORLAUNCH;
+                    payload[1] = 0xFF;
+                    saveEventSimple(EVENT_STATE_CHANGED, payload);
+
+                    //Cameras are off, we move to the next step:
+                    confRegister_.flightState = FLIGHTSTATE_WAITFORLAUNCH;
+                    confRegister_.lastStateTime = uptime_ms;
+                    //Reset the substate
+                    confRegister_.flightSubState = 0;
+                    confRegister_.lastSubStateTime = uptime_ms;
+                }
+            }
         }
 
     }
@@ -124,9 +170,10 @@ void checkFlightSequence()
                 }
             }
             //Write event
-            uint8_t payload[5] = {0};
+            /*uint8_t payload[5] = {0};
             payload[0] = camerasIndex;
-            saveEventSimple(EVENT_CAMERA_TIMELAPSE_PIC, payload);
+            saveEventSimple(EVENT_CAMERA_TIMELAPSE_PIC, payload);*/
+
             lastTimePicture_ = uptime_s;
         }
 
@@ -135,10 +182,11 @@ void checkFlightSequence()
         if(altitude > confRegister_.landing_heightSecurityThreshold * 100)
             verticalSpeed = 0;  //avoid listening to vertical speeds when altitude is too high
 
+        uint8_t sunriseGpioSignal = sunrise_GPIO_Read_Signal();
 
         if(    (getAltitude() < (confRegister_.landing_heightThreshold * 100))
             || (verticalSpeed < (confRegister_.landing_speedThreshold * 100))
-            || sunrise_GPIO_Read_Signal()
+            || sunriseGpioSignal
           )
         {
             //Move only if safe descending time reached:
@@ -146,6 +194,13 @@ void checkFlightSequence()
                     + (uint64_t)confRegister_.launch_timeClimbMaximum * 1000UL
                     < uptime_ms)
             {
+                uint8_t payload[5] = {0};
+                payload[0] = FLIGHTSTATE_LANDING;
+                payload[1] = getAltitude() < (confRegister_.landing_heightThreshold * 100);
+                payload[2] = verticalSpeed < (confRegister_.landing_speedThreshold * 100);
+                payload[3] = sunriseGpioSignal;
+                saveEventSimple(EVENT_STATE_CHANGED, payload);
+
                 //Lets move to the next state!!
                 confRegister_.flightState = FLIGHTSTATE_LANDING;
                 confRegister_.lastStateTime = uptime_ms;
@@ -154,12 +209,12 @@ void checkFlightSequence()
                 confRegister_.flightSubState = SUBSTATE_LANDING_WAITING;
                 confRegister_.lastSubStateTime = uptime_ms;
 
-                uint8_t payload[5] = {0};
-                payload[0] = FLIGHTSTATE_LANDING;
-                payload[1] = getAltitude() < (confRegister_.landing_heightThreshold * 100);
-                payload[2] = verticalSpeed < (confRegister_.landing_speedThreshold * 100);
-                payload[3] = sunrise_GPIO_Read_Signal();
-                saveEventSimple(EVENT_STATE_CHANGED, payload);
+                if(sunriseGpioSignal)
+                {
+                    //TRigger was Sunrise, register it just in case we have to go back
+                    landingDetectedFromSunrise_ = 1;
+                    landingHeight_ = getAltitude(); //In cm!!
+                }
             }
         }
         else
@@ -171,7 +226,7 @@ void checkFlightSequence()
 
     if(confRegister_.flightState == FLIGHTSTATE_LANDING)
     {
-        if(confRegister_.lastStateTime + 15000 > uptime_ms)
+        if(confRegister_.lastStateTime + 15000L > uptime_ms)
         {
             //During the first 15s after changing, do not start this sequence
             //in order to avoid starting to take video while doing a picture
@@ -206,12 +261,12 @@ void checkFlightSequence()
             }
 
             //Write event
-            uint8_t payload[5] = {0};
+            /*uint8_t payload[5] = {0};
             payload[0] = confRegister_.landing_camerasShort;
             payload[1] = confRegister_.landing_camerasLong;
             payload[2] = confRegister_.landing_camerasHighSpeed;
+            saveEventSimple(EVENT_CAMERA_VIDEO_START, payload);*/
 
-            saveEventSimple(EVENT_CAMERA_VIDEO_START, payload);
             confRegister_.flightSubState = SUBSTATE_LANDING_VIDEO_STARTED;
             confRegister_.lastSubStateTime = uptime_ms;
         }
@@ -248,21 +303,50 @@ void checkFlightSequence()
         //Lets wait for the duration of the long video plus 30 minutes to go
         //to next step
         if(confRegister_.lastStateTime
-                + (uint64_t)confRegister_.landing_videoDurationShort * 1000UL
+                + (uint64_t)confRegister_.landing_videoDurationLong * 1000UL
                 + 1800000UL
                 < uptime_ms)
         {
+            uint8_t payload[5] = {0};
+            payload[0] = FLIGHTSTATE_TIMELAPSE_LAND;
+            saveEventSimple(EVENT_STATE_CHANGED, payload);
+
             //Cameras are off, we move to the next step:
             confRegister_.flightState = FLIGHTSTATE_TIMELAPSE_LAND;
             confRegister_.lastStateTime = uptime_ms;
             //Reset the substate
             confRegister_.flightSubState = 0;
             confRegister_.lastSubStateTime = uptime_ms;
-            uint8_t payload[5] = {0};
-            payload[0] = FLIGHTSTATE_TIMELAPSE_LAND;
-            saveEventSimple(EVENT_STATE_CHANGED, payload);
+
             //Activate interrupt for detecting the recovery team:
             i2c_ADXL345_activateActivityDetection();
+        }
+        else
+        {
+            if(landingDetectedFromSunrise_
+                    && confRegister_.lastStateTime  + 600000 < uptime_ms)
+            {
+                int32_t currentAltitude = getAltitude();
+                if(landingHeight_ - currentAltitude < 200000)
+                {
+                    //we did less than 2000km in 10min, so interrupt
+                    uint8_t i;
+                    for(i = 0; i < 4; i++)
+                    {
+                        cameraInterruptVideo(i);
+                    }
+
+                    uint8_t payload[5] = {0};
+                    payload[0] = FLIGHTSTATE_TIMELAPSE;
+                    saveEventSimple(EVENT_STATE_CHANGED, payload);
+                    //Cameras are off, we move to the next step:
+                    confRegister_.flightState = FLIGHTSTATE_TIMELAPSE;
+                    confRegister_.lastStateTime = uptime_ms;
+                    //Reset the substate
+                    confRegister_.flightSubState = 0;
+                    confRegister_.lastSubStateTime = uptime_ms;
+                }
+            }
         }
     }
 
@@ -280,14 +364,15 @@ void checkFlightSequence()
                 cameraTakePicture(i);
             }
 
-            //Write event
+            /*//Write event
             uint8_t payload[5] = {0};
             payload[0] = 0x0F;   //All four cameras taking video
-            saveEventSimple(EVENT_CAMERA_TIMELAPSE_PIC, payload);
+            saveEventSimple(EVENT_CAMERA_TIMELAPSE_PIC, payload);*/
+
             lastTimePicture_ = uptime_s;
         }
 
-        if(i2c_ADXL345_getMovementDetected() > 3)
+        if(i2c_ADXL345_getMovementDetected() > 3) //More than 3 events in 1 minute
         {
             uint8_t i;
             for(i = 0; i < 4; i++)
@@ -297,13 +382,9 @@ void checkFlightSequence()
                                 confRegister_.recovery_videoDuration);
             }
 
-            //Write event
             uint8_t payload[5] = {0};
-            saveEventSimple(EVENT_CAMERA_VIDEO_START, payload);
-
-
-            confRegister_.flightSubState = SUBSTATE_LANDING_VIDEO_STARTED;
-            confRegister_.lastSubStateTime = uptime_ms;
+            payload[0] = FLIGHTSTATE_RECOVERY;
+            saveEventSimple(EVENT_STATE_CHANGED, payload);
 
             //we move to the next step:
             confRegister_.flightState = FLIGHTSTATE_RECOVERY;
@@ -311,9 +392,6 @@ void checkFlightSequence()
             //Reset the substate
             confRegister_.flightSubState = 0;
             confRegister_.lastSubStateTime = uptime_ms;
-
-            payload[0] = FLIGHTSTATE_RECOVERY;
-            saveEventSimple(EVENT_STATE_CHANGED, payload);
         }
     }
 
@@ -322,7 +400,8 @@ void checkFlightSequence()
         //Remain here for ever
         uint32_t uptime_s = (uptime_ms / 1000UL);
         //Is it time to make another picture?
-        if(lastTimePicture_ + (uint32_t)confRegister_.flight_timelapse_period < uptime_s)
+        if(lastTimePicture_
+                + (uint32_t)confRegister_.flight_timelapse_period < uptime_s)
         {
             uint8_t i;
 
@@ -332,10 +411,6 @@ void checkFlightSequence()
                 cameraTakePicture(i);
             }
 
-            //Write event
-            uint8_t payload[5] = {0};
-            payload[0] = 0x0F;   //All four cameras taking video
-            saveEventSimple(EVENT_CAMERA_TIMELAPSE_PIC, payload);
             lastTimePicture_ = uptime_s;
         }
     }

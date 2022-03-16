@@ -6,6 +6,10 @@
 
 #include "i2c_ADXL345.h"
 
+
+volatile uint8_t flagIMUDetection_ = 0;
+uint32_t flagIMULastTimeReset_ = 0;
+
 /**
  * Configures the accelerometer, so it can start to make measurements returns
  * the ack value of the accelerometer.
@@ -67,7 +71,7 @@ int8_t i2c_ADXL345_init(void)
 }
 
 /**
- * Activate interrupt on the ADX
+ * Activate interrupt on the ACC for the movement detection
  */
 int8_t i2c_ADXL345_activateActivityDetection()
 {
@@ -110,8 +114,13 @@ int8_t i2c_ADXL345_activateActivityDetection()
     //Clear previous interrupts
     P3IFG &= ~BIT7;
 
+    //Clear the status of the buffers:
+    flagIMULastTimeReset_ = 0;
+    flagIMUDetection_ = 0;
+
     return ack;
 }
+
 
 /**
  * Returns the x, y, z readings of the acc in g
@@ -133,15 +142,32 @@ int8_t i2c_ADXL345_getAccelerations(struct ACCData *data)
     data->y = (((int16_t) ((adxlData[3] << 8) | adxlData[2])) * 4);
     data->z = (((int16_t) ((adxlData[5] << 8) | adxlData[4])) * 4);
 
-    //Clear the register just in case
+    //Clear the interrupt register just in case
     adxlRegister = ADXL345_INT_SOURCE;
     ack |= i2c_write(I2C_BUS00, ADXL345_ADDRESS, &adxlRegister, 1, 0);
     ack |= i2c_requestFrom(I2C_BUS00, ADXL345_ADDRESS, &adxlRegister, 1, 0);
 
+    //If more than 1 minute passed, clear the movement interrupt
+    uint32_t uptime_s = seconds_uptime();
+    if(flagIMULastTimeReset_ + 60 < uptime_s)
+    {
+        //Reset buffer to delete any glitches from wind:
+        flagIMULastTimeReset_ = uptime_s;
+        flagIMUDetection_ = 0;
+    }
+
+    //Interrupt movement detected?
+    if(adxlRegister && 0x10)
+    {
+        uint8_t payload[5] = {0};
+        payload[0] = FLIGHTSTATE_RECOVERY;
+        saveEventSimple(EVENT_MOVEMENT_DETECTED, payload);
+    }
+
     return ack;
 }
 
-volatile uint8_t flagIMUDetection_ = 0;
+
 
 /**
  * Returns the free fall interrupt information

@@ -38,25 +38,6 @@
 #define FRAM_EVENTS_ADDRESS     0x42FFC
 #define FRAM_EVENTS_SIZE        0x00FFC  //this is 255 event lines at 16 bytes each
 
-//Define all the events that we want to store on the memories
-#define EVENT_BOOT                          69
-#define EVENT_CONFIGURATION_CHANGED         1
-#define EVENT_NOR_CLEAN                     2
-#define EVENT_CAMERA_ON                     10
-#define EVENT_CAMERA_PICTURE                11
-#define EVENT_CAMERA_VIDEO_START            12
-#define EVENT_CAMERA_VIDEO_END              13
-#define EVENT_CAMERA_OFF                    14
-#define EVENT_CAMERA_TIMELAPSE_PIC          15
-#define EVENT_CAMERA_VIDEOMODE              16
-#define EVENT_CAMERA_PICMODE                17
-#define EVENT_STATE_CHANGED                 20
-#define EVENT_LOW_ALTITUDE_DETECTED         30
-#define EVENT_I2C_ERROR_RESET               99
-#define EVENT_SUNRISE_GPIO_CHANGE           100
-#define EVENT_SUNRISE_SIGNAL_DETECTED       101
-#define EVENT_BATTERY_CUTOUT                200
-
 #define AVG_INDEX               0
 #define MAX_INDEX               1
 #define MIN_INDEX               2

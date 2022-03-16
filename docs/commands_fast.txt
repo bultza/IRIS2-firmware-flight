@@ -10,7 +10,7 @@ conf set flightState 3
 
 //********************************
 //Simulate launch
-conf set sim_pressure 102400
+conf set sim_pressure 101400
 conf set sim_enabled 1
 conf set flightState 1
 
@@ -50,6 +50,7 @@ conf set sim_pressure 100000
 //********************************
 //Simulate landed:
 conf set recovery_videoDuration 30
+conf set flightState 5
 
 //Format SDCards:
 uartdebug 1
