@@ -579,7 +579,7 @@ int8_t cameraFSMhighLevelCheck()
                 {
                     uint8_t payload[5] = {0};
                     payload[0] = i;
-                    saveEventSimple(EVENT_CAMERA_VIDEO_INTERRUPT, payload);
+                    saveEventSimple(EVENT_CAMERA_VIDEO_END, payload);
                 }
                 break;
             default:

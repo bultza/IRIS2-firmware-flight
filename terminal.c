@@ -1788,8 +1788,8 @@ int8_t terminal_readAndProcessCommands(void)
                 P5DIR &= ~BIT6;      // Define button as input - high impedance
             }
 
-            sprintf(strToPrint_, "Button of camera %d pressed\r\n",
-                    confRegister_.debugUART);
+            sprintf(strToPrint_, "Button of camera %c pressed\r\n",
+                    command_[2]);
             uart_print(UART_DEBUG, strToPrint_);
         }
         else if (strcmp("uptime", (char *)command_) == 0)

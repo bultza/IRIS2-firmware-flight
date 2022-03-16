@@ -58,6 +58,11 @@ int8_t i2c_ADXL345_init(void)
 
         */
 
+        //Disable interrupts
+        buffer[0] = ADXL345_INT_ENABLE;
+        buffer[1] = 0x00;
+        ack |= i2c_write(I2C_BUS00, ADXL345_ADDRESS, buffer, 2, 0);
+
         //Only activate interrupt if we have landed:
         if(confRegister_.flightState == FLIGHTSTATE_TIMELAPSE_LAND)
         {
@@ -157,10 +162,10 @@ int8_t i2c_ADXL345_getAccelerations(struct ACCData *data)
     }
 
     //Interrupt movement detected?
-    if(adxlRegister && 0x10)
+    if(adxlRegister & 0x10)
     {
         uint8_t payload[5] = {0};
-        payload[0] = FLIGHTSTATE_RECOVERY;
+        payload[0] = adxlRegister;
         saveEventSimple(EVENT_MOVEMENT_DETECTED, payload);
     }
 

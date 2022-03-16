@@ -284,7 +284,7 @@ void checkFlightSequence()
                     {
                         cameraMakeVideo(i,
                                         CAMERAMODE_VID,
-                                        confRegister_.landing_camerasShort);
+                                        confRegister_.landing_videoDurationShort);
                     }else if((confRegister_.landing_camerasHighSpeed >> i) & 1)
                     {
                         cameraMakeVideo(i,
