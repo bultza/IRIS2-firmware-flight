@@ -386,7 +386,8 @@ int8_t cameraFSMlowLevelCheck()
                     sprintf(dateTimeCmd, "YY000721002320160111000000%02X00%02X00010100000000000000000000000001%02X00%02X%02X%02X%02X%02X%02X%02X\n",
                             confRegister_.gopro_beeps,
                             confRegister_.gopro_leds,
-                            cameraMode_[i],
+                            //cameraMode_[i],
+                            1,  //Allways like camera mode
                             (uint8_t)((2000 + (uint16_t)dateTime.year)/256),
                             (uint8_t)((2000 + (uint16_t)dateTime.year)%256),
                             dateTime.month,
