@@ -649,32 +649,7 @@ void processCameraCommand(char * command)
 
     int8_t returnCode;
 
-    if (strcmp("pic", cameraSubcommand) == 0)
-    {
-        returnCode = cameraTakePicture(selectedCamera);
-        if(returnCode == 0)
-            sprintf(strToPrint_, "Camera %c is taking a picture.\r\n", command[7]);
-        else
-            sprintf(strToPrint_, "ERROR Camera %c was busy.\r\n", command[7]);
-    }
-    else if (strncmp("vid", cameraSubcommand, 3) == 0)
-    {
-        uint16_t duration = atoi(cameraSubcommandExtra);
-        returnCode = cameraMakeVideo(selectedCamera, CAMERAMODE_VID, duration);
-        if(returnCode == 0)
-            sprintf(strToPrint_, "Camera %c is taking a video.\r\n", command[7]);
-        else
-            sprintf(strToPrint_, "ERROR Camera %c was busy.\r\n", command[7]);
-    }
-    else if (strncmp("interrupt", cameraSubcommand, 3) == 0)
-    {
-        returnCode = cameraInterruptVideo(selectedCamera);
-        if(returnCode == 0)
-            sprintf(strToPrint_, "Camera %c video was interrupted.\r\n", command[7]);
-        else
-            sprintf(strToPrint_, "ERROR Camera %c was not making video.\r\n", command[7]);
-    }
-    else if (strcmp("on", cameraSubcommand) == 0)
+    if (strcmp("on", cameraSubcommand) == 0)
     {
         // Initialised UART comms with camera in PICture mode
         gopros_raw_cameraInit(selectedCamera, CAMERAMODE_PIC);
@@ -743,6 +718,31 @@ void processCameraCommand(char * command)
         uint8_t payload[5] = {0};
         payload[0] = selectedCamera;
         saveEventSimple(EVENT_CAMERA_VIDEO_END, payload);
+    }
+    else if (strcmp("pic", cameraSubcommand) == 0)
+    {
+        returnCode = cameraTakePicture(selectedCamera);
+        if(returnCode == 0)
+            sprintf(strToPrint_, "Camera %c is taking a picture.\r\n", command[7]);
+        else
+            sprintf(strToPrint_, "ERROR Camera %c was busy.\r\n", command[7]);
+    }
+    else if (strncmp("vid", cameraSubcommand, 3) == 0)
+    {
+        uint16_t duration = atoi(cameraSubcommandExtra);
+        returnCode = cameraMakeVideo(selectedCamera, CAMERAMODE_VID, duration);
+        if(returnCode == 0)
+            sprintf(strToPrint_, "Camera %c is taking a video.\r\n", command[7]);
+        else
+            sprintf(strToPrint_, "ERROR Camera %c was busy.\r\n", command[7]);
+    }
+    else if (strncmp("interrupt", cameraSubcommand, 3) == 0)
+    {
+        returnCode = cameraInterruptVideo(selectedCamera);
+        if(returnCode == 0)
+            sprintf(strToPrint_, "Camera %c video was interrupted.\r\n", command[7]);
+        else
+            sprintf(strToPrint_, "ERROR Camera %c was not making video.\r\n", command[7]);
     }
     else if (strncmp("send_cmd", cameraSubcommand, 8) == 0)
     {
