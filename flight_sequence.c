@@ -72,14 +72,6 @@ void checkFlightSequence()
             confRegister_.flightSubState = 0;
             confRegister_.lastSubStateTime = uptime_ms;
 
-            //Write event
-            /*payload[0] = confRegister_.launch_camerasShort;
-            payload[1] = confRegister_.launch_camerasLong;
-            payload[2] = 0;
-            payload[3] = 0;
-            payload[4] = 0;
-            saveEventSimple(EVENT_CAMERA_VIDEO_START, payload);*/
-
             if(sunriseGpioSignal)
             {
                 //TRigger was Sunrise, register it just in case we have to go back
@@ -169,10 +161,6 @@ void checkFlightSequence()
                     cameraTakePicture(i);
                 }
             }
-            //Write event
-            /*uint8_t payload[5] = {0};
-            payload[0] = camerasIndex;
-            saveEventSimple(EVENT_CAMERA_TIMELAPSE_PIC, payload);*/
 
             lastTimePicture_ = uptime_s;
         }
@@ -259,13 +247,6 @@ void checkFlightSequence()
                                     confRegister_.landing_videoDurationShort);
                 }
             }
-
-            //Write event
-            /*uint8_t payload[5] = {0};
-            payload[0] = confRegister_.landing_camerasShort;
-            payload[1] = confRegister_.landing_camerasLong;
-            payload[2] = confRegister_.landing_camerasHighSpeed;
-            saveEventSimple(EVENT_CAMERA_VIDEO_START, payload);*/
 
             confRegister_.flightSubState = SUBSTATE_LANDING_VIDEO_STARTED;
             confRegister_.lastSubStateTime = uptime_ms;
@@ -363,11 +344,6 @@ void checkFlightSequence()
                 //Switch on depending on when it is now:
                 cameraTakePicture(i);
             }
-
-            /*//Write event
-            uint8_t payload[5] = {0};
-            payload[0] = 0x0F;   //All four cameras taking video
-            saveEventSimple(EVENT_CAMERA_TIMELAPSE_PIC, payload);*/
 
             lastTimePicture_ = uptime_s;
         }
