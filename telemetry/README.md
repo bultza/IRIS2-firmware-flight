@@ -13,6 +13,7 @@ sudo apt install python3-pip
 Install influxDB python interface
 ```console
 pip3 install influxdb
+pip3 install -r requirements.txt
 ```
 Install influxDB
 ```console
