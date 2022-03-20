@@ -93,7 +93,7 @@ These are the currently implemented commands:
 ## Telemetry
 On the folder [telemetry](telemetry) you find the needed scripts to visualize the telemetry in a Grafana dashboard.
 <div align="center">
-<img src="docs/IRIS2_telemetry.png" alt="Vertical Speed of IRIS2 in grafana" width="70%"/>
+<img src="docs/IRIS2_telemetry.png" alt="Vertical Speed of IRIS2 in grafana"/>
 </div>
 
 ## Authors
