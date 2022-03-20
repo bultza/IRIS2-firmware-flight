@@ -55,7 +55,7 @@ Connect to grafana at http://localhost:3000/ Click on the "+" button and Import 
 Probably you need to configure the database access from the left configuration arrow, datasources, usually the default values are enough.
 
 <div align="center">
-<img src="docs/IRIS2_telemetry.png" alt="Vertical Speed of IRIS2 in grafana" />
+<img src="../docs/IRIS2_telemetry.png" alt="Vertical Speed of IRIS2 in grafana" />
 </div>
 
 ### Converting the event log file to human readable
