@@ -1,3 +1,8 @@
+"""
+Autor: Aitor Conde <aitorconde@gmail.com>
+It loads an IRIS2 telemetry CSV file into an influx database.
+"""
+
 import sys
 import datetime
 import csv
@@ -7,6 +12,10 @@ from influxdb import client as influxdb
 
 
 def read_data(filename):
+    """
+    It reads the file and loads it in an array. It ignores the first line that
+    they probably have the headers
+    """
     print ("Reading file " + filename)
     with open(filename) as f:
         lines = f.readlines()[1:]

@@ -91,7 +91,10 @@ These are the currently implemented commands:
 |`u [data]` |[data] will be dumped to the uart selected as debug|
 
 ## Telemetry
-On the folder telemetry you find the needed scripts to visualize the telemetry in a Grafana dashboard
+On the folder [telemetry](telemetry) you find the needed scripts to visualize the telemetry in a Grafana dashboard.
+<div align="center">
+<img src="docs/IRIS2_telemetry.png" alt="Vertical Speed of IRIS2 in grafana" width="70%"/>
+</div>
 
 ## Authors
 * Aitor Conde <aitorconde@gmail.com>

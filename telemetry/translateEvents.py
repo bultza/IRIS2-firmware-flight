@@ -1,3 +1,8 @@
+"""
+Autor: Aitor Conde <aitorconde@gmail.com>
+It converts the IRIS2 event CSV files into a human readable output.
+"""
+
 import csv
 import matplotlib.pyplot as plt
 import sys
@@ -167,26 +172,27 @@ def translateEvent(code, payload1, payload2, payload3, payload4, payload5):
         return "Camera '" + payload1 + "' video was interrupted."
     elif code == "20":
         event = translateFlightSequence(payload1 , 0)
-        #TODO Event 
-        """
-            uint8_t payload[5] = {0};
-            payload[0] = FLIGHTSTATE_LAUNCH;
-            payload[1] = getAltitude() > (confRegister_.launch_heightThreshold * 100);
-            payload[2] = getVerticalSpeed() > (confRegister_.launch_climbThreshold * 100);
-            payload[3] = sunriseGpioSignal;
-            saveEventSimple(EVENT_STATE_CHANGED, payload);
+        somethingElse = ""
+        if payload1 == "2":
+            if payload2 != 0:
+                somethingElse = " due to altitude over the height threshold."
+            elif payload3 != 0:
+                somethingElse = " due to vertical speed over launch threshold."
+            elif payload4 != 0:
+                somethingElse = " due to SUNRISE GPIO signal detection."
+            else:
+                somethingElse = " due to unknown reason."
+        elif payload1 == "4":
+            if payload2 != 0:
+                somethingElse = " due to altitude below the height threshold."
+            elif payload3 != 0:
+                somethingElse = " due to vertical speed higher than landing threshold."
+            elif payload4 != 0:
+                somethingElse = " due to SUNRISE GPIO signal detection."
+            else:
+                somethingElse = " due to unknown reason."
+        return "Flight sequence changed to '" + event + "'" + somethingElse
 
-            uint8_t payload[5] = {0};
-            payload[0] = FLIGHTSTATE_LANDING;
-            payload[1] = getAltitude() < (confRegister_.landing_heightThreshold * 100);
-            payload[2] = verticalSpeed < (confRegister_.landing_speedThreshold * 100);
-            payload[3] = sunriseGpioSignal;
-            saveEventSimple(EVENT_STATE_CHANGED, payload);
-
-        """
-
-
-        return "Flight sequence changed to '" + event + "'"
     elif code == "30":
         altitude = int(payload1) \
                  + int(payload2) * 255 \

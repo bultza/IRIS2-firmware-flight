@@ -1,3 +1,9 @@
+"""
+Autor: Aitor Conde <aitorconde@gmail.com>
+An example to display pressure, altitude and temperatures in a graph with 
+mathplotlib and pandas!
+"""
+
 import csv
 import matplotlib.pyplot as plt
 import sys
