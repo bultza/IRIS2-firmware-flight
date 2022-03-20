@@ -91,7 +91,8 @@ Reading file '20220220_AfterTVAC_putty_events_nor.csv'
 ```
 
 ### Displaying graphs without grafana
-> :warning: With the following two scripts you have to modify the code to display other telemetry values.
+> :warning: With the following two scripts you have to modify the code to display other telemetry values than those shown by default.
+
 You can also display different graphs using mathplot and not installing grafana. After dumping the telemetry of IRIS into a CSV file do, run the following command:
 ```console
 python3 showGraph.py 20220214_baroTest_tlm.csv
