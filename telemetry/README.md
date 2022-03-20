@@ -54,6 +54,10 @@ Connect to grafana at http://localhost:3000/ Click on the "+" button and Import 
 
 Probably you need to configure the database access from the left configuration arrow, datasources, usually the default values are enough.
 
+<div align="center">
+<img src="docs/IRIS2_telemetry.png" alt="Vertical Speed of IRIS2 in grafana" />
+</div>
+
 ### Converting the event log file to human readable
 After dumping the event log into a CSV file, run the following command:
 ```console
@@ -87,6 +91,7 @@ Reading file '20220220_AfterTVAC_putty_events_nor.csv'
 ```
 
 ### Displaying graphs without grafana
+> :warning: With the following two scripts you have to modify the code to display other telemetry values.
 You can also display different graphs using mathplot and not installing grafana. After dumping the telemetry of IRIS into a CSV file do, run the following command:
 ```console
 python3 showGraph.py 20220214_baroTest_tlm.csv
@@ -95,8 +100,6 @@ There is an alternative using pandas:
 ```console
 python3 showGraphTelemetry.py 20220214_baroTest_tlm.csv
 ```
-> warning; With both programs you have to modify the code to display other telemetry values.
-
 
 ## Docker Alternative
 I tried to install grafana and influx with docker-compose unsuccessfully, access permisions need to be fixed between dockers to make them work
