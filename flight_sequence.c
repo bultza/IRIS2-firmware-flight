@@ -41,6 +41,20 @@ void checkFlightSequence()
            ||  sunriseGpioSignal)
         {
             //Start making video!!
+            uint8_t payload[5] = {0};
+            payload[0] = FLIGHTSTATE_LAUNCH;
+            payload[1] = getAltitude() > (confRegister_.launch_heightThreshold * 100);
+            payload[2] = getVerticalSpeed() > (confRegister_.launch_climbThreshold * 100);
+            payload[3] = sunriseGpioSignal;
+            saveEventSimple(EVENT_STATE_CHANGED, payload);
+
+            //Lets move to the next state!!
+            confRegister_.flightState = FLIGHTSTATE_LAUNCH;
+            confRegister_.lastStateTime = uptime_ms;
+            //Reset the substate
+            confRegister_.flightSubState = 0;
+            confRegister_.lastSubStateTime = uptime_ms;
+
             uint8_t i;
             for(i = 0; i < 4; i++)
             {
@@ -57,20 +71,6 @@ void checkFlightSequence()
                                     confRegister_.launch_videoDurationShort);
                 }
             }
-
-            uint8_t payload[5] = {0};
-            payload[0] = FLIGHTSTATE_LAUNCH;
-            payload[1] = getAltitude() > (confRegister_.launch_heightThreshold * 100);
-            payload[2] = getVerticalSpeed() > (confRegister_.launch_climbThreshold * 100);
-            payload[3] = sunriseGpioSignal;
-            saveEventSimple(EVENT_STATE_CHANGED, payload);
-
-            //Lets move to the next state!!
-            confRegister_.flightState = FLIGHTSTATE_LAUNCH;
-            confRegister_.lastStateTime = uptime_ms;
-            //Reset the substate
-            confRegister_.flightSubState = 0;
-            confRegister_.lastSubStateTime = uptime_ms;
 
             if(sunriseGpioSignal)
             {
@@ -115,11 +115,6 @@ void checkFlightSequence()
                 {
                     //On Sunrise 1 it measured > 4km in 10min, here
                     //we did less than 100m in 10min, so interrupt
-                    uint8_t i;
-                    for(i = 0; i < 4; i++)
-                    {
-                        cameraInterruptVideo(i);
-                    }
 
                     uint8_t payload[5] = {0};
                     payload[0] = FLIGHTSTATE_WAITFORLAUNCH;
@@ -132,10 +127,15 @@ void checkFlightSequence()
                     //Reset the substate
                     confRegister_.flightSubState = 0;
                     confRegister_.lastSubStateTime = uptime_ms;
+
+                    uint8_t i;
+                    for(i = 0; i < 4; i++)
+                    {
+                        cameraInterruptVideo(i);
+                    }
                 }
             }
         }
-
     }
 
     if(confRegister_.flightState == FLIGHTSTATE_TIMELAPSE)
@@ -258,6 +258,12 @@ void checkFlightSequence()
             //video on the shorts
             if(altitude < confRegister_.landing_heightShortStart * 100L)
             {
+                uint8_t payload[5] = {0};
+                memcpy(payload, (const uint8_t*)&altitude, 4);
+                saveEventSimple(EVENT_LOW_ALTITUDE_DETECTED, payload);
+                confRegister_.flightSubState = SUBSTATE_LANDING_VIDEO_SHORTSSTARTED;
+                confRegister_.lastSubStateTime = uptime_ms;
+
                 uint8_t i;
                 for(i = 0; i < 4; i++)
                 {
@@ -273,11 +279,6 @@ void checkFlightSequence()
                                         confRegister_.landing_videoDurationShort);
                     }
                 }
-                uint8_t payload[5] = {0};
-                memcpy(payload, (const uint8_t*)&altitude, 4);
-                saveEventSimple(EVENT_LOW_ALTITUDE_DETECTED, payload);
-                confRegister_.flightSubState = SUBSTATE_LANDING_VIDEO_SHORTSSTARTED;
-                confRegister_.lastSubStateTime = uptime_ms;
             }
         }
 
@@ -311,12 +312,6 @@ void checkFlightSequence()
                 if(landingHeight_ - currentAltitude < 200000)
                 {
                     //we did less than 2000km in 10min, so interrupt
-                    uint8_t i;
-                    for(i = 0; i < 4; i++)
-                    {
-                        cameraInterruptVideo(i);
-                    }
-
                     uint8_t payload[5] = {0};
                     payload[0] = FLIGHTSTATE_TIMELAPSE;
                     saveEventSimple(EVENT_STATE_CHANGED, payload);
@@ -326,6 +321,12 @@ void checkFlightSequence()
                     //Reset the substate
                     confRegister_.flightSubState = 0;
                     confRegister_.lastSubStateTime = uptime_ms;
+
+                    uint8_t i;
+                    for(i = 0; i < 4; i++)
+                    {
+                        cameraInterruptVideo(i);
+                    }
                 }
             }
         }
@@ -350,14 +351,6 @@ void checkFlightSequence()
 
         if(i2c_ADXL345_getMovementDetected() > 3) //More than 3 events in 1 minute
         {
-            uint8_t i;
-            for(i = 0; i < 4; i++)
-            {
-                cameraMakeVideo(i,
-                                CAMERAMODE_VID,
-                                confRegister_.recovery_videoDuration);
-            }
-
             uint8_t payload[5] = {0};
             payload[0] = FLIGHTSTATE_RECOVERY;
             saveEventSimple(EVENT_STATE_CHANGED, payload);
@@ -368,6 +361,14 @@ void checkFlightSequence()
             //Reset the substate
             confRegister_.flightSubState = 0;
             confRegister_.lastSubStateTime = uptime_ms;
+
+            uint8_t i;
+            for(i = 0; i < 4; i++)
+            {
+                cameraMakeVideo(i,
+                                CAMERAMODE_VID,
+                                confRegister_.recovery_videoDuration);
+            }
         }
     }
 
