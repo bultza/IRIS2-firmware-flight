@@ -4,10 +4,7 @@ It converts the IRIS2 event CSV files into a human readable output.
 """
 
 import csv
-import matplotlib.pyplot as plt
 import sys
-import pandas as pd
-
 
 
 def read_data(filename):
@@ -149,7 +146,7 @@ def translateEvent(code, payload1, payload2, payload3, payload4, payload5):
     elif code == "11":
         return "Camera '" + payload1 + "' took a picture manually."
     elif code == "12":
-        duration = int(payload4) + int(payload5[0]) * 255
+        duration = int(payload5[0]) + int(payload4) * 256
         if payload2 == "1":
             mode = "Normal 2.7k/4:3"
         elif payload2 == "2":
@@ -174,30 +171,31 @@ def translateEvent(code, payload1, payload2, payload3, payload4, payload5):
         event = translateFlightSequence(payload1 , 0)
         somethingElse = ""
         if payload1 == "2":
-            if payload2 != 0:
+            if payload2 != "0":
                 somethingElse = " due to altitude over the height threshold."
-            elif payload3 != 0:
+            elif payload3 != "0":
                 somethingElse = " due to vertical speed over launch threshold."
-            elif payload4 != 0:
+            elif payload4 != "0":
                 somethingElse = " due to SUNRISE GPIO signal detection."
             else:
                 somethingElse = " due to unknown reason."
         elif payload1 == "4":
-            if payload2 != 0:
+            if payload2 != "0":
                 somethingElse = " due to altitude below the height threshold."
-            elif payload3 != 0:
+            elif payload3 != "0":
                 somethingElse = " due to vertical speed higher than landing threshold."
-            elif payload4 != 0:
+            elif payload4 != "0":
                 somethingElse = " due to SUNRISE GPIO signal detection."
             else:
                 somethingElse = " due to unknown reason."
         return "Flight sequence changed to '" + event + "'" + somethingElse
 
     elif code == "30":
+        #print(payload1, payload2, payload3, payload4, payload5)
         altitude = int(payload1) \
-                 + int(payload2) * 255 \
-                 + int(payload3) * 65535 \
-                 + int(payload4) * 16777215
+                 + int(payload2) * 256 \
+                 + int(payload3) * 65536 \
+                 + int(payload4) * 16777216
         return "IRIS2 is below landing threshold! Measured " + "{:.2f}".format(altitude/100) + "m."
     elif code == "40":
         return "Movement detected by Accelerometer!"
@@ -208,6 +206,7 @@ def translateEvent(code, payload1, payload2, payload3, payload4, payload5):
     elif code == "101":
         return "SUNSIRE Signal activation detected!"
     elif code == "200":
+        #print(payload1, payload2, payload3, payload4, payload5)
         current = int(payload1) + int(payload2) * 255
         voltage = int(payload3) + int(payload4) * 255
         if current > 32767:

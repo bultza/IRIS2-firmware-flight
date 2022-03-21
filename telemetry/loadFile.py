@@ -24,7 +24,7 @@ def read_data(filename):
 
 if __name__ == '__main__':
     db = influxdb.InfluxDBClient("localhost", 8086, "admin", "daedalusdaedalus", "db0")
-    #db.write_points(value, time_precision='ms')
+
     if len(sys.argv) != 2:
         print ('ERROR, you should add a file as argument, python3 loadFile input.csv.')
         exit()
