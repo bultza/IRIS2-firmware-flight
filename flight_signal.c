@@ -16,10 +16,17 @@ uint8_t  sunrise_signalStatus_ = 0;
  */
 uint8_t sunrise_GPIO_Read_RAW_no()
 {
-    if(P2IN & BIT2)
-        return 1;
+    if(confRegister_.sim_sunriseSignal == 0)
+    {
+        if(P2IN & BIT2)
+            return 1;
+        else
+            return 0;
+    }
+    else if(confRegister_.sim_sunriseSignal == 1)
+        return 1;   //Simulated output HIGH to test logic
     else
-        return 0;
+        return 0;   //Simulated output LOW to test logic
 }
 
 /**

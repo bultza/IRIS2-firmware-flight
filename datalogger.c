@@ -329,19 +329,36 @@ void sensorsRead()
     //Time to read barometer?
     if(lastTime_baroRead_ + confRegister_.baro_readPeriod < uptime_ms)
     {
+        //Try rebooting again the i2c and init the barometer if it was on error
+        if(baro_isOnError_)
+        {
+            //Try to reconfigure the barometer:
+            i2c_master_init();
+
+            sleep_ms(5);
+            //Init Barometer
+            i2c_MS5611_init();
+        }
+
         //Time to read barometer
         int32_t pressure;
         int32_t altitude;
         int32_t speed;
         int32_t temperature;
         int8_t error = i2c_MS5611_getPressure(&pressure, &temperature);
+
         if (error != 0)
         {
             baro_isOnError_ = 1;
 
             //Try to reboot the i2c!!!
-            uart_print(UART_DEBUG, "\r\nERROR: I2C seems to be not responding, rebooting the I2C...\r\n");
+            if(confRegister_.debugUART == 5)
+            {
+                uart_print(UART_DEBUG, "ERROR: I2C seems to be not responding, rebooting the I2C...\r\n# ");
+            }
             i2c_master_init();
+
+            sleep_ms(5);
             //Init Barometer
             i2c_MS5611_init();
             //Register that an error ocurred today

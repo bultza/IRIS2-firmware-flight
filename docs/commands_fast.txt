@@ -10,6 +10,8 @@ conf set flightState 3
 conf set gopro_beeps 1
 conf set gopro_leds 1
 
+conf set sim_sunriseSignal 2
+conf set sim_sunriseSignal 1
 
 //********************************
 //Simulate launch
@@ -28,6 +30,7 @@ memory read nor events 0 300
 
 conf set sim_pressure 100500
 conf set sim_pressure 99900
+conf set sim_pressure 99000
 
 
 

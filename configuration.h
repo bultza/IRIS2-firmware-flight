@@ -134,6 +134,7 @@ struct ConfigurationRegister
     uint8_t debugUART;
     uint8_t sim_enabled;
     int32_t sim_pressure;
+    uint8_t sim_sunriseSignal;    //1 if high, 2 if low simulated (remember it has a pull up)
 };
 
 //******************************************************************************

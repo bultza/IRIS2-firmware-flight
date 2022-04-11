@@ -54,6 +54,7 @@ int8_t configuration_init(void)
         confRegister_.temp_readPeriod = TEMP_READPERIOD;
         confRegister_.debugUART = 0;
         confRegister_.sim_enabled = 0;
+        confRegister_.sim_sunriseSignal = 0;
 
         //Remember camera configuration:
         //CAMERA 1: Points the mirror assembly (frontplate)
