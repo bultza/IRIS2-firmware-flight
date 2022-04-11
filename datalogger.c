@@ -24,7 +24,6 @@ int16_t numTimes_accRead_[2] = {0, 0};
 struct TelemetryLine currentTelemetryLine_[2];
 
 //History of altitudes
-#define ALTITUDE_HISTORY 10
 struct AltitudesHistory
 {
     int32_t time;

@@ -12,6 +12,7 @@
 #include "clock.h"
 #include "configuration.h"
 #include "gopros.h"
+#include "datalogger.h"
 
 void checkFlightSequence();
 

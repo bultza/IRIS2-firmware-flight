@@ -42,6 +42,8 @@
 #define MAX_INDEX               1
 #define MIN_INDEX               2
 
+#define ALTITUDE_HISTORY        10
+
 // ---NOR COMPUTATIONS---
 // Mission: 10 days -> 10*24*60*60 = 864 000 seconds
 // Proposing saving 1 Telemetry Line every 30 s --> 1.84 MB of telemetry

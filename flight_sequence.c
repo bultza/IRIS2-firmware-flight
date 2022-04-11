@@ -63,10 +63,10 @@ void checkFlightSequence()
                 verticalSpeedTrigger_ = 0;
             }
 
-            if(heightTrigger_ > 10)
+            if(heightTrigger_ > ALTITUDE_HISTORY + 1)
                 heightReached = 1;
 
-            if(verticalSpeedTrigger_ > 10)
+            if(verticalSpeedTrigger_ > ALTITUDE_HISTORY + 1)
                 verticalSpeedReached = 1;
         }
 
@@ -237,10 +237,10 @@ void checkFlightSequence()
                 verticalSpeedTrigger_ = 0;
             }
 
-            if(heightTrigger_ > 10)
+            if(heightTrigger_ > ALTITUDE_HISTORY + 1)
                 heightReached = 1;
 
-            if(verticalSpeedTrigger_ > 10)
+            if(verticalSpeedTrigger_ > ALTITUDE_HISTORY + 1)
                 verticalSpeedReached = 1;
         }
 
