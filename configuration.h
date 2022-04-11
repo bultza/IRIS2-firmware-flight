@@ -9,7 +9,7 @@
 
 //#define DEBUG_MODE
 #define MAGICWORD           0xBABE
-#define FWVERSION           10
+#define FWVERSION           11
 
 #include <stdint.h>
 #include <msp430.h>
