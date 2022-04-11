@@ -32,6 +32,7 @@ struct AltitudesHistory
 };
 struct AltitudesHistory altitudeHistory_[ALTITUDE_HISTORY];
 uint8_t altitudeHistoryIndex_ = 0;
+uint8_t baro_isOnError_ = 0;    //It signals if the barometer is not responding
 
 // PUBLIC FUNCTIONS
 
@@ -180,10 +181,8 @@ int32_t getVerticalSpeed()
  */
 int32_t getAltitude()
 {
-    //if(confRegister_.sim_enabled)
-    //{
-    //    return confRegister_.sim_altitude * 100L;
-    //}
+    if(baro_isOnError_)
+        return -123456; //Signal baro error
     //REturn the last recorded altitude:
     uint8_t previousAltitudeIndex;
     if(altitudeHistoryIndex_ == 0)
@@ -192,6 +191,14 @@ int32_t getAltitude()
         previousAltitudeIndex = altitudeHistoryIndex_ - 1;
 
     return altitudeHistory_[previousAltitudeIndex].altitude;
+}
+
+/**
+ * It returns the status of the Barometer to see if it is on error status
+ */
+uint8_t getBaroIsOnError()
+{
+    return baro_isOnError_;
 }
 
 //uint32_t altDebug_ = 0;
@@ -207,10 +214,10 @@ float accZAverages_[2];
  */
 void sensorsRead()
 {
-    uint64_t uptime = millis_uptime();
+    uint64_t uptime_ms = millis_uptime();
 
     //Read GPIOs only once per second (like baro)
-    if(lastTime_gpioSunriseRead_ + confRegister_.baro_readPeriod < uptime)
+    if(lastTime_gpioSunriseRead_ + confRegister_.baro_readPeriod < uptime_ms)
     {
         uint8_t gpioStatus = sunrise_GPIO_Read_RAW_no();
 
@@ -225,7 +232,7 @@ void sensorsRead()
             currentTelemetryLine_[1].switches_status &= ~BIT6;
         }
 
-        lastTime_gpioSunriseRead_ = uptime;
+        lastTime_gpioSunriseRead_ = uptime_ms;
     }
 
     //Add the rest of the thing of the switches:
@@ -321,7 +328,7 @@ void sensorsRead()
     currentTelemetryLine_[1].sub_state = confRegister_.flightSubState;
 
     //Time to read barometer?
-    if(lastTime_baroRead_ + confRegister_.baro_readPeriod < uptime)
+    if(lastTime_baroRead_ + confRegister_.baro_readPeriod < uptime_ms)
     {
         //Time to read barometer
         int32_t pressure;
@@ -331,6 +338,8 @@ void sensorsRead()
         int8_t error = i2c_MS5611_getPressure(&pressure, &temperature);
         if (error != 0)
         {
+            baro_isOnError_ = 1;
+
             //Try to reboot the i2c!!!
             uart_print(UART_DEBUG, "\r\nERROR: I2C seems to be not responding, rebooting the I2C...\r\n");
             i2c_master_init();
@@ -341,15 +350,17 @@ void sensorsRead()
             saveEventSimple(EVENT_I2C_ERROR_RESET, payload);
 
             //Reset time to read baro
-            lastTime_baroRead_ = uptime;
+            lastTime_baroRead_ = uptime_ms;
             return;
         }
+
+        baro_isOnError_ = 0;    //Signal that baro is running correctly
 
         //Convert baro to altitude
         altitude = calculateAltitude(pressure);
 
         //add altitude to altitude history
-        altitudeHistory_[altitudeHistoryIndex_].time = (int32_t)uptime;
+        altitudeHistory_[altitudeHistoryIndex_].time = (int32_t)uptime_ms;
         altitudeHistory_[altitudeHistoryIndex_].altitude = altitude;
         altitudeHistoryIndex_++;
         if(altitudeHistoryIndex_ >= ALTITUDE_HISTORY)
@@ -409,11 +420,11 @@ void sensorsRead()
             numTimes_baroRead_[i]++;
         }
 
-        lastTime_baroRead_ = uptime;
+        lastTime_baroRead_ = uptime_ms;
     }
 
     //Time to read temperatures?
-    if(lastTime_tempRead_ + confRegister_.temp_readPeriod < uptime)
+    if(lastTime_tempRead_ + confRegister_.temp_readPeriod < uptime_ms)
     {
         int16_t temperatures[6];
         int8_t error = i2c_TMP75_getTemperatures(temperatures);
@@ -429,11 +440,11 @@ void sensorsRead()
             //currentTelemetryLineFRAMandNOR_[i].temperatures[4] = temperatures[4]; //External 03
         }
 
-        lastTime_tempRead_ = uptime;
+        lastTime_tempRead_ = uptime_ms;
     }
 
     //Time to read voltages and currents?
-    if(lastTime_inaRead_ + confRegister_.ina_readPeriod < uptime)
+    if(lastTime_inaRead_ + confRegister_.ina_readPeriod < uptime_ms)
     {
         struct INAData inaData;
         int8_t error = i2c_INA_read(&inaData);
@@ -497,11 +508,11 @@ void sensorsRead()
             numTimes_inaRead_[i]++;
         }
 
-        lastTime_inaRead_ = uptime;
+        lastTime_inaRead_ = uptime_ms;
     }
 
     //Time to read accelerations?
-    if(lastTime_accRead_ + confRegister_.acc_readPeriod < uptime)
+    if(lastTime_accRead_ + confRegister_.acc_readPeriod < uptime_ms)
     {
         struct ACCData accData;
         int8_t error = i2c_ADXL345_getAccelerations(&accData);
@@ -570,7 +581,7 @@ void sensorsRead()
 
             numTimes_accRead_[i]++;
         }
-        lastTime_accRead_ = uptime;
+        lastTime_accRead_ = uptime_ms;
     }
 
 

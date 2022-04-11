@@ -16,6 +16,10 @@ uint8_t  launchDetectedFromSunrise_ = 0;
 int32_t landingHeight_ = 0;
 uint8_t  landingDetectedFromSunrise_ = 0;
 
+uint64_t triggersLastTime_ = 0;
+uint16_t verticalSpeedTrigger_ = 0;
+uint16_t heightTrigger_ = 0;
+
 /**
  * Checks if there are any activities to be performed during the flight
  */
@@ -34,17 +38,48 @@ void checkFlightSequence()
             return;
 
         uint8_t sunriseGpioSignal = sunrise_GPIO_Read_Signal();
+        uint8_t heightReached = 0;
+        uint8_t verticalSpeedReached = 0;
+
+        //We count 10 times to see if threshold was achieved
+        if(triggersLastTime_ + 1000 < uptime_ms)
+        {
+            triggersLastTime_ = uptime_ms;
+            int32_t altitude = getAltitude();
+            if(altitude > (confRegister_.launch_heightThreshold * 100))
+                heightTrigger_++;
+            else
+                heightTrigger_ = 0;
+
+            if(getVerticalSpeed() > (confRegister_.launch_climbThreshold * 100))
+                verticalSpeedTrigger_++;
+            else
+                verticalSpeedTrigger_ = 0;
+
+            if(getBaroIsOnError())
+            {
+                //Ignore all measurements from the baro:
+                heightTrigger_ = 0;
+                verticalSpeedTrigger_ = 0;
+            }
+
+            if(heightTrigger_ > 10)
+                heightReached = 1;
+
+            if(verticalSpeedTrigger_ > 10)
+                verticalSpeedReached = 1;
+        }
 
         //Are we very high or climbing very fast?
-        if(   (getAltitude() > (confRegister_.launch_heightThreshold * 100))
-           || (getVerticalSpeed() > (confRegister_.launch_climbThreshold * 100))
-           ||  sunriseGpioSignal)
+        if( heightReached
+           || verticalSpeedReached
+           || sunriseGpioSignal)
         {
             //Start making video!!
             uint8_t payload[5] = {0};
             payload[0] = FLIGHTSTATE_LAUNCH;
-            payload[1] = getAltitude() > (confRegister_.launch_heightThreshold * 100);
-            payload[2] = getVerticalSpeed() > (confRegister_.launch_climbThreshold * 100);
+            payload[1] = heightReached;
+            payload[2] = verticalSpeedReached;
             payload[3] = sunriseGpioSignal;
             saveEventSimple(EVENT_STATE_CHANGED, payload);
 
@@ -54,6 +89,8 @@ void checkFlightSequence()
             //Reset the substate
             confRegister_.flightSubState = 0;
             confRegister_.lastSubStateTime = uptime_ms;
+            heightTrigger_ = 0;
+            verticalSpeedTrigger_ = 0;
 
             uint8_t i;
             for(i = 0; i < 4; i++)
@@ -74,9 +111,13 @@ void checkFlightSequence()
 
             if(sunriseGpioSignal)
             {
-                //TRigger was Sunrise, register it just in case we have to go back
-                launchDetectedFromSunrise_ = 1;
-                launchHeight_ = getAltitude(); //In cm!!
+                //TRigger was Sunrise, register it just in case we have to go
+                //back and do it only if barometer is actually working:
+                if(getBaroIsOnError() == 0)
+                {
+                    launchDetectedFromSunrise_ = 1;
+                    launchHeight_ = getAltitude(); //In cm!!
+                }
             }
         }
         else
@@ -111,7 +152,8 @@ void checkFlightSequence()
                     && confRegister_.lastStateTime  + 600000L < uptime_ms)
             {
                 int32_t currentAltitude = getAltitude();
-                if(currentAltitude - launchHeight_ < 10000L)
+                if(currentAltitude - launchHeight_ < 10000L
+                        && getBaroIsOnError() == 0)
                 {
                     //On Sunrise 1 it measured > 4km in 10min, here
                     //we did less than 100m in 10min, so interrupt
@@ -165,17 +207,46 @@ void checkFlightSequence()
             lastTimePicture_ = uptime_s;
         }
 
-        int32_t verticalSpeed = getVerticalSpeed();
-        int32_t altitude = getAltitude();
-        if(altitude > confRegister_.landing_heightSecurityThreshold * 100)
-            verticalSpeed = 0;  //avoid listening to vertical speeds when altitude is too high
-
         uint8_t sunriseGpioSignal = sunrise_GPIO_Read_Signal();
+        uint8_t heightReached = 0;
+        uint8_t verticalSpeedReached = 0;
 
-        if(    (getAltitude() < (confRegister_.landing_heightThreshold * 100))
-            || (verticalSpeed < (confRegister_.landing_speedThreshold * 100))
-            || sunriseGpioSignal
-          )
+        //We count 10 times to see if threshold was achieved and once per second
+        if(triggersLastTime_ + 1000 < uptime_ms)
+        {
+            triggersLastTime_ = uptime_ms;
+            int32_t altitude = getAltitude();
+            int32_t verticalSpeed = getVerticalSpeed();
+            if(altitude > confRegister_.landing_heightSecurityThreshold * 100)
+                verticalSpeed = 0;  //avoid listening to vertical speeds when altitude is too high
+
+            if(altitude < (confRegister_.landing_heightThreshold * 100))
+                heightTrigger_++;
+            else
+                heightTrigger_ = 0;
+
+            if(getVerticalSpeed() < (confRegister_.landing_speedThreshold * 100))
+                verticalSpeedTrigger_++;
+            else
+                verticalSpeedTrigger_ = 0;
+
+            if(getBaroIsOnError())
+            {
+                //Ignore all measurements from the baro:
+                heightTrigger_ = 0;
+                verticalSpeedTrigger_ = 0;
+            }
+
+            if(heightTrigger_ > 10)
+                heightReached = 1;
+
+            if(verticalSpeedTrigger_ > 10)
+                verticalSpeedReached = 1;
+        }
+
+        if( heightReached
+            || verticalSpeedReached
+            || sunriseGpioSignal)
         {
             //Move only if safe descending time reached:
             if(confRegister_.lastStateTime
@@ -184,8 +255,8 @@ void checkFlightSequence()
             {
                 uint8_t payload[5] = {0};
                 payload[0] = FLIGHTSTATE_LANDING;
-                payload[1] = getAltitude() < (confRegister_.landing_heightThreshold * 100);
-                payload[2] = verticalSpeed < (confRegister_.landing_speedThreshold * 100);
+                payload[1] = heightReached;
+                payload[2] = verticalSpeedReached;
                 payload[3] = sunriseGpioSignal;
                 saveEventSimple(EVENT_STATE_CHANGED, payload);
 
@@ -196,12 +267,18 @@ void checkFlightSequence()
                 //Reset the substate
                 confRegister_.flightSubState = SUBSTATE_LANDING_WAITING;
                 confRegister_.lastSubStateTime = uptime_ms;
+                heightTrigger_ = 0;
+                verticalSpeedTrigger_ = 0;
 
                 if(sunriseGpioSignal)
                 {
-                    //TRigger was Sunrise, register it just in case we have to go back
-                    landingDetectedFromSunrise_ = 1;
-                    landingHeight_ = getAltitude(); //In cm!!
+                    //TRigger was Sunrise, register it just in case we have to go
+                    //back and do it only if barometer is actually working:
+                    if(getBaroIsOnError() == 0)
+                    {
+                        landingDetectedFromSunrise_ = 1;
+                        landingHeight_ = getAltitude(); //In cm!!
+                    }
                 }
             }
         }
@@ -309,7 +386,8 @@ void checkFlightSequence()
                     && confRegister_.lastStateTime  + 600000 < uptime_ms)
             {
                 int32_t currentAltitude = getAltitude();
-                if(landingHeight_ - currentAltitude < 200000)
+                if(landingHeight_ - currentAltitude < 200000
+                        && getBaroIsOnError() == 0)
                 {
                     //we did less than 2000km in 10min, so interrupt
                     uint8_t payload[5] = {0};
