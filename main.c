@@ -235,6 +235,53 @@ void init_board()
     led_g_off();
 }
 
+uint8_t ledBlinkCounter_ = 0;
+uint8_t lastLEDStatus_ = 0;
+/**
+ * If everything is ok it will blink once per second
+ * If baro error it blinks twice as fast
+ */
+void ledDebugBlink(uint64_t uptime)
+{
+    uint16_t blinkPeriod = 1000;
+    if(getBaroIsOnError())
+        blinkPeriod = 250;
+
+    //If debug, blink always
+    if(confRegister_.flightState == FLIGHTSTATE_DEBUG)
+    {
+        if(uptime % blinkPeriod > 50)
+            led_off();
+        else
+            led_on();
+        return;
+    }
+
+    //If not debug, blink as many times as the flight status
+    if(uptime % blinkPeriod > 50)
+    {
+        if(lastLEDStatus_ == 1)
+        {
+            //We have the transition here
+            if(ledBlinkCounter_ > confRegister_.flightState)
+                ledBlinkCounter_ = 0;
+        }
+        led_off();
+        lastLEDStatus_ = 0;
+    }
+    else
+    {
+        if(lastLEDStatus_ == 0)
+        {
+            //We have the transition here
+            ledBlinkCounter_++;
+        }
+        if(ledBlinkCounter_ != confRegister_.flightState + 1)
+            led_on();
+        lastLEDStatus_ = 1;
+    }
+}
+
 /**
  * main.c
  */
@@ -304,10 +351,7 @@ int main(void)
 	    checkFlightSequence();
 
 	    //Blink CPU LED
-	    if(uptime % 1000 > 50)
-	        led_off();
-	    else
-	        led_on();
+	    ledDebugBlink(uptime);
 
 	    //Blink FP Green LED once per 5s
         if(uptime % 5000 > 10)
