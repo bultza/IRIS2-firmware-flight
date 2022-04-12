@@ -21,8 +21,8 @@
 #define I2C_BUS00 0
 #define I2C_BUS01 1
 
-#define I2CTIMEOUTCYCLES    10000UL   //30000 for 8MHz at 400kHz
-//#define I2CTIMEOUTCYCLES    5000UL   //30000 for 8MHz at 400kHz
+//#define I2CTIMEOUTCYCLES    10000UL   //30000 for 8MHz at 400kHz
+#define I2CTIMEOUTCYCLES    5000UL   //30000 for 8MHz at 400kHz
 
 
 //******************************************************************************
