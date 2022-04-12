@@ -130,3 +130,11 @@ python3 showGraphTelemetry.py 20220214_baroTest_tlm.csv
 
 ## Docker Alternative
 I tried to install grafana and influx with docker-compose unsuccessfully due to an incorrect influxdb version. It needs a little bit of updates to make it work.
+
+## How to delete from database
+The best thing is to do as follows on a local terminal:
+```console
+influx
+use db0
+DELETE FROM /.*/ WHERE "time" >= '2022-04-12T00:00:00.0000000Z' AND "time" <= '2022-04-13T00:27:08.0000000Z'
+```
