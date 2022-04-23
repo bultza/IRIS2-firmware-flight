@@ -104,7 +104,7 @@ These are the currently implemented commands:
 |`uartdebug [x]` |All characters received of the [x] UART will be dumped on the console|
 |`u [data]` |[data] will be dumped to the uart selected as debug|
 
-## Configuration Parameters
+### Configuration Parameters
 Sending the command `conf` will print all the configuration parameters and its assigned values:
 
 ```
@@ -158,12 +158,12 @@ Selected parameter 'flightState' has been set to '6'.
 ```
 List of configuration parameters:
 
-|Command      | Def Val| Units        | Comment     |
+|Command      | Default Value| Units        | Comment     |
 |-------------|-------------:|:-------------|:------------|
-| `sim_enabled` | 0 | | DEBUG Mode, enables simulation values for pressure and sunrise signal. 1 = Enabled, 0 = Disabled|
+| `sim_enabled` | 0 | | :warning: DEBUG Mode, enables simulation values for pressure and sunrise signal. 1 = Enabled, 0 = Disabled|
 | `sim_pressure` | 0 | mbar * 100 | Simulated pressure, only takes affect if sim_enabled is = 1| 
 | `sim_sunriseSignal` | 0 | digital | 0 = Sunrise signal is LOW, 1 = Sunrise signal is HIGH | 
-| `flightState` | 1 | | 0 = Debug mode, 1 = Waiting for launch, 2 = launch video, 3 = timelapse cruising, 4 = landing video, 5 = timelapse waiting for recovery team, 6 = 2 min video of the team and timelapse post recovery|
+| `flightState` | 1 | | :warning: 0 = Standby, 1 = Waiting for launch, 2 = Making launch video, 3 = Timelapse cruising, 4 = Making landing video, 5 = Timelapse waiting for recovery team, 6 = 2 min video of the team and timelapse post recovery|
 | `flightSubState` | 0 | | Only useful on landing video, just sub-states|
 | `fram_tlmSavePeriod` | 600 | s | Periodicity to save telemetry on the FRAM |
 | `nor_deviceSelected` | 0 | | Selected NOR memory to work with, because we have two! |
@@ -198,6 +198,77 @@ List of configuration parameters:
 | `landing_camerasHighSpeed` | 0x04 | hex | Selected cameras for making high speed video. 0x04 means Cameras 3. 0x0F means all cameras |
 | `landing_heightShortStart` | 3000 | m | When reached this height or lower and on state 4, IRIS will start the second phase of the landing switching on all the cameras to make video of the impact |
 | `recovery_videoDuration` | 120 | s | Duration of the video of the recovery team. It will activate on vibration detection |
+
+### Testing the cameras and the Sunrise Signal
+This are the recommended commands for testing the camera:
+|Command      | Comment     |
+|-------------|-------------|
+|`status`     | It shows the current status |
+|`memory status`| It shows the current status of the memories|
+|`conf`       | It shows the current configuration paramters|
+|`conf set flightState 0` | It sets the instrument in standby status, so it will not make videos or pictures unless manually instructed|
+|`conf set flightSubState 0` | Just in case|
+|`uartdebug 5` | It will show on terminal more information than usual, especially when commanding cameras or with Sunrise digital signal|
+
+After this secuence you are ready for fully testing the cameras, just copy paste the following commands:
+```console
+camera 1 on
+camera 1 format
+camera 1 off
+
+camera 2 on
+camera 2 format
+camera 2 off
+
+camera 3 on
+camera 3 format
+camera 3 off
+
+camera 4 on
+camera 4 format
+camera 4 off
+
+camera 1 pic
+camera 2 pic
+camera 3 pic
+camera 4 pic
+
+camera 1 pic
+camera 2 pic
+camera 3 pic
+camera 4 pic
+
+camera 1 vid 30
+camera 2 vid 30
+camera 3 vid 30
+camera 4 vid 30
+
+camera 1 pic
+camera 2 pic
+camera 3 pic
+camera 4 pic
+```
+After this, every SDCard should show 3 pictures and 1 video of 30s.
+> :warning: Never apply a NOR memory bulk erase, as we want every possible telemetry to be saved forever.
+
+### Setting IRIS for launch
+This are the recommended commands for testing the camera:
+|Command      | Comment     |
+|-------------|-------------|
+|`conf set flightState 0` | It sets the instrument in standby status, so it will not make videos or pictures unless manually instructed|
+|`status`     | It shows the current status |
+|`memory status`| It shows the current status of the memories|
+|`memory read nor events 0 [x]` | It dumps all the recorded events. [x] is the value of the last recorded event |
+|`memory read nor tlm 0 [x]` | It dumps all the recorded telemetry. [x] is the value of the last recorded telemetry. This can take several minutes to dump! |
+|`conf`       | It shows the current configuration paramters|
+|`conf set flightState 1` | It sets the instrument in waiting for launch status|
+|`conf set flightSubState 0` | Just in case|
+|`uartdebug 0` | It will disable the debug messages on console |
+|`conf set sim_enabled 0` | Just to make sure that simulation is disabled |
+|`memory erase fram bulk` | Clean FRAM memory before launch |
+|`memory status` | Print memory status for eternity |
+|`status` | General status for eternity |
+|`conf` | General configuration for eternity |
 
 
 ## Telemetry

@@ -691,12 +691,15 @@ void processCameraCommand(char * command)
     {
         returnCode = gopros_raw_cameraFormatSDCard(selectedCamera);
         if(returnCode == 0)
+        {
             sprintf(strToPrint_, "Camera %c SDCard formated!\r\n", command[7]);
+            uint8_t payload[5] = {0};
+            payload[0] = selectedCamera;
+            saveEventSimple(EVENT_CAMERA_SDCARD_FORMAT, payload);
+        }
         else
             sprintf(strToPrint_, "ERROR Camera %c is not switched on.\r\n", command[7]);
-        uint8_t payload[5] = {0};
-        payload[0] = selectedCamera;
-        saveEventSimple(EVENT_CAMERA_SDCARD_FORMAT, payload);
+
     }
     else if (strcmp("video_mode", cameraSubcommand) == 0)
     {

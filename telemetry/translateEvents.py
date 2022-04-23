@@ -167,6 +167,8 @@ def translateEvent(code, payload1, payload2, payload3, payload4, payload5):
         return "Camera '" + payload1 + "' configuration changed to picture mode manually."
     elif code == "18":
         return "Camera '" + payload1 + "' video was interrupted."
+    elif code == "19":  
+        return "Camera '" + payload1 + "' SDCard was formated."
     elif code == "20":
         event = translateFlightSequence(payload1 , 0)
         somethingElse = ""
