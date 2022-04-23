@@ -9,6 +9,7 @@
 struct CameraStatus cameraStatus_[4] = {0};
 uint8_t cameraHasStarted_[4] = {0};
 uint8_t cameraMode_[4] = {CAMERAMODE_PIC};
+char strToPrint_[50];
 
 /*
  * Begins an UART communication with the selected camera.
@@ -91,6 +92,12 @@ int8_t gopros_raw_cameraTakePicture(uint8_t selectedCamera)
         return -1;
     uart_print(selectedCamera + 1, CAM_PHOTO_TAKE_PIC);
     uart_flush(selectedCamera + 1);
+    if(confRegister_.debugUART == 5)
+    {
+        uint64_t uptime = millis_uptime();
+        sprintf(strToPrint_, "%.3fs: Camera %d picture command.\r\n# ", uptime/1000.0, selectedCamera+1);
+        uart_print(UART_DEBUG, strToPrint_);
+    }
     return 0;
 }
 
@@ -307,7 +314,6 @@ int8_t searchInUart(uint8_t uartIndex, uint8_t flag)
 int8_t cameraFSMlowLevelCheck()
 {
     uint64_t uptime = millis_uptime();
-    char strToPrint[50];
     uint8_t i;
     for(i = 0; i < 4; i++)
     {
@@ -331,8 +337,8 @@ int8_t cameraFSMlowLevelCheck()
                 if(confRegister_.debugUART == 5)
                 {
                     uint64_t uptime = millis_uptime();
-                    sprintf(strToPrint, "%.3fs: Camera %d Start pressing button.\r\n# ", uptime/1000.0, i+1);
-                    uart_print(UART_DEBUG, strToPrint);
+                    sprintf(strToPrint_, "%.3fs: Camera %d Start pressing button.\r\n# ", uptime/1000.0, i+1);
+                    uart_print(UART_DEBUG, strToPrint_);
                 }
                 break;
             case FSM_CAM_PRESSBTN_WAIT:
@@ -351,8 +357,8 @@ int8_t cameraFSMlowLevelCheck()
                 if(confRegister_.debugUART == 5)
                 {
                     uint64_t uptime = millis_uptime();
-                    sprintf(strToPrint, "%.3fs: Camera %d Stop pressing button.\r\n# ", uptime/1000.0, i+1);
-                    uart_print(UART_DEBUG, strToPrint);
+                    sprintf(strToPrint_, "%.3fs: Camera %d Stop pressing button.\r\n# ", uptime/1000.0, i+1);
+                    uart_print(UART_DEBUG, strToPrint_);
                 }
                 break;
             case FSM_CAM_CONF_1:
@@ -361,8 +367,8 @@ int8_t cameraFSMlowLevelCheck()
                     if(cameraStatus_[i].lastCommandTime + cameraStatus_[i].timeoutTime < uptime)
                     {
                         uint64_t uptime = millis_uptime();
-                        sprintf(strToPrint, "%.3fs: Camera %d timeout :(\r\n# ", uptime/1000.0, i+1);
-                        uart_print(UART_DEBUG, strToPrint);
+                        sprintf(strToPrint_, "%.3fs: Camera %d timeout :(\r\n# ", uptime/1000.0, i+1);
+                        uart_print(UART_DEBUG, strToPrint_);
                         //It is timeout however we continue with the rest of the configuration as blind
                     }
                     //Wait for uart to answer:
@@ -400,8 +406,8 @@ int8_t cameraFSMlowLevelCheck()
                     if(confRegister_.debugUART == 5)
                     {
                         uint64_t uptime = millis_uptime();
-                        sprintf(strToPrint, "%.3fs: Camera %d conf: '", uptime/1000.0, i+1);
-                        uart_print(UART_DEBUG, strToPrint);
+                        sprintf(strToPrint_, "%.3fs: Camera %d conf: '", uptime/1000.0, i+1);
+                        uart_print(UART_DEBUG, strToPrint_);
                         uart_print(UART_DEBUG, dateTimeCmd);
                         uart_print(UART_DEBUG, "'\r\n# ");
                     }
@@ -416,8 +422,8 @@ int8_t cameraFSMlowLevelCheck()
                 if(confRegister_.debugUART == 5)
                 {
                     uint64_t uptime = millis_uptime();
-                    sprintf(strToPrint, "%.3fs: Camera %d is Configured.\r\n# ", uptime/1000.0, i+1);
-                    uart_print(UART_DEBUG, strToPrint);
+                    sprintf(strToPrint_, "%.3fs: Camera %d is Configured.\r\n# ", uptime/1000.0, i+1);
+                    uart_print(UART_DEBUG, strToPrint_);
                 }
                 break;
             case FSM_CAM_CONF_2:
@@ -491,8 +497,8 @@ int8_t cameraFSMlowLevelCheck()
                 if(confRegister_.debugUART == 5)
                 {
                     uint64_t uptime = millis_uptime();
-                    sprintf(strToPrint, "%.3fs: Camera %d is Ready.\r\n# ", uptime/1000.0, i+1);
-                    uart_print(UART_DEBUG, strToPrint);
+                    sprintf(strToPrint_, "%.3fs: Camera %d is Ready.\r\n# ", uptime/1000.0, i+1);
+                    uart_print(UART_DEBUG, strToPrint_);
                 }
                 break;
             case FSM_CAM_PRESSBTNOFF_WAIT:
@@ -511,8 +517,8 @@ int8_t cameraFSMlowLevelCheck()
                 if(confRegister_.debugUART == 5)
                 {
                     uint64_t uptime = millis_uptime();
-                    sprintf(strToPrint, "%.3fs: Camera %d is Off.\r\n# ", uptime/1000.0, i+1);
-                    uart_print(UART_DEBUG, strToPrint);
+                    sprintf(strToPrint_, "%.3fs: Camera %d is Off.\r\n# ", uptime/1000.0, i+1);
+                    uart_print(UART_DEBUG, strToPrint_);
                 }
                 break;
             }
@@ -547,7 +553,7 @@ int8_t cameraFSMhighLevelCheck()
                 {
                     cameraStatus_[i].fsmStatusGlobalLastTime = uptime_ms;
                     //Wait 1s for sending the picture command:
-                    cameraStatus_[i].fsmStatusGlobalsleepTime = 1000;
+                    cameraStatus_[i].fsmStatusGlobalsleepTime = 1500;
                     cameraStatus_[i].fsmStatusGlobal = FSMGLOBAL_CAM_PICTURESHOOT;
                 }
                 break;
