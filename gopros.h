@@ -94,8 +94,8 @@ struct CameraStatus
 #define CAM_VIDEO_FORMAT_NTSC       "YY000713000100\n"
 #define CAM_VIDEO_FORMAT_PAL        "YY000713000101\n"
 #define CAM_AUTO_POWER_DOWN_NEVER   "YY000717000100\n"
+#define CAM_FORMAT_SDCARD           "YY00090A0000\n"
 #define CAM_PAYLOAD_SET_DATETIME    "YY00071B0001";
-
 
 /*
 Example: //YY00072100232016011100000001000000000000000000000000000000000001000007E50A14020A0B
@@ -223,6 +223,7 @@ int8_t gopros_raw_cameraSetVideoMode(uint8_t selectedCamera);
 int8_t gopros_raw_cameraTakePicture(uint8_t selectedCamera);
 int8_t gopros_raw_cameraStartRecordingVideo(uint8_t selectedCamera);
 int8_t gopros_raw_cameraStopRecordingVideo(uint8_t selectedCamera);
+int8_t gopros_raw_cameraFormatSDCard(uint8_t selectedCamera);
 int8_t gopros_raw_cameraRawSendCommand(uint8_t selectedCamera, char * cmd);
 int8_t cameraPowerOn(uint8_t selectedCamera, uint8_t slowMode);
 int8_t cameraPowerOff(uint8_t selectedCamera);

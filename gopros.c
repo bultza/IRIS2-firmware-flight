@@ -126,6 +126,18 @@ int8_t gopros_raw_cameraStopRecordingVideo(uint8_t selectedCamera)
     return 0;
 }
 
+/**
+ * Send command to format SD-Card
+ */
+int8_t gopros_raw_cameraFormatSDCard(uint8_t selectedCamera)
+{
+    if (!cameraHasStarted_[selectedCamera])
+        return -1;
+    uart_print(selectedCamera + 1, CAM_FORMAT_SDCARD);
+    uart_flush(selectedCamera + 1);
+    return 0;
+}
+
 /*
  * Send a customised command to the selected camera.
  */
@@ -553,7 +565,8 @@ int8_t cameraFSMhighLevelCheck()
                 {
                     cameraStatus_[i].fsmStatusGlobalLastTime = uptime_ms;
                     //Wait 1s for sending the picture command:
-                    cameraStatus_[i].fsmStatusGlobalsleepTime = 1500;
+                    //cameraStatus_[i].fsmStatusGlobalsleepTime = 1500;
+                    cameraStatus_[i].fsmStatusGlobalsleepTime = confRegister_.gopro_pictureSleep;
                     cameraStatus_[i].fsmStatusGlobal = FSMGLOBAL_CAM_PICTURESHOOT;
                 }
                 break;
