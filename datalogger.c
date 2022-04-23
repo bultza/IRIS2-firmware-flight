@@ -674,7 +674,7 @@ int8_t saveTelemetry()
 
     //First save on the FRAM which is much faster
     //Save it only once every x seconds, otherwise we fill it!
-    if(lastTimeTelemetrySavedFRAM_ + confRegister_.fram_tlmSavePeriod < elapsedSeconds)
+    if(lastTimeTelemetrySavedFRAM_ + confRegister_.fram_tlmSavePeriod - 1 < elapsedSeconds)
     {
         currentTelemetryLine_[0].unixTime = unixtTimeNow;
         currentTelemetryLine_[0].upTime = uptime;
@@ -694,7 +694,7 @@ int8_t saveTelemetry()
 
     //Now save on the NOR which is a little bit slower
     //if(1) //Trick to save a lot of them altoghether
-    if(lastTimeTelemetrySavedNOR_ + confRegister_.nor_tlmSavePeriod < elapsedSeconds)
+    if(lastTimeTelemetrySavedNOR_ + confRegister_.nor_tlmSavePeriod - 1 < elapsedSeconds)
     {
         currentTelemetryLine_[1].unixTime = unixtTimeNow;
         currentTelemetryLine_[1].upTime = uptime;

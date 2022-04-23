@@ -16,15 +16,13 @@
 #include "spi_NOR.h"
 #include "datalogger.h"
 
-//#define FRAM_TLM_SAVEPERIOD 599     //seconds period to save on FRAM
-#define FRAM_TLM_SAVEPERIOD 599     //Only for Debug TODO
+#define FRAM_TLM_SAVEPERIOD 600     //seconds period to save on FRAM
 #define NOR_TLM_SAVEPERIOD  10      //seconds period to save on NOR Flash
 #define BARO_READPERIOD     1000    //Milliseconds period to read barometer
 #define TEMP_READPERIOD     1000    //Milliseconds period to read temperatures
 #define INA_READPERIOD      100     //Milliseconds period to read INA Voltage and currents
 #define ACC_READPERIOD      100     //Milliseconds period to read Accelerometer
 #define TIMELAPSE_PERIOD    120      //Seconds
-//#define TIMELAPSE_PERIOD    30      //Seconds
 
 //Define all the flight status available for the flight plan
 #define FLIGHTSTATE_DEBUG           0
