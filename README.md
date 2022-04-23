@@ -277,12 +277,14 @@ This are the recommended commands for testing the camera:
 |`status` | General status for eternity |
 |`conf` | General configuration for eternity |
 
+Just for easier access, here you have the commands, but be careful, change the [x] with the read value on the memory status!!
+
 ```console
 conf set flightState 0
 status
 memory status
-memory read nor events 0 300
-memory read nor tlm 0 3000
+memory read nor events 0 [x]
+memory read nor tlm 0 [x]
 conf
 conf set flightState 1
 conf set flightSubState 0
