@@ -212,6 +212,13 @@ This are the recommended commands for testing the camera:
 
 After this secuence you are ready for fully testing the cameras, just copy paste the following commands:
 ```console
+status
+memory status
+conf
+conf set flightState 0
+conf set flightSubState 0
+uartdebug 5
+
 camera 1 on
 camera 1 format
 camera 1 off
@@ -270,6 +277,22 @@ This are the recommended commands for testing the camera:
 |`status` | General status for eternity |
 |`conf` | General configuration for eternity |
 
+```console
+conf set flightState 0
+status
+memory status
+memory read nor events 0 300
+memory read nor tlm 0 3000
+conf
+conf set flightState 1
+conf set flightSubState 0
+uartdebug 0
+conf set sim_enabled 0
+memory erase fram bulk
+memory status
+status
+conf
+```
 
 ## Telemetry
 On the folder [telemetry](telemetry) you find the needed scripts to visualize the telemetry in a Grafana dashboard.
