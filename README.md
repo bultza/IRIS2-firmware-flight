@@ -46,9 +46,22 @@ The configuration parameters should be as follows:
 * Serial line: `COMx` (where "x" is the COM number in your computer that you can find in the "device manager")
 * Speed: `115200`
 
-After opening the TTY session, the following must be typed: 
+After opening the TTY session, press 'Enter' and you should see the terminal command sign.
+
+After a reboot, you should see the following message:
 ```
-terminal begin
+IRIS2 is booting up...
+IRIS 2 (Image Recorder Instrument for Sunrise) terminal.
+IRIS 2 Firmware version is '12', compiled on Apr 23 2022 at 15:38:03.
+Made with passion and hard work by:
+  * Aitor Conde <aitorconde@gmail.com>. Senior Engineer. Electronics. Software.
+  * Ramon Garcia <ramongarciaalarcia@gmail.com>. Project Management. Software.
+  * David Mayo <mayo@sondasespaciales.com>. Electronics.
+  * Miguel Angel Gomez <haplo@sondasespaciales.com>. Structure.
+IRIS 2 last booted 0 seconds ago.
+Reboot counter is 4.
+Last Reboot reason was 0x18, 'WDTPW password violation (PUC)'.
+# 
 ```
 
 ### Command line commands
@@ -90,6 +103,102 @@ These are the currently implemented commands:
 |`memory erase [nor/fram] bulk` |It erases the NOR/FRAM memory of the CPU|
 |`uartdebug [x]` |All characters received of the [x] UART will be dumped on the console|
 |`u [data]` |[data] will be dumped to the uart selected as debug|
+
+## Configuration Parameters
+Sending the command `conf` will print all the configuration parameters and its assigned values:
+
+```
+# conf
+sim_enabled = 0
+sim_pressure = 0
+sim_sunriseSignal = 0
+flightState = 1
+flightSubState = 0
+fram_tlmSavePeriod = 599
+nor_deviceSelected = 0
+nor_tlmSavePeriod = 10
+baro_readPeriod = 1000
+ina_readPeriod = 100
+acc_readPeriod = 100
+temp_readPeriod = 1000
+leds = 1
+gopro_model[0] = 0
+gopro_model[1] = 0
+gopro_model[2] = 0
+gopro_model[3] = 0
+gopro_beeps = 2
+gopro_leds = 1
+gopro_pictureSleep = 1500
+launch_heightThreshold = 3000
+launch_climbThreshold = 2
+launch_videoDurationLong = 7200
+launch_videoDurationShort = 3600
+launch_camerasLong = 0x03
+launch_camerasShort = 0x0C
+launch_timeClimbMaximum = 14400
+flight_timelapse_period = 120
+flight_camerasFirstLeg = 0x0F
+flight_camerasSecondLeg = 0x0B
+flight_timeSecondLeg = 86400
+landing_heightThreshold = 25000
+landing_heightSecurityThreshold = 32000
+landing_speedThreshold = -15
+landing_videoDurationLong = 3600
+landing_videoDurationShort = 900
+landing_camerasLong = 0x02
+landing_camerasShort = 0x09
+landing_camerasHighSpeed = 0x04
+landing_heightShortStart = 3000
+recovery_videoDuration = 120
+```
+In order to change a configuration you should use the following command as example:
+```
+# conf set flightState 6
+Selected parameter 'flightState' has been set to '6'.
+```
+List of configuration parameters:
+
+|Command      | Default Value| Units        | Comment     |
+|-------------|--------------|--------------|-------------|
+| `sim_enabled` | 0 | | DEBUG Mode, enables simulation values for pressure and sunrise signal. 1 = Enabled, 0 = Disabled|
+| `sim_pressure` | 0 | mbar * 100 | Simulated pressure, only takes affect if sim_enabled is = 1| 
+| `sim_sunriseSignal` | 0 | Digital | 0 = Sunrise signal is LOW, 1 = Sunrise signal is HIGH | 
+| `flightState` | 1 | | 0 = Debug mode, 1 = Waiting for launch, 2 = launch video, 3 = timelapse cruising, 4 = landing video, 5 = timelapse waiting for recovery team, 6 = 2 min video of the team and timelapse post recovery|
+| `flightSubState` | 0 | | Only useful on landing video, just sub-states|
+| `fram_tlmSavePeriod` | 599 | s | Periodicity to save telemetry on the FRAM |
+| `nor_deviceSelected` | 0 | Digital | Selected NOR memory to work with, because we have two! |
+| `nor_tlmSavePeriod` | 10 | s | Periodicity to save telemetry to on the NOR Flash |
+| `baro_readPeriod` | 1000 | ms | Periodicity to read the barometer |
+| `ina_readPeriod` | 100 | ms | Periodicity to read the Voltage and Current levels of the battery |
+| `acc_readPeriod` | 100 | ms | Periodicity to read the 3 axis Accelerometer |
+| `temp_readPeriod` | 1000 | ms | Periodicity to read the temperature sensors |
+| `leds` | 1 | Digital | 1 = LEDs are On and showing activity, 0 = All leds are off. Only affects the CPU and the Front plate but never the GoPros |
+| `gopro_model[x]` | 0 | | 0 = Gopro Black (IRIS2), 1 = Gopro White (TouchScreen) |
+| `gopro_beeps` | 2 | | 0 = 100% Volume, 1 = 70% Volume, 2 = off. Be aware that this is configured on next boot for the camera, however it takes effect only after a second reboot |
+| `gopro_leds` | 1 | | 0 = Off, 1 = 2 blinks, 2 = 4 blinks |
+| `gopro_pictureSleep` | 1500 | ms | Sleep time between the camera configures until it makes picture. 1s for small SDCards, 1.5s for at least 32GB SDCards |
+| `launch_heightThreshold` | 3000 | m | If reached this height and on state 1, IRIS will jump to State 2 (start making launch video) |
+| `launch_climbThreshold` | 2 | m/s | If reached this speed and on state 1, IRIS will jump to State 2 (Start making launch video) |
+| `launch_videoDurationLong` | 7200 | s | Duration of the video for the cameras to make long launch videos |
+| `launch_videoDurationShort` | 3600 | s | Duration of the video for the cameras to make short launch videos |
+| `launch_camerasLong` | 0x03 | binary | Selected cameras for making long videos. 0x03 means Cameras 1 and 2. 0x0F means all cameras |
+| `launch_camerasShort` | 0x0C | binary | Selected cameras for making short videos. 0x0C means Cameras 3 and 4. 0x0F means all cameras |
+| `launch_timeClimbMaximum` | 14400 | s | Safe time in which IRIS cannot jump to state 4 because it is too soon. This is to prevent triggering landing when the climb is very slow |
+| `flight_timelapse_period` | 120 | s | Periodicity between pictures of every timelapse |
+| `flight_camerasFirstLeg` | 0x0F | binary | Selected cameras for making timelapse during the first part of the cruise phase. 0x0F means all cameras |
+| `flight_camerasSecondLeg` | 0x0B | binary | Selected cameras for making timelapse during the second part of hte cruise phase. 0x0B means Cameras 2, 3 and 4.
+| `flight_timeSecondLeg` | 86400 | s | Duration of the first part of the cruise phase for timelapse. |
+| `landing_heightThreshold` | 25000 | m | If reached this height or lower and on state 3, IRIS will jump to State 4 (start making landing video) |
+| `landing_heightSecurityThreshold` | 32000 | m | Above this height, the measurements of the barometer are not considered safe to calculate vertical speeds and they are ignored |
+| `landing_speedThreshold` | -15 | m/s | If reached this vertical speed or lower and on state 3, IRIS will jump to State 4 (start making landing video) |
+| `landing_videoDurationLong` | 3600 | s | Duration of the long landing videos |
+| `landing_videoDurationShort` | 900 | s | Duration of the short landing videos |
+| `landing_camerasLong` | 0x02 | binary | Selected cameras for making long videos. 0x02 means that only Camera 2 will make video. 0x0F means all cameras |
+| `landing_camerasShort` | 0x09 | binary | Selected cameras for making short videos. 0x09 means Cameras 1 and 4. 0x0F means all cameras |
+| `landing_camerasHighSpeed` | 0x04 | binary | Selected cameras for making high speed video. 0x04 means Cameras 3. 0x0F means all cameras |
+| `landing_heightShortStart` | 3000 | m | When reached this height or lower and on state 4, IRIS will start the second phase of the landing switching on all the cameras to make video of the impact |
+| `recovery_videoDuration` | 120 | s | Duration of the video of the recovery team. It will activate on vibration detection |
+
 
 ## Telemetry
 On the folder [telemetry](telemetry) you find the needed scripts to visualize the telemetry in a Grafana dashboard.
