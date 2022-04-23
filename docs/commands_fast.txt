@@ -64,3 +64,10 @@ conf set flightState 5
 uartdebug 1
 camera 1 on
 u YY00090A0000
+
+//*******************************
+//Do a super fast timelapse:
+conf set gopro_leds 1
+conf set flight_timelapse_period 15
+conf set flightState 6
+conf
