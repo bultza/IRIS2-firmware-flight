@@ -48,6 +48,7 @@
 #define EVENT_CAMERA_VIDEOMODE              16
 #define EVENT_CAMERA_PICMODE                17
 #define EVENT_CAMERA_VIDEO_INTERRUPT        18
+#define EVENT_CAMERA_SDCARD_FORMAT          19
 #define EVENT_STATE_CHANGED                 20
 #define EVENT_LOW_ALTITUDE_DETECTED         30
 #define EVENT_MOVEMENT_DETECTED             40

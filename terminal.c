@@ -264,6 +264,8 @@ void processConfCommand(char * command)
         uart_print(UART_DEBUG, strToPrint_);
         sprintf(strToPrint_, "gopro_leds = %d\r\n", confRegister_.gopro_leds);
         uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "gopro_pictureSleep = %d\r\n", confRegister_.gopro_pictureSleep);
+        uart_print(UART_DEBUG, strToPrint_);
 
         sprintf(strToPrint_, "launch_heightThreshold = %ld\r\n", confRegister_.launch_heightThreshold);
         uart_print(UART_DEBUG, strToPrint_);
@@ -415,6 +417,10 @@ void processConfCommand(char * command)
     else if (strcmp("gopro_leds", (char *)selectedParameter) == 0)
     {
         confRegister_.gopro_leds = valueToSet;
+    }
+    else if (strcmp("gopro_pictureSleep", (char *)selectedParameter) == 0)
+    {
+        confRegister_.gopro_pictureSleep = valueToSet;
     }
     else if (strcmp("leds", (char *)selectedParameter) == 0)
     {
@@ -680,6 +686,17 @@ void processCameraCommand(char * command)
         uint8_t payload[5] = {0};
         payload[0] = selectedCamera;
         saveEventSimple(EVENT_CAMERA_PICTURE, payload);
+    }
+    else if (strcmp("format", cameraSubcommand) == 0)
+    {
+        returnCode = gopros_raw_cameraFormatSDCard(selectedCamera);
+        if(returnCode == 0)
+            sprintf(strToPrint_, "Camera %c SDCard formated!\r\n", command[7]);
+        else
+            sprintf(strToPrint_, "ERROR Camera %c is not switched on.\r\n", command[7]);
+        uint8_t payload[5] = {0};
+        payload[0] = selectedCamera;
+        saveEventSimple(EVENT_CAMERA_SDCARD_FORMAT, payload);
     }
     else if (strcmp("video_mode", cameraSubcommand) == 0)
     {
@@ -1696,6 +1713,7 @@ int8_t terminal_readAndProcessCommands(void)
             uart_print(UART_DEBUG, "  camera [x] picture_mode\r\n");
             uart_print(UART_DEBUG, "  camera [x] video_mode\r\n");
             uart_print(UART_DEBUG, "  camera [x] pic_raw\r\n");
+            uart_print(UART_DEBUG, "  camera [x] format\r\n");
             uart_print(UART_DEBUG, "  camera [x] video_start\r\n");
             uart_print(UART_DEBUG, "  camera [x] video_end\r\n");
             uart_print(UART_DEBUG, "  camera [x] send_cmd [y]\r\n");

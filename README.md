@@ -73,10 +73,11 @@ These are the currently implemented commands:
 |`camera [x] vid [sec]`  |It makes automatically a video with the [x] camera with a duration of [sec] seconds.|
 |`camera [x] interrupt`  |It ends the video inmediately|
 |`camera [x] on`  |It switches on the [x] camera|
+|`camera [x] format`|> :warning: It formats the SDCard of the [x] camera!!|
 |`camera [x] picture_mode`|It sets the [x] camera to picture mode|
 |`camera [x] video_mode`  |It sets the [x] camera to video mode|
 |`camera [x] pic_raw` |It takes a picture with the [x] camera|
-|`camera [x] video_start` |It makes a video on the [x] camera|
+|`camera [x] video_start` |It starts a video on the [x] camera|
 |`camera [x] video_end`   |It stops a video on the [x] camera|
 |`camera [x] send_cmd y`   |Sends command y (do not include line feed at the end!) to camera x|
 |`camera [x] off` |It switches off the [x] camera|
