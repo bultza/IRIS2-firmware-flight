@@ -86,7 +86,7 @@ These are the currently implemented commands:
 |`camera [x] vid [sec]`  |It makes automatically a video with the [x] camera with a duration of [sec] seconds.|
 |`camera [x] interrupt`  |It ends the video inmediately|
 |`camera [x] on`  |It switches on the [x] camera|
-|`camera [x] format`|> :warning: It formats the SDCard of the [x] camera!!|
+|`camera [x] format`| :warning: It formats the SDCard of the [x] camera!!|
 |`camera [x] picture_mode`|It sets the [x] camera to picture mode|
 |`camera [x] video_mode`  |It sets the [x] camera to video mode|
 |`camera [x] pic_raw` |It takes a picture with the [x] camera|
@@ -161,8 +161,8 @@ List of configuration parameters:
 |Command      | Default Value| Units        | Comment     |
 |-------------|-------------:|:-------------|:------------|
 | `sim_enabled` | 0 | | :warning: DEBUG Mode, enables simulation values for pressure and sunrise signal. 1 = Enabled, 0 = Disabled|
-| `sim_pressure` | 0 | mbar * 100 | Simulated pressure, only takes affect if sim_enabled is = 1| 
-| `sim_sunriseSignal` | 0 | digital | 0 = Sunrise signal is LOW, 1 = Sunrise signal is HIGH | 
+| `sim_pressure` | 0 | mbar / 100 | Simulated pressure, only takes affect if sim_enabled is = 1. A value of 101301 equals to 1013.01mbar| 
+| `sim_sunriseSignal` | 0 | | :warning: DEBUG Mode, 0 = Sunrise signal is not simulated, 1 = Sunrise signal is simulated as HIGH, 1 = Sunrise signal is simulated LOW | 
 | `flightState` | 1 | | :warning: 0 = Standby, 1 = Waiting for launch, 2 = Making launch video, 3 = Timelapse cruising, 4 = Making landing video, 5 = Timelapse waiting for recovery team, 6 = 2 min video of the team and timelapse post recovery|
 | `flightSubState` | 0 | | Only useful on landing video, just sub-states|
 | `fram_tlmSavePeriod` | 600 | s | Periodicity to save telemetry on the FRAM |
