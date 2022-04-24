@@ -42,7 +42,7 @@ int8_t configuration_init(void)
         //00 = off, 01 = 2, 02 = 4
         confRegister_.gopro_leds = 0;
         //1500ms is safer for bigger SD-Cards
-        confRegister_.gopro_pictureSleep = 1500;
+        confRegister_.gopro_pictureSleep = 2500;
 
         //00 = Gopro Black, 01 = Gopro White
         confRegister_.gopro_model[0] = 00;

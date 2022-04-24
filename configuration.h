@@ -84,7 +84,7 @@ struct ConfigurationRegister
     uint8_t gopro_beeps;        //01 = 70%, 02 = off
     uint8_t gopro_leds;         //00 = off, 01 = 2, 02 = 4
     uint8_t gopro_model[4];     //00 = Gopro Black, 01 = Gopro White (TouchScreen)
-    uint16_t gopro_pictureSleep; //1500 ms by default. less is too risky (depends on the sd-card)
+    uint16_t gopro_pictureSleep; //2500 ms by default. less is too risky (depends on the sd-card)
 
 
     //Put here all the current execution status
