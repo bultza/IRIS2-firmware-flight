@@ -127,7 +127,7 @@ gopro_model[1] = 0
 gopro_model[2] = 0
 gopro_model[3] = 0
 gopro_beeps = 2
-gopro_leds = 1
+gopro_leds = 0
 gopro_pictureSleep = 2500
 launch_heightThreshold = 3000
 launch_climbThreshold = 2
@@ -161,7 +161,7 @@ List of configuration parameters:
 |Command      | Default Value| Units        | Comment     |
 |-------------|-------------:|:-------------|:------------|
 | `sim_enabled` | 0 | | :warning: DEBUG Mode, enables simulation values for pressure and sunrise signal. 1 = Enabled, 0 = Disabled|
-| `sim_pressure` | 0 | mbar / 100 | Simulated pressure, only takes affect if sim_enabled is = 1. A value of 101301 equals to 1013.01mbar| 
+| `sim_pressure` | 0 | mbar / 100 | Simulated pressure, only takes effect if sim_enabled is = 1. A value of 101301 equals to 1013.01mbar| 
 | `sim_sunriseSignal` | 0 | | :warning: DEBUG Mode, 0 = Sunrise signal is not simulated, 1 = Sunrise signal is simulated as HIGH, 1 = Sunrise signal is simulated LOW | 
 | `flightState` | 1 | | :warning: 0 = Standby, 1 = Waiting for launch, 2 = Making launch video, 3 = Timelapse cruising, 4 = Making landing video, 5 = Timelapse waiting for recovery team, 6 = 2 min video of the team and timelapse post recovery|
 | `flightSubState` | 0 | | Only useful on landing video, just sub-states|
@@ -205,6 +205,7 @@ This are the recommended commands for testing the camera:
 |-------------|-------------|
 |`status`     | It shows the current status |
 |`memory status`| It shows the current status of the memories|
+|`conf set gopro_leds 1` | It sets the LEDs of the cameras to be on while using them to help debugging|
 |`conf`       | It shows the current configuration paramters|
 |`conf set flightState 0` | It sets the instrument in standby status, so it will not make videos or pictures unless manually instructed|
 |`conf set flightSubState 0` | Just in case|
@@ -217,6 +218,7 @@ memory status
 conf
 conf set flightState 0
 conf set flightSubState 0
+conf set gopro_leds 1
 uartdebug 5
 
 camera 1 on
@@ -263,6 +265,7 @@ This are the recommended commands for testing the camera:
 |Command      | Comment     |
 |-------------|-------------|
 |`conf set flightState 0` | It sets the instrument in standby status, so it will not make videos or pictures unless manually instructed|
+|`conf set gopro_leds 0` | It sets the LEDs of the cameras to be off while using them|
 |`status`     | It shows the current status |
 |`memory status`| It shows the current status of the memories|
 |`memory read nor events 0 [x]` | It dumps all the recorded events. [x] is the value of the last recorded event |
@@ -272,6 +275,7 @@ This are the recommended commands for testing the camera:
 |`conf set flightSubState 0` | Just in case|
 |`uartdebug 0` | It will disable the debug messages on console |
 |`conf set sim_enabled 0` | Just to make sure that simulation is disabled |
+|`conf set sim_sunriseSignal 0` | Just to make sure that simulation of the Sunrise Singal is disabled |
 |`memory erase fram bulk` | Clean FRAM memory before launch |
 |`memory status` | Print memory status for eternity |
 |`status` | General status for eternity |
@@ -281,6 +285,7 @@ Just for easier access, here you have the commands, but be careful, change the [
 
 ```console
 conf set flightState 0
+conf set gopro_leds 0
 status
 memory status
 memory read nor events 0 [x]
@@ -290,11 +295,13 @@ conf set flightState 1
 conf set flightSubState 0
 uartdebug 0
 conf set sim_enabled 0
+conf set sim_sunriseSignal 0
 memory erase fram bulk
 memory status
 status
 conf
 ```
+Now you can safely switch off IRIS to wait for the launch.
 
 ## Telemetry
 On the folder [telemetry](telemetry) you find the needed scripts to visualize the telemetry in a Grafana dashboard.
