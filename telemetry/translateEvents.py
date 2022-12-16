@@ -5,6 +5,7 @@ It converts the IRIS2 event CSV files into a human readable output.
 
 import csv
 import sys
+import math
 
 
 def read_data(filename):
@@ -23,7 +24,7 @@ def prntime(ms):
     Convert milliseconds to human readable string
     """
     s=ms/1000
-    m,s=divmod(s,60)
+    m,s=divmod(math.floor(s),60)
     h,m=divmod(m,60)
     d,h=divmod(h,24)
     return str(int(d)) + " days " + '{:0>2.0f}'.format(h) + ":" \
