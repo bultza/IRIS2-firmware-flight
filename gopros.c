@@ -647,6 +647,27 @@ int8_t cameraReadyStatus()
  */
 int8_t cameraMakeVideo(uint8_t selectedCamera, uint8_t cameraMode, uint16_t duration)
 {
+    if(cameraStatus_[selectedCamera].fsmStatusGlobal == FSMGLOBAL_CAM_VIDEOSTOP)
+    {
+        //Camera was already doing a video and waiting for it to be stopped.
+        //Lets just change the duration of the video to the new duration:
+        cameraStatus_[selectedCamera].videoDuration = duration;
+        uint64_t uptime_ms = millis_uptime();
+        cameraStatus_[selectedCamera].fsmStatusGlobalLastTime = uptime_ms;
+        cameraStatus_[selectedCamera].fsmStatusGlobalsleepTime = (uint64_t)cameraStatus_[selectedCamera].videoDuration * 1000UL;
+
+        uint8_t payload[5];
+        payload[0] = selectedCamera;
+        payload[1] = cameraMode;
+        payload[2] = 1; //Indicate here the "ROGUE" behaviour
+        payload[3] = (uint8_t) (0x00FF & (duration >> 8));
+        payload[4] = (uint8_t) (0x00FF & duration);
+        saveEventSimple(EVENT_CAMERA_VIDEO_START, payload);
+
+        //Return like we were already doing video and duration has been changed...
+        return 1;
+    }
+
     if(cameraStatus_[selectedCamera].fsmStatusGlobal != FSMGLOBAL_CAM_DISABLED)
         return -1; //Camera was busy, return error!
 
