@@ -71,7 +71,7 @@ int8_t configuration_init(void)
         confRegister_.launch_videoDurationShort = 3600; //1h
         confRegister_.launch_camerasLong = 0x03;        //Cameras 1 & 2
         confRegister_.launch_camerasShort = 0x0C;       //Cameras 3 & 4
-        confRegister_.launch_timeClimbMaximum = 14400;  //4hours (+ 2h of the launch video)
+        confRegister_.launch_timeClimbMaximum = 7200;  //2hours (+ 2h of the launch video)
 
         //Timelapse Configuration
         confRegister_.flight_timelapse_period = TIMELAPSE_PERIOD;
