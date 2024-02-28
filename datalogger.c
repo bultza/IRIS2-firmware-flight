@@ -193,6 +193,15 @@ int32_t getAltitude()
 }
 
 /**
+ * It returns the current voltage of the input battery in mV.
+ *  - selection: 0 = Average, 1 = Max, 2 = Min
+ */
+int16_t getBatteryVoltage(uint8_t selection)
+{
+    return currentTelemetryLine_[1].voltage[selection];
+}
+
+/**
  * It returns the status of the Barometer to see if it is on error status
  */
 uint8_t getBaroIsOnError()

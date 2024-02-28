@@ -647,6 +647,7 @@ int8_t cameraReadyStatus()
  */
 int8_t cameraMakeVideo(uint8_t selectedCamera, uint8_t cameraMode, uint16_t duration)
 {
+    //Check battery voltage, if below 6.75V, stop making video:
     if(cameraStatus_[selectedCamera].fsmStatusGlobal == FSMGLOBAL_CAM_VIDEOSTOP)
     {
         //Camera was already doing a video and waiting for it to be stopped.
@@ -676,6 +677,11 @@ int8_t cameraMakeVideo(uint8_t selectedCamera, uint8_t cameraMode, uint16_t dura
 
     if(cameraStatus_[selectedCamera].cameraStatus != CAM_STATUS_OFF)
         return -3; //Camera was busy, return error!
+
+    //Check battery voltage, if it is below 6.75V, do not make more videos:
+    int16_t batteryVoltage = getBatteryVoltage(0);
+    if(batteryVoltage > 0 && batteryVoltage < 675)
+        return -4; // Camera low battery error
 
     cameraStatus_[selectedCamera].fsmStatusGlobal = FSMGLOBAL_CAM_VIDEOSTART;
     cameraStatus_[selectedCamera].fsmStatusGlobalsleepTime = 15000;
@@ -736,6 +742,11 @@ int8_t cameraTakePicture(uint8_t selectedCamera)
 
     if(cameraStatus_[selectedCamera].cameraStatus != CAM_STATUS_OFF)
         return -3; //Camera was busy, return error!
+
+    //Check battery voltage, if it is below 6.75V, do not make more videos:
+    int16_t batteryVoltage = getBatteryVoltage(0);
+    if(batteryVoltage > 0 && batteryVoltage < 675)
+        return -4; // Camera low battery error
 
     cameraStatus_[selectedCamera].fsmStatusGlobal = FSMGLOBAL_CAM_PICTURESTART;
     cameraStatus_[selectedCamera].fsmStatusGlobalsleepTime = 0;

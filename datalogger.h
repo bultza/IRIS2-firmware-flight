@@ -169,5 +169,6 @@ void printAltitudeHistory();
 int32_t getVerticalSpeed();
 int32_t getAltitude();
 uint8_t getBaroIsOnError();
+int16_t getBatteryVoltage(uint8_t selection);
 
 #endif /* DATALOGGER_H_ */
