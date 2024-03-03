@@ -751,7 +751,7 @@ void processCameraCommand(char * command)
         if(returnCode == 0)
             sprintf(strToPrint_, "Camera %c is taking a picture.\r\n", command[7]);
         else
-            sprintf(strToPrint_, "ERROR Camera %c was busy.\r\n", command[7]);
+            sprintf(strToPrint_, "ERROR Camera %c returned error code %d.\r\n", command[7], returnCode);
     }
     else if (strncmp("vid", cameraSubcommand, 3) == 0)
     {
