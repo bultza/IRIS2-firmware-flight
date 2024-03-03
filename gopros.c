@@ -647,7 +647,7 @@ int8_t cameraReadyStatus()
  */
 int8_t cameraMakeVideo(uint8_t selectedCamera, uint8_t cameraMode, uint16_t duration)
 {
-    //Check battery voltage, if below 6.75V, stop making video:
+    //Check if it was already doing video, if so, just continue doing it non stop
     if(cameraStatus_[selectedCamera].fsmStatusGlobal == FSMGLOBAL_CAM_VIDEOSTOP)
     {
         //Camera was already doing a video and waiting for it to be stopped.
