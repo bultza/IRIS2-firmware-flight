@@ -102,6 +102,13 @@ int8_t i2c_RTC_getClockData(struct RTCDateTime *dateTime)
     uint32_t unixtime = convert_to_unixTime(*dateTime);
     int32_t deltaTime = unixtime - confRegister_.rtcLastTimeUpdate;
 
+    if(confRegister_.rtcLastTimeUpdate == 0)
+    {
+        //Date has never been set since software update! ouch!!!
+        confRegister_.rtcLastTimeUpdate = unixtime;
+        return 2;
+    }
+
     //Sanity check
     if(deltaTime < 0)
     {
