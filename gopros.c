@@ -401,6 +401,8 @@ int8_t cameraFSMlowLevelCheck()
                     char dateTimeCmd[100];
                     //i2c_RTC_getClockData(&dateTime);
                     uint32_t unixtimeNow = i2c_RTC_unixTime_now();
+                    if(unixtimeNow > 7200)
+                        unixtimeNow = unixtimeNow - 7200;
                     convert_from_unixTime(unixtimeNow, &dateTime);
                     //sprintf(dateTimeCmd, "YY000721002320160111000000010002000101000000000000000000000000010100%02X%02X%02X%02X%02X%02X%02X\n",
                     sprintf(dateTimeCmd, "YY000721002320160111000000%02X00%02X00010100000000000000000000000001%02X00%02X%02X%02X%02X%02X%02X%02X\n",
