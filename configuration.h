@@ -9,7 +9,7 @@
 
 //#define DEBUG_MODE
 #define MAGICWORD           0xBABE
-#define FWVERSION           12
+#define FWVERSION           13
 
 #include <stdint.h>
 #include <msp430.h>
@@ -135,6 +135,12 @@ struct ConfigurationRegister
     uint8_t sim_enabled;
     int32_t sim_pressure;
     uint8_t sim_sunriseSignal;    //1 if high, 2 if low simulated (remember it has a pull up)
+
+    //For RTC drift
+    int16_t rtcDrift;               //s, every X seconds you need to update the RTC by 1s
+    uint8_t rtcDriftFlag;           //0 = disabled, 1 = enabled clock is low so +1, 2 = enabled clock is fast so -1
+
+    uint32_t rtcLastTimeUpdate;
 };
 
 //******************************************************************************

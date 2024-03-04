@@ -48,14 +48,18 @@ int8_t i2c_RTC_setClockData(struct RTCDateTime *dateTime)
     }
 
     int8_t ack = i2c_write(I2C_BUS00, DS1338Z_ADDRESS, txBuffer, 8, 0);
+
+    //Now save the event that has been put into time:
+
+    confRegister_.rtcLastTimeUpdate = convert_to_unixTime(*dateTime);
+
     return ack;
 }
-
 
 /**
  * Gets the current DateTime from the RTC
  */
-int8_t i2c_RTC_getClockData(struct RTCDateTime *dateTime)
+int8_t i2c_RTC_getClockDataRAW(struct RTCDateTime *dateTime)
 {
     uint8_t rtcData[7];
     rtcData[0] = DS1338Z_SECONDS;
@@ -80,6 +84,44 @@ int8_t i2c_RTC_getClockData(struct RTCDateTime *dateTime)
     }
 
     return ack;
+}
+
+
+/**
+ * Gets the current DateTime from the RTC
+ */
+int8_t i2c_RTC_getClockData(struct RTCDateTime *dateTime)
+{
+    //Read from the i2c:
+    int8_t i2cAck = i2c_RTC_getClockDataRAW(dateTime);
+
+    if(confRegister_.rtcDriftFlag == 0 || confRegister_.rtcLastTimeUpdate == 0)
+        return i2cAck;  //rtc drift disabled so just use the RTC data
+
+    //Drift enabled, lets calculate the delta since date was saved:
+    uint32_t unixtime = convert_to_unixTime(*dateTime);
+    int32_t deltaTime = unixtime - confRegister_.rtcLastTimeUpdate;
+
+    //Sanity check
+    if(deltaTime < 0)
+    {
+        //This should have never happened
+        confRegister_.rtcLastTimeUpdate = unixtime;
+        return 1;   //Return error that the rtc has been reset or something
+    }
+
+    //How many extra seconds do we need to adjust?
+    int32_t extraSeconds = deltaTime / confRegister_.rtcDrift;
+    uint32_t newUnixTime = 0;
+    if(confRegister_.rtcDriftFlag == 1)
+        newUnixTime = unixtime + extraSeconds;
+    else
+        newUnixTime = unixtime - extraSeconds;
+
+    //Now convert back the date to the original format
+    convert_from_unixTime(newUnixTime, dateTime);
+
+    return i2cAck;
 }
 
 /**

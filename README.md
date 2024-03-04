@@ -82,8 +82,8 @@ These are the currently implemented commands:
 |`i2c baro`     |It returns the current barometric pressure and calculated Altitude|
 |`i2c ina`      |It returns the current Voltage and Current input power values|
 |`i2c acc`      |It returns the current Accelerometer values|
-|`camera [x] pic`  |It makes automatically a picture with the [x] camera. It returns Error -4 if battery below 6.75V. Error -1,-2,-3 if it was busy.|
-|`camera [x] vid [sec]`  |It makes automatically a video with the [x] camera with a duration of [sec] seconds. It returns Error -4 if battery below 6.75V. Error -1,-2,-3 if it was busy. It returns 1 if if it was already doing video and duration is updated with new value|
+|`camera [x] pic`  |It makes automatically a picture with the [x] camera. It returns Error -4 if battery below 6.75V. It returns Error -1,-2,-3 if it was busy.|
+|`camera [x] vid [sec]`  |It makes automatically a video with the [x] camera with a duration of [sec] seconds. It returns Error -4 if battery below 6.75V. It returns Error -1,-2,-3 if it was busy. It returns Error 1 if it was already doing video and duration is updated with new passed duration.|
 |`camera [x] interrupt`  |It ends the video inmediately|
 |`camera [x] on`  |It switches on the [x] camera|
 |`camera [x] format`| :warning: It formats the SDCard of the [x] camera!!|
@@ -135,7 +135,7 @@ launch_videoDurationLong = 7200
 launch_videoDurationShort = 3600
 launch_camerasLong = 0x03
 launch_camerasShort = 0x0C
-launch_timeClimbMaximum = 14400
+launch_timeClimbMaximum = 7200
 flight_timelapse_period = 120
 flight_camerasFirstLeg = 0x0F
 flight_camerasSecondLeg = 0x0B
@@ -162,7 +162,7 @@ List of configuration parameters:
 |-------------|-------------:|:-------------|:------------|
 | `sim_enabled` | 0 | | :warning: DEBUG Mode, enables simulation values for pressure and sunrise signal. 1 = Enabled, 0 = Disabled|
 | `sim_pressure` | 0 | mbar / 100 | Simulated pressure, only takes effect if sim_enabled is = 1. A value of 101301 equals to 1013.01mbar| 
-| `sim_sunriseSignal` | 0 | | :warning: DEBUG Mode, 0 = Sunrise signal is not simulated, 1 = Sunrise signal is simulated as HIGH, 1 = Sunrise signal is simulated LOW | 
+| `sim_sunriseSignal` | 0 | | :warning: DEBUG Mode, 0 = Sunrise signal is not simulated, 1 = Sunrise signal is simulated as HIGH, 2 = Sunrise signal is simulated LOW | 
 | `flightState` | 1 | | :warning: 0 = Standby, 1 = Waiting for launch, 2 = Making launch video, 3 = Timelapse cruising, 4 = Making landing video, 5 = Timelapse waiting for recovery team, 6 = 2 min video of the team and timelapse post recovery|
 | `flightSubState` | 0 | | Only useful on landing video, just sub-states|
 | `fram_tlmSavePeriod` | 600 | s | Periodicity to save telemetry on the FRAM |

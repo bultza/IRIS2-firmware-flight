@@ -313,7 +313,10 @@ void processConfCommand(char * command)
         sprintf(strToPrint_, "recovery_videoDuration = %d\r\n", confRegister_.recovery_videoDuration);
         uart_print(UART_DEBUG, strToPrint_);
 
-
+        sprintf(strToPrint_, "rtcDriftFlag = %d\r\n", confRegister_.rtcDriftFlag);
+        uart_print(UART_DEBUG, strToPrint_);
+        sprintf(strToPrint_, "rtcDrift = %d\r\n", confRegister_.rtcDrift);
+        uart_print(UART_DEBUG, strToPrint_);
 
         return;
     }
@@ -514,6 +517,14 @@ void processConfCommand(char * command)
     {
         confRegister_.recovery_videoDuration = valueToSet;
     }
+    else if (strcmp("rtcDrift", (char *)selectedParameter) == 0)
+    {
+        confRegister_.rtcDrift = valueToSet;
+    }
+    else if (strcmp("rtcDriftFlag", (char *)selectedParameter) == 0)
+    {
+        confRegister_.rtcDriftFlag = valueToSet;
+    }
     else
     {
         uart_print(UART_DEBUG, "Invalid command format. Use: conf set [parameter] [value]. Use: conf, to see all available parameters\r\n");
@@ -547,7 +558,7 @@ void processI2CCommand(char * command)
     if (strcmp("rtc", (char *) i2cSubcommand) == 0)
     {
         struct RTCDateTime dateTime;
-        int8_t error = i2c_RTC_getClockData(&dateTime);
+        int8_t error = i2c_RTC_getClockDataRAW(&dateTime);
 
         if (error != 0)
             sprintf(strToPrint_, "I2C RTC: Error code %d!\r\n", error);

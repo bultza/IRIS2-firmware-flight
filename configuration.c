@@ -97,6 +97,12 @@ int8_t configuration_init(void)
         //Reboot counter moves up
         confRegister_.numberReboots++;
 
+        //RTC Drifts:
+        confRegister_.rtcDrift = 2426;      //This is IRIS rtc measured drift over 2 years in seconds
+        //confRegister_.rtcDrift = 22302;   //This is Aitor's flatsat rtc measured drift
+        confRegister_.rtcDriftFlag = 1;
+        confRegister_.rtcLastTimeUpdate = 0;
+
 #ifdef DEBUG_MODE
         #warning "DEBUG MODE is active. You should never use this mode for the flight version!!"
         //This is just for easy testing in the lab. Disable DEBUG mode for flight!
