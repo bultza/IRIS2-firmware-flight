@@ -399,7 +399,9 @@ int8_t cameraFSMlowLevelCheck()
                     //YY00072100232016011100000001000000000000000000000000000000000001000007E50A14020A0B
                     struct RTCDateTime dateTime;
                     char dateTimeCmd[100];
-                    i2c_RTC_getClockData(&dateTime);
+                    //i2c_RTC_getClockData(&dateTime);
+                    uint32_t unixtimeNow = i2c_RTC_unixTime_now();
+                    convert_from_unixTime(unixtimeNow, &dateTime);
                     //sprintf(dateTimeCmd, "YY000721002320160111000000010002000101000000000000000000000000010100%02X%02X%02X%02X%02X%02X%02X\n",
                     sprintf(dateTimeCmd, "YY000721002320160111000000%02X00%02X00010100000000000000000000000001%02X00%02X%02X%02X%02X%02X%02X%02X\n",
                             confRegister_.gopro_beeps,
