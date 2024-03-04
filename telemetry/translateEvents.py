@@ -148,14 +148,17 @@ def translateEvent(code, payload1, payload2, payload3, payload4, payload5):
         return "Camera '" + payload1 + "' took a picture manually."
     elif code == "12":
         duration = int(payload5[0]) + int(payload4) * 256
+        extra = ""
         if payload2 == "1":
             mode = "Normal 2.7k/4:3"
         elif payload2 == "2":
             mode = "HighSpeed 960p/Wide"
         else:
             mode = "Picture"
+        if payload3 == "1":
+            extra = " Video started in the middle of the last video."
         return "Camera '" + payload1 + "' started recording video with a "\
-             + "duration of " + str(duration) + "s in '" + mode + "' mode."
+             + "duration of " + str(duration) + "s in '" + mode + "' mode." + extra
     elif code == "13":
         return "Camera '" + payload1 + "' ended recording video."
     elif code == "14":
