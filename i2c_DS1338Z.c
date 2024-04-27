@@ -95,7 +95,7 @@ int8_t i2c_RTC_getClockData(struct RTCDateTime *dateTime)
     //Read from the i2c:
     int8_t i2cAck = i2c_RTC_getClockDataRAW(dateTime);
 
-    if(confRegister_.rtcDriftFlag == 0 || confRegister_.rtcLastTimeUpdate == 0)
+    if(confRegister_.rtcDriftFlag == 0)
         return i2cAck;  //rtc drift disabled so just use the RTC data
 
     //Drift enabled, lets calculate the delta since date was saved:
@@ -107,15 +107,17 @@ int8_t i2c_RTC_getClockData(struct RTCDateTime *dateTime)
         //Date has never been set since software update! ouch!!!
         confRegister_.rtcLastTimeUpdate = unixtime;
         return 2;
+        return i2cAck;
     }
 
+    /*
     //Sanity check
     if(deltaTime < 0)
     {
         //This should have never happened
         confRegister_.rtcLastTimeUpdate = unixtime;
         return 1;   //Return error that the rtc has been reset or something
-    }
+    }*/
 
     //How many extra seconds do we need to adjust?
     int32_t extraSeconds = deltaTime / confRegister_.rtcDrift;
