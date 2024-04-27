@@ -106,7 +106,6 @@ int8_t i2c_RTC_getClockData(struct RTCDateTime *dateTime)
     {
         //Date has never been set since software update! ouch!!!
         confRegister_.rtcLastTimeUpdate = unixtime;
-        return 2;
         return i2cAck;
     }
 
