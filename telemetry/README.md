@@ -20,7 +20,7 @@ pip3 install -r requirements.txt
 ```
 Install influxDB
 ```console
-sudo apt-get install influxdb
+sudo apt install influxdb
 sudo service influxdb start
 ```
 Install Grafana
@@ -29,15 +29,16 @@ wget -q -O - https://packages.grafana.com/gpg.key | sudo apt-key add -
 sudo add-apt-repository "deb https://packages.grafana.com/oss/deb stable main"
 sudo apt update
 sudo apt install grafana
-sudo systemctl start grafana-server
-sudo systemctl status grafana-server
-sudo systemctl enable grafana-server
+sudo service grafana-server restart
+sudo service status grafana-server
 ```
 Create database:
 ```console
 influx
 CREATE DATABASE db0
 ```
+Grafana will be available on port 3000, so here: http://localhost:3000
+Username and password by default are "admin/admin", it will ask you to change password on first login.
 
 ## Usage
 There are 3 different scripts:
