@@ -17,8 +17,9 @@ def read_data(filename):
     they probably have the headers
     """
     print ("Reading file " + filename)
-    with open(filename) as f:
-        lines = f.readlines()[1:]
+    with open(filename, errors='replace') as f:
+        #lines = f.readlines()[1:]
+        lines = f.readlines()
 
     return lines
 
@@ -32,10 +33,22 @@ if __name__ == '__main__':
     filename = sys.argv[1]
     lines = read_data(filename)
     counter = 0
+    linenumber = 0
     for rawline in lines:
         #print (rawline)
-        line=rawline.split(",")
-        #print (line)
+        line = rawline.split(",")
+        linenumber = linenumber + 1
+        #print (len(line))
+        if len(line) != 31:
+            print("Line " + str(linenumber) + " ignored due to incorrect format: '" + rawline.strip() + "'")
+            continue
+        if line[0] == "address" and line[1] == "date":
+            print("Line " + str(linenumber) + " header telemetry detected")
+            continue
+        if line[2] == "-1" and line[3] == "-1" :
+            print("Line " + str(linenumber) + " ignored because it is empty")
+            continue
+        
         json_body = [
         {
             "measurement": "tlm",

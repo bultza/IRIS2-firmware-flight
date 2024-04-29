@@ -14,9 +14,10 @@ def read_data(filename):
     they probably have the headers
     """
     print("Reading file '" + filename + "'")
-    with open(filename) as f:
+    with open(filename, errors='replace') as f:
         #Dont read the first line (headers)
-        lines = f.readlines()[1:]
+        #lines = f.readlines()[1:]
+        lines = f.readlines()
     return lines
 
 def prntime(ms):
@@ -230,11 +231,26 @@ if __name__ == "__main__":
     
     lines = read_data(filename)
     counter = 0
+    linenumber = 0
     for rawline in lines:
         #print (rawline)
         line=rawline.split(",")
+        linenumber = linenumber + 1
         #print (line)
         #Processed line:
+        if len(line) != 12:
+            #print("Ignoring line " + str(linenumber) + " due to incorrect format: '" + rawline.strip() + "'")
+            continue
+        if line[0] == "address" and line[1] == "date":
+            print("***************************************")
+            print("***************************************")
+            print("***************************************")
+            print("Header detected at line " + str(linenumber))
+            continue
+        if line[3] == "-1":
+            print("Ignoring empty telemetry at line " + str(linenumber))
+            continue
+        
         uptime_ms = int(line[3])
         if(line[6] == "69"):
             print("================================================================================")
