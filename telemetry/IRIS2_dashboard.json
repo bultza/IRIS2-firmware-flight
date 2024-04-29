@@ -79,7 +79,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 11,
+        "h": 9,
         "w": 12,
         "x": 0,
         "y": 0
@@ -193,7 +193,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 11,
+        "h": 9,
         "w": 12,
         "x": 12,
         "y": 0
@@ -412,10 +412,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 11,
+        "h": 9,
         "w": 12,
         "x": 0,
-        "y": 11
+        "y": 9
       },
       "id": 2,
       "options": {
@@ -532,10 +532,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 11,
+        "h": 9,
         "w": 12,
         "x": 12,
-        "y": 11
+        "y": 9
       },
       "id": 12,
       "options": {
@@ -724,8 +724,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               }
             ]
           },
@@ -734,10 +733,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 11,
+        "h": 9,
         "w": 12,
         "x": 0,
-        "y": 22
+        "y": 18
       },
       "id": 3,
       "options": {
@@ -926,8 +925,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               }
             ]
           },
@@ -936,10 +934,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 11,
+        "h": 9,
         "w": 12,
         "x": 12,
-        "y": 22
+        "y": 18
       },
       "id": 4,
       "options": {
@@ -1046,8 +1044,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               }
             ]
           },
@@ -1056,10 +1053,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 11,
+        "h": 9,
         "w": 12,
         "x": 0,
-        "y": 33
+        "y": 27
       },
       "id": 6,
       "options": {
@@ -1248,8 +1245,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1262,10 +1258,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 11,
+        "h": 9,
         "w": 12,
         "x": 12,
-        "y": 33
+        "y": 27
       },
       "id": 5,
       "options": {
@@ -1436,8 +1432,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               }
             ]
           },
@@ -1446,10 +1441,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 11,
+        "h": 9,
         "w": 12,
         "x": 0,
-        "y": 44
+        "y": 36
       },
       "id": 8,
       "options": {
@@ -1638,8 +1633,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               }
             ]
           },
@@ -1648,10 +1642,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 11,
+        "h": 9,
         "w": 12,
         "x": 12,
-        "y": 44
+        "y": 36
       },
       "id": 7,
       "options": {
@@ -1840,8 +1834,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               }
             ]
           },
@@ -1850,10 +1843,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 11,
+        "h": 9,
         "w": 12,
         "x": 0,
-        "y": 55
+        "y": 45
       },
       "id": 11,
       "options": {
@@ -2042,8 +2035,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               }
             ]
           },
@@ -2052,10 +2044,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 11,
+        "h": 9,
         "w": 12,
         "x": 12,
-        "y": 55
+        "y": 45
       },
       "id": 9,
       "options": {
@@ -2207,8 +2199,8 @@
     "list": []
   },
   "time": {
-    "from": "2024-04-29T06:34:24.608Z",
-    "to": "2024-04-29T07:58:35.684Z"
+    "from": "now-90d",
+    "to": "now"
   },
   "timepicker": {
     "refresh_intervals": [
@@ -2224,9 +2216,9 @@
       "1d"
     ]
   },
-  "timezone": "",
+  "timezone": "Europe/Madrid",
   "title": "IRIS2",
   "uid": "SQQpI3pnz",
-  "version": 8,
+  "version": 10,
   "weekStart": ""
 }
