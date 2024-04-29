@@ -101,7 +101,7 @@ These are the currently implemented commands:
 |`memory dump [nor/fram] [start] [end]` |It dumps the contents of the NOR/FRAM memories of the CPU|
 |`memory read [nor/fram] [events/tlm] [start] [end]` |It reads the contents of the NOR/FRAM memories and shows them in CSV|
 |`memory erase [nor/fram] bulk` |It erases the NOR/FRAM memory of the CPU|
-|`uartdebug [x]` |All characters received of the [x] UART will be dumped on the console|
+|`uartdebug [x]` |All characters received of the [x] UART will be dumped on the console. If 5 is selected then it shows verbosity in everything. 0 is the default and does not put anything on console.|
 |`u [data]` |[data] will be dumped to the uart selected as debug|
 
 ### Configuration Parameters
@@ -176,14 +176,14 @@ List of configuration parameters:
 | `gopro_model[x]` | 0 | | 0 = Gopro Black (IRIS2), 1 = Gopro White (TouchScreen) |
 | `gopro_beeps` | 2 | | 0 = 100% Volume, 1 = 70% Volume, 2 = off. Be aware that this is configured on next boot for the camera, however it takes effect only after a second reboot |
 | `gopro_leds` | 1 | | 0 = Off, 1 = 2 blinks, 2 = 4 blinks |
-| `gopro_pictureSleep` | 1500 | ms | Sleep time between the camera configures until it makes picture. 1s for small SDCards, 1.5s for at least 32GB SDCards |
+| `gopro_pictureSleep` | 2500 | ms | Sleep time between the camera configures until it makes picture. 1s for small SDCards, 1.5s for at least 32GB SDCards, 2.5s for 64GB SDCards |
 | `launch_heightThreshold` | 3000 | m | If reached this height and on state 1, IRIS will jump to State 2 (start making launch video) |
 | `launch_climbThreshold` | 2 | m/s | If reached this speed and on state 1, IRIS will jump to State 2 (Start making launch video) |
 | `launch_videoDurationLong` | 7200 | s | Duration of the video for the cameras to make long launch videos |
 | `launch_videoDurationShort` | 3600 | s | Duration of the video for the cameras to make short launch videos |
 | `launch_camerasLong` | 0x03 | hex | Selected cameras for making long videos. 0x03 means Cameras 1 and 2. 0x0F means all cameras |
 | `launch_camerasShort` | 0x0C | hex | Selected cameras for making short videos. 0x0C means Cameras 3 and 4. 0x0F means all cameras |
-| `launch_timeClimbMaximum` | 14400 | s | Safe time in which IRIS cannot jump to state 4 because it is too soon. This is to prevent triggering landing when the climb is very slow |
+| `launch_timeClimbMaximum` | 7200 | s | Safe time in which IRIS cannot jump to state 4 because it is too soon. This is to prevent triggering landing when the climb is very slow. This was reduced to 7200 because it caused conflict on first flight of IRIS2 due to the launch being aborted |
 | `flight_timelapse_period` | 120 | s | Periodicity between pictures of every timelapse |
 | `flight_camerasFirstLeg` | 0x0F | hex | Selected cameras for making timelapse during the first part of the cruise phase. 0x0F means all cameras |
 | `flight_camerasSecondLeg` | 0x0B | hex | Selected cameras for making timelapse during the second part of hte cruise phase. 0x0B means Cameras 2, 3 and 4.
@@ -198,6 +198,8 @@ List of configuration parameters:
 | `landing_camerasHighSpeed` | 0x04 | hex | Selected cameras for making high speed video. 0x04 means Cameras 3. 0x0F means all cameras |
 | `landing_heightShortStart` | 3000 | m | When reached this height or lower and on state 4, IRIS will start the second phase of the landing switching on all the cameras to make video of the impact |
 | `recovery_videoDuration` | 120 | s | Duration of the video of the recovery team. It will activate on vibration detection |
+| `rtcDriftFlag` | 1 |  | 0 = no drift corrections are applied, 1 or 2 = it activates the automatic correction of the drift RTC . 1 = RTC is slower than reality, 2 = RTC is faster than reality|
+| `rtcDrift` | 2426 | s | This is the time in seconds that takes the RTC to have a 1 second error. The value 2426 s is the measured drift of the flight hardware but each board will be different, i.e. Aitor's flatsat has a value of 22302 s! |
 
 ### Testing the cameras and the Sunrise Signal
 This are the recommended commands for testing the camera:
