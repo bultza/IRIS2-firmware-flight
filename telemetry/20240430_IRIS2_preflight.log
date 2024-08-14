@@ -1,0 +1,3382 @@
+=~=~=~=~=~=~=~=~=~=~=~= PuTTY log 2024.04.30 10:22:44 =~=~=~=~=~=~=~=~=~=~=~=
+
+# 
+# status
+================================
+Uptime:         23.131s
+Time:           2024/04/30 08:22:38
+State:          0
+Substate:       0
+Switches:       0xC0
+Errors:         0x0000
+CPU Temp:       19.3ºC
+Pressure:       984.21mbar
+Altitude:       244.46m
+Current Speed:  0.000m/s
+Sunrise GPIO:   HIGH
+Temp CPU:       19.3ºC
+Temp [1]:       19.6ºC
+Temp [2]:       19.7ºC
+Statistics:
+                Min	Avg	Max
+Speed(m/s):     -0.02	0.00	0.02
+Battery(V):     9.86	9.87	9.88
+Battery(mA):    3	3	5
+AccX(g):        -0.00	0.00	0.00
+AccY(g):        -0.14	-0.13	-0.13
+AccZ(g):        0.95	0.96	0.97
+Altitude History:
+  [0]:	21.069s	 244.46m
+  [1]:	22.070s	 244.46m
+  [2]:	23.075s	 244.46m
+  [3]:	14.051s	 244.46m
+  [4]:	15.053s	 244.37m
+  [5]:	16.054s	 244.54m
+  [6]:	17.060s	 244.46m
+  [7]:	18.061s	 244.71m
+  [8]:	19.064s	 244.71m
+  [9]:	20.065s	 244.37m
+Current Speed:   0.000m/s
+# date
+Date is: 2024/04/30 08:22:45
+# uartdebug 5
+UART debug changed to camera: 5
+# date 2024/04/30 08:23:30
+Date changed to: 2024/04/30 08:23:30
+# date
+Date is: 2024/04/30 08:23:41
+# status
+================================
+Uptime:         83.579s
+Time:           2024/04/30 08:23:48
+State:          0
+Substate:       0
+Switches:       0xC0
+Errors:         0x0000
+CPU Temp:       19.3ºC
+Pressure:       984.19mbar
+Altitude:       244.63m
+Current Speed:  0.020m/s
+Sunrise GPIO:   HIGH
+Temp CPU:       19.3ºC
+Temp [1]:       19.6ºC
+Temp [2]:       19.8ºC
+Statistics:
+                Min	Avg	Max
+Speed(m/s):     -0.12	0.00	0.10
+Battery(V):     9.86	9.87	9.88
+Battery(mA):    3	3	5
+AccX(g):        -0.00	0.00	0.00
+AccY(g):        -0.14	-0.13	-0.13
+AccZ(g):        0.95	0.96	0.97
+Altitude History:
+  [0]:	81.311s	 244.46m
+  [1]:	82.315s	 244.46m
+  [2]:	83.317s	 244.63m
+  [3]:	74.283s	 244.37m
+  [4]:	75.284s	 244.46m
+  [5]:	76.288s	 244.37m
+  [6]:	77.290s	 244.46m
+  [7]:	78.293s	 244.63m
+  [8]:	79.299s	 244.37m
+  [9]:	80.306s	 244.46m
+Current Speed:   0.020m/s
+# status
+================================
+Uptime:         96.337s
+Time:           2024/04/30 08:24:01
+State:          0
+Substate:       0
+Switches:       0xC0
+Errors:         0x0000
+CPU Temp:       19.3ºC
+Pressure:       984.23mbar
+Altitude:       244.29m
+Current Speed:  0.000m/s
+Sunrise GPIO:   HIGH
+Temp CPU:       19.3ºC
+Temp [1]:       19.6ºC
+Temp [2]:       20.6ºC
+Statistics:
+                Min	Avg	Max
+Speed(m/s):     -0.12	0.00	0.10
+Battery(V):     9.86	9.87	9.88
+Battery(mA):    3	3	5
+AccX(g):        -0.00	0.00	0.00
+AccY(g):        -0.14	-0.13	-0.13
+AccZ(g):        0.95	0.96	0.97
+Altitude History:
+  [0]:	91.345s	 245.22m
+  [1]:	92.348s	 244.71m
+  [2]:	93.353s	 244.46m
+  [3]:	94.357s	 244.37m
+  [4]:	95.363s	 244.29m
+  [5]:	86.329s	 244.37m
+  [6]:	87.330s	 244.37m
+  [7]:	88.332s	 244.54m
+  [8]:	89.337s	 244.37m
+  [9]:	90.343s	 244.37m
+Current Speed:   0.000m/s
+# status
+================================
+Uptime:         101.266s
+Time:           2024/04/30 08:24:06
+State:          0
+Substate:       0
+Switches:       0xC0
+Errors:         0x0000
+CPU Temp:       19.3ºC
+Pressure:       984.23mbar
+Altitude:       244.29m
+Current Speed:  -0.100m/s
+Sunrise GPIO:   HIGH
+Temp CPU:       19.3ºC
+Temp [1]:       19.6ºC
+Temp [2]:       21.1ºC
+Statistics:
+                Min	Avg	Max
+Speed(m/s):     -0.12	0.00	0.10
+Battery(V):     9.86	9.87	9.88
+Battery(mA):    3	3	5
+AccX(g):        -0.00	0.00	0.00
+AccY(g):        -0.14	-0.13	-0.13
+AccZ(g):        0.95	0.96	0.97
+Altitude History:
+  [0]:	91.345s	 245.22m
+  [1]:	92.348s	 244.71m
+  [2]:	93.353s	 244.46m
+  [3]:	94.357s	 244.37m
+  [4]:	95.363s	 244.29m
+  [5]:	96.516s	 244.37m
+  [6]:	97.517s	 244.46m
+  [7]:	98.521s	 244.37m
+  [8]:	99.522s	 244.37m
+  [9]:	100.529s	 244.29m
+Current Speed:   -0.100m/s
+# [A                                                            # status
+================================
+Uptime:         114.221s
+Time:           2024/04/30 08:24:19
+State:          0
+Substate:       0
+Switches:       0xC0
+Errors:         0x0000
+CPU Temp:       19.3ºC
+Pressure:       984.23mbar
+Altitude:       244.29m
+Current Speed:  0.000m/s
+Sunrise GPIO:   HIGH
+Temp CPU:       19.3ºC
+Temp [1]:       19.6ºC
+Temp [2]:       21.3ºC
+Statistics:
+                Min	Avg	Max
+Speed(m/s):     -0.12	0.00	0.10
+Battery(V):     9.86	9.87	9.88
+Battery(mA):    3	3	5
+AccX(g):        -0.00	0.00	0.00
+AccY(g):        -0.14	-0.13	-0.13
+AccZ(g):        0.95	0.96	0.97
+Altitude History:
+  [0]:	111.573s	 244.37m
+  [1]:	112.575s	 244.12m
+  [2]:	113.580s	 244.29m
+  [3]:	104.543s	 244.37m
+  [4]:	105.548s	 244.46m
+  [5]:	106.551s	 244.29m
+  [6]:	107.556s	 244.29m
+  [7]:	108.558s	 244.29m
+  [8]:	109.562s	 244.37m
+  [9]:	110.567s	 244.29m
+Current Speed:   0.000m/s
+# status
+================================
+Uptime:         164.246s
+Time:           2024/04/30 08:25:09
+State:          0
+Substate:       0
+Switches:       0xC0
+Errors:         0x0000
+CPU Temp:       19.3ºC
+Pressure:       984.24mbar
+Altitude:       244.20m
+Current Speed:  0.000m/s
+Sunrise GPIO:   HIGH
+Temp CPU:       19.3ºC
+Temp [1]:       19.6ºC
+Temp [2]:       20.0ºC
+Statistics:
+                Min	Avg	Max
+Speed(m/s):     -0.12	0.00	0.10
+Battery(V):     9.86	9.87	9.88
+Battery(mA):    3	3	5
+AccX(g):        -0.00	0.00	0.01
+AccY(g):        -0.14	-0.13	-0.13
+AccZ(g):        0.95	0.96	0.97
+Altitude History:
+  [0]:	161.753s	 244.12m
+  [1]:	162.757s	 244.12m
+  [2]:	163.763s	 244.20m
+  [3]:	154.721s	 244.20m
+  [4]:	155.722s	 244.20m
+  [5]:	156.728s	 244.20m
+  [6]:	157.734s	 244.20m
+  [7]:	158.737s	 244.29m
+  [8]:	159.742s	 244.20m
+  [9]:	160.747s	 244.20m
+Current Speed:   0.000m/s
+# reboot
+# 
+# status
+================================
+Uptime:         16.956s
+Time:           2024/04/30 09:15:10
+State:          0
+Substate:       0
+Switches:       0xC0
+Errors:         0x0000
+CPU Temp:       19.7ºC
+Pressure:       984.68mbar
+Altitude:       240.45m
+Current Speed:  0.000m/s
+Sunrise GPIO:   HIGH
+Temp CPU:       19.7ºC
+Temp [1]:       20.1ºC
+Temp [2]:       20.3ºC
+Statistics:
+                Min	Avg	Max
+Speed(m/s):     -0.02	0.00	0.00
+Battery(V):     9.83	9.83	9.84
+Battery(mA):    3	3	5
+AccX(g):        -0.00	0.00	0.00
+AccY(g):        -0.14	-0.13	-0.12
+AccZ(g):        0.96	0.96	0.97
+Altitude History:
+  [0]:	11.039s	 240.45m
+  [1]:	12.045s	 240.45m
+  [2]:	13.051s	 240.37m
+  [3]:	14.057s	 240.45m
+  [4]:	15.061s	 240.37m
+  [5]:	16.063s	 240.45m
+  [6]:	7.025s	 240.37m
+  [7]:	8.027s	 240.28m
+  [8]:	9.030s	 240.54m
+  [9]:	10.034s	 240.28m
+Current Speed:   0.000m/s
+# [A                                                            # status
+================================
+Uptime:         25.575s
+Time:           2024/04/30 09:15:19
+State:          0
+Substate:       0
+Switches:       0xC0
+Errors:         0x0000
+CPU Temp:       19.7ºC
+Pressure:       984.67mbar
+Altitude:       240.54m
+Current Speed:  0.000m/s
+Sunrise GPIO:   HIGH
+Temp CPU:       19.7ºC
+Temp [1]:       20.1ºC
+Temp [2]:       20.3ºC
+Statistics:
+                Min	Avg	Max
+Speed(m/s):     -0.02	0.00	0.02
+Battery(V):     9.83	9.83	9.84
+Battery(mA):    3	3	5
+AccX(g):        -0.00	0.00	0.00
+AccY(g):        -0.14	-0.14	-0.12
+AccZ(g):        0.96	0.96	0.97
+Altitude History:
+  [0]:	21.150s	 240.45m
+  [1]:	22.156s	 240.54m
+  [2]:	23.158s	 240.54m
+  [3]:	24.160s	 240.45m
+  [4]:	25.161s	 240.54m
+  [5]:	16.063s	 240.45m
+  [6]:	17.133s	 240.54m
+  [7]:	18.136s	 240.45m
+  [8]:	19.139s	 240.45m
+  [9]:	20.143s	 240.54m
+Current Speed:   0.000m/s
+# [A                                                            # status
+================================
+Uptime:         29.823s
+Time:           2024/04/30 09:15:23
+State:          0
+Substate:       0
+Switches:       0xC0
+Errors:         0x0000
+CPU Temp:       19.7ºC
+Pressure:       984.68mbar
+Altitude:       240.45m
+Current Speed:  0.000m/s
+Sunrise GPIO:   HIGH
+Temp CPU:       19.7ºC
+Temp [1]:       20.1ºC
+Temp [2]:       20.3ºC
+Statistics:
+                Min	Avg	Max
+Speed(m/s):     -0.02	0.00	0.02
+Battery(V):     9.83	9.83	9.84
+Battery(mA):    3	3	5
+AccX(g):        -0.00	0.00	0.00
+AccY(g):        -0.14	-0.14	-0.12
+AccZ(g):        0.96	0.96	0.97
+Altitude History:
+  [0]:	21.150s	 240.45m
+  [1]:	22.156s	 240.54m
+  [2]:	23.158s	 240.54m
+  [3]:	24.160s	 240.45m
+  [4]:	25.161s	 240.54m
+  [5]:	26.163s	 240.37m
+  [6]:	27.165s	 240.37m
+  [7]:	28.171s	 240.45m
+  [8]:	29.173s	 240.45m
+  [9]:	20.143s	 240.54m
+Current Speed:   0.000m/s
+# [A                                                            # status
+================================
+Uptime:         32.799s
+Time:           2024/04/30 09:15:26
+State:          0
+Substate:       0
+Switches:       0xC0
+Errors:         0x0000
+CPU Temp:       19.7ºC
+Pressure:       984.69mbar
+Altitude:       240.37m
+Current Speed:  -0.010m/s
+Sunrise GPIO:   HIGH
+Temp CPU:       19.7ºC
+Temp [1]:       20.1ºC
+Temp [2]:       20.3ºC
+Statistics:
+                Min	Avg	Max
+Speed(m/s):     -0.02	0.00	0.02
+Battery(V):     9.83	9.83	9.84
+Battery(mA):    3	3	5
+AccX(g):        -0.00	0.00	0.00
+AccY(g):        -0.14	-0.14	-0.12
+AccZ(g):        0.96	0.96	0.97
+Altitude History:
+  [0]:	31.175s	 240.37m
+  [1]:	32.179s	 240.37m
+  [2]:	23.158s	 240.54m
+  [3]:	24.160s	 240.45m
+  [4]:	25.161s	 240.54m
+  [5]:	26.163s	 240.37m
+  [6]:	27.165s	 240.37m
+  [7]:	28.171s	 240.45m
+  [8]:	29.173s	 240.45m
+  [9]:	30.174s	 240.37m
+Current Speed:   -0.010m/s
+# [A                                                            # status
+================================
+Uptime:         35.618s
+Time:           2024/04/30 09:15:29
+State:          0
+Substate:       0
+Switches:       0xC0
+Errors:         0x0000
+CPU Temp:       19.7ºC
+Pressure:       984.69mbar
+Altitude:       240.37m
+Current Speed:  0.000m/s
+Sunrise GPIO:   HIGH
+Temp CPU:       19.7ºC
+Temp [1]:       20.1ºC
+Temp [2]:       20.3ºC
+Statistics:
+                Min	Avg	Max
+Speed(m/s):     -0.02	0.00	0.02
+Battery(V):     9.83	9.83	9.84
+Battery(mA):    3	3	5
+AccX(g):        -0.00	0.00	0.00
+AccY(g):        -0.14	-0.14	-0.12
+AccZ(g):        0.96	0.96	0.97
+Altitude History:
+  [0]:	31.175s	 240.37m
+  [1]:	32.179s	 240.37m
+  [2]:	33.182s	 240.28m
+  [3]:	34.188s	 240.54m
+  [4]:	35.190s	 240.37m
+  [5]:	26.163s	 240.37m
+  [6]:	27.165s	 240.37m
+  [7]:	28.171s	 240.45m
+  [8]:	29.173s	 240.45m
+  [9]:	30.174s	 240.37m
+Current Speed:   0.000m/s
+# [A                                                            # status
+================================
+Uptime:         38.849s
+Time:           2024/04/30 09:15:32
+State:          0
+Substate:       0
+Switches:       0xC0
+Errors:         0x0000
+CPU Temp:       19.7ºC
+Pressure:       984.67mbar
+Altitude:       240.54m
+Current Speed:  0.000m/s
+Sunrise GPIO:   HIGH
+Temp CPU:       19.7ºC
+Temp [1]:       20.1ºC
+Temp [2]:       20.3ºC
+Statistics:
+                Min	Avg	Max
+Speed(m/s):     -0.02	0.00	0.02
+Battery(V):     9.83	9.83	9.84
+Battery(mA):    3	3	5
+AccX(g):        -0.00	0.00	0.00
+AccY(g):        -0.14	-0.13	-0.12
+AccZ(g):        0.96	0.96	0.97
+Altitude History:
+  [0]:	31.175s	 240.37m
+  [1]:	32.179s	 240.37m
+  [2]:	33.182s	 240.28m
+  [3]:	34.188s	 240.54m
+  [4]:	35.190s	 240.37m
+  [5]:	36.194s	 240.20m
+  [6]:	37.198s	 240.54m
+  [7]:	38.200s	 240.54m
+  [8]:	29.173s	 240.45m
+  [9]:	30.174s	 240.37m
+Current Speed:   0.000m/s
+# [A                                                            # status
+================================
+Uptime:         41.641s
+Time:           2024/04/30 09:15:35
+State:          0
+Substate:       0
+Switches:       0xC0
+Errors:         0x0000
+CPU Temp:       19.7ºC
+Pressure:       984.67mbar
+Altitude:       240.54m
+Current Speed:  0.010m/s
+Sunrise GPIO:   HIGH
+Temp CPU:       19.7ºC
+Temp [1]:       20.1ºC
+Temp [2]:       20.3ºC
+Statistics:
+                Min	Avg	Max
+Speed(m/s):     -0.02	0.00	0.04
+Battery(V):     9.83	9.83	9.84
+Battery(mA):    3	3	5
+AccX(g):        -0.00	0.00	0.00
+AccY(g):        -0.14	-0.13	-0.12
+AccZ(g):        0.96	0.96	0.97
+Altitude History:
+  [0]:	41.212s	 240.54m
+  [1]:	32.179s	 240.37m
+  [2]:	33.182s	 240.28m
+  [3]:	34.188s	 240.54m
+  [4]:	35.190s	 240.37m
+  [5]:	36.194s	 240.20m
+  [6]:	37.198s	 240.54m
+  [7]:	38.200s	 240.54m
+  [8]:	39.203s	 240.54m
+  [9]:	40.209s	 240.79m
+Current Speed:   0.010m/s
+# [A                                                            # status
+================================
+Uptime:         44.842s
+Time:           2024/04/30 09:15:38
+State:          0
+Substate:       0
+Switches:       0xC0
+Errors:         0x0000
+CPU Temp:       19.7ºC
+Pressure:       984.67mbar
+Altitude:       240.54m
+Current Speed:  0.010m/s
+Sunrise GPIO:   HIGH
+Temp CPU:       19.7ºC
+Temp [1]:       20.1ºC
+Temp [2]:       20.3ºC
+Statistics:
+                Min	Avg	Max
+Speed(m/s):     -0.02	0.00	0.04
+Battery(V):     9.83	9.83	9.84
+Battery(mA):    3	3	5
+AccX(g):        -0.00	0.00	0.00
+AccY(g):        -0.14	-0.14	-0.12
+AccZ(g):        0.96	0.96	0.97
+Altitude History:
+  [0]:	41.212s	 240.54m
+  [1]:	42.216s	 240.45m
+  [2]:	43.220s	 240.54m
+  [3]:	44.225s	 240.54m
+  [4]:	35.190s	 240.37m
+  [5]:	36.194s	 240.20m
+  [6]:	37.198s	 240.54m
+  [7]:	38.200s	 240.54m
+  [8]:	39.203s	 240.54m
+  [9]:	40.209s	 240.79m
+Current Speed:   0.010m/s
+# [A                                                            # status
+================================
+Uptime:         46.961s
+Time:           2024/04/30 09:15:40
+State:          0
+Substate:       0
+Switches:       0xC0
+Errors:         0x0000
+CPU Temp:       19.7ºC
+Pressure:       984.67mbar
+Altitude:       240.54m
+Current Speed:  0.000m/s
+Sunrise GPIO:   HIGH
+Temp CPU:       19.7ºC
+Temp [1]:       20.1ºC
+Temp [2]:       20.3ºC
+Statistics:
+                Min	Avg	Max
+Speed(m/s):     -0.02	0.00	0.04
+Battery(V):     9.83	9.83	9.84
+Battery(mA):    3	3	5
+AccX(g):        -0.00	0.00	0.00
+AccY(g):        -0.14	-0.14	-0.12
+AccZ(g):        0.96	0.96	0.97
+Altitude History:
+  [0]:	41.212s	 240.54m
+  [1]:	42.216s	 240.45m
+  [2]:	43.220s	 240.54m
+  [3]:	44.225s	 240.54m
+  [4]:	45.226s	 240.37m
+  [5]:	46.232s	 240.54m
+  [6]:	37.198s	 240.54m
+  [7]:	38.200s	 240.54m
+  [8]:	39.203s	 240.54m
+  [9]:	40.209s	 240.79m
+Current Speed:   0.000m/s
+# [A                                                            # status
+================================
+Uptime:         50.542s
+Time:           2024/04/30 09:15:44
+State:          0
+Substate:       0
+Switches:       0xC0
+Errors:         0x0000
+CPU Temp:       19.7ºC
+Pressure:       984.69mbar
+Altitude:       240.37m
+Current Speed:  -0.010m/s
+Sunrise GPIO:   HIGH
+Temp CPU:       19.7ºC
+Temp [1]:       20.1ºC
+Temp [2]:       20.3ºC
+Statistics:
+                Min	Avg	Max
+Speed(m/s):     -0.03	0.00	0.04
+Battery(V):     9.83	9.83	9.84
+Battery(mA):    3	3	5
+AccX(g):        -0.00	0.00	0.00
+AccY(g):        -0.14	-0.14	-0.12
+AccZ(g):        0.96	0.96	0.97
+Altitude History:
+  [0]:	41.212s	 240.54m
+  [1]:	42.216s	 240.45m
+  [2]:	43.220s	 240.54m
+  [3]:	44.225s	 240.54m
+  [4]:	45.226s	 240.37m
+  [5]:	46.232s	 240.54m
+  [6]:	47.237s	 240.20m
+  [7]:	48.238s	 240.20m
+  [8]:	49.242s	 240.45m
+  [9]:	50.243s	 240.37m
+Current Speed:   -0.010m/s
+# [A                                                            # status
+================================
+Uptime:         54.594s
+Time:           2024/04/30 09:15:48
+State:          0
+Substate:       0
+Switches:       0xC0
+Errors:         0x0000
+CPU Temp:       19.7ºC
+Pressure:       984.69mbar
+Altitude:       240.37m
+Current Speed:  0.000m/s
+Sunrise GPIO:   HIGH
+Temp CPU:       19.7ºC
+Temp [1]:       20.1ºC
+Temp [2]:       20.3ºC
+Statistics:
+                Min	Avg	Max
+Speed(m/s):     -0.03	0.00	0.04
+Battery(V):     9.83	9.83	9.84
+Battery(mA):    3	3	5
+AccX(g):        -0.00	0.00	0.00
+AccY(g):        -0.14	-0.13	-0.12
+AccZ(g):        0.96	0.96	0.97
+Altitude History:
+  [0]:	51.247s	 240.20m
+  [1]:	52.254s	 240.45m
+  [2]:	53.259s	 240.45m
+  [3]:	54.263s	 240.37m
+  [4]:	45.226s	 240.37m
+  [5]:	46.232s	 240.54m
+  [6]:	47.237s	 240.20m
+  [7]:	48.238s	 240.20m
+  [8]:	49.242s	 240.45m
+  [9]:	50.243s	 240.37m
+Current Speed:   0.000m/s
+# [A                                                            # status
+================================
+Uptime:         58.102s
+Time:           2024/04/30 09:15:52
+State:          0
+Substate:       0
+Switches:       0xC0
+Errors:         0x0000
+CPU Temp:       19.7ºC
+Pressure:       984.68mbar
+Altitude:       240.45m
+Current Speed:  0.020m/s
+Sunrise GPIO:   HIGH
+Temp CPU:       19.7ºC
+Temp [1]:       20.1ºC
+Temp [2]:       20.3ºC
+Statistics:
+                Min	Avg	Max
+Speed(m/s):     -0.03	0.00	0.04
+Battery(V):     9.83	9.83	9.84
+Battery(mA):    3	3	5
+AccX(g):        -0.00	0.00	0.00
+AccY(g):        -0.14	-0.13	-0.12
+AccZ(g):        0.96	0.96	0.97
+Altitude History:
+  [0]:	51.247s	 240.20m
+  [1]:	52.254s	 240.45m
+  [2]:	53.259s	 240.45m
+  [3]:	54.263s	 240.37m
+  [4]:	55.267s	 240.28m
+  [5]:	56.270s	 240.20m
+  [6]:	57.275s	 240.45m
+  [7]:	48.238s	 240.20m
+  [8]:	49.242s	 240.45m
+  [9]:	50.243s	 240.37m
+Current Speed:   0.020m/s
+# [A                                                            # status
+================================
+Uptime:         62.642s
+Time:           2024/04/30 09:15:56
+State:          0
+Substate:       0
+Switches:       0xC0
+Errors:         0x0000
+CPU Temp:       19.7ºC
+Pressure:       984.70mbar
+Altitude:       240.28m
+Current Speed:  -0.010m/s
+Sunrise GPIO:   HIGH
+Temp CPU:       19.7ºC
+Temp [1]:       20.1ºC
+Temp [2]:       20.3ºC
+Statistics:
+                Min	Avg	Max
+Speed(m/s):     -0.03	0.00	0.04
+Battery(V):     9.83	9.83	9.84
+Battery(mA):    3	3	5
+AccX(g):        -0.00	0.00	0.00
+AccY(g):        -0.14	-0.13	-0.12
+AccZ(g):        0.96	0.96	0.97
+Altitude History:
+  [0]:	61.313s	 240.45m
+  [1]:	62.315s	 240.28m
+  [2]:	53.259s	 240.45m
+  [3]:	54.263s	 240.37m
+  [4]:	55.267s	 240.28m
+  [5]:	56.270s	 240.20m
+  [6]:	57.275s	 240.45m
+  [7]:	58.295s	 240.28m
+  [8]:	59.301s	 240.37m
+  [9]:	60.307s	 240.37m
+Current Speed:   -0.010m/s
+# [A                                                            # status
+================================
+Uptime:         65.967s
+Time:           2024/04/30 09:15:59
+State:          0
+Substate:       0
+Switches:       0xC0
+Errors:         0x0000
+CPU Temp:       19.7ºC
+Pressure:       984.68mbar
+Altitude:       240.45m
+Current Speed:  0.020m/s
+Sunrise GPIO:   HIGH
+Temp CPU:       19.7ºC
+Temp [1]:       20.1ºC
+Temp [2]:       20.3ºC
+Statistics:
+                Min	Avg	Max
+Speed(m/s):     -0.03	0.00	0.04
+Battery(V):     9.83	9.83	9.84
+Battery(mA):    3	3	5
+AccX(g):        -0.00	0.00	0.00
+AccY(g):        -0.14	-0.13	-0.12
+AccZ(g):        0.96	0.96	0.97
+Altitude History:
+  [0]:	61.313s	 240.45m
+  [1]:	62.315s	 240.28m
+  [2]:	63.317s	 240.20m
+  [3]:	64.321s	 240.45m
+  [4]:	65.327s	 240.45m
+  [5]:	56.270s	 240.20m
+  [6]:	57.275s	 240.45m
+  [7]:	58.295s	 240.28m
+  [8]:	59.301s	 240.37m
+  [9]:	60.307s	 240.37m
+Current Speed:   0.020m/s
+# [A                                                            # status
+================================
+Uptime:         68.583s
+Time:           2024/04/30 09:16:02
+State:          0
+Substate:       0
+Switches:       0xC0
+Errors:         0x0000
+CPU Temp:       19.7ºC
+Pressure:       984.70mbar
+Altitude:       240.28m
+Current Speed:  -0.010m/s
+Sunrise GPIO:   HIGH
+Temp CPU:       19.7ºC
+Temp [1]:       20.1ºC
+Temp [2]:       20.4ºC
+Statistics:
+                Min	Avg	Max
+Speed(m/s):     -0.03	0.00	0.04
+Battery(V):     9.83	9.83	9.84
+Battery(mA):    3	3	5
+AccX(g):        -0.00	0.00	0.00
+AccY(g):        -0.14	-0.13	-0.12
+AccZ(g):        0.96	0.96	0.97
+Altitude History:
+  [0]:	61.313s	 240.45m
+  [1]:	62.315s	 240.28m
+  [2]:	63.317s	 240.20m
+  [3]:	64.321s	 240.45m
+  [4]:	65.327s	 240.45m
+  [5]:	66.328s	 240.37m
+  [6]:	67.331s	 240.37m
+  [7]:	68.334s	 240.28m
+  [8]:	59.301s	 240.37m
+  [9]:	60.307s	 240.37m
+Current Speed:   -0.010m/s
+# [A                                                            # status
+================================
+Uptime:         76.132s
+Time:           2024/04/30 09:16:10
+State:          0
+Substate:       0
+Switches:       0xC0
+Errors:         0x0000
+CPU Temp:       19.7ºC
+Pressure:       984.69mbar
+Altitude:       240.37m
+Current Speed:  0.000m/s
+Sunrise GPIO:   HIGH
+Temp CPU:       19.7ºC
+Temp [1]:       20.1ºC
+Temp [2]:       20.4ºC
+Statistics:
+                Min	Avg	Max
+Speed(m/s):     -0.03	0.00	0.04
+Battery(V):     9.83	9.83	9.84
+Battery(mA):    3	3	5
+AccX(g):        -0.00	0.00	0.00
+AccY(g):        -0.14	-0.13	-0.12
+AccZ(g):        0.96	0.96	0.97
+Altitude History:
+  [0]:	71.340s	 240.45m
+  [1]:	72.344s	 240.20m
+  [2]:	73.346s	 240.20m
+  [3]:	74.349s	 240.28m
+  [4]:	75.350s	 240.37m
+  [5]:	66.328s	 240.37m
+  [6]:	67.331s	 240.37m
+  [7]:	68.334s	 240.28m
+  [8]:	69.335s	 240.37m
+  [9]:	70.339s	 240.37m
+Current Speed:   0.000m/s
+# [A                                                            # status
+================================
+Uptime:         80.580s
+Time:           2024/04/30 09:16:14
+State:          0
+Substate:       0
+Switches:       0xC0
+Errors:         0x0000
+CPU Temp:       19.7ºC
+Pressure:       984.71mbar
+Altitude:       240.20m
+Current Speed:  -0.020m/s
+Sunrise GPIO:   HIGH
+Temp CPU:       19.7ºC
+Temp [1]:       20.1ºC
+Temp [2]:       20.4ºC
+Statistics:
+                Min	Avg	Max
+Speed(m/s):     -0.03	0.00	0.04
+Battery(V):     9.83	9.83	9.84
+Battery(mA):    3	3	5
+AccX(g):        -0.00	0.00	0.00
+AccY(g):        -0.14	-0.13	-0.12
+AccZ(g):        0.96	0.96	0.97
+Altitude History:
+  [0]:	71.340s	 240.45m
+  [1]:	72.344s	 240.20m
+  [2]:	73.346s	 240.20m
+  [3]:	74.349s	 240.28m
+  [4]:	75.350s	 240.37m
+  [5]:	76.351s	 240.28m
+  [6]:	77.353s	 240.37m
+  [7]:	78.355s	 240.28m
+  [8]:	79.358s	 240.20m
+  [9]:	80.364s	 240.20m
+Current Speed:   -0.020m/s
+# [A                                                            # status
+================================
+Uptime:         84.627s
+Time:           2024/04/30 09:16:18
+State:          0
+Substate:       0
+Switches:       0xC0
+Errors:         0x0000
+CPU Temp:       19.7ºC
+Pressure:       984.70mbar
+Altitude:       240.28m
+Current Speed:  0.000m/s
+Sunrise GPIO:   HIGH
+Temp CPU:       19.7ºC
+Temp [1]:       20.1ºC
+Temp [2]:       20.4ºC
+Statistics:
+                Min	Avg	Max
+Speed(m/s):     -0.03	0.00	0.04
+Battery(V):     9.83	9.83	9.84
+Battery(mA):    3	3	5
+AccX(g):        -0.00	0.00	0.00
+AccY(g):        -0.14	-0.13	-0.12
+AccZ(g):        0.96	0.96	0.97
+Altitude History:
+  [0]:	81.368s	 240.45m
+  [1]:	82.371s	 240.37m
+  [2]:	83.376s	 240.11m
+  [3]:	84.380s	 240.28m
+  [4]:	75.350s	 240.37m
+  [5]:	76.351s	 240.28m
+  [6]:	77.353s	 240.37m
+  [7]:	78.355s	 240.28m
+  [8]:	79.358s	 240.20m
+  [9]:	80.364s	 240.20m
+Current Speed:   0.000m/s
+# [A                                                            # status
+================================
+Uptime:         88.345s
+Time:           2024/04/30 09:16:22
+State:          0
+Substate:       0
+Switches:       0xC0
+Errors:         0x0000
+CPU Temp:       19.7ºC
+Pressure:       984.69mbar
+Altitude:       240.37m
+Current Speed:  0.010m/s
+Sunrise GPIO:   HIGH
+Temp CPU:       19.7ºC
+Temp [1]:       20.1ºC
+Temp [2]:       20.4ºC
+Statistics:
+                Min	Avg	Max
+Speed(m/s):     -0.03	0.00	0.04
+Battery(V):     9.83	9.83	9.84
+Battery(mA):    3	3	5
+AccX(g):        -0.00	0.00	0.00
+AccY(g):        -0.14	-0.13	-0.12
+AccZ(g):        0.96	0.96	0.97
+Altitude History:
+  [0]:	81.368s	 240.45m
+  [1]:	82.371s	 240.37m
+  [2]:	83.376s	 240.11m
+  [3]:	84.380s	 240.28m
+  [4]:	85.386s	 240.20m
+  [5]:	86.389s	 240.28m
+  [6]:	87.391s	 240.37m
+  [7]:	78.355s	 240.28m
+  [8]:	79.358s	 240.20m
+  [9]:	80.364s	 240.20m
+Current Speed:   0.010m/s
+# [A                                                            # status
+================================
+Uptime:         90.683s
+Time:           2024/04/30 09:16:24
+State:          0
+Substate:       0
+Switches:       0xC0
+Errors:         0x0000
+CPU Temp:       19.7ºC
+Pressure:       984.68mbar
+Altitude:       240.45m
+Current Speed:  0.000m/s
+Sunrise GPIO:   HIGH
+Temp CPU:       19.7ºC
+Temp [1]:       20.1ºC
+Temp [2]:       20.4ºC
+Statistics:
+                Min	Avg	Max
+Speed(m/s):     -0.03	0.00	0.04
+Battery(V):     9.83	9.83	9.84
+Battery(mA):    3	3	5
+AccX(g):        -0.00	0.00	0.00
+AccY(g):        -0.14	-0.13	-0.12
+AccZ(g):        0.95	0.96	0.97
+Altitude History:
+  [0]:	81.368s	 240.45m
+  [1]:	82.371s	 240.37m
+  [2]:	83.376s	 240.11m
+  [3]:	84.380s	 240.28m
+  [4]:	85.386s	 240.20m
+  [5]:	86.389s	 240.28m
+  [6]:	87.391s	 240.37m
+  [7]:	88.538s	 240.37m
+  [8]:	89.542s	 240.28m
+  [9]:	90.548s	 240.45m
+Current Speed:   0.000m/s
+# [A                                                            # status
+================================
+Uptime:         94.421s
+Time:           2024/04/30 09:16:28
+State:          0
+Substate:       0
+Switches:       0xC0
+Errors:         0x0000
+CPU Temp:       19.7ºC
+Pressure:       984.71mbar
+Altitude:       240.20m
+Current Speed:  0.000m/s
+Sunrise GPIO:   HIGH
+Temp CPU:       19.7ºC
+Temp [1]:       20.1ºC
+Temp [2]:       20.4ºC
+Statistics:
+                Min	Avg	Max
+Speed(m/s):     -0.03	0.00	0.04
+Battery(V):     9.83	9.83	9.84
+Battery(mA):    3	3	5
+AccX(g):        -0.00	0.00	0.00
+AccY(g):        -0.14	-0.13	-0.12
+AccZ(g):        0.95	0.96	0.97
+Altitude History:
+  [0]:	91.552s	 240.37m
+  [1]:	92.554s	 240.37m
+  [2]:	93.559s	 240.20m
+  [3]:	84.380s	 240.28m
+  [4]:	85.386s	 240.20m
+  [5]:	86.389s	 240.28m
+  [6]:	87.391s	 240.37m
+  [7]:	88.538s	 240.37m
+  [8]:	89.542s	 240.28m
+  [9]:	90.548s	 240.45m
+Current Speed:   0.000m/s
+# [A                                                            # status
+================================
+Uptime:         97.759s
+Time:           2024/04/30 09:16:31
+State:          0
+Substate:       0
+Switches:       0xC0
+Errors:         0x0000
+CPU Temp:       19.7ºC
+Pressure:       984.71mbar
+Altitude:       240.20m
+Current Speed:  -0.010m/s
+Sunrise GPIO:   HIGH
+Temp CPU:       19.7ºC
+Temp [1]:       20.1ºC
+Temp [2]:       20.4ºC
+Statistics:
+                Min	Avg	Max
+Speed(m/s):     -0.03	0.00	0.04
+Battery(V):     9.83	9.83	9.84
+Battery(mA):    3	3	5
+AccX(g):        -0.00	0.00	0.00
+AccY(g):        -0.14	-0.13	-0.12
+AccZ(g):        0.95	0.96	0.97
+Altitude History:
+  [0]:	91.552s	 240.37m
+  [1]:	92.554s	 240.37m
+  [2]:	93.559s	 240.20m
+  [3]:	94.610s	 240.28m
+  [4]:	95.613s	 240.20m
+  [5]:	96.614s	 240.37m
+  [6]:	97.618s	 240.20m
+  [7]:	88.538s	 240.37m
+  [8]:	89.542s	 240.28m
+  [9]:	90.548s	 240.45m
+Current Speed:   -0.010m/s
+# [A                                                            # status[A                                                            # status
+================================
+Uptime:         118.812s
+Time:           2024/04/30 09:16:52
+State:          0
+Substate:       0
+Switches:       0xC0
+Errors:         0x0000
+CPU Temp:       19.7ºC
+Pressure:       984.71mbar
+Altitude:       240.20m
+Current Speed:  -0.010m/s
+Sunrise GPIO:   HIGH
+Temp CPU:       19.7ºC
+Temp [1]:       20.1ºC
+Temp [2]:       20.4ºC
+Statistics:
+                Min	Avg	Max
+Speed(m/s):     -0.03	0.00	0.04
+Battery(V):     9.83	9.83	9.84
+Battery(mA):    3	3	5
+AccX(g):        -0.00	0.00	0.00
+AccY(g):        -0.14	-0.13	-0.12
+AccZ(g):        0.95	0.96	0.97
+Altitude History:
+  [0]:	111.677s	 240.37m
+  [1]:	112.685s	 240.28m
+  [2]:	113.691s	 240.37m
+  [3]:	114.692s	 240.28m
+  [4]:	115.695s	 240.28m
+  [5]:	116.696s	 240.28m
+  [6]:	117.697s	 240.20m
+  [7]:	118.704s	 240.20m
+  [8]:	109.666s	 240.37m
+  [9]:	110.671s	 240.37m
+Current Speed:   -0.010m/s
+# [A                                                            # status
+================================
+Uptime:         127.495s
+Time:           2024/04/30 09:17:01
+State:          0
+Substate:       0
+Switches:       0xC0
+Errors:         0x0000
+CPU Temp:       19.7ºC
+Pressure:       984.69mbar
+Altitude:       240.37m
+Current Speed:  0.010m/s
+Sunrise GPIO:   HIGH
+Temp CPU:       19.7ºC
+Temp [1]:       20.1ºC
+Temp [2]:       20.4ºC
+Statistics:
+                Min	Avg	Max
+Speed(m/s):     -0.03	0.00	0.04
+Battery(V):     9.83	9.83	9.84
+Battery(mA):    3	3	5
+AccX(g):        -0.00	0.00	0.00
+AccY(g):        -0.14	-0.13	-0.12
+AccZ(g):        0.95	0.96	0.97
+Altitude History:
+  [0]:	121.716s	 240.28m
+  [1]:	122.724s	 240.28m
+  [2]:	123.728s	 240.20m
+  [3]:	124.734s	 240.28m
+  [4]:	125.739s	 240.28m
+  [5]:	126.746s	 240.37m
+  [6]:	117.697s	 240.20m
+  [7]:	118.704s	 240.20m
+  [8]:	119.706s	 240.54m
+  [9]:	120.710s	 240.28m
+Current Speed:   0.010m/s
+# [A                                                            # status
+================================
+Uptime:         141.697s
+Time:           2024/04/30 09:17:15
+State:          0
+Substate:       0
+Switches:       0xC0
+Errors:         0x0000
+CPU Temp:       19.7ºC
+Pressure:       984.73mbar
+Altitude:       240.03m
+Current Speed:  0.000m/s
+Sunrise GPIO:   HIGH
+Temp CPU:       19.7ºC
+Temp [1]:       20.1ºC
+Temp [2]:       20.4ºC
+Statistics:
+                Min	Avg	Max
+Speed(m/s):     -0.03	0.00	0.04
+Battery(V):     9.83	9.83	9.84
+Battery(mA):    3	3	5
+AccX(g):        -0.00	0.00	0.01
+AccY(g):        -0.14	-0.13	-0.12
+AccZ(g):        0.95	0.96	0.97
+Altitude History:
+  [0]:	131.759s	 240.03m
+  [1]:	132.762s	 240.20m
+  [2]:	133.763s	 240.20m
+  [3]:	134.765s	 240.20m
+  [4]:	135.770s	 240.37m
+  [5]:	136.772s	 240.11m
+  [6]:	137.777s	 240.28m
+  [7]:	138.779s	 240.28m
+  [8]:	139.783s	 240.37m
+  [9]:	140.786s	 240.03m
+Current Speed:   0.000m/s
+# [A                                                            # status
+================================
+Uptime:         144.868s
+Time:           2024/04/30 09:17:18
+State:          0
+Substate:       0
+Switches:       0xC0
+Errors:         0x0000
+CPU Temp:       19.7ºC
+Pressure:       984.68mbar
+Altitude:       240.45m
+Current Speed:  0.020m/s
+Sunrise GPIO:   HIGH
+Temp CPU:       19.7ºC
+Temp [1]:       20.1ºC
+Temp [2]:       20.4ºC
+Statistics:
+                Min	Avg	Max
+Speed(m/s):     -0.03	0.00	0.04
+Battery(V):     9.83	9.83	9.84
+Battery(mA):    3	3	5
+AccX(g):        -0.00	0.00	0.01
+AccY(g):        -0.14	-0.13	-0.12
+AccZ(g):        0.95	0.96	0.97
+Altitude History:
+  [0]:	141.887s	 240.20m
+  [1]:	142.888s	 240.11m
+  [2]:	143.889s	 240.45m
+  [3]:	134.765s	 240.20m
+  [4]:	135.770s	 240.37m
+  [5]:	136.772s	 240.11m
+  [6]:	137.777s	 240.28m
+  [7]:	138.779s	 240.28m
+  [8]:	139.783s	 240.37m
+  [9]:	140.786s	 240.03m
+Current Speed:   0.020m/s
+# [A                                                            # status
+================================
+Uptime:         148.052s
+Time:           2024/04/30 09:17:22
+State:          0
+Substate:       0
+Switches:       0xC0
+Errors:         0x0000
+CPU Temp:       19.7ºC
+Pressure:       984.74mbar
+Altitude:       239.94m
+Current Speed:  -0.030m/s
+Sunrise GPIO:   HIGH
+Temp CPU:       19.7ºC
+Temp [1]:       20.1ºC
+Temp [2]:       20.4ºC
+Statistics:
+                Min	Avg	Max
+Speed(m/s):     -0.03	0.00	0.04
+Battery(V):     9.83	9.83	9.84
+Battery(mA):    3	3	5
+AccX(g):        -0.00	0.00	0.01
+AccY(g):        -0.14	-0.13	-0.12
+AccZ(g):        0.95	0.96	0.97
+Altitude History:
+  [0]:	141.887s	 240.20m
+  [1]:	142.888s	 240.11m
+  [2]:	143.889s	 240.45m
+  [3]:	145.063s	 240.28m
+  [4]:	146.066s	 240.11m
+  [5]:	147.068s	 239.94m
+  [6]:	137.777s	 240.28m
+  [7]:	138.779s	 240.28m
+  [8]:	139.783s	 240.37m
+  [9]:	140.786s	 240.03m
+Current Speed:   -0.030m/s
+# [A                                                            # status
+================================
+Uptime:         151.502s
+Time:           2024/04/30 09:17:25
+State:          0
+Substate:       0
+Switches:       0xC0
+Errors:         0x0000
+CPU Temp:       19.7ºC
+Pressure:       984.71mbar
+Altitude:       240.20m
+Current Speed:  0.000m/s
+Sunrise GPIO:   HIGH
+Temp CPU:       19.7ºC
+Temp [1]:       20.1ºC
+Temp [2]:       20.4ºC
+Statistics:
+                Min	Avg	Max
+Speed(m/s):     -0.03	0.00	0.04
+Battery(V):     9.83	9.83	9.84
+Battery(mA):    3	3	5
+AccX(g):        -0.00	0.00	0.01
+AccY(g):        -0.14	-0.13	-0.12
+AccZ(g):        0.95	0.96	0.97
+Altitude History:
+  [0]:	141.887s	 240.20m
+  [1]:	142.888s	 240.11m
+  [2]:	143.889s	 240.45m
+  [3]:	145.063s	 240.28m
+  [4]:	146.066s	 240.11m
+  [5]:	147.068s	 239.94m
+  [6]:	148.247s	 240.28m
+  [7]:	149.251s	 240.20m
+  [8]:	150.257s	 240.28m
+  [9]:	151.258s	 240.20m
+Current Speed:   0.000m/s
+# [A                                                            # status
+================================
+Uptime:         205.112s
+Time:           2024/04/30 09:18:19
+State:          0
+Substate:       0
+Switches:       0xC0
+Errors:         0x0000
+CPU Temp:       19.7ºC
+Pressure:       984.70mbar
+Altitude:       240.28m
+Current Speed:  0.000m/s
+Sunrise GPIO:   HIGH
+Temp CPU:       19.7ºC
+Temp [1]:       20.1ºC
+Temp [2]:       20.3ºC
+Statistics:
+                Min	Avg	Max
+Speed(m/s):     -0.06	0.00	0.06
+Battery(V):     9.83	9.83	9.84
+Battery(mA):    3	3	5
+AccX(g):        -0.00	0.00	0.01
+AccY(g):        -0.14	-0.13	-0.12
+AccZ(g):        0.95	0.96	0.97
+Altitude History:
+  [0]:	202.454s	 240.11m
+  [1]:	203.456s	 239.94m
+  [2]:	204.460s	 240.28m
+  [3]:	195.418s	 240.20m
+  [4]:	196.424s	 240.20m
+  [5]:	197.430s	 240.11m
+  [6]:	198.434s	 240.11m
+  [7]:	199.440s	 240.03m
+  [8]:	200.445s	 240.03m
+  [9]:	201.451s	 240.28m
+Current Speed:   0.000m/s
+# [A                                                            # status
+================================
+Uptime:         208.252s
+Time:           2024/04/30 09:18:22
+State:          0
+Substate:       0
+Switches:       0xC0
+Errors:         0x0000
+CPU Temp:       19.8ºC
+Pressure:       984.75mbar
+Altitude:       239.86m
+Current Speed:  -0.020m/s
+Sunrise GPIO:   HIGH
+Temp CPU:       19.8ºC
+Temp [1]:       20.1ºC
+Temp [2]:       20.3ºC
+Statistics:
+                Min	Avg	Max
+Speed(m/s):     -0.06	0.00	0.06
+Battery(V):     9.83	9.83	9.84
+Battery(mA):    3	3	5
+AccX(g):        -0.00	0.00	0.01
+AccY(g):        -0.14	-0.13	-0.12
+AccZ(g):        0.95	0.96	0.97
+Altitude History:
+  [0]:	202.454s	 240.11m
+  [1]:	203.456s	 239.94m
+  [2]:	204.460s	 240.28m
+  [3]:	205.465s	 240.20m
+  [4]:	206.467s	 240.28m
+  [5]:	207.472s	 239.86m
+  [6]:	198.434s	 240.11m
+  [7]:	199.440s	 240.03m
+  [8]:	200.445s	 240.03m
+  [9]:	201.451s	 240.28m
+Current Speed:   -0.020m/s
+# [A                                                            # status
+================================
+Uptime:         235.216s
+Time:           2024/04/30 09:18:49
+State:          0
+Substate:       0
+Switches:       0xC0
+Errors:         0x0000
+CPU Temp:       19.8ºC
+Pressure:       984.72mbar
+Altitude:       240.11m
+Current Speed:  0.000m/s
+Sunrise GPIO:   HIGH
+Temp CPU:       19.8ºC
+Temp [1]:       20.1ºC
+Temp [2]:       20.4ºC
+Statistics:
+                Min	Avg	Max
+Speed(m/s):     -0.06	0.00	0.06
+Battery(V):     9.83	9.83	9.84
+Battery(mA):    3	3	5
+AccX(g):        -0.00	0.00	0.01
+AccY(g):        -0.14	-0.13	-0.12
+AccZ(g):        0.95	0.96	0.97
+Altitude History:
+  [0]:	232.568s	 240.11m
+  [1]:	233.570s	 240.37m
+  [2]:	234.571s	 240.11m
+  [3]:	225.540s	 240.03m
+  [4]:	226.546s	 240.03m
+  [5]:	227.548s	 240.03m
+  [6]:	228.552s	 240.11m
+  [7]:	229.554s	 240.03m
+  [8]:	230.560s	 239.94m
+  [9]:	231.562s	 240.11m
+Current Speed:   0.000m/s
+# [A                                                            # status
+================================
+Uptime:         238.575s
+Time:           2024/04/30 09:18:52
+State:          0
+Substate:       0
+Switches:       0x80
+Errors:         0x0000
+CPU Temp:       19.8ºC
+Pressure:       984.73mbar
+Altitude:       240.03m
+Current Speed:  0.000m/s
+Sunrise GPIO:   LOW
+Temp CPU:       19.8ºC
+Temp [1]:       20.1ºC
+Temp [2]:       20.4ºC
+Statistics:
+                Min	Avg	Max
+Speed(m/s):     -0.06	0.00	0.06
+Battery(V):     9.83	9.83	9.84
+Battery(mA):    3	3	5
+AccX(g):        -0.00	0.00	0.01
+AccY(g):        -0.14	-0.13	-0.12
+AccZ(g):        0.95	0.96	0.97
+Altitude History:
+  [0]:	232.568s	 240.11m
+  [1]:	233.570s	 240.37m
+  [2]:	234.571s	 240.11m
+  [3]:	235.574s	 240.20m
+  [4]:	236.575s	 239.94m
+  [5]:	237.581s	 240.03m
+  [6]:	228.552s	 240.11m
+  [7]:	229.554s	 240.03m
+  [8]:	230.560s	 239.94m
+  [9]:	231.562s	 240.11m
+Current Speed:   0.000m/s
+# [A                                                            # status
+================================
+Uptime:         243.779s
+Time:           2024/04/30 09:18:57
+State:          0
+Substate:       0
+Switches:       0x80
+Errors:         0x0000
+CPU Temp:       19.8ºC
+Pressure:       984.72mbar
+Altitude:       240.11m
+Current Speed:  -0.030m/s
+Sunrise GPIO:   LOW
+Temp CPU:       19.8ºC
+Temp [1]:       20.1ºC
+Temp [2]:       20.4ºC
+Statistics:
+                Min	Avg	Max
+Speed(m/s):     -0.06	0.00	0.06
+Battery(V):     9.83	9.83	9.84
+Battery(mA):    3	3	5
+AccX(g):        -0.00	0.00	0.01
+AccY(g):        -0.14	-0.13	-0.12
+AccZ(g):        0.95	0.96	0.97
+Altitude History:
+  [0]:	242.783s	 240.11m
+  [1]:	233.570s	 240.37m
+  [2]:	234.571s	 240.11m
+  [3]:	235.574s	 240.20m
+  [4]:	236.575s	 239.94m
+  [5]:	237.581s	 240.03m
+  [6]:	238.768s	 240.20m
+  [7]:	239.770s	 240.20m
+  [8]:	240.774s	 240.11m
+  [9]:	241.780s	 240.20m
+Current Speed:   -0.030m/s
+# [A                                                            # status
+================================
+Uptime:         248.322s
+Time:           2024/04/30 09:19:02
+State:          0
+Substate:       0
+Switches:       0x80
+Errors:         0x0000
+CPU Temp:       19.8ºC
+Pressure:       984.71mbar
+Altitude:       240.20m
+Current Speed:  0.000m/s
+Sunrise GPIO:   LOW
+Temp CPU:       19.8ºC
+Temp [1]:       20.1ºC
+Temp [2]:       20.4ºC
+Statistics:
+                Min	Avg	Max
+Speed(m/s):     -0.06	0.00	0.06
+Battery(V):     9.83	9.83	9.84
+Battery(mA):    3	3	5
+AccX(g):        -0.00	0.00	0.01
+AccY(g):        -0.14	-0.13	-0.12
+AccZ(g):        0.95	0.96	0.97
+Altitude History:
+  [0]:	242.783s	 240.11m
+  [1]:	243.974s	 240.11m
+  [2]:	244.977s	 240.11m
+  [3]:	245.978s	 240.11m
+  [4]:	246.983s	 240.03m
+  [5]:	247.988s	 240.20m
+  [6]:	238.768s	 240.20m
+  [7]:	239.770s	 240.20m
+  [8]:	240.774s	 240.11m
+  [9]:	241.780s	 240.20m
+Current Speed:   0.000m/s
+# 252.054s: Sunrise activation signal detected!
+# [A                                                            # status
+================================
+Uptime:         260.913s
+Time:           2024/04/30 09:19:14
+State:          0
+Substate:       0
+Switches:       0x80
+Errors:         0x0000
+CPU Temp:       19.8ºC
+Pressure:       984.74mbar
+Altitude:       239.94m
+Current Speed:  -0.020m/s
+Sunrise GPIO:   LOW
+Temp CPU:       19.8ºC
+Temp [1]:       20.1ºC
+Temp [2]:       20.4ºC
+Statistics:
+                Min	Avg	Max
+Speed(m/s):     -0.06	0.00	0.06
+Battery(V):     9.83	9.83	9.84
+Battery(mA):    3	3	5
+AccX(g):        -0.00	0.00	0.01
+AccY(g):        -0.14	-0.13	-0.12
+AccZ(g):        0.95	0.96	0.97
+Altitude History:
+  [0]:	253.007s	 240.11m
+  [1]:	254.012s	 240.03m
+  [2]:	255.017s	 239.94m
+  [3]:	256.018s	 240.11m
+  [4]:	257.020s	 240.03m
+  [5]:	258.025s	 240.03m
+  [6]:	259.031s	 240.03m
+  [7]:	260.034s	 239.94m
+  [8]:	250.997s	 240.20m
+  [9]:	252.002s	 240.03m
+Current Speed:   -0.020m/s
+# [A                                                            # status
+================================
+Uptime:         269.954s
+Time:           2024/04/30 09:19:23
+State:          0
+Substate:       0
+Switches:       0x80
+Errors:         0x0000
+CPU Temp:       19.8ºC
+Pressure:       984.71mbar
+Altitude:       240.20m
+Current Speed:  0.020m/s
+Sunrise GPIO:   LOW
+Temp CPU:       19.8ºC
+Temp [1]:       20.1ºC
+Temp [2]:       20.4ºC
+Statistics:
+                Min	Avg	Max
+Speed(m/s):     -0.06	0.00	0.06
+Battery(V):     9.83	9.83	9.84
+Battery(mA):    3	3	5
+AccX(g):        -0.00	0.00	0.01
+AccY(g):        -0.14	-0.13	-0.12
+AccZ(g):        0.95	0.96	0.97
+Altitude History:
+  [0]:	263.109s	 239.94m
+  [1]:	264.113s	 240.03m
+  [2]:	265.114s	 240.03m
+  [3]:	266.118s	 240.03m
+  [4]:	267.123s	 240.28m
+  [5]:	268.126s	 240.11m
+  [6]:	269.127s	 240.20m
+  [7]:	260.034s	 239.94m
+  [8]:	261.104s	 240.20m
+  [9]:	262.107s	 240.03m
+Current Speed:   0.020m/s
+# [A                                                            # status
+================================
+Uptime:         273.313s
+Time:           2024/04/30 09:19:27
+State:          0
+Substate:       0
+Switches:       0x80
+Errors:         0x0000
+CPU Temp:       19.8ºC
+Pressure:       984.70mbar
+Altitude:       240.28m
+Current Speed:  0.020m/s
+Sunrise GPIO:   LOW
+Temp CPU:       19.8ºC
+Temp [1]:       20.1ºC
+Temp [2]:       20.3ºC
+Statistics:
+                Min	Avg	Max
+Speed(m/s):     -0.06	0.00	0.06
+Battery(V):     9.83	9.83	9.84
+Battery(mA):    3	3	5
+AccX(g):        -0.00	0.00	0.01
+AccY(g):        -0.14	-0.13	-0.12
+AccZ(g):        0.95	0.96	0.97
+Altitude History:
+  [0]:	273.158s	 240.28m
+  [1]:	264.113s	 240.03m
+  [2]:	265.114s	 240.03m
+  [3]:	266.118s	 240.03m
+  [4]:	267.123s	 240.28m
+  [5]:	268.126s	 240.11m
+  [6]:	269.127s	 240.20m
+  [7]:	270.147s	 240.03m
+  [8]:	271.148s	 240.11m
+  [9]:	272.154s	 240.03m
+Current Speed:   0.020m/s
+# [A                                                            # status
+================================
+Uptime:         277.134s
+Time:           2024/04/30 09:19:31
+State:          0
+Substate:       0
+Switches:       0x80
+Errors:         0x0000
+CPU Temp:       19.8ºC
+Pressure:       984.74mbar
+Altitude:       239.94m
+Current Speed:  -0.030m/s
+Sunrise GPIO:   LOW
+Temp CPU:       19.8ºC
+Temp [1]:       20.1ºC
+Temp [2]:       20.4ºC
+Statistics:
+                Min	Avg	Max
+Speed(m/s):     -0.06	0.00	0.06
+Battery(V):     9.83	9.83	9.84
+Battery(mA):    3	3	5
+AccX(g):        -0.00	0.00	0.01
+AccY(g):        -0.14	-0.13	-0.12
+AccZ(g):        0.95	0.96	0.97
+Altitude History:
+  [0]:	273.158s	 240.28m
+  [1]:	274.162s	 240.03m
+  [2]:	275.169s	 240.20m
+  [3]:	276.174s	 239.94m
+  [4]:	267.123s	 240.28m
+  [5]:	268.126s	 240.11m
+  [6]:	269.127s	 240.20m
+  [7]:	270.147s	 240.03m
+  [8]:	271.148s	 240.11m
+  [9]:	272.154s	 240.03m
+Current Speed:   -0.030m/s
+# [A                                                            # status
+================================
+Uptime:         280.648s
+Time:           2024/04/30 09:19:34
+State:          0
+Substate:       0
+Switches:       0x80
+Errors:         0x0000
+CPU Temp:       19.8ºC
+Pressure:       984.74mbar
+Altitude:       239.94m
+Current Speed:  -0.010m/s
+Sunrise GPIO:   LOW
+Temp CPU:       19.8ºC
+Temp [1]:       20.1ºC
+Temp [2]:       20.4ºC
+Statistics:
+                Min	Avg	Max
+Speed(m/s):     -0.06	0.00	0.06
+Battery(V):     9.83	9.83	9.84
+Battery(mA):    3	3	5
+AccX(g):        -0.00	0.00	0.01
+AccY(g):        -0.14	-0.13	-0.12
+AccZ(g):        0.95	0.96	0.97
+Altitude History:
+  [0]:	273.158s	 240.28m
+  [1]:	274.162s	 240.03m
+  [2]:	275.169s	 240.20m
+  [3]:	276.174s	 239.94m
+  [4]:	277.331s	 239.94m
+  [5]:	278.332s	 240.11m
+  [6]:	279.338s	 240.11m
+  [7]:	280.343s	 239.94m
+  [8]:	271.148s	 240.11m
+  [9]:	272.154s	 240.03m
+Current Speed:   -0.010m/s
+# [A                                                            # status
+================================
+Uptime:         299.485s
+Time:           2024/04/30 09:19:53
+State:          0
+Substate:       0
+Switches:       0x80
+Errors:         0x0000
+CPU Temp:       19.8ºC
+Pressure:       984.75mbar
+Altitude:       239.86m
+Current Speed:  -0.010m/s
+Sunrise GPIO:   LOW
+Temp CPU:       19.8ºC
+Temp [1]:       20.1ºC
+Temp [2]:       20.4ºC
+Statistics:
+                Min	Avg	Max
+Speed(m/s):     -0.06	0.00	0.06
+Battery(V):     9.83	9.83	9.84
+Battery(mA):    3	3	5
+AccX(g):        -0.00	0.00	0.01
+AccY(g):        -0.14	-0.13	-0.12
+AccZ(g):        0.95	0.96	0.97
+Altitude History:
+  [0]:	293.389s	 239.94m
+  [1]:	294.395s	 239.94m
+  [2]:	295.398s	 239.94m
+  [3]:	296.402s	 240.03m
+  [4]:	297.404s	 239.94m
+  [5]:	298.408s	 240.03m
+  [6]:	299.409s	 239.86m
+  [7]:	290.378s	 240.03m
+  [8]:	291.381s	 240.20m
+  [9]:	292.386s	 240.03m
+Current Speed:   -0.010m/s
+# [A                                                            # status
+================================
+Uptime:         301.762s
+Time:           2024/04/30 09:19:55
+State:          0
+Substate:       0
+Switches:       0x80
+Errors:         0x0000
+CPU Temp:       19.8ºC
+Pressure:       984.74mbar
+Altitude:       239.94m
+Current Speed:  -0.010m/s
+Sunrise GPIO:   LOW
+Temp CPU:       19.8ºC
+Temp [1]:       20.1ºC
+Temp [2]:       20.4ºC
+Statistics:
+                Min	Avg	Max
+Speed(m/s):     -0.06	0.00	0.06
+Battery(V):     9.83	9.83	9.84
+Battery(mA):    3	3	5
+AccX(g):        -0.00	0.00	0.01
+AccY(g):        -0.14	-0.13	-0.12
+AccZ(g):        0.95	0.96	0.97
+Altitude History:
+  [0]:	293.389s	 239.94m
+  [1]:	294.395s	 239.94m
+  [2]:	295.398s	 239.94m
+  [3]:	296.402s	 240.03m
+  [4]:	297.404s	 239.94m
+  [5]:	298.408s	 240.03m
+  [6]:	299.409s	 239.86m
+  [7]:	300.410s	 240.11m
+  [8]:	301.412s	 239.94m
+  [9]:	292.386s	 240.03m
+Current Speed:   -0.010m/s
+# [A                                                            # status
+================================
+Uptime:         304.019s
+Time:           2024/04/30 09:19:58
+State:          0
+Substate:       0
+Switches:       0x80
+Errors:         0x0000
+CPU Temp:       19.8ºC
+Pressure:       984.75mbar
+Altitude:       239.86m
+Current Speed:  0.000m/s
+Sunrise GPIO:   LOW
+Temp CPU:       19.8ºC
+Temp [1]:       20.1ºC
+Temp [2]:       20.5ºC
+Statistics:
+                Min	Avg	Max
+Speed(m/s):     -0.06	0.00	0.06
+Battery(V):     9.83	9.83	9.84
+Battery(mA):    3	3	5
+AccX(g):        -0.00	0.00	0.01
+AccY(g):        -0.14	-0.13	-0.12
+AccZ(g):        0.95	0.96	0.97
+Altitude History:
+  [0]:	303.417s	 239.86m
+  [1]:	294.395s	 239.94m
+  [2]:	295.398s	 239.94m
+  [3]:	296.402s	 240.03m
+  [4]:	297.404s	 239.94m
+  [5]:	298.408s	 240.03m
+  [6]:	299.409s	 239.86m
+  [7]:	300.410s	 240.11m
+  [8]:	301.412s	 239.94m
+  [9]:	302.413s	 240.11m
+Current Speed:   0.000m/s
+# [A                                                            # status
+================================
+Uptime:         328.688s
+Time:           2024/04/30 09:20:22
+State:          0
+Substate:       0
+Switches:       0x80
+Errors:         0x0000
+CPU Temp:       19.8ºC
+Pressure:       984.71mbar
+Altitude:       240.20m
+Current Speed:  0.020m/s
+Sunrise GPIO:   LOW
+Temp CPU:       19.8ºC
+Temp [1]:       20.1ºC
+Temp [2]:       20.5ºC
+Statistics:
+                Min	Avg	Max
+Speed(m/s):     -0.06	0.00	0.07
+Battery(V):     9.83	9.83	9.84
+Battery(mA):    3	3	5
+AccX(g):        -0.00	0.00	0.01
+AccY(g):        -0.14	-0.13	-0.12
+AccZ(g):        0.95	0.96	0.97
+Altitude History:
+  [0]:	323.488s	 240.37m
+  [1]:	324.493s	 240.37m
+  [2]:	325.496s	 240.28m
+  [3]:	326.501s	 240.11m
+  [4]:	327.504s	 240.03m
+  [5]:	328.509s	 240.20m
+  [6]:	319.471s	 239.94m
+  [7]:	320.477s	 240.20m
+  [8]:	321.479s	 240.54m
+  [9]:	322.485s	 240.62m
+Current Speed:   0.020m/s
+# [A                                                            # status
+================================
+Uptime:         372.980s
+Time:           2024/04/30 09:21:06
+State:          0
+Substate:       0
+Switches:       0xC0
+Errors:         0x0000
+CPU Temp:       19.8ºC
+Pressure:       984.66mbar
+Altitude:       240.62m
+Current Speed:  0.060m/s
+Sunrise GPIO:   HIGH
+Temp CPU:       19.8ºC
+Temp [1]:       20.1ºC
+Temp [2]:       20.5ºC
+Statistics:
+                Min	Avg	Max
+Speed(m/s):     -0.06	0.00	0.07
+Battery(V):     9.83	9.83	9.84
+Battery(mA):    3	3	5
+AccX(g):        -0.00	0.00	0.01
+AccY(g):        -0.14	-0.13	-0.12
+AccZ(g):        0.95	0.96	0.97
+Altitude History:
+  [0]:	363.635s	 240.03m
+  [1]:	364.638s	 240.11m
+  [2]:	365.643s	 239.94m
+  [3]:	366.646s	 239.77m
+  [4]:	367.651s	 240.03m
+  [5]:	368.654s	 239.86m
+  [6]:	369.659s	 240.03m
+  [7]:	370.660s	 239.77m
+  [8]:	371.663s	 239.94m
+  [9]:	372.666s	 240.62m
+Current Speed:   0.060m/s
+# [A                                                            # status
+================================
+Uptime:         375.485s
+Time:           2024/04/30 09:21:09
+State:          0
+Substate:       0
+Switches:       0xC0
+Errors:         0x0000
+CPU Temp:       19.8ºC
+Pressure:       984.72mbar
+Altitude:       240.11m
+Current Speed:  0.010m/s
+Sunrise GPIO:   HIGH
+Temp CPU:       19.8ºC
+Temp [1]:       20.1ºC
+Temp [2]:       20.5ºC
+Statistics:
+                Min	Avg	Max
+Speed(m/s):     -0.06	0.00	0.07
+Battery(V):     9.83	9.83	9.84
+Battery(mA):    3	3	5
+AccX(g):        -0.00	0.00	0.01
+AccY(g):        -0.14	-0.13	-0.12
+AccZ(g):        0.95	0.96	0.97
+Altitude History:
+  [0]:	373.670s	 240.45m
+  [1]:	374.671s	 240.11m
+  [2]:	365.643s	 239.94m
+  [3]:	366.646s	 239.77m
+  [4]:	367.651s	 240.03m
+  [5]:	368.654s	 239.86m
+  [6]:	369.659s	 240.03m
+  [7]:	370.660s	 239.77m
+  [8]:	371.663s	 239.94m
+  [9]:	372.666s	 240.62m
+Current Speed:   0.010m/s
+# [A                                                            # status
+================================
+Uptime:         419.965s
+Time:           2024/04/30 09:21:53
+State:          0
+Substate:       0
+Switches:       0xC0
+Errors:         0x0000
+CPU Temp:       19.8ºC
+Pressure:       984.76mbar
+Altitude:       239.77m
+Current Speed:  -0.010m/s
+Sunrise GPIO:   HIGH
+Temp CPU:       19.8ºC
+Temp [1]:       20.1ºC
+Temp [2]:       20.5ºC
+Statistics:
+                Min	Avg	Max
+Speed(m/s):     -0.09	0.00	0.10
+Battery(V):     9.83	9.83	9.84
+Battery(mA):    3	3	5
+AccX(g):        -0.00	0.00	0.01
+AccY(g):        -0.14	-0.13	-0.12
+AccZ(g):        0.95	0.96	0.97
+Altitude History:
+  [0]:	413.815s	 239.86m
+  [1]:	414.818s	 239.77m
+  [2]:	415.822s	 239.94m
+  [3]:	416.827s	 239.86m
+  [4]:	417.828s	 239.86m
+  [5]:	418.831s	 239.94m
+  [6]:	419.832s	 239.77m
+  [7]:	410.802s	 239.86m
+  [8]:	411.806s	 239.94m
+  [9]:	412.810s	 239.77m
+Current Speed:   -0.010m/s
+# uartdebug 0
+UART debug changed to camera: 0
+# memory status
+NOR memory status: 
+ * NOR memory is ready
+ * 670 saved telemetry lines. 0.08% used. Last address is 42880
+ * 187 saved events. 0.02% used. Last address is 52431792
+FRAM memory status: 
+ * FRAM memory is ready
+ * 1 saved telemetry. 0.06% used. Last address is 172092
+ * 115 saved events. 45.10% used. Last address is 276268
+# memory read nor tlm 0 680
+address,date,unixtime,uptime,pressure,altitude,verticalSpeedAVG,verticalSpeedMAX,verticalSpeedMIN,temperatures0,temperatures1,temperatures2,accXAxisAVG,accXAxisMAX,accXAxisMIN,accYAxisAVG,accYAxisMAX,accYAxisMIN,accZAxisAVG,accZAxisMAX,accZAxisMIN,voltagesAVG,voltagesMAX,voltagesMIN,currentsAVG,currentsMAX,currentsMIN,state,sub_state,switches_status,errors
+0,2024/02/29 11:58:04,1709207884,930000,100748,4811,0,5,-5,227,218,221,7,20,-8,-1128,-1116,-1144,-48,-32,-68,876,879,871,8,38,-6,0,0,0xC0,0x0000
+1,2024/02/29 11:58:14,1709207894,940001,100752,4778,1,8,-2,227,218,221,6,12,4,-1128,-1120,-1132,-47,-40,-56,879,879,879,-1,0,-2,0,0,0xC0,0x0000
+2,2024/02/29 11:58:24,1709207904,950004,100753,4769,-2,0,-7,227,218,221,7,20,0,-1127,-1124,-1136,-47,-36,-60,879,879,879,0,0,0,0,0,0xC0,0x0000
+3,2024/02/29 11:58:34,1709207914,960004,100748,4811,4,8,0,228,218,221,6,12,0,-1128,-1124,-1136,-47,-40,-52,879,879,879,0,1,0,0,0,0xC0,0x0000
+4,2024/02/29 11:58:44,1709207924,970002,100748,4811,0,3,-3,228,217,221,6,12,4,-1128,-1124,-1132,-47,-40,-56,879,879,879,1,1,1,0,0,0xC0,0x0000
+5,2024/03/05 12:53:41,1709643221,10005,101488,-1355,0,0,0,226,227,229,0,8,-8,-1127,-1116,-1140,-45,-36,-56,330,330,330,0,0,0,0,0,0xC0,0x0000
+6,2024/03/05 12:54:19,1709643259,10005,101487,-1346,0,0,0,226,227,229,0,8,-8,-1127,-1116,-1140,-45,-32,-60,329,330,329,0,0,0,0,0,0xC0,0x0000
+7,2024/03/05 12:55:25,1709643325,10000,101488,-1355,0,0,0,226,227,229,0,4,-4,-1127,-1120,-1132,-45,-36,-52,802,803,802,3,4,3,0,0,0xC0,0x0000
+8,2024/03/05 12:55:35,1709643335,20001,101488,-1355,0,2,0,226,227,230,0,4,-4,-1127,-1120,-1136,-46,-36,-56,802,803,802,3,4,3,0,0,0xC0,0x0000
+9,2024/03/05 12:55:45,1709643345,30002,101489,-1363,0,1,-3,226,227,230,0,8,-12,-1127,-1120,-1132,-46,-36,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+10,2024/03/05 12:55:55,1709643355,40001,101488,-1355,0,1,-2,226,227,230,0,4,-4,-1127,-1120,-1132,-45,-36,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+11,2024/03/05 12:56:05,1709643365,50003,101489,-1363,0,0,-1,226,227,230,0,4,-4,-1127,-1120,-1136,-45,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+12,2024/03/05 19:39:16,1709667556,60000,101487,-1346,0,0,-1,226,227,230,0,4,-4,-1127,-1120,-1140,-45,-32,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+13,2024/03/05 19:39:26,1709667566,70000,101488,-1355,0,2,0,226,227,230,0,4,-4,-1127,-1120,-1132,-45,-36,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+14,2024/03/05 19:39:36,1709667576,80003,101489,-1363,0,1,-3,226,227,230,0,8,-4,-1127,-1120,-1136,-45,-36,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+15,2024/03/05 19:39:46,1709667586,90000,101489,-1363,0,2,-3,226,227,230,0,4,-4,-1127,-1120,-1132,-45,-36,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+16,2024/03/05 19:39:56,1709667596,100000,101489,-1363,0,2,-2,226,227,230,0,4,-4,-1127,-1116,-1132,-45,-36,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+17,2024/03/05 19:40:06,1709667606,110005,101490,-1371,0,2,-3,226,227,230,0,4,-4,-1127,-1124,-1136,-46,-40,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+18,2024/03/05 19:40:16,1709667616,120000,101489,-1363,0,3,-1,226,227,230,0,4,-4,-1126,-1112,-1132,-46,-36,-52,798,803,787,64,241,3,0,0,0xC1,0x0000
+19,2024/03/05 19:40:26,1709667626,130002,101485,-1330,0,3,-1,226,227,230,0,4,-4,-1127,-1120,-1136,-46,-36,-56,784,786,784,304,346,274,0,0,0xC1,0x0000
+20,2024/03/05 19:40:36,1709667636,140003,101484,-1322,0,4,0,226,227,230,0,8,-4,-1128,-1120,-1140,-47,-36,-56,785,785,785,290,314,289,0,0,0xC1,0x0000
+21,2024/03/05 19:40:46,1709667646,150001,101484,-1322,0,4,-2,227,227,230,0,4,-4,-1127,-1108,-1136,-46,-40,-56,788,803,785,234,295,1,0,0,0xC0,0x0000
+22,2024/03/05 19:40:56,1709667656,160003,101486,-1338,0,2,0,228,227,230,0,4,-4,-1128,-1120,-1156,-46,-36,-52,793,803,785,136,318,1,0,0,0xC1,0x0000
+23,2024/03/05 19:41:06,1709667666,170002,101486,-1338,0,2,-1,228,227,230,0,4,-8,-1127,-1124,-1132,-46,-40,-56,792,803,783,187,380,1,0,0,0xC0,0x0000
+24,2024/03/05 19:41:16,1709667676,180003,101487,-1346,0,3,-1,229,227,230,0,4,-8,-1128,-1120,-1148,-46,-40,-56,792,803,784,172,346,1,0,0,0xC1,0x0000
+25,2024/03/05 19:41:26,1709667686,190004,101482,-1305,0,3,0,230,227,230,0,4,-4,-1127,-1124,-1132,-46,-40,-52,784,786,778,327,558,279,0,0,0xC1,0x0000
+26,2024/03/05 19:41:36,1709667696,200001,101483,-1313,0,0,-1,231,227,230,0,4,-4,-1127,-1120,-1136,-47,-40,-56,779,786,778,532,589,293,0,0,0xC1,0x0000
+27,2024/03/05 19:41:46,1709667706,210005,101483,-1313,0,2,-1,231,227,230,0,4,-8,-1127,-1108,-1132,-46,-40,-52,796,803,785,102,306,1,0,0,0xC1,0x0000
+28,2024/03/05 19:41:56,1709667716,220003,101483,-1313,0,1,-1,233,227,230,0,4,-4,-1127,-1120,-1136,-47,-40,-56,785,789,783,287,385,183,0,0,0xC1,0x0000
+29,2024/03/05 19:42:06,1709667726,230003,101484,-1322,0,1,-3,233,227,230,0,4,-8,-1127,-1120,-1132,-46,-32,-56,800,803,785,40,305,1,0,0,0xC0,0x0000
+30,2024/03/05 19:54:48,1709668488,10000,101480,-1288,0,0,0,226,225,230,0,8,-12,-1126,-1116,-1140,-45,-36,-56,329,330,329,0,0,0,0,0,0xC0,0x0000
+31,2024/03/05 19:54:58,1709668498,20003,101478,-1272,0,1,0,226,225,230,0,8,-8,-1126,-1116,-1136,-47,-36,-60,329,330,329,0,0,0,0,0,0xC0,0x0000
+32,2024/03/05 19:56:50,1709668610,10007,101481,-1297,0,0,0,225,225,229,0,8,-8,-1126,-1120,-1132,-46,-36,-56,802,803,802,3,5,3,0,0,0xC0,0x0000
+33,2024/03/05 19:57:07,1709668627,10002,101481,-1297,0,0,0,225,225,229,0,4,-4,-1126,-1112,-1136,-45,-36,-56,802,803,802,3,4,3,0,0,0xC0,0x0000
+34,2024/03/05 19:57:17,1709668637,20002,101478,-1272,0,3,0,225,225,229,0,4,-4,-1127,-1120,-1132,-46,-40,-52,794,803,785,134,310,3,0,0,0xC1,0x0000
+35,2024/03/05 19:57:27,1709668647,30004,101477,-1263,0,1,0,226,225,229,0,4,-4,-1127,-1120,-1132,-46,-40,-52,785,786,784,296,344,284,0,0,0xC1,0x0000
+36,2024/03/05 19:57:37,1709668657,40003,101479,-1280,0,1,-1,226,225,229,0,4,-12,-1127,-1120,-1132,-46,-36,-52,797,803,785,90,296,1,0,0,0xC0,0x0000
+37,2024/03/05 19:57:47,1709668667,50005,101477,-1263,0,2,-1,226,225,229,0,8,-16,-1126,-1104,-1136,-48,-12,-116,803,803,803,2,3,1,0,0,0xC0,0x0000
+38,2024/03/05 19:57:57,1709668677,60003,101477,-1263,0,2,-1,227,225,229,0,4,-4,-1127,-1120,-1132,-46,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+39,2024/03/05 19:58:07,1709668687,70001,101478,-1272,0,1,-2,227,225,229,0,4,-4,-1127,-1124,-1132,-46,-40,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+40,2024/03/05 19:58:17,1709668697,80000,101477,-1263,0,1,-2,227,225,229,0,4,-4,-1127,-1120,-1132,-46,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+41,2024/03/05 19:58:27,1709668707,90003,101476,-1255,0,4,0,227,225,229,0,4,-4,-1127,-1120,-1132,-46,-36,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+42,2024/03/05 19:58:37,1709668717,100005,101477,-1263,0,0,-3,227,225,229,0,4,-4,-1127,-1120,-1132,-45,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+43,2024/03/05 19:58:47,1709668727,110003,101476,-1255,0,2,-2,227,225,229,0,4,-4,-1126,-1120,-1132,-46,-36,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+44,2024/03/05 19:58:57,1709668737,120002,101477,-1263,0,1,-1,226,225,229,0,4,-4,-1127,-1120,-1132,-46,-36,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+45,2024/03/05 19:59:07,1709668747,130003,101476,-1255,0,4,-1,226,225,229,0,4,-4,-1127,-1124,-1136,-46,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+46,2024/03/05 19:59:17,1709668757,140000,101476,-1255,0,0,-1,226,225,229,0,4,-12,-1127,-1120,-1132,-45,-24,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+47,2024/03/05 19:59:27,1709668767,150002,101475,-1247,0,3,-2,226,225,228,0,8,-20,-1127,-1116,-1136,-46,-24,-112,803,803,803,3,3,3,0,0,0xC0,0x0000
+48,2024/03/05 19:59:37,1709668777,160003,101476,-1255,0,2,-1,226,225,229,0,8,-8,-1126,-1120,-1140,-45,-36,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+49,2024/03/05 19:59:47,1709668787,170035,101476,-1255,0,2,0,226,225,229,0,4,-4,-1127,-1120,-1136,-45,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+50,2024/03/05 19:59:57,1709668797,180002,101476,-1255,0,0,-4,226,225,229,0,4,-4,-1127,-1120,-1132,-46,-36,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+51,2024/03/05 20:00:07,1709668807,190001,101476,-1255,0,2,-2,226,225,229,0,4,-4,-1127,-1120,-1132,-45,-36,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+52,2024/03/05 20:00:17,1709668817,200000,101472,-1222,0,2,-2,226,225,229,0,4,-4,-1127,-1120,-1132,-46,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+53,2024/03/05 20:00:27,1709668827,210000,101475,-1247,0,1,-2,226,225,229,0,4,-4,-1127,-1120,-1132,-45,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+54,2024/03/05 20:00:37,1709668837,220000,101474,-1238,0,2,-2,226,225,229,0,4,-4,-1127,-1120,-1136,-46,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+55,2024/03/05 20:00:47,1709668847,230000,101474,-1238,0,4,-2,226,225,229,0,4,-4,-1127,-1120,-1132,-46,-36,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+56,2024/03/05 20:00:57,1709668857,240004,101473,-1230,0,1,-3,226,225,229,0,4,-4,-1126,-1120,-1132,-46,-36,-52,798,803,786,69,270,3,0,0,0xC2,0x0000
+57,2024/03/05 20:01:07,1709668867,250004,101474,-1238,0,3,-1,228,225,229,0,4,-4,-1127,-1120,-1136,-46,-40,-56,785,786,784,298,340,259,0,0,0xC2,0x0000
+58,2024/03/05 20:01:17,1709668877,260004,101471,-1214,0,1,-2,231,225,229,0,4,-4,-1127,-1124,-1132,-46,-40,-52,793,803,786,145,289,1,0,0,0xC0,0x0000
+59,2024/03/05 20:01:27,1709668887,270004,101470,-1205,0,2,0,230,225,229,0,4,-4,-1126,-1116,-1132,-46,-40,-56,803,803,803,2,3,1,0,0,0xC0,0x0000
+60,2024/03/05 20:01:37,1709668897,280004,101469,-1197,0,2,-2,230,225,229,0,4,-4,-1127,-1124,-1132,-45,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+61,2024/03/05 20:01:47,1709668907,290005,101473,-1230,0,1,-2,229,225,228,0,4,-4,-1127,-1124,-1132,-45,-36,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+62,2024/03/05 20:01:57,1709668917,300001,101470,-1205,0,1,-1,228,225,228,0,4,-4,-1127,-1124,-1132,-45,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+63,2024/03/05 20:02:07,1709668927,310003,101470,-1205,0,3,-1,228,225,228,0,4,-4,-1127,-1124,-1132,-46,-40,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+64,2024/03/05 20:02:17,1709668937,320001,101470,-1205,0,1,-1,228,225,228,0,4,-4,-1127,-1124,-1132,-45,-36,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+65,2024/03/05 20:02:27,1709668947,330002,101472,-1222,0,1,-3,228,225,228,0,4,-4,-1127,-1120,-1136,-46,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+66,2024/03/05 20:02:37,1709668957,340001,101471,-1214,0,3,-1,228,225,228,0,4,-4,-1127,-1120,-1136,-45,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+67,2024/03/05 20:02:47,1709668967,350004,101472,-1222,0,3,-3,227,225,228,0,4,-4,-1127,-1120,-1136,-46,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+68,2024/03/05 20:02:57,1709668977,360001,101469,-1197,0,3,0,227,225,228,0,4,-4,-1127,-1120,-1132,-44,-36,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+69,2024/03/05 20:03:07,1709668987,370000,101469,-1197,0,1,-1,227,225,228,0,4,-4,-1127,-1124,-1132,-46,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+70,2024/03/05 20:03:17,1709668997,380002,101470,-1205,0,2,-2,227,225,228,0,4,-4,-1127,-1120,-1132,-45,-36,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+71,2024/03/05 20:03:27,1709669007,390002,101470,-1205,0,2,-2,227,225,228,0,4,-4,-1126,-1120,-1132,-45,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+72,2024/03/05 20:03:37,1709669017,400000,101470,-1205,0,1,-3,226,225,228,0,4,-4,-1127,-1120,-1132,-45,-40,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+73,2024/03/05 20:03:47,1709669027,410002,101467,-1180,0,1,0,226,225,228,0,4,-4,-1127,-1120,-1132,-45,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+74,2024/03/05 20:03:57,1709669037,420001,101468,-1189,0,1,-1,226,225,228,0,4,-4,-1127,-1120,-1136,-45,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+75,2024/03/05 20:04:07,1709669047,430005,101467,-1180,0,1,-2,226,225,228,0,4,-4,-1127,-1120,-1132,-46,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+76,2024/03/05 20:04:17,1709669057,440000,101467,-1180,0,2,-1,226,225,228,0,4,-4,-1127,-1120,-1132,-45,-36,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+77,2024/03/05 20:04:27,1709669067,450002,101468,-1189,0,5,-2,226,225,228,0,4,-4,-1127,-1124,-1132,-45,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+78,2024/03/05 20:04:37,1709669077,460003,101469,-1197,0,1,-2,226,225,228,0,4,-4,-1127,-1120,-1132,-45,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+79,2024/03/05 20:04:47,1709669087,470001,101468,-1189,0,3,-2,226,225,228,0,4,-4,-1127,-1120,-1132,-46,-36,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+80,2024/03/05 20:04:57,1709669097,480017,101467,-1180,0,3,-2,226,225,228,0,4,-4,-1127,-1124,-1132,-45,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+81,2024/03/05 20:05:07,1709669107,490050,101468,-1189,0,1,-1,226,225,228,0,4,-4,-1127,-1120,-1132,-46,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+82,2024/03/05 20:05:17,1709669117,500000,101467,-1180,0,2,0,226,225,228,0,4,-4,-1127,-1124,-1132,-45,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+83,2024/03/05 20:05:27,1709669127,510001,101468,-1189,0,1,-1,226,225,228,0,4,-4,-1126,-1120,-1132,-46,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+84,2024/03/05 20:05:37,1709669137,520001,101468,-1189,0,1,-3,226,225,228,0,4,-4,-1127,-1120,-1132,-46,-36,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+85,2024/03/05 20:05:47,1709669147,530001,101467,-1180,0,2,-1,226,225,228,0,4,-4,-1127,-1120,-1132,-46,-36,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+86,2024/03/05 20:05:57,1709669157,540003,101467,-1180,0,2,-1,226,225,228,0,4,-4,-1127,-1120,-1132,-45,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+87,2024/03/05 20:06:07,1709669167,550003,101468,-1189,0,1,-1,226,225,228,0,4,-4,-1127,-1120,-1132,-45,-36,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+88,2024/03/05 20:06:17,1709669177,560004,101468,-1189,0,0,-2,226,225,228,0,4,-4,-1127,-1120,-1132,-45,-36,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+89,2024/03/05 20:06:27,1709669187,570000,101470,-1205,0,1,-1,226,225,228,0,4,-4,-1127,-1120,-1136,-45,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+90,2024/03/05 20:06:37,1709669197,580004,101470,-1205,0,3,-1,226,225,228,0,4,-4,-1127,-1120,-1132,-45,-36,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+91,2024/03/05 20:06:47,1709669207,590000,101468,-1189,0,2,-1,226,225,228,0,4,-4,-1126,-1120,-1132,-46,-40,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+92,2024/03/05 20:06:57,1709669217,600004,101469,-1197,0,1,-2,226,225,228,0,4,-4,-1127,-1124,-1132,-46,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+93,2024/03/05 20:07:07,1709669227,610004,101468,-1189,0,2,-1,226,225,228,0,4,-4,-1127,-1124,-1132,-45,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+94,2024/03/05 20:07:17,1709669237,620002,101469,-1197,0,1,-3,226,225,228,0,4,-4,-1126,-1120,-1136,-46,-40,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+95,2024/03/05 20:07:27,1709669247,630004,101469,-1197,0,3,-2,226,224,228,0,4,-4,-1127,-1120,-1132,-46,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+96,2024/03/05 20:07:37,1709669257,640005,101471,-1214,0,1,-3,225,224,228,0,4,-4,-1127,-1120,-1132,-46,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+97,2024/03/05 20:07:47,1709669267,650003,101469,-1197,0,2,-2,225,224,228,0,4,-4,-1127,-1124,-1132,-46,-40,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+98,2024/03/05 20:07:57,1709669277,660003,101468,-1189,0,2,-1,225,224,228,0,4,-4,-1127,-1120,-1136,-45,-36,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+99,2024/03/05 20:08:07,1709669287,670001,101466,-1172,0,0,-3,225,224,228,0,4,-4,-1126,-1120,-1136,-46,-40,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+100,2024/03/05 20:08:17,1709669297,680001,101469,-1197,0,3,-1,225,224,228,0,4,-4,-1127,-1120,-1132,-45,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+101,2024/03/05 20:08:27,1709669307,690000,101469,-1197,0,0,-2,225,224,228,0,4,-4,-1127,-1124,-1132,-45,-36,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+102,2024/03/05 20:08:37,1709669317,700001,101467,-1180,0,2,0,225,224,228,0,4,-4,-1126,-1120,-1132,-45,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+103,2024/03/05 20:08:47,1709669327,710000,101469,-1197,0,1,-1,225,224,228,0,4,-4,-1127,-1120,-1132,-46,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+104,2024/03/05 20:08:57,1709669337,720000,101469,-1197,0,1,-1,225,224,228,0,4,-4,-1126,-1120,-1132,-45,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+105,2024/03/05 20:09:07,1709669347,730004,101468,-1189,0,3,0,225,224,228,0,4,-4,-1126,-1120,-1132,-46,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+106,2024/03/05 20:09:17,1709669357,740001,101467,-1180,0,1,-2,225,224,228,0,4,-4,-1126,-1120,-1132,-45,-36,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+107,2024/03/05 20:09:27,1709669367,750000,101468,-1189,0,1,-1,225,224,228,0,4,-4,-1127,-1120,-1132,-46,-36,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+108,2024/03/05 20:09:37,1709669377,760000,101470,-1205,0,3,0,225,224,228,0,4,-4,-1127,-1120,-1132,-46,-36,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+109,2024/03/05 20:09:47,1709669387,770004,101468,-1189,0,1,-1,225,224,228,0,4,-4,-1127,-1124,-1136,-46,-36,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+110,2024/03/05 20:09:57,1709669397,780006,101467,-1180,0,1,-1,225,224,228,0,4,-4,-1126,-1120,-1132,-45,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+111,2024/03/05 20:10:07,1709669407,790035,101471,-1214,-1,0,-4,225,224,228,0,4,-4,-1126,-1120,-1132,-46,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+112,2024/03/05 20:10:17,1709669417,800002,101466,-1172,1,4,-1,225,224,228,0,4,-4,-1127,-1120,-1132,-45,-36,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+113,2024/03/05 20:10:27,1709669427,810002,101469,-1197,0,1,-2,225,224,228,0,4,-4,-1127,-1120,-1132,-46,-40,-52,802,803,802,3,4,3,0,0,0xC0,0x0000
+114,2024/03/05 20:10:37,1709669437,820002,101468,-1189,0,1,-1,225,224,228,0,4,-4,-1127,-1120,-1132,-46,-36,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+115,2024/03/05 20:10:47,1709669447,830002,101467,-1180,0,3,0,225,224,228,0,4,-4,-1127,-1120,-1136,-45,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+116,2024/03/05 20:10:57,1709669457,840003,101466,-1172,0,1,-2,225,224,228,0,4,-4,-1127,-1120,-1132,-46,-36,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+117,2024/03/05 20:11:07,1709669467,850000,101467,-1180,0,0,-2,225,224,228,0,4,-4,-1127,-1120,-1132,-46,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+118,2024/03/05 20:11:17,1709669477,860002,101467,-1180,0,1,-1,225,224,227,0,4,-4,-1127,-1120,-1132,-46,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+119,2024/03/05 20:11:27,1709669487,870003,101470,-1205,0,2,-4,225,224,227,0,4,-4,-1127,-1120,-1136,-46,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+120,2024/03/05 20:11:37,1709669497,880001,101468,-1189,0,2,-3,225,224,227,0,4,-4,-1127,-1120,-1132,-46,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+121,2024/03/05 20:11:47,1709669507,890000,101469,-1197,0,2,-2,225,224,227,0,4,-4,-1126,-1120,-1132,-46,-36,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+122,2024/03/05 20:11:57,1709669517,900000,101469,-1197,0,1,0,225,224,227,0,4,-8,-1127,-1120,-1136,-45,-36,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+123,2024/03/05 20:12:07,1709669527,910000,101466,-1172,0,3,-1,225,224,227,0,4,-4,-1126,-1120,-1132,-46,-36,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+124,2024/03/05 20:12:17,1709669537,920001,101468,-1189,0,0,0,225,224,227,0,4,-4,-1127,-1120,-1132,-46,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+125,2024/03/05 20:12:27,1709669547,930002,101467,-1180,0,1,-5,225,224,227,0,4,-4,-1127,-1120,-1132,-45,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+126,2024/03/05 20:12:37,1709669557,940002,101467,-1180,0,3,-1,225,223,227,0,4,-4,-1126,-1120,-1136,-46,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+127,2024/03/05 20:12:47,1709669567,950004,101467,-1180,0,1,-1,225,223,227,0,4,-8,-1127,-1120,-1136,-46,-40,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+128,2024/03/05 20:12:57,1709669577,960004,101469,-1197,0,2,-2,225,223,227,0,4,-4,-1127,-1120,-1132,-46,-36,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+129,2024/03/05 20:13:07,1709669587,970003,101468,-1189,0,4,-1,225,223,227,0,4,-4,-1127,-1120,-1132,-45,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+130,2024/03/05 20:13:17,1709669597,980004,101467,-1180,0,1,-2,225,223,227,0,4,-4,-1127,-1120,-1132,-45,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+131,2024/03/05 20:13:27,1709669607,990002,101467,-1180,0,1,-1,225,223,227,0,4,-8,-1127,-1120,-1132,-46,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+132,2024/03/05 20:13:37,1709669617,1000004,101467,-1180,0,1,0,225,223,227,0,4,-4,-1126,-1120,-1132,-45,-36,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+133,2024/03/05 20:13:47,1709669627,1010001,101466,-1172,0,2,0,225,223,227,0,4,-4,-1127,-1124,-1132,-46,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+134,2024/03/05 20:13:57,1709669637,1020001,101467,-1180,0,2,-2,225,223,227,0,4,-4,-1126,-1124,-1136,-46,-40,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+135,2024/03/05 20:14:07,1709669647,1030003,101465,-1164,0,1,-1,225,223,227,0,4,-4,-1127,-1120,-1136,-46,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+136,2024/03/05 20:14:17,1709669657,1040003,101466,-1172,0,1,-1,225,223,227,0,4,-4,-1126,-1120,-1132,-45,-36,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+137,2024/03/05 20:14:27,1709669667,1050003,101468,-1189,0,2,-2,225,223,227,0,4,-4,-1126,-1120,-1132,-45,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+138,2024/03/05 20:14:37,1709669677,1060000,101465,-1164,0,3,0,225,223,227,0,4,-4,-1127,-1120,-1132,-46,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+139,2024/03/05 20:14:47,1709669687,1070000,101465,-1164,0,1,-1,225,223,227,0,4,-4,-1127,-1120,-1136,-46,-40,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+140,2024/03/05 20:14:57,1709669697,1080011,101466,-1172,0,0,-3,225,223,227,0,4,-4,-1126,-1120,-1132,-46,-40,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+141,2024/03/05 20:15:07,1709669707,1090046,101467,-1180,0,2,-2,225,223,227,0,4,-4,-1127,-1120,-1136,-46,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+142,2024/03/05 20:15:17,1709669717,1100002,101466,-1172,0,3,-2,225,223,227,0,4,-4,-1127,-1120,-1132,-46,-40,-52,802,803,802,3,4,3,0,0,0xC0,0x0000
+143,2024/03/05 20:15:27,1709669727,1110004,101464,-1155,0,1,-2,225,223,227,0,4,-4,-1127,-1120,-1132,-46,-36,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+144,2024/03/05 20:15:37,1709669737,1120000,101465,-1164,0,3,-2,225,223,227,0,4,-4,-1127,-1120,-1132,-46,-36,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+145,2024/03/05 20:15:47,1709669747,1130002,101464,-1155,0,2,-1,225,223,227,0,4,-4,-1127,-1120,-1132,-45,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+146,2024/03/05 20:15:57,1709669757,1140003,101465,-1164,0,2,0,225,223,227,0,4,-4,-1127,-1120,-1132,-46,-40,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+147,2024/03/05 20:16:07,1709669767,1150005,101464,-1155,0,0,-1,225,223,227,0,4,-4,-1127,-1124,-1136,-46,-36,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+148,2024/03/05 20:16:17,1709669777,1160000,101465,-1164,0,0,-2,225,223,227,0,4,-8,-1127,-1124,-1132,-46,-40,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+149,2024/03/05 20:16:27,1709669787,1170005,101464,-1155,0,1,-1,224,223,227,0,4,-4,-1126,-1120,-1132,-46,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+150,2024/03/05 20:16:37,1709669797,1180005,101463,-1147,0,1,-2,224,223,226,0,4,-8,-1127,-1116,-1136,-46,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+151,2024/03/05 20:16:47,1709669807,1190000,101464,-1155,0,1,-1,224,223,226,0,4,-4,-1127,-1120,-1132,-45,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+152,2024/03/05 20:16:57,1709669817,1200002,101461,-1130,1,4,-1,224,223,226,0,4,-4,-1127,-1120,-1132,-45,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+153,2024/03/05 20:17:07,1709669827,1210001,101464,-1155,0,1,-2,224,223,226,0,4,-4,-1127,-1120,-1132,-45,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+154,2024/03/05 20:17:17,1709669837,1220004,101464,-1155,0,4,-3,224,223,226,0,4,-4,-1127,-1120,-1136,-46,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+155,2024/03/05 20:17:27,1709669847,1230000,101461,-1130,0,2,-2,224,223,227,0,4,-4,-1127,-1124,-1132,-45,-36,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+156,2024/03/05 20:17:37,1709669857,1240003,101464,-1155,0,0,-2,225,223,227,0,4,-4,-1127,-1120,-1132,-46,-40,-52,790,803,784,203,338,3,0,0,0xC2,0x0000
+157,2024/03/05 20:17:47,1709669867,1250000,101464,-1155,0,1,-1,228,223,227,0,4,-4,-1127,-1120,-1132,-46,-40,-56,785,786,785,289,315,281,0,0,0xC2,0x0000
+158,2024/03/05 20:17:57,1709669877,1260004,101462,-1139,0,2,0,230,223,227,0,4,-8,-1127,-1120,-1132,-46,-40,-56,786,786,786,281,283,281,0,0,0xC2,0x0000
+159,2024/03/05 20:18:07,1709669887,1270003,101462,-1139,0,2,0,232,223,228,0,8,-4,-1127,-1120,-1132,-46,-40,-52,790,803,785,190,291,1,0,0,0xC2,0x0000
+160,2024/03/05 20:18:17,1709669897,1280004,101461,-1130,0,1,-4,233,223,228,0,4,-8,-1127,-1120,-1132,-46,-40,-52,785,797,783,284,383,25,0,0,0xC2,0x0000
+161,2024/03/05 20:18:27,1709669907,1290000,101461,-1130,0,1,-2,233,223,228,0,4,-4,-1127,-1120,-1136,-46,-40,-56,800,803,788,31,196,1,0,0,0xC2,0x0000
+162,2024/03/05 20:18:37,1709669917,1300000,101464,-1155,0,2,-2,233,223,228,0,4,-4,-1127,-1124,-1132,-47,-40,-56,785,787,784,284,343,224,0,0,0xC2,0x0000
+163,2024/03/05 20:18:47,1709669927,1310004,101461,-1130,0,3,-2,235,223,228,0,4,-4,-1127,-1124,-1136,-47,-40,-52,782,786,779,403,539,280,0,0,0xC2,0x0000
+164,2024/03/05 20:18:57,1709669937,1320003,101462,-1139,0,2,-1,236,223,228,0,4,-4,-1127,-1120,-1132,-46,-36,-52,796,803,786,82,289,1,0,0,0xC0,0x0000
+165,2024/03/05 20:19:07,1709669947,1330004,101461,-1130,0,2,0,235,223,228,0,4,-4,-1127,-1124,-1132,-46,-36,-56,803,803,803,1,3,1,0,0,0xC0,0x0000
+166,2024/03/05 20:19:17,1709669957,1340001,101463,-1147,0,1,-2,233,223,228,0,4,-4,-1126,-1120,-1132,-46,-32,-52,803,803,803,2,3,1,0,0,0xC0,0x0000
+167,2024/03/05 20:19:27,1709669967,1350000,101460,-1122,0,2,-1,232,223,228,0,4,-4,-1127,-1120,-1132,-46,-40,-56,803,803,803,2,3,1,0,0,0xC0,0x0000
+168,2024/03/05 20:19:37,1709669977,1360004,101458,-1105,0,2,-2,231,223,228,0,4,-8,-1127,-1120,-1132,-46,-40,-56,803,803,803,2,3,1,0,0,0xC0,0x0000
+169,2024/03/05 20:19:47,1709669987,1370001,101461,-1130,0,1,-2,231,223,228,0,4,-4,-1127,-1120,-1132,-46,-36,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+170,2024/03/05 20:19:57,1709669997,1380012,101459,-1114,0,0,-1,230,223,228,0,4,-4,-1127,-1120,-1140,-46,-36,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+171,2024/03/05 20:20:07,1709670007,1390036,101458,-1105,0,2,0,230,223,228,0,4,-4,-1127,-1120,-1132,-46,-36,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+172,2024/03/05 20:20:17,1709670017,1400003,101462,-1139,0,1,-3,230,223,228,0,4,-4,-1126,-1120,-1132,-46,-36,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+173,2024/03/05 20:20:27,1709670027,1410002,101461,-1130,0,0,-1,229,223,228,0,4,-8,-1127,-1120,-1136,-45,-36,-52,802,803,802,3,3,3,0,0,0xC0,0x0000
+174,2024/03/05 20:20:37,1709670037,1420001,101459,-1114,0,2,-4,229,223,228,0,4,-8,-1127,-1120,-1136,-46,-36,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+175,2024/03/05 20:20:47,1709670047,1430001,101460,-1122,0,2,-2,228,223,228,0,4,-4,-1127,-1120,-1132,-46,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+176,2024/03/05 20:20:57,1709670057,1440000,101459,-1114,0,1,-1,228,223,228,0,4,-8,-1126,-1120,-1132,-46,-36,-76,803,803,803,3,3,3,0,0,0xC0,0x0000
+177,2024/03/05 20:21:07,1709670067,1450001,101462,-1139,0,1,-2,228,223,228,0,4,-4,-1127,-1120,-1132,-46,-40,-52,803,803,803,3,3,3,0,0,0xC2,0x0000
+178,2024/03/05 20:21:17,1709670077,1460002,101464,-1155,0,1,-1,229,223,228,0,8,-4,-1127,-1120,-1132,-47,-40,-52,785,794,783,276,390,95,0,0,0xC2,0x0000
+179,2024/03/05 20:21:27,1709670087,1470000,101463,-1147,0,3,0,231,223,228,0,4,-8,-1127,-1116,-1132,-45,-28,-56,800,803,785,31,301,1,0,0,0xC0,0x0000
+180,2024/03/05 20:21:37,1709670097,1480002,101461,-1130,0,1,-1,230,223,228,0,4,-4,-1127,-1120,-1132,-46,-40,-56,803,803,803,2,3,1,0,0,0xC0,0x0000
+181,2024/03/05 20:21:47,1709670107,1490001,101461,-1130,0,2,0,230,223,228,0,4,-4,-1127,-1120,-1132,-45,-36,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+182,2024/03/05 20:21:57,1709670117,1500000,101460,-1122,0,1,-2,229,223,228,0,4,-4,-1127,-1120,-1136,-46,-36,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+183,2024/03/05 20:22:07,1709670127,1510000,101461,-1130,0,0,-3,228,223,228,0,4,-12,-1126,-1112,-1136,-45,-32,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+184,2024/03/05 20:22:17,1709670137,1520005,101462,-1139,0,2,-1,228,223,228,0,8,-20,-1127,-1112,-1136,-45,-32,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+185,2024/03/05 20:22:27,1709670147,1530002,101464,-1155,0,2,-3,228,223,228,0,4,-8,-1127,-1116,-1136,-45,-32,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+186,2024/03/05 20:22:37,1709670157,1540004,101461,-1130,0,2,-2,228,223,228,0,4,-8,-1127,-1120,-1136,-45,-32,-60,803,803,803,3,3,3,0,0,0xC0,0x0000
+187,2024/03/05 20:22:47,1709670167,1550002,101463,-1147,0,1,-1,228,223,228,0,16,-12,-1127,-1120,-1136,-46,-16,-68,803,803,803,3,3,3,0,0,0xC0,0x0000
+188,2024/03/05 20:22:57,1709670177,1560004,101463,-1147,0,2,-2,228,223,228,0,16,-40,-1126,-1092,-1148,-44,140,-116,803,803,803,3,3,3,0,0,0xC0,0x0000
+189,2024/03/05 20:23:07,1709670187,1570000,101461,-1130,0,3,-1,227,223,228,0,12,-12,-1127,-1116,-1156,-47,-24,-80,803,803,803,3,3,3,0,0,0xC0,0x0000
+190,2024/03/05 20:23:17,1709670197,1580001,101462,-1139,0,1,-1,227,223,228,0,20,-16,-1127,-1116,-1144,-46,12,-120,803,803,803,3,3,3,0,0,0xC0,0x0000
+191,2024/03/05 20:23:27,1709670207,1590002,101464,-1155,0,2,-1,227,223,228,0,4,-8,-1127,-1120,-1136,-45,-36,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+192,2024/03/05 20:23:37,1709670217,1600004,101461,-1130,0,3,-4,227,223,229,0,8,-20,-1126,-1120,-1136,-45,-32,-60,803,803,803,3,3,3,0,0,0xC0,0x0000
+193,2024/03/05 20:23:47,1709670227,1610002,101463,-1147,0,2,-2,227,223,229,0,4,-12,-1127,-1120,-1132,-45,-36,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+194,2024/03/05 20:23:57,1709670237,1620002,101464,-1155,0,2,-3,226,223,229,0,4,-8,-1126,-1108,-1140,-45,-24,-80,803,803,803,3,3,3,0,0,0xC0,0x0000
+195,2024/03/05 20:24:07,1709670247,1630004,101459,-1114,0,2,-1,226,223,229,0,4,-4,-1127,-1116,-1132,-45,-36,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+196,2024/03/05 20:24:17,1709670257,1640004,101461,-1130,0,2,-2,226,223,229,0,4,-4,-1127,-1124,-1132,-47,-36,-56,791,803,784,169,323,3,0,0,0xD4,0x0000
+197,2024/03/05 20:24:27,1709670267,1650002,101462,-1139,0,0,-1,228,223,228,0,4,-4,-1128,-1120,-1136,-47,-40,-52,785,786,784,293,338,283,0,0,0xD4,0x0000
+198,2024/03/05 20:24:37,1709670277,1660000,101463,-1147,0,0,-1,229,223,228,0,4,-4,-1128,-1120,-1136,-47,-40,-52,786,786,786,283,284,283,0,0,0xD4,0x0000
+199,2024/03/05 20:24:47,1709670287,1670002,101460,-1122,0,2,-1,230,223,228,0,4,-4,-1127,-1120,-1136,-46,-36,-56,791,803,785,167,295,1,0,0,0xD4,0x0000
+200,2024/03/05 20:24:57,1709670297,1680004,101462,-1139,0,1,-1,231,223,228,0,4,-4,-1127,-1124,-1132,-46,-40,-52,786,803,783,281,378,1,0,0,0xC0,0x0000
+201,2024/03/05 20:25:07,1709670307,1690025,101461,-1130,0,4,-1,231,223,228,0,4,-4,-1127,-1120,-1132,-47,-40,-52,801,803,789,19,186,1,0,0,0xD4,0x0000
+202,2024/03/05 20:25:17,1709670317,1700004,101462,-1139,0,0,-2,231,223,228,0,4,-4,-1127,-1120,-1132,-48,-40,-56,785,789,784,282,340,185,0,0,0xD4,0x0000
+203,2024/03/05 20:25:27,1709670327,1710002,101460,-1122,0,2,-2,232,223,228,0,4,-4,-1127,-1124,-1132,-47,-40,-56,782,786,778,418,564,276,0,0,0xD4,0x0000
+204,2024/03/05 20:25:37,1709670337,1720002,101461,-1130,0,1,-1,233,223,228,0,4,-4,-1128,-1120,-1132,-47,-36,-52,795,803,785,106,296,1,0,0,0xC0,0x0000
+205,2024/03/05 20:25:47,1709670347,1730003,101463,-1147,0,2,-2,233,223,228,0,4,-8,-1127,-1120,-1132,-46,-40,-56,803,803,803,1,1,1,0,0,0xC0,0x0000
+206,2024/03/05 20:25:57,1709670357,1740002,101461,-1130,0,2,-1,233,223,228,0,4,-4,-1127,-1120,-1132,-47,-36,-56,803,803,803,1,3,1,0,0,0xC0,0x0000
+207,2024/03/05 20:26:07,1709670367,1750004,101460,-1122,0,2,-1,232,223,228,0,4,-4,-1127,-1120,-1136,-46,-36,-52,803,803,803,2,3,1,0,0,0xC0,0x0000
+208,2024/03/05 20:26:17,1709670377,1760004,101461,-1130,0,1,-2,231,223,228,0,4,-4,-1127,-1124,-1132,-46,-40,-56,803,803,803,2,3,1,0,0,0xC0,0x0000
+209,2024/03/05 20:26:27,1709670387,1770001,101460,-1122,0,0,-1,231,223,228,0,4,-4,-1127,-1120,-1132,-46,-40,-56,803,803,803,2,3,1,0,0,0xC0,0x0000
+210,2024/03/05 20:26:37,1709670397,1780003,101461,-1130,0,2,-2,231,223,229,0,4,-4,-1127,-1124,-1132,-47,-40,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+211,2024/03/05 20:26:47,1709670407,1790001,101461,-1130,0,2,0,230,223,229,0,4,-4,-1127,-1120,-1136,-46,-36,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+212,2024/03/05 20:26:57,1709670417,1800005,101461,-1130,0,1,-3,230,223,229,0,8,-4,-1127,-1120,-1132,-46,-36,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+213,2024/03/05 20:27:07,1709670427,1810002,101460,-1122,0,3,-1,230,223,229,0,4,-4,-1127,-1112,-1136,-46,-36,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+214,2024/03/05 20:27:17,1709670437,1820003,101460,-1122,0,1,-3,229,223,229,0,4,-4,-1127,-1120,-1136,-46,-32,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+215,2024/03/05 20:27:27,1709670447,1830000,101460,-1122,0,0,-2,229,223,229,0,4,-8,-1127,-1120,-1136,-46,-36,-64,803,803,803,3,3,3,0,0,0xC0,0x0000
+216,2024/03/05 20:27:37,1709670457,1840003,101460,-1122,0,2,0,229,223,229,0,4,-8,-1126,-1120,-1136,-46,-36,-60,803,803,803,3,3,3,0,0,0xC0,0x0000
+217,2024/03/05 20:27:47,1709670467,1850003,101460,-1122,0,2,-2,229,223,229,0,4,-4,-1127,-1120,-1132,-47,-40,-56,789,803,783,223,381,3,0,0,0xD4,0x0000
+218,2024/03/05 20:27:57,1709670477,1860002,101461,-1130,0,1,-1,230,223,229,0,4,-4,-1127,-1124,-1132,-47,-40,-52,797,803,785,92,315,1,0,0,0xC0,0x0000
+219,2024/03/05 20:28:07,1709670487,1870000,101460,-1122,0,1,0,230,223,229,0,4,-4,-1127,-1124,-1132,-47,-40,-56,803,803,803,2,3,1,0,0,0xC0,0x0000
+220,2024/03/05 20:28:17,1709670497,1880002,101460,-1122,0,1,-1,230,223,229,0,4,-4,-1127,-1120,-1132,-46,-40,-56,803,803,803,2,3,1,0,0,0xC0,0x0000
+221,2024/03/05 20:28:27,1709670507,1890004,101459,-1114,0,2,-1,229,223,230,0,4,-4,-1127,-1120,-1132,-46,-40,-56,803,803,803,2,3,1,0,0,0xC0,0x0000
+222,2024/03/05 20:28:37,1709670517,1900002,101461,-1130,0,1,-1,229,223,230,0,4,-8,-1127,-1120,-1140,-47,-36,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+223,2024/03/05 20:28:47,1709670527,1910000,101460,-1122,0,0,-2,229,223,230,0,4,-8,-1127,-1124,-1136,-46,-36,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+224,2024/03/05 20:28:57,1709670537,1920001,101459,-1114,0,2,0,228,223,230,0,12,-8,-1127,-1116,-1132,-46,-32,-60,803,803,803,3,3,3,0,0,0xC0,0x0000
+225,2024/03/05 20:29:07,1709670547,1930000,101460,-1122,0,1,-3,228,223,230,0,4,-20,-1127,-1120,-1140,-45,-36,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+226,2024/03/05 20:29:17,1709670557,1940004,101459,-1114,1,4,-2,228,223,230,0,8,-8,-1128,-1124,-1140,-46,-28,-60,803,803,803,3,3,3,0,0,0xC0,0x0000
+227,2024/03/05 20:29:27,1709670567,1950004,101459,-1114,0,2,-3,228,223,230,0,4,-24,-1127,-1116,-1136,-46,-32,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+228,2024/03/05 20:29:37,1709670577,1960001,101458,-1105,0,1,-1,228,223,230,0,8,-4,-1127,-1120,-1136,-46,-36,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+229,2024/03/05 20:29:47,1709670587,1970000,101457,-1097,0,2,-1,228,223,230,0,4,-4,-1127,-1120,-1132,-46,-40,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+230,2024/03/05 20:29:57,1709670597,1980027,101459,-1114,0,1,-2,228,223,230,0,4,-4,-1127,-1120,-1132,-45,-36,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+231,2024/03/05 20:30:07,1709670607,1990003,101457,-1097,0,2,-1,228,223,230,0,4,-8,-1127,-1120,-1140,-45,-40,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+232,2024/03/05 20:30:17,1709670617,2000001,101458,-1105,0,0,-4,227,223,230,0,4,-8,-1127,-1120,-1132,-46,-36,-60,803,803,803,3,3,3,0,0,0xC0,0x0000
+233,2024/03/05 20:30:27,1709670627,2010003,101456,-1089,0,2,0,227,223,230,0,4,-4,-1127,-1120,-1132,-46,-36,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+234,2024/03/05 20:30:37,1709670637,2020003,101460,-1122,0,1,-3,227,223,230,0,4,-8,-1127,-1116,-1132,-46,-40,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+235,2024/03/05 20:30:47,1709670647,2030000,101457,-1097,0,1,0,227,223,230,0,4,-8,-1126,-1120,-1136,-45,-32,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+236,2024/03/05 20:30:57,1709670657,2040002,101459,-1114,0,1,-2,227,223,230,0,4,-8,-1127,-1108,-1136,-46,-36,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+237,2024/03/05 20:31:07,1709670667,2050005,101460,-1122,0,2,-2,227,223,230,0,8,-8,-1127,-1120,-1136,-46,-36,-60,803,803,803,3,3,3,0,0,0xC0,0x0000
+238,2024/03/05 20:31:17,1709670677,2060001,101458,-1105,0,1,-1,226,223,230,0,4,-8,-1127,-1120,-1136,-46,-40,-60,803,803,803,3,3,3,0,0,0xC0,0x0000
+239,2024/03/05 20:31:27,1709670687,2070004,101458,-1105,0,1,0,226,224,230,0,12,-8,-1127,-1120,-1136,-46,-28,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+240,2024/03/05 20:31:37,1709670697,2080003,101460,-1122,0,1,-1,226,224,230,0,4,-12,-1127,-1120,-1136,-45,-36,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+241,2024/03/05 20:31:47,1709670707,2090004,101457,-1097,0,2,-1,226,224,230,0,4,-4,-1127,-1120,-1132,-46,-36,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+242,2024/03/05 20:31:57,1709670717,2100005,101459,-1114,0,1,-1,226,224,230,0,4,-4,-1127,-1120,-1132,-46,-32,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+243,2024/03/05 20:32:07,1709670727,2110000,101459,-1114,0,2,-2,226,224,230,0,4,-4,-1127,-1112,-1144,-46,-40,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+244,2024/03/05 20:32:17,1709670737,2120000,101459,-1114,0,2,-2,226,224,230,0,4,-8,-1127,-1120,-1136,-46,-36,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+245,2024/03/05 20:32:27,1709670747,2130001,101461,-1130,0,1,-2,226,224,230,0,8,-8,-1127,-1124,-1136,-46,-20,-72,803,803,803,3,3,3,0,0,0xC0,0x0000
+246,2024/03/05 20:32:37,1709670757,2140001,101460,-1122,0,1,-3,226,224,230,0,8,-8,-1126,-1116,-1132,-46,-32,-80,803,803,803,3,3,3,0,0,0xC0,0x0000
+247,2024/03/05 20:32:47,1709670767,2150001,101458,-1105,0,2,-1,226,224,230,0,4,-4,-1127,-1120,-1136,-45,-28,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+248,2024/03/05 20:32:57,1709670777,2160003,101458,-1105,0,2,-1,226,224,230,0,4,-12,-1127,-1120,-1136,-46,-36,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+249,2024/03/05 20:33:07,1709670787,2170003,101458,-1105,0,2,-1,226,224,230,0,4,-4,-1127,-1120,-1132,-46,-40,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+250,2024/03/05 20:33:17,1709670797,2180000,101459,-1114,0,2,0,226,224,230,0,4,-8,-1127,-1120,-1132,-46,-40,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+251,2024/03/05 20:33:27,1709670807,2190003,101459,-1114,0,1,-2,226,224,230,0,4,-8,-1127,-1120,-1132,-46,-40,-60,803,803,803,3,3,3,0,0,0xC0,0x0000
+252,2024/03/05 20:33:37,1709670817,2200003,101460,-1122,0,2,0,226,224,230,0,4,-4,-1127,-1120,-1136,-46,-24,-60,803,803,803,3,3,3,0,0,0xC0,0x0000
+253,2024/03/05 20:33:47,1709670827,2210003,101462,-1139,0,0,-1,226,224,230,0,8,-16,-1128,-1120,-1160,-45,-20,-64,803,803,803,3,3,3,0,0,0xC0,0x0000
+254,2024/03/05 20:33:57,1709670837,2220004,101461,-1130,0,1,-1,226,224,230,0,32,-8,-1127,-1120,-1144,-46,-28,-64,803,803,803,3,3,3,0,0,0xC0,0x0000
+255,2024/03/05 20:34:07,1709670847,2230002,101460,-1122,0,1,0,226,224,230,0,8,-24,-1127,-1120,-1132,-46,-4,-92,803,803,803,3,3,3,0,0,0xC0,0x0000
+256,2024/03/05 20:34:17,1709670857,2240003,101461,-1130,0,0,-2,226,224,230,1,8,-4,-1127,-1116,-1136,-44,-32,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+257,2024/03/05 20:34:27,1709670867,2250001,101462,-1139,0,0,0,226,224,230,1,4,0,-1126,-1120,-1132,-45,-32,-60,803,803,803,3,3,3,0,0,0xC0,0x0000
+258,2024/03/05 20:34:37,1709670877,2260002,101461,-1130,0,1,-2,226,224,230,0,12,-40,-1127,-1116,-1136,-44,-32,-60,803,803,803,3,3,3,0,0,0xC0,0x0000
+259,2024/03/05 20:34:47,1709670887,2270022,101461,-1130,0,0,-3,226,224,230,1,24,-24,-1127,-1120,-1136,-45,-36,-52,803,803,803,3,3,3,0,0,0xC0,0x0000
+260,2024/03/05 20:34:57,1709670897,2280004,101460,-1122,0,0,-1,226,225,230,2,48,-4,-1127,-1124,-1136,-44,-36,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+261,2024/03/05 20:35:07,1709670907,2290004,101461,-1130,0,1,-2,226,225,230,1,12,-12,-1127,-1120,-1136,-45,-28,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+262,2024/03/05 20:35:17,1709670917,2300002,101462,-1139,0,0,-2,226,225,230,1,8,-4,-1127,-1120,-1136,-44,-36,-56,803,803,803,3,3,3,0,0,0xC0,0x0000
+263,2024/03/05 20:35:27,1709670927,2310000,101462,-1139,0,2,-1,226,225,230,1,8,-4,-1126,-1120,-1132,-45,-36,-64,803,803,803,3,3,3,0,0,0xC0,0x0000
+264,2024/03/05 20:35:37,1709670937,2320004,101463,-1147,0,1,-2,226,225,229,1,8,-4,-1127,-1116,-1136,-45,-40,-56,802,803,788,9,185,3,0,0,0xF8,0x0000
+265,2024/03/05 20:35:47,1709670947,2330004,101463,-1147,0,2,-1,226,225,229,0,4,-4,-1127,-1120,-1132,-46,-28,-56,785,789,784,279,340,178,0,0,0xF8,0x0000
+266,2024/03/05 20:35:57,1709670957,2340002,101462,-1139,0,0,-3,226,224,229,1,8,-4,-1127,-1124,-1136,-46,-40,-52,785,786,785,282,310,279,0,0,0xF8,0x0000
+267,2024/03/05 20:36:07,1709670967,2350002,101460,-1122,0,2,0,226,224,230,0,8,-4,-1126,-1116,-1132,-45,-32,-56,786,786,786,283,284,281,0,0,0xF8,0x0000
+268,2024/03/05 20:36:17,1709670977,2360001,101460,-1122,0,1,-1,226,224,230,1,4,-4,-1127,-1108,-1132,-46,-36,-56,786,786,786,283,285,281,0,0,0xF8,0x0000
+269,2024/03/05 20:36:27,1709670987,2370004,101463,-1147,0,2,-4,226,224,230,1,4,-4,-1126,-1120,-1136,-46,-36,-52,790,803,785,183,313,1,0,0,0xF8,0x0000
+270,2024/03/05 20:36:37,1709670997,2380004,101463,-1147,0,1,-1,227,223,230,1,4,-4,-1127,-1120,-1132,-45,-40,-56,793,803,783,158,379,1,0,0,0xE0,0x0000
+271,2024/03/05 20:36:47,1709671007,2390002,101464,-1155,0,0,-3,228,223,230,1,4,0,-1127,-1120,-1132,-45,-36,-52,794,803,785,125,315,1,0,0,0xF8,0x0000
+272,2024/03/05 20:36:57,1709671017,2400005,101465,-1164,0,2,-1,228,223,230,1,4,-4,-1128,-1124,-1136,-46,-40,-52,785,786,784,291,338,273,0,0,0xF8,0x0000
+273,2024/03/05 20:37:08,1709671028,2410002,101467,-1180,0,1,-1,228,223,230,0,4,-4,-1127,-1120,-1136,-45,-36,-52,783,798,779,395,548,24,0,0,0xF8,0x0000
+274,2024/03/05 20:37:18,1709671038,2420000,101463,-1147,0,1,-3,229,223,230,0,4,-4,-1127,-1096,-1140,-45,-24,-64,801,803,797,5,24,1,0,0,0xE0,0x0000
+275,2024/03/05 20:37:28,1709671048,2430000,101463,-1147,0,2,-3,229,223,230,1,28,-12,-1127,-1112,-1132,-45,-16,-52,803,803,803,2,3,1,0,0,0xE0,0x0000
+276,2024/03/05 20:37:38,1709671058,2440002,101463,-1147,0,1,-2,230,223,230,1,8,-4,-1127,-1120,-1132,-45,-36,-56,803,803,803,2,3,1,0,0,0xE0,0x0000
+277,2024/03/05 20:37:48,1709671068,2450004,101464,-1155,0,1,-2,230,224,230,1,4,-4,-1127,-1120,-1132,-45,-40,-56,803,803,803,3,3,3,0,0,0xE0,0x0000
+278,2024/03/05 20:37:58,1709671078,2460000,101463,-1147,0,1,0,230,224,230,1,4,-4,-1127,-1120,-1132,-45,-36,-52,803,803,803,3,3,3,0,0,0xE0,0x0000
+279,2024/03/05 20:38:08,1709671088,2470003,101464,-1155,0,1,-2,230,224,230,1,4,-4,-1128,-1124,-1136,-45,-36,-52,787,803,784,248,341,3,0,0,0xF8,0x0000
+280,2024/03/05 20:38:18,1709671098,2480000,101463,-1147,0,2,-3,230,224,230,1,4,-4,-1127,-1112,-1144,-45,-36,-60,785,786,785,284,309,280,0,0,0xF8,0x0000
+281,2024/03/05 20:38:28,1709671108,2490001,101464,-1155,0,1,-1,230,223,230,1,12,-4,-1127,-1120,-1188,-46,-40,-76,788,803,785,232,294,1,0,0,0xE0,0x0000
+282,2024/03/05 20:38:38,1709671118,2500003,101465,-1164,0,1,-1,230,223,230,1,12,-8,-1127,-1116,-1140,-45,-32,-56,803,803,803,1,3,1,0,0,0xE0,0x0000
+283,2024/03/05 20:38:48,1709671128,2510000,101463,-1147,0,3,-2,230,223,230,1,12,-8,-1127,-1120,-1136,-46,-24,-68,789,803,783,219,365,1,0,0,0xF8,0x0000
+284,2024/03/05 20:38:58,1709671138,2520002,101464,-1155,0,2,-2,230,223,230,1,16,-4,-1127,-1116,-1136,-45,-40,-52,796,803,785,101,313,1,0,0,0xE0,0x0000
+285,2024/03/05 20:39:08,1709671148,2530032,101463,-1147,0,1,-2,230,223,230,1,4,-4,-1127,-1120,-1136,-45,-40,-52,803,803,803,1,3,1,0,0,0xE0,0x0000
+286,2024/03/05 20:39:18,1709671158,2540003,101463,-1147,0,2,-2,230,223,230,1,4,-4,-1127,-1124,-1132,-45,-36,-52,803,803,803,2,3,1,0,0,0xE0,0x0000
+287,2024/03/05 20:39:28,1709671168,2550000,101464,-1155,0,3,-2,230,223,230,1,8,0,-1127,-1120,-1132,-45,-40,-52,803,803,803,3,3,3,0,0,0xE0,0x0000
+288,2024/03/05 20:39:38,1709671178,2560000,101463,-1147,0,0,-1,230,223,230,1,4,-4,-1127,-1120,-1136,-45,-40,-52,803,803,803,3,3,3,0,0,0xE0,0x0000
+289,2024/03/05 20:39:48,1709671188,2570002,101463,-1147,0,2,-1,230,222,230,1,8,-4,-1127,-1120,-1132,-45,-36,-56,803,803,803,3,3,3,0,0,0xE0,0x0000
+290,2024/03/05 20:39:58,1709671198,2580005,101466,-1172,0,0,-3,230,223,230,1,28,-36,-1127,-1112,-1136,-44,-32,-60,803,803,803,3,3,3,0,0,0xE0,0x0000
+291,2024/03/05 20:40:08,1709671208,2590002,101463,-1147,0,2,-2,230,223,230,1,8,0,-1126,-1120,-1132,-45,-36,-52,803,803,803,3,3,3,0,0,0xE0,0x0000
+292,2024/03/05 20:40:18,1709671218,2600000,101466,-1172,0,3,0,230,223,230,1,4,0,-1127,-1124,-1136,-44,-32,-56,803,803,803,3,3,3,0,0,0xE0,0x0000
+293,2024/03/05 20:40:28,1709671228,2610004,101465,-1164,0,1,-5,230,224,230,1,8,-4,-1127,-1120,-1136,-44,-32,-56,803,803,803,3,3,3,0,0,0xE0,0x0000
+294,2024/03/05 20:40:38,1709671238,2620004,101466,-1172,0,1,-2,230,224,230,0,8,-8,-1126,-1120,-1132,-45,-36,-64,803,803,803,3,3,3,0,0,0xE0,0x0000
+295,2024/03/05 20:40:48,1709671248,2630004,101466,-1172,0,2,-1,230,225,230,1,12,-8,-1127,-1120,-1140,-45,-24,-76,803,803,803,3,3,3,0,0,0xE0,0x0000
+296,2024/03/05 20:40:58,1709671258,2640000,101465,-1164,0,3,-2,229,225,229,1,12,-12,-1127,-1120,-1136,-45,-24,-60,803,803,803,3,3,3,0,0,0xE0,0x0000
+297,2024/03/05 20:41:08,1709671268,2650002,101465,-1164,0,4,-2,229,225,230,0,20,-32,-1127,-1120,-1152,-48,12,-128,803,803,803,3,3,3,0,0,0xE0,0x0000
+298,2024/03/05 20:41:18,1709671278,2660001,101468,-1189,0,1,-1,229,226,230,1,212,-228,-1127,-1048,-1164,-45,-8,-92,803,803,803,3,3,3,0,0,0xE0,0x0000
+299,2024/03/05 20:41:28,1709671288,2670004,101465,-1164,0,2,-1,229,226,230,3,192,-20,-1127,-1092,-1228,-44,16,-68,803,803,803,3,3,3,0,0,0xE0,0x0000
+300,2024/03/05 20:41:38,1709671298,2680001,101465,-1164,0,1,0,229,226,230,1,16,-28,-1126,-1100,-1140,-43,16,-72,803,803,803,3,3,3,0,0,0xE0,0x0000
+301,2024/03/05 20:41:48,1709671308,2690003,101466,-1172,0,0,-5,229,226,230,1,32,-8,-1127,-1120,-1136,-45,-20,-84,803,803,803,3,3,3,0,0,0xE0,0x0000
+302,2024/03/05 20:41:58,1709671318,2700003,101468,-1189,0,1,-1,228,226,230,3,132,-44,-1128,-1100,-1152,-43,-4,-60,803,803,803,3,3,3,0,0,0xE0,0x0000
+303,2024/03/05 20:42:08,1709671328,2710007,101468,-1189,0,2,-2,228,226,230,0,8,-24,-1127,-1104,-1140,-45,-32,-64,803,803,803,3,3,3,0,0,0xE0,0x0000
+304,2024/03/05 20:42:18,1709671338,2720005,101466,-1172,0,1,-4,228,226,230,0,4,-4,-1127,-1120,-1136,-45,-36,-52,803,803,803,3,3,3,0,0,0xE0,0x0000
+305,2024/03/05 20:42:28,1709671348,2730002,101466,-1172,0,4,0,228,226,230,1,4,0,-1127,-1120,-1132,-45,-40,-52,803,803,803,3,3,3,0,0,0xE0,0x0000
+306,2024/03/05 20:42:38,1709671358,2740000,101468,-1189,0,2,-2,228,226,230,0,4,-4,-1126,-1116,-1132,-45,-40,-52,803,803,803,3,3,3,0,0,0xE0,0x0000
+307,2024/03/05 20:42:48,1709671368,2750021,101466,-1172,0,2,0,228,226,230,0,4,-4,-1127,-1124,-1132,-45,-36,-56,803,803,803,3,3,3,0,0,0xE0,0x0000
+308,2024/03/05 20:42:58,1709671378,2760997,101466,-1172,0,0,0,228,226,230,0,4,0,-1127,-1124,-1132,-45,-36,-52,803,803,803,3,3,3,0,0,0xE0,0x0000
+309,2024/03/05 20:43:08,1709671388,2770027,101467,-1180,0,0,-4,228,226,230,0,4,-4,-1127,-1120,-1136,-45,-36,-52,803,803,803,3,3,3,0,0,0xE0,0x0000
+310,2024/03/05 20:43:18,1709671398,2780004,101466,-1172,0,4,0,228,226,230,0,8,-4,-1127,-1120,-1136,-45,-40,-52,803,803,803,3,3,3,0,0,0xE0,0x0000
+311,2024/03/05 20:43:35,1709671415,10000,101465,-1164,0,0,0,228,226,230,0,4,-4,-1127,-1120,-1132,-44,-36,-52,802,803,802,3,4,3,0,0,0xE0,0x0000
+312,2024/03/05 20:43:45,1709671425,20000,101467,-1180,0,3,-2,228,226,230,1,4,0,-1127,-1120,-1136,-45,-32,-56,802,803,802,3,4,3,0,0,0xE0,0x0000
+313,2024/03/06 09:17:05,1709716625,10001,101217,898,0,0,0,195,199,208,-994,-988,-1000,-299,-292,-304,-214,-208,-224,934,935,934,3,4,3,0,0,0xC0,0x0000
+314,2024/03/06 09:17:15,1709716635,20000,101217,898,0,0,-3,195,199,208,-994,-988,-1000,-299,-296,-304,-213,-204,-220,934,935,934,3,4,3,0,0,0xC0,0x0000
+315,2024/03/06 09:17:25,1709716645,30001,101217,898,0,5,-1,195,199,208,-995,-992,-1000,-298,-292,-304,-214,-208,-224,934,935,934,3,3,3,0,0,0xC0,0x0000
+316,2024/03/06 09:17:35,1709716655,40001,101215,915,0,3,-1,195,199,208,-994,-988,-1000,-299,-292,-304,-214,-208,-224,934,935,934,3,3,3,0,0,0xC0,0x0000
+317,2024/03/06 09:17:45,1709716665,50001,101215,915,0,2,-3,196,199,208,-994,-988,-1000,-299,-292,-308,-214,-208,-220,911,935,897,609,1154,3,0,0,0xDF,0x0000
+318,2024/03/06 09:17:55,1709716675,60004,101213,932,1,3,-1,201,199,208,-995,-992,-1000,-299,-292,-308,-215,-208,-224,914,934,898,474,1083,1,0,0,0xE0,0x0000
+319,2024/03/06 09:18:05,1709716685,70004,101213,932,0,2,-1,201,199,208,-994,-988,-1000,-299,-292,-304,-214,-208,-220,934,934,934,1,3,1,0,0,0xE0,0x0000
+320,2024/03/06 09:18:15,1709716695,80005,101214,923,0,2,-3,201,200,208,-994,-988,-1000,-298,-292,-308,-215,-208,-224,934,934,934,3,3,3,0,0,0xE0,0x0000
+321,2024/03/06 09:18:25,1709716705,90000,101215,915,0,3,-1,201,200,208,-994,-992,-1000,-298,-292,-304,-214,-208,-220,934,934,934,3,3,3,0,0,0xE0,0x0000
+322,2024/03/06 09:18:35,1709716715,100005,101212,940,0,1,-2,200,200,208,-994,-988,-1000,-298,-292,-304,-214,-208,-220,934,934,934,3,3,3,0,0,0xE0,0x0000
+323,2024/03/06 09:18:45,1709716725,110005,101212,940,0,2,-2,200,200,208,-994,-988,-1000,-298,-296,-304,-214,-204,-224,934,934,934,3,3,3,0,0,0xE0,0x0000
+324,2024/03/06 09:18:55,1709716735,120004,101215,915,0,2,-2,200,200,208,-994,-988,-1000,-298,-292,-304,-214,-208,-224,934,934,934,3,3,3,1,0,0xE0,0x0000
+325,2024/03/06 09:19:05,1709716745,130000,101214,923,0,4,-2,200,200,208,-993,-988,-1000,-298,-292,-304,-215,-208,-220,934,934,934,3,3,3,1,0,0xE0,0x0000
+326,2024/03/06 09:19:15,1709716755,140000,101215,915,0,1,-2,200,200,208,-994,-988,-1000,-299,-292,-304,-214,-208,-224,934,934,934,3,3,3,1,0,0xE0,0x0000
+327,2024/03/06 09:19:25,1709716765,150000,101214,923,0,1,-1,200,200,208,-994,-992,-1000,-298,-292,-304,-214,-208,-220,934,934,934,3,3,3,1,0,0xE0,0x0000
+328,2024/03/06 09:19:35,1709716775,160001,101215,915,0,0,-1,199,200,208,-994,-988,-1000,-299,-292,-304,-214,-208,-220,934,934,934,3,3,3,1,0,0xE0,0x0000
+329,2024/03/06 09:19:45,1709716785,170003,101213,932,1,4,0,199,200,208,-994,-988,-1000,-299,-292,-304,-214,-208,-220,934,934,934,3,3,3,1,0,0xE0,0x0000
+330,2024/04/29 06:48:02,1714373282,10000,98621,22743,0,0,0,197,200,201,-1021,-1016,-1028,-132,-124,-140,-42,-32,-52,871,871,871,3,4,3,1,0,0xC0,0x0000
+331,2024/04/29 06:48:12,1714373292,20002,98619,22760,0,0,-1,197,200,201,-1021,-1016,-1024,-131,-112,-152,-43,-32,-56,871,871,871,3,4,3,1,0,0xC0,0x0000
+332,2024/04/29 06:48:22,1714373302,30002,98620,22752,1,5,-2,197,200,201,-1021,-1012,-1028,-132,-124,-140,-42,-28,-52,871,871,871,3,3,3,1,0,0xC0,0x0000
+333,2024/04/29 06:48:32,1714373312,40001,98620,22752,-1,1,-5,197,200,201,-1020,-1012,-1024,-133,-116,-152,-41,-16,-64,871,871,871,3,3,3,1,0,0xC0,0x0000
+334,2024/04/29 06:48:42,1714373322,50001,98612,22820,0,6,-1,197,200,201,-1021,-1016,-1024,-133,-128,-140,-41,-36,-48,871,871,871,3,3,3,1,0,0xC0,0x0000
+335,2024/04/29 06:48:52,1714373332,60005,98622,22735,-1,3,-8,197,200,201,-1021,-1016,-1024,-132,-128,-140,-41,-32,-48,826,871,498,2,3,-1,1,0,0xC0,0x0000
+336,2024/04/29 06:49:07,1714373347,10003,98622,22735,0,0,0,197,200,201,-1021,-1004,-1028,-133,-124,-156,-42,-24,-64,921,922,921,3,4,3,1,0,0xC0,0x0000
+337,2024/04/29 06:49:17,1714373357,20000,98619,22760,0,3,-1,197,200,201,-1021,-1016,-1024,-132,-124,-140,-42,-32,-52,921,922,921,3,3,3,1,0,0xC0,0x0000
+338,2024/04/29 06:49:27,1714373367,30004,98620,22752,0,3,-2,197,200,201,-1021,-1016,-1028,-132,-124,-140,-42,-32,-48,922,922,922,3,3,3,1,0,0xC0,0x0000
+339,2024/04/29 06:49:37,1714373377,40005,98622,22735,0,1,-2,197,200,201,-1021,-1016,-1024,-131,-124,-140,-42,-32,-52,922,922,922,3,3,3,1,0,0xC0,0x0000
+340,2024/04/29 06:49:47,1714373387,50002,98620,22752,0,1,-1,197,200,201,-1021,-1016,-1024,-132,-128,-140,-42,-36,-52,922,922,922,3,3,3,1,0,0xC0,0x0000
+341,2024/04/29 06:49:57,1714373397,60005,98619,22760,0,1,0,197,200,201,-1021,-1012,-1032,-132,-116,-144,-43,-28,-80,922,922,922,3,3,3,1,0,0xC0,0x0000
+342,2024/04/29 06:50:07,1714373407,70002,98618,22769,0,2,-1,197,200,201,-1021,-1020,-1032,-132,-124,-140,-42,-28,-48,922,922,922,3,3,3,1,0,0xC0,0x0000
+343,2024/04/29 06:50:17,1714373417,80000,98621,22743,0,1,-1,197,200,201,-1021,-1016,-1024,-132,-124,-140,-42,-36,-48,922,922,922,3,3,3,1,0,0xC0,0x0000
+344,2024/04/29 06:50:27,1714373427,90005,98621,22743,0,2,-2,197,200,201,-1021,-1016,-1024,-132,-124,-140,-42,-32,-52,922,922,922,3,3,3,0,0,0xC0,0x0000
+345,2024/04/29 06:50:37,1714373437,100005,98619,22760,0,4,0,197,200,201,-1020,-1016,-1028,-132,-112,-144,-42,-36,-52,922,922,922,3,3,3,0,0,0xC0,0x0000
+346,2024/04/29 06:50:47,1714373447,110004,98621,22743,-1,1,-5,198,200,201,-1021,-1020,-1024,-132,-124,-140,-42,-32,-52,922,922,922,3,3,3,0,0,0xC0,0x0000
+347,2024/04/29 06:50:57,1714373457,120000,98622,22735,0,3,-4,198,200,201,-1021,-1016,-1028,-132,-124,-148,-42,-32,-48,922,922,922,3,3,3,0,0,0xC0,0x0000
+348,2024/04/29 06:51:07,1714373467,130001,98622,22735,0,1,-3,198,200,201,-1021,-1016,-1024,-132,-124,-144,-42,-32,-52,922,922,922,3,3,3,0,0,0xC0,0x0000
+349,2024/04/29 06:51:17,1714373477,140000,98621,22743,0,1,0,198,200,201,-1021,-1016,-1024,-132,-124,-140,-42,-32,-48,922,922,922,3,3,3,0,0,0xC0,0x0000
+350,2024/04/29 06:51:27,1714373487,150004,98621,22743,0,2,-2,198,200,201,-1021,-1016,-1036,-131,-124,-140,-42,-32,-48,922,922,922,3,3,3,0,0,0xC0,0x0000
+351,2024/04/29 06:51:37,1714373497,160003,98621,22743,0,1,-4,198,200,201,-1021,-1016,-1024,-132,-128,-140,-42,-36,-48,922,922,922,3,3,3,0,0,0xC0,0x0000
+352,2024/04/29 06:51:47,1714373507,170002,98621,22743,0,1,0,198,200,201,-1021,-1020,-1024,-132,-128,-136,-42,-36,-48,922,922,922,3,3,3,0,0,0xC0,0x0000
+353,2024/04/29 06:51:57,1714373517,180000,98619,22760,0,3,0,198,200,200,-1021,-1016,-1024,-132,-124,-140,-42,-32,-52,922,922,922,3,3,3,0,0,0xC0,0x0000
+354,2024/04/29 06:52:07,1714373527,190002,98620,22752,-1,1,-4,198,200,200,-1021,-1016,-1024,-132,-124,-140,-42,-32,-52,922,922,922,3,3,3,0,0,0xC0,0x0000
+355,2024/04/29 06:52:17,1714373537,200007,98620,22752,0,1,-2,198,200,200,-1021,-1016,-1024,-132,-124,-144,-43,-36,-52,922,922,922,3,3,3,0,0,0xC0,0x0000
+356,2024/04/29 06:52:27,1714373547,210002,98621,22743,0,3,-1,198,200,200,-1021,-1016,-1024,-132,-124,-136,-42,-36,-52,922,922,922,3,3,3,0,0,0xC0,0x0000
+357,2024/04/29 06:52:37,1714373557,220002,98618,22769,2,7,-2,198,200,200,-1021,-1016,-1024,-131,-124,-140,-43,-36,-52,922,922,922,3,3,3,0,0,0xC0,0x0000
+358,2024/04/29 06:52:47,1714373567,230004,98622,22735,-3,1,-7,198,200,200,-1021,-1016,-1024,-132,-128,-136,-42,-36,-52,922,922,922,3,3,3,0,0,0xC0,0x0000
+359,2024/04/29 06:52:57,1714373577,240000,98621,22743,0,2,0,198,200,200,-1020,-1016,-1024,-132,-124,-140,-43,-36,-52,922,922,922,3,3,3,0,0,0xC0,0x0000
+360,2024/04/29 06:53:07,1714373587,250003,98622,22735,0,1,-1,198,200,200,-1021,-1016,-1024,-132,-124,-140,-42,-36,-52,922,922,922,3,3,3,0,0,0xC0,0x0000
+361,2024/04/29 06:53:17,1714373597,260003,98623,22726,0,0,-1,198,200,200,-1021,-1016,-1028,-133,-124,-140,-41,-32,-52,922,922,922,3,3,3,0,0,0xC0,0x0000
+362,2024/04/29 06:53:27,1714373607,270002,98621,22743,0,1,-1,198,200,200,-1021,-1016,-1024,-132,-124,-140,-42,-28,-48,922,922,922,3,3,3,0,0,0xC0,0x0000
+363,2024/04/29 06:53:37,1714373617,280021,98621,22743,0,1,-2,198,200,200,-1021,-1016,-1028,-132,-120,-140,-42,-32,-52,922,922,922,3,3,3,0,0,0xC0,0x0000
+364,2024/04/29 06:53:47,1714373627,290004,98621,22743,2,7,0,198,200,200,-1021,-1016,-1024,-132,-124,-140,-42,-36,-48,922,922,922,3,3,3,0,0,0xC0,0x0000
+365,2024/04/29 06:53:57,1714373637,300001,98625,22709,-2,0,-8,198,200,200,-1021,-1016,-1040,-132,-116,-144,-42,-12,-56,921,922,921,3,3,3,0,0,0xC0,0x0000
+366,2024/04/29 06:54:07,1714373647,310000,98620,22752,1,3,0,198,200,200,-1021,-1016,-1036,-131,-116,-148,-41,-32,-52,921,922,921,3,3,3,0,0,0xC0,0x0000
+367,2024/04/29 06:54:17,1714373657,320004,98621,22743,0,2,-2,198,200,200,-1021,-1016,-1032,-132,-124,-140,-41,-32,-52,922,922,922,3,3,3,0,0,0xC0,0x0000
+368,2024/04/29 06:54:27,1714373667,330005,98619,22760,0,3,-2,198,200,200,-1021,-1016,-1024,-132,-124,-140,-42,-32,-52,922,922,922,3,3,3,0,0,0xC0,0x0000
+369,2024/04/29 06:54:37,1714373677,340000,98622,22735,0,6,-1,198,200,200,-1021,-1016,-1024,-132,-124,-140,-41,-32,-52,922,922,922,3,3,3,0,0,0xC0,0x0000
+370,2024/04/29 06:54:47,1714373687,350003,98623,22726,-1,0,-5,198,200,200,-1021,-1016,-1028,-132,-128,-140,-42,-36,-52,922,922,922,3,3,3,0,0,0xC0,0x0000
+371,2024/04/29 06:54:57,1714373697,360000,98622,22735,0,1,-2,198,200,200,-1021,-1016,-1028,-132,-128,-140,-42,-28,-48,922,922,922,3,3,3,0,0,0xC0,0x0000
+372,2024/04/29 06:55:07,1714373707,370000,98623,22726,0,1,-1,198,200,200,-1020,-1000,-1024,-132,-124,-144,-42,-32,-52,922,922,922,3,3,3,0,0,0xC0,0x0000
+373,2024/04/29 06:55:17,1714373717,380000,98620,22752,0,3,-1,198,200,200,-1021,-1020,-1024,-132,-128,-140,-42,-32,-52,922,922,922,3,3,3,0,0,0xC0,0x0000
+374,2024/04/29 07:08:15,1714374495,10002,98625,22709,0,0,0,200,213,206,3,8,0,-1129,-1120,-1136,-39,-28,-52,1009,1010,1009,3,4,3,0,0,0xC0,0x0000
+375,2024/04/29 07:08:25,1714374505,20001,98625,22709,0,2,-1,200,213,206,3,36,0,-1128,-1068,-1172,-39,-28,-56,1010,1010,1010,3,3,3,0,0,0xC0,0x0000
+376,2024/04/29 07:08:35,1714374515,30000,98623,22726,1,6,-2,200,213,206,2,8,0,-1129,-1124,-1136,-39,-32,-48,1009,1010,1009,3,3,3,0,0,0xC0,0x0000
+377,2024/04/29 07:08:45,1714374525,40000,98618,22769,0,6,-4,200,212,206,2,8,0,-1129,-1120,-1132,-38,-32,-52,1009,1010,1009,3,3,3,0,0,0xC0,0x0000
+378,2024/04/29 07:08:55,1714374535,50004,98623,22726,0,2,-4,200,212,206,3,8,0,-1129,-1120,-1136,-39,-28,-52,1006,1010,996,45,188,3,0,0,0xC1,0x0000
+379,2024/04/29 07:09:05,1714374545,60000,98623,22726,0,1,-1,200,212,206,2,16,-4,-1129,-1120,-1148,-39,-32,-52,995,996,994,238,273,183,0,0,0xC1,0x0000
+380,2024/04/29 07:09:15,1714374555,70000,98622,22735,0,2,0,200,212,205,3,16,-8,-1129,-1120,-1136,-44,0,-64,996,996,996,225,228,225,0,0,0xC1,0x0000
+381,2024/04/29 07:09:25,1714374565,80002,98621,22743,0,2,-2,201,211,206,3,12,0,-1129,-1120,-1140,-47,-28,-56,996,996,996,225,226,225,0,0,0xC1,0x0000
+382,2024/04/29 07:09:35,1714374575,90002,98620,22752,1,6,0,201,210,206,3,12,-4,-1129,-1124,-1136,-47,-32,-60,996,996,996,225,226,225,0,0,0xC1,0x0000
+383,2024/04/29 07:09:45,1714374585,100003,98618,22769,0,1,-2,203,210,206,3,12,0,-1129,-1116,-1140,-48,-36,-56,996,996,996,225,226,225,0,0,0xC1,0x0000
+384,2024/04/29 07:09:55,1714374595,110001,98617,22777,0,2,-1,203,208,206,3,12,-4,-1129,-1120,-1136,-49,-40,-64,996,996,996,226,226,226,0,0,0xC1,0x0000
+385,2024/04/29 07:10:05,1714374605,120004,98617,22777,2,6,0,205,208,206,4,12,0,-1130,-1124,-1140,-43,-32,-52,997,999,996,164,229,143,0,0,0xC1,0x0000
+386,2024/04/29 07:10:15,1714374615,130000,98617,22777,-1,1,-5,205,207,206,4,32,-16,-1129,-1120,-1144,-46,-24,-80,998,998,998,142,144,141,0,0,0xC1,0x0000
+387,2024/04/29 07:10:25,1714374625,140001,98616,22786,0,4,0,206,207,206,2,12,-4,-1129,-1124,-1136,-48,-36,-60,998,998,998,142,143,141,0,0,0xC1,0x0000
+388,2024/04/29 07:10:35,1714374635,150000,98618,22769,0,1,-3,206,206,206,3,8,-4,-1128,-1104,-1140,-49,-40,-64,998,998,998,141,143,141,0,0,0xC1,0x0000
+389,2024/04/29 07:10:45,1714374645,160002,98617,22777,0,3,-1,207,206,206,3,8,0,-1129,-1116,-1140,-49,-32,-68,997,998,995,148,230,141,0,0,0xC1,0x0000
+390,2024/04/29 07:10:55,1714374655,170005,98619,22760,0,3,-1,207,206,206,4,12,0,-1129,-1124,-1136,-47,-36,-72,1001,1011,995,115,235,0,0,0,0xC2,0x0000
+391,2024/04/29 07:11:05,1714374665,180001,98618,22769,0,1,-2,210,205,206,4,12,-4,-1130,-1108,-1156,-47,-36,-60,995,996,994,230,264,213,0,0,0xC2,0x0000
+392,2024/04/29 07:11:15,1714374675,190004,98617,22777,0,3,0,213,205,206,3,8,0,-1129,-1124,-1136,-47,-24,-72,996,996,996,219,223,218,0,0,0xC2,0x0000
+393,2024/04/29 07:11:25,1714374685,200002,98617,22777,3,5,-1,215,205,206,3,12,0,-1129,-1120,-1144,-48,-40,-56,996,996,996,219,220,219,0,0,0xC2,0x0000
+394,2024/04/29 07:11:35,1714374695,210005,98611,22828,-1,4,-5,215,205,206,4,8,0,-1129,-1124,-1136,-48,-44,-56,1005,1011,996,61,228,0,0,0,0xC2,0x0000
+395,2024/04/29 07:11:45,1714374705,220003,98620,22752,-1,4,-7,215,205,206,3,8,0,-1130,-1124,-1140,-49,-40,-56,995,997,994,223,264,158,0,0,0xC2,0x0000
+396,2024/04/29 07:11:55,1714374715,230003,98618,22769,0,1,-2,217,205,206,4,12,0,-1129,-1120,-1144,-49,-36,-60,995,996,994,225,263,219,0,0,0xC2,0x0000
+397,2024/04/29 07:12:05,1714374725,240001,98617,22777,0,1,-2,218,205,206,4,20,-4,-1128,-1112,-1140,-47,-28,-68,995,995,995,251,253,250,0,0,0xC2,0x0000
+398,2024/04/29 07:12:15,1714374735,250000,98618,22769,0,1,0,220,204,206,4,12,0,-1130,-1120,-1136,-47,-32,-60,995,995,995,251,256,250,0,0,0xC2,0x0000
+399,2024/04/29 07:12:25,1714374745,260000,98613,22811,0,3,-2,221,204,206,4,8,0,-1130,-1124,-1136,-47,-36,-56,995,995,995,251,256,250,0,0,0xC2,0x0000
+400,2024/04/29 07:12:35,1714374755,270002,98617,22777,0,5,-5,221,204,206,4,8,0,-1129,-1124,-1136,-46,-36,-56,995,995,995,251,256,250,0,0,0xC2,0x0000
+401,2024/04/29 07:12:45,1714374765,280007,98617,22777,0,0,-2,222,203,206,4,12,0,-1129,-1124,-1136,-46,-36,-56,995,995,995,251,255,250,0,0,0xC2,0x0000
+402,2024/04/29 07:12:55,1714374775,290033,98617,22777,0,1,-1,223,203,206,4,12,-4,-1129,-1120,-1136,-46,-36,-56,995,995,995,251,256,250,0,0,0xC2,0x0000
+403,2024/04/29 07:13:05,1714374785,300003,98615,22794,0,1,-2,223,203,206,4,12,0,-1129,-1124,-1136,-45,-36,-52,995,995,995,251,254,251,0,0,0xC2,0x0000
+404,2024/04/29 07:13:15,1714374795,310001,98615,22794,0,0,-2,224,203,206,4,12,-4,-1129,-1120,-1136,-47,-36,-56,995,995,995,252,256,250,0,0,0xC2,0x0000
+405,2024/04/29 07:13:25,1714374805,320003,98616,22786,0,3,-3,225,203,206,4,12,0,-1129,-1120,-1136,-47,-40,-56,995,995,995,252,255,251,0,0,0xC2,0x0000
+406,2024/04/29 07:13:35,1714374815,330001,98615,22794,0,2,-1,225,203,206,4,8,0,-1129,-1124,-1136,-47,-40,-52,995,995,995,252,255,251,0,0,0xC2,0x0000
+407,2024/04/29 07:13:45,1714374825,340004,98617,22777,0,1,-1,226,203,206,4,12,0,-1129,-1124,-1136,-47,-40,-56,995,995,995,252,255,250,0,0,0xC2,0x0000
+408,2024/04/29 07:13:55,1714374835,350004,98615,22794,0,3,-1,226,203,206,3,12,-4,-1129,-1120,-1136,-48,-40,-56,995,995,995,252,256,251,0,0,0xC2,0x0000
+409,2024/04/29 07:14:05,1714374845,360005,98615,22794,0,2,0,227,203,206,3,8,0,-1129,-1120,-1136,-49,-40,-60,995,995,995,252,256,251,0,0,0xC2,0x0000
+410,2024/04/29 07:14:15,1714374855,370003,98608,22854,1,7,-1,227,203,206,4,8,0,-1130,-1124,-1136,-48,-40,-60,994,995,994,256,270,251,0,0,0xC2,0x0000
+411,2024/04/29 07:14:25,1714374865,380004,98613,22811,0,2,-7,228,203,206,3,12,-4,-1129,-1124,-1136,-48,-36,-56,994,995,994,259,265,255,0,0,0xC2,0x0000
+412,2024/04/29 07:14:35,1714374875,390003,98614,22803,0,0,-2,228,203,206,4,12,0,-1129,-1120,-1136,-47,-32,-56,994,995,993,262,311,255,0,0,0xC2,0x0000
+413,2024/04/29 07:14:45,1714374885,400003,98614,22803,0,2,0,229,203,206,4,12,0,-1129,-1124,-1136,-48,-36,-60,996,1003,995,217,264,54,0,0,0xC2,0x0000
+414,2024/04/29 07:14:55,1714374895,410003,98613,22811,2,8,0,227,203,206,4,8,0,-1130,-1124,-1140,-47,-28,-56,1002,1003,1002,54,58,54,0,0,0xC2,0x0000
+415,2024/04/29 07:15:05,1714374905,420002,98613,22811,-2,0,-5,225,203,206,4,16,0,-1129,-1120,-1148,-47,-32,-60,1000,1003,995,105,230,53,0,0,0xC0,0x0000
+416,2024/04/29 07:15:15,1714374915,430002,98615,22794,0,2,-1,224,203,206,4,28,0,-1129,-1116,-1172,-48,-36,-64,1002,1012,994,105,248,0,0,0,0xC1,0x0000
+417,2024/04/29 07:15:25,1714374925,440003,98615,22794,0,2,-2,222,203,206,4,20,-8,-1129,-1120,-1156,-49,-36,-72,995,996,994,233,270,224,0,0,0xC1,0x0000
+418,2024/04/29 07:15:35,1714374935,450003,98613,22811,0,1,-2,221,203,206,4,16,-4,-1130,-1120,-1148,-49,-24,-76,995,996,995,235,264,224,0,0,0xC1,0x0000
+419,2024/04/29 07:15:45,1714374945,460001,98612,22820,0,1,-1,220,203,206,4,12,0,-1129,-1116,-1140,-48,-36,-64,995,995,995,256,260,255,0,0,0xC1,0x0000
+420,2024/04/29 07:15:55,1714374955,470000,98613,22811,0,1,-1,220,203,206,3,12,0,-1129,-1124,-1136,-47,-36,-56,995,995,995,256,264,255,0,0,0xC1,0x0000
+421,2024/04/29 07:16:05,1714374965,480003,98612,22820,0,2,0,220,203,206,3,24,-16,-1130,-1120,-1176,-48,-28,-60,995,995,995,257,261,256,0,0,0xC1,0x0000
+422,2024/04/29 07:16:15,1714374975,490002,98613,22811,0,0,-1,220,203,206,3,8,0,-1129,-1124,-1136,-48,-32,-60,994,995,994,258,265,256,0,0,0xC1,0x0000
+423,2024/04/29 07:16:25,1714374985,500005,98609,22845,2,6,0,220,203,206,3,12,0,-1129,-1120,-1136,-49,-44,-60,994,995,994,263,284,258,0,0,0xC1,0x0000
+424,2024/04/29 07:16:35,1714374995,510000,98612,22820,-1,1,-6,220,203,206,4,12,0,-1130,-1124,-1140,-48,-36,-64,994,995,994,265,271,260,0,0,0xC1,0x0000
+425,2024/04/29 07:16:45,1714375005,520002,98614,22803,0,2,-2,221,202,206,4,12,0,-1129,-1124,-1136,-47,-32,-60,999,1003,994,135,273,58,0,0,0xC1,0x0000
+426,2024/04/29 07:16:55,1714375015,530003,98611,22828,0,1,-3,221,202,206,4,12,-4,-1130,-1120,-1156,-47,-16,-56,1005,1011,995,76,236,0,0,0,0xC0,0x0000
+427,2024/04/29 07:17:05,1714375025,540004,98614,22803,0,2,-2,220,202,206,4,8,0,-1130,-1124,-1148,-48,-40,-56,1010,1011,1010,0,1,0,0,0,0xC0,0x0000
+428,2024/04/29 07:17:15,1714375035,550003,98614,22803,0,1,-2,220,202,206,4,12,0,-1129,-1108,-1152,-47,-36,-56,1006,1011,996,43,183,1,0,0,0xF8,0x0000
+429,2024/04/29 07:17:25,1714375045,560002,98615,22794,0,1,-2,219,203,206,3,12,-8,-1129,-1120,-1140,-48,-36,-68,995,996,994,231,261,205,0,0,0xF8,0x0000
+430,2024/04/29 07:17:35,1714375055,570018,98615,22794,0,1,-1,218,204,206,3,16,-8,-1130,-1112,-1156,-48,-28,-68,995,996,995,215,219,210,0,0,0xF8,0x0000
+431,2024/04/29 07:17:45,1714375065,580001,98615,22794,0,0,-4,218,206,206,3,16,-4,-1129,-1108,-1144,-48,-4,-100,995,996,995,245,254,215,0,0,0xF8,0x0000
+432,2024/04/29 07:17:55,1714375075,590000,98616,22786,0,1,-1,218,206,206,3,16,-12,-1130,-1116,-1140,-48,-32,-76,995,995,995,249,254,248,0,0,0xF8,0x0000
+433,2024/04/29 07:18:05,1714375085,600003,98617,22777,0,1,-2,217,206,206,4,8,0,-1129,-1124,-1140,-49,-28,-60,995,995,995,249,255,248,0,0,0xF8,0x0000
+434,2024/04/29 07:18:15,1714375095,610005,98616,22786,0,1,-2,217,205,206,3,8,0,-1129,-1124,-1136,-48,-40,-56,995,995,995,249,254,249,0,0,0xF8,0x0000
+435,2024/04/29 07:18:25,1714375105,620005,98616,22786,0,1,-2,217,205,206,3,8,0,-1130,-1124,-1136,-49,-40,-56,995,995,995,252,269,249,0,0,0xF8,0x0000
+436,2024/04/29 07:18:35,1714375115,630003,98618,22769,0,1,-1,217,205,206,3,12,-8,-1129,-1124,-1136,-49,-40,-56,994,995,994,255,271,251,0,0,0xF8,0x0000
+437,2024/04/29 07:18:45,1714375125,640003,98616,22786,0,1,-1,217,204,206,3,8,0,-1129,-1120,-1136,-49,-36,-56,997,1003,995,198,259,54,0,0,0xF8,0x0000
+438,2024/04/29 07:18:55,1714375135,650003,98619,22760,0,3,-1,217,203,206,4,12,0,-1129,-1124,-1136,-48,-40,-60,1003,1012,994,91,283,0,0,0,0xE0,0x0000
+439,2024/04/29 07:19:05,1714375145,660003,98618,22769,-1,0,-5,216,203,206,4,16,-8,-1129,-1112,-1172,-48,-28,-64,1006,1011,996,46,184,0,0,0,0xD4,0x0000
+440,2024/04/29 07:19:15,1714375155,670000,98617,22777,0,3,-1,217,203,206,4,16,-24,-1130,-1112,-1140,-45,0,-108,995,996,995,227,259,186,0,0,0xD4,0x0000
+441,2024/04/29 07:19:25,1714375165,680003,98618,22769,0,2,-1,218,204,206,3,28,-8,-1130,-1104,-1200,-48,-20,-84,996,996,996,218,221,216,0,0,0xD4,0x0000
+442,2024/04/29 07:19:35,1714375175,690007,98618,22769,0,2,-1,220,204,206,4,36,-4,-1130,-1124,-1164,-48,-16,-68,996,996,996,217,218,216,0,0,0xD4,0x0000
+443,2024/04/29 07:19:45,1714375185,700004,98618,22769,0,2,-2,220,205,206,3,12,0,-1130,-1124,-1136,-48,-36,-56,995,996,995,231,255,216,0,0,0xD4,0x0000
+444,2024/04/29 07:19:55,1714375195,710002,98615,22794,0,3,-2,221,205,206,3,16,-12,-1129,-1104,-1144,-47,-4,-96,995,995,995,248,251,248,0,0,0xD4,0x0000
+445,2024/04/29 07:20:05,1714375205,720003,98617,22777,0,2,-1,221,205,206,3,12,-8,-1129,-1080,-1152,-49,-32,-72,995,995,995,249,255,248,0,0,0xD4,0x0000
+446,2024/04/29 07:20:15,1714375215,730002,98620,22752,0,2,-3,223,204,206,3,8,-4,-1129,-1120,-1136,-49,-44,-56,995,995,995,249,253,248,0,0,0xD4,0x0000
+447,2024/04/29 07:20:25,1714375225,740005,98620,22752,0,1,-1,223,204,206,3,8,0,-1129,-1120,-1136,-48,-44,-56,995,995,995,249,255,248,0,0,0xD4,0x0000
+448,2024/04/29 07:20:35,1714375235,750001,98621,22743,0,0,-3,223,204,206,3,12,-8,-1130,-1124,-1148,-50,-28,-128,995,995,995,250,261,248,0,0,0xD4,0x0000
+449,2024/04/29 07:20:45,1714375245,760005,98619,22760,0,2,0,224,204,206,3,8,0,-1129,-1108,-1140,-49,-40,-56,994,995,994,256,271,248,0,0,0xD4,0x0000
+450,2024/04/29 07:20:55,1714375255,770000,98618,22769,1,9,-1,225,205,206,3,8,0,-1130,-1120,-1140,-49,-40,-60,995,995,995,254,263,250,0,0,0xD4,0x0000
+451,2024/04/29 07:21:05,1714375265,780001,98619,22760,-1,0,-8,225,205,206,3,8,0,-1129,-1116,-1136,-48,-40,-56,996,1004,994,221,266,54,0,0,0xD4,0x0000
+452,2024/04/29 07:21:15,1714375275,790002,98617,22777,0,1,-1,225,204,206,3,12,0,-1129,-1124,-1136,-48,-40,-56,1002,1012,995,91,233,-1,0,0,0xC0,0x0000
+453,2024/04/29 07:21:25,1714375285,800001,98618,22769,0,1,-2,224,204,206,3,8,0,-1129,-1124,-1136,-48,-40,-56,1010,1011,1010,0,1,0,0,0,0xC0,0x0000
+454,2024/04/29 07:21:35,1714375295,810000,98617,22777,0,2,-2,223,204,206,4,12,0,-1129,-1120,-1140,-47,-40,-56,1010,1011,1010,0,1,0,0,0,0xC0,0x0000
+455,2024/04/29 07:21:45,1714375305,820012,98618,22769,0,1,0,221,203,206,4,12,0,-1130,-1124,-1140,-47,-32,-60,1010,1011,1010,1,1,1,0,0,0xC0,0x0000
+456,2024/04/29 07:21:55,1714375315,830005,98617,22777,0,1,-1,220,204,206,3,12,-4,-1129,-1120,-1136,-47,-28,-60,1010,1011,1010,1,1,1,0,0,0xC0,0x0000
+457,2024/04/29 07:22:05,1714375325,840002,98616,22786,0,1,0,220,203,206,4,8,0,-1129,-1124,-1136,-47,-40,-56,1010,1011,1010,1,1,1,0,0,0xC0,0x0000
+458,2024/04/29 07:22:15,1714375335,850001,98615,22794,0,2,-4,218,203,206,4,8,0,-1129,-1124,-1136,-47,-36,-56,1010,1011,1010,1,1,1,0,0,0xC0,0x0000
+459,2024/04/29 07:22:25,1714375345,860002,98619,22760,0,3,-2,218,203,206,3,8,0,-1129,-1124,-1136,-46,-40,-56,1010,1011,1010,1,1,1,0,0,0xC0,0x0000
+460,2024/04/29 07:22:35,1714375355,870003,98618,22769,1,6,-1,217,203,206,3,8,0,-1129,-1124,-1140,-46,-40,-52,1010,1010,1010,1,3,1,0,0,0xC0,0x0000
+461,2024/04/29 07:22:45,1714375365,880002,98617,22777,0,1,-6,216,203,206,4,12,0,-1129,-1124,-1136,-46,-40,-52,1010,1011,1010,1,3,1,0,0,0xC0,0x0000
+462,2024/04/29 07:22:55,1714375375,890002,98618,22769,0,0,-1,216,204,206,3,8,0,-1129,-1120,-1136,-47,-40,-56,1010,1010,1010,1,3,1,0,0,0xC0,0x0000
+463,2024/04/29 07:23:05,1714375385,900002,98615,22794,0,2,-2,215,204,206,3,8,0,-1129,-1124,-1136,-46,-40,-56,1010,1010,1010,1,3,1,0,0,0xC0,0x0000
+464,2024/04/29 07:23:15,1714375395,910002,98618,22769,0,5,-6,215,203,206,3,8,0,-1129,-1120,-1140,-47,-40,-60,1010,1010,1010,1,3,1,0,0,0xC0,0x0000
+465,2024/04/29 07:23:25,1714375405,920004,98621,22743,0,1,-4,214,203,206,4,8,0,-1129,-1120,-1136,-46,-40,-56,1010,1010,1010,2,3,1,0,0,0xC0,0x0000
+466,2024/04/29 07:23:35,1714375415,930000,98620,22752,0,2,-1,213,203,206,3,8,0,-1128,-1124,-1136,-47,-40,-56,1010,1010,1010,2,3,1,0,0,0xC0,0x0000
+467,2024/04/29 07:23:45,1714375425,940005,98619,22760,0,1,-1,213,203,206,4,8,0,-1129,-1124,-1136,-47,-40,-56,1010,1010,1010,2,3,1,0,0,0xC0,0x0000
+468,2024/04/29 07:23:55,1714375435,950002,98615,22794,1,7,-2,213,203,206,4,12,0,-1128,-1120,-1136,-47,-28,-64,1010,1010,1010,2,3,1,0,0,0xC0,0x0000
+469,2024/04/29 07:24:05,1714375445,960004,98614,22803,1,6,0,212,203,206,3,12,0,-1129,-1124,-1136,-47,-36,-56,1010,1010,1010,2,3,1,0,0,0xC0,0x0000
+470,2024/04/29 07:24:15,1714375455,970002,98615,22794,0,1,-1,211,203,206,3,8,0,-1129,-1124,-1136,-47,-40,-56,1010,1010,1010,2,3,1,0,0,0xC0,0x0000
+471,2024/04/29 07:24:25,1714375465,980000,98613,22811,0,0,-2,211,203,206,4,12,0,-1129,-1124,-1136,-47,-40,-56,1010,1010,1010,2,3,1,0,0,0xC0,0x0000
+472,2024/04/29 07:24:35,1714375475,990002,98619,22760,-3,-1,-7,211,203,206,3,8,0,-1129,-1124,-1140,-48,-40,-56,1010,1010,1010,2,3,1,0,0,0xC0,0x0000
+473,2024/04/29 07:24:45,1714375485,1000004,98622,22735,0,1,-2,211,203,206,4,8,0,-1129,-1124,-1136,-47,-40,-56,1010,1010,1010,2,3,1,0,0,0xC0,0x0000
+474,2024/04/29 07:24:55,1714375495,1010002,98622,22735,0,2,-1,210,203,206,3,8,0,-1128,-1124,-1136,-46,-40,-56,1010,1010,1010,2,3,1,0,0,0xC0,0x0000
+475,2024/04/29 07:25:05,1714375505,1020005,98621,22743,0,1,-1,210,203,206,4,12,0,-1129,-1124,-1136,-47,-40,-60,1010,1010,1010,2,3,1,0,0,0xC0,0x0000
+476,2024/04/29 07:25:15,1714375515,1030000,98619,22760,0,3,0,210,203,206,4,8,0,-1128,-1120,-1136,-47,-40,-56,1010,1010,1010,2,3,1,0,0,0xC0,0x0000
+477,2024/04/29 07:25:25,1714375525,1040001,98621,22743,0,0,-1,209,203,206,3,8,0,-1129,-1124,-1136,-47,-40,-56,1010,1010,1010,3,3,3,0,0,0xC0,0x0000
+478,2024/04/29 07:25:35,1714375535,1050000,98618,22769,0,2,-1,209,203,206,3,8,0,-1128,-1124,-1136,-46,-40,-56,1010,1010,1010,2,3,1,0,0,0xC0,0x0000
+479,2024/04/29 07:25:45,1714375545,1060022,98620,22752,0,2,-2,209,203,206,4,8,0,-1129,-1124,-1136,-47,-36,-56,1010,1010,1010,2,3,1,0,0,0xC0,0x0000
+480,2024/04/29 07:25:55,1714375555,1070001,98621,22743,0,3,-1,208,203,206,3,8,0,-1129,-1124,-1136,-47,-40,-56,1010,1010,1010,3,3,3,0,0,0xC0,0x0000
+481,2024/04/29 07:26:05,1714375565,1080002,98620,22752,0,1,-1,208,203,206,3,8,0,-1128,-1124,-1136,-47,-40,-56,1010,1010,1010,3,3,3,0,0,0xC0,0x0000
+482,2024/04/29 07:26:15,1714375575,1090002,98619,22760,0,1,0,208,203,206,3,8,0,-1128,-1124,-1136,-47,-40,-60,1010,1010,1010,3,3,3,0,0,0xC0,0x0000
+483,2024/04/29 07:26:25,1714375585,1100004,98619,22760,0,1,-1,208,203,206,3,16,-12,-1128,-1056,-1136,-46,-36,-84,1010,1010,1010,3,3,3,0,0,0xC0,0x0000
+484,2024/04/29 07:26:35,1714375595,1110004,98621,22743,0,1,-1,208,203,206,3,12,0,-1128,-1120,-1136,-46,-40,-56,1009,1010,966,2,3,-1,0,0,0xC0,0x0000
+485,2024/04/29 07:55:32,1714377332,10000,98613,22811,0,0,0,200,203,208,2,8,-4,-1128,-1108,-1140,-49,-32,-72,921,922,921,3,4,3,0,0,0xC0,0x0000
+486,2024/04/29 07:55:42,1714377342,20000,98615,22794,0,1,0,200,203,208,2,8,-4,-1128,-1124,-1144,-50,-40,-72,921,922,921,3,3,3,0,0,0xC0,0x0000
+487,2024/04/29 07:55:52,1714377352,30004,98611,22828,0,4,-1,200,203,208,2,8,-4,-1128,-1124,-1136,-50,-44,-56,922,922,922,3,3,3,1,0,0xC0,0x0000
+488,2024/04/29 07:56:02,1714377362,40004,98613,22811,0,1,-1,200,203,208,2,8,-4,-1128,-1120,-1136,-50,-40,-60,922,922,922,3,3,3,1,0,0xC0,0x0000
+489,2024/04/29 07:56:12,1714377372,50001,98614,22803,0,0,-2,200,203,208,2,12,-4,-1128,-1124,-1136,-49,-44,-56,922,922,922,3,3,3,1,0,0x80,0x0000
+490,2024/04/29 07:56:22,1714377382,60004,98615,22794,0,3,-1,200,203,208,1,12,-12,-1128,-1116,-1136,-50,-28,-76,914,922,892,188,785,3,2,0,0xBF,0x0000
+491,2024/04/29 07:56:32,1714377392,70005,98609,22845,0,3,-3,203,203,208,1,8,-8,-1129,-1116,-1132,-50,-44,-60,887,891,886,983,1068,839,2,0,0xFF,0x0000
+492,2024/04/29 07:56:42,1714377402,80000,98612,22820,0,10,-5,209,203,208,1,12,-8,-1129,-1100,-1156,-51,-36,-68,872,888,866,1664,1935,951,2,0,0xFF,0x0000
+493,2024/04/29 07:56:52,1714377412,90002,98611,22828,0,1,0,218,203,208,1,12,-4,-1129,-1124,-1144,-51,-44,-60,865,867,865,1919,1943,1899,2,0,0xFF,0x0000
+494,2024/04/29 07:57:02,1714377422,100002,98606,22871,1,3,0,226,203,208,2,8,-4,-1129,-1120,-1136,-51,-44,-60,865,870,865,1907,1949,1670,2,0,0xFF,0x0000
+495,2024/04/29 07:57:12,1714377432,110003,98609,22845,0,3,-2,233,203,208,2,12,-4,-1129,-1124,-1136,-50,-40,-64,881,898,870,1139,1680,436,2,0,0xFC,0x0000
+496,2024/04/29 07:57:22,1714377442,120003,98607,22862,0,2,-1,235,203,208,2,16,-4,-1129,-1124,-1136,-50,-40,-64,911,919,898,102,436,1,2,0,0xE0,0x0000
+497,2024/04/29 07:57:32,1714377452,130005,98607,22862,0,1,-1,233,203,208,2,8,-4,-1129,-1120,-1136,-50,-40,-60,919,920,919,1,1,1,0,0,0xE0,0x0000
+498,2024/04/29 07:57:42,1714377462,140002,98607,22862,0,1,-2,231,203,208,1,12,-24,-1128,-1092,-1136,-51,-20,-72,919,920,919,1,1,1,0,0,0xE0,0x0000
+499,2024/04/29 07:57:52,1714377472,150000,98607,22862,0,2,-1,230,203,208,2,12,-12,-1129,-1120,-1148,-52,-40,-80,895,920,885,566,1015,1,0,0,0xDF,0x0000
+500,2024/04/29 07:58:02,1714377482,160000,98608,22854,0,0,-2,232,203,208,1,12,-8,-1129,-1116,-1136,-53,-44,-60,898,919,883,486,1069,0,0,0,0xE0,0x0000
+501,2024/04/29 07:58:12,1714377492,170004,98609,22845,0,5,-2,231,203,208,2,8,-16,-1129,-1100,-1136,-51,-40,-68,919,919,919,0,1,0,0,0,0xE0,0x0000
+502,2024/04/29 08:40:32,1714380032,10000,98617,22777,0,0,0,203,207,208,-1020,-1016,-1024,-146,-136,-156,-50,-36,-64,920,920,920,3,4,3,0,0,0xC0,0x0000
+503,2024/04/29 08:40:42,1714380042,20004,98617,22777,0,0,-2,203,207,208,-1021,-1016,-1024,-146,-140,-152,-50,-40,-60,920,920,920,3,3,3,0,0,0xC0,0x0000
+504,2024/04/29 08:40:52,1714380052,30001,98618,22769,0,1,-1,203,207,208,-1021,-1016,-1024,-146,-136,-156,-50,-44,-60,920,920,920,3,3,3,0,0,0xC0,0x0000
+505,2024/04/29 08:41:02,1714380062,40002,98615,22794,1,5,-2,203,207,208,-1021,-1016,-1024,-146,-140,-152,-50,-44,-60,920,920,920,3,3,3,0,0,0xC0,0x0000
+506,2024/04/29 08:41:12,1714380072,50004,98617,22777,0,5,-1,203,207,208,-1021,-1016,-1024,-146,-136,-156,-50,-40,-60,920,920,920,3,3,3,0,0,0xC0,0x0000
+507,2024/04/29 08:41:22,1714380082,60004,98615,22794,0,1,-1,203,207,208,-1021,-1016,-1028,-146,-140,-152,-50,-36,-60,920,920,920,3,3,3,0,0,0xC0,0x0000
+508,2024/04/29 08:41:34,1714380094,72463,98616,22786,0,0,0,203,207,208,-1021,-1020,-1024,-146,-140,-152,-51,-48,-56,920,920,920,3,3,3,0,0,0xC0,0x0000
+509,2024/04/29 08:41:44,1714380104,82002,98613,22811,0,2,-1,203,207,208,-1021,-1016,-1024,-146,-136,-152,-50,-44,-56,920,920,920,3,3,3,0,0,0xC0,0x0000
+510,2024/04/29 11:09:27,1714388967,10004,98556,23296,0,0,0,210,215,216,3,8,0,-135,-124,-144,962,968,956,920,921,920,3,4,3,0,0,0xC0,0x0000
+511,2024/04/29 11:09:37,1714388977,20004,98556,23296,0,1,0,210,215,216,2,4,0,-134,-128,-140,962,968,956,920,921,920,3,4,3,0,0,0xC0,0x0000
+512,2024/04/29 11:09:47,1714388987,30001,98548,23364,1,6,0,210,215,216,2,8,0,-134,-128,-144,962,968,956,920,921,920,3,3,3,0,0,0xC0,0x0000
+513,2024/04/29 11:09:57,1714388997,40005,98557,23288,-1,2,-5,210,215,216,2,4,0,-134,-132,-140,962,968,956,920,921,920,3,3,3,0,0,0xC0,0x0000
+514,2024/04/29 11:10:07,1714389007,50000,98557,23288,0,1,-2,210,215,216,3,8,-4,-135,-120,-144,963,968,956,920,921,920,3,3,3,0,0,0xC0,0x0000
+515,2024/04/29 11:10:17,1714389017,60005,98556,23296,0,1,-3,210,215,216,3,8,0,-135,-120,-144,962,968,956,920,921,920,3,3,3,0,0,0xC0,0x0000
+516,2024/04/29 11:10:27,1714389027,70003,98553,23322,0,5,-2,210,215,216,2,8,0,-134,-128,-144,962,968,956,920,921,920,3,3,3,0,0,0xC0,0x0000
+517,2024/04/29 11:10:37,1714389037,80002,98554,23313,0,0,-2,210,215,216,3,8,0,-135,-128,-144,963,968,956,920,921,920,3,3,3,1,0,0xC0,0x0000
+518,2024/04/29 11:10:47,1714389047,90000,98556,23296,0,2,-1,210,215,216,2,8,0,-134,-128,-140,962,968,956,920,921,920,3,3,3,1,0,0xC0,0x0000
+519,2024/04/29 11:10:57,1714389057,100004,98554,23313,0,5,-2,210,215,216,3,8,-4,-135,-128,-144,962,972,956,920,921,920,3,3,3,1,0,0x80,0x0000
+520,2024/04/29 11:11:07,1714389067,110006,98555,23305,0,3,-1,210,215,216,2,4,0,-135,-128,-140,962,968,956,920,921,920,3,3,3,1,0,0x80,0x0000
+521,2024/04/29 11:11:17,1714389077,120000,98553,23322,0,2,-1,211,215,216,2,4,0,-135,-128,-140,961,968,956,896,921,883,669,1143,3,2,0,0xFF,0x0000
+522,2024/04/29 11:11:27,1714389087,130001,98555,23305,0,2,-1,216,215,216,3,8,0,-135,-124,-156,962,968,956,881,888,866,1234,1991,928,2,0,0xFF,0x0000
+523,2024/04/29 11:11:37,1714389097,140004,98550,23347,1,4,-2,224,215,216,2,8,0,-135,-128,-144,960,972,952,865,866,864,1966,1994,1940,2,0,0xFF,0x0000
+524,2024/04/29 11:11:47,1714389107,150003,98549,23356,0,3,-1,233,215,217,3,8,0,-135,-128,-144,960,968,956,864,865,864,1971,2004,1943,2,0,0xFF,0x0000
+525,2024/04/29 11:11:57,1714389117,160000,98549,23356,1,3,-1,241,215,217,3,8,0,-134,-100,-152,961,972,952,863,864,863,1981,2018,1955,2,0,0xFF,0x0000
+526,2024/04/29 11:12:07,1714389127,170003,98547,23373,0,2,0,250,215,217,3,8,0,-135,-120,-148,960,968,956,865,869,863,1870,2011,1696,2,0,0xFF,0x0000
+527,2024/04/29 11:12:17,1714389137,180004,98545,23390,0,1,-1,256,216,218,3,8,0,-136,-116,-168,960,976,948,887,901,874,802,1430,255,2,0,0xFC,0x0000
+528,2024/04/29 11:12:27,1714389147,190003,98545,23390,0,2,-2,255,216,218,3,8,0,-136,-120,-148,960,968,956,912,918,901,54,256,1,2,0,0xE1,0x0000
+529,2024/04/29 11:12:37,1714389157,200005,98547,23373,0,1,-1,254,216,218,3,20,-4,-136,-132,-152,959,972,944,892,903,883,598,1001,191,2,0,0xDF,0x0000
+530,2024/04/29 11:12:47,1714389167,210003,98546,23381,0,2,-1,255,216,218,3,8,-4,-136,-128,-144,960,972,952,895,910,888,471,793,64,2,0,0xF8,0x0000
+531,2024/04/29 11:12:57,1714389177,220004,98546,23381,0,3,-1,253,216,218,3,8,0,-135,-132,-144,961,968,956,917,918,912,0,21,0,2,0,0xE0,0x0000
+532,2024/04/29 11:13:07,1714389187,230003,98546,23381,0,2,-1,251,216,219,3,8,0,-135,-132,-140,961,968,952,918,918,918,0,1,0,2,0,0xE0,0x0000
+533,2024/04/29 11:13:17,1714389197,240002,98548,23364,0,1,-1,249,216,219,3,8,0,-135,-128,-140,961,968,952,918,918,918,0,1,0,2,0,0xE0,0x0000
+534,2024/04/29 11:13:27,1714389207,250000,98548,23364,0,0,-2,246,216,220,3,8,0,-136,-128,-144,961,968,956,918,918,918,0,1,0,2,0,0xE0,0x0000
+535,2024/04/29 11:13:37,1714389217,260003,98546,23381,0,2,-2,245,216,220,3,8,0,-135,-128,-140,962,968,956,918,918,918,0,1,0,2,0,0xE0,0x0000
+536,2024/04/29 11:13:55,1714389235,278652,98545,23390,0,1,-3,241,216,220,3,8,0,-135,-128,-140,962,968,956,918,918,918,0,1,0,2,0,0xE0,0x0000
+537,2024/04/29 11:14:12,1714389252,10000,98545,23390,0,0,0,240,216,220,4,8,0,-135,-132,-144,962,972,956,918,918,918,1,1,1,2,0,0xE0,0x0000
+538,2024/04/29 11:34:58,1714390498,10002,98528,23535,0,0,0,215,218,223,-2,0,-8,-1129,-1124,-1136,-51,-44,-60,910,918,902,102,260,3,2,0,0xF8,0x0000
+539,2024/04/29 11:35:08,1714390508,20002,98529,23526,0,2,-3,215,218,224,-2,0,-8,-1129,-1120,-1136,-51,-44,-60,902,903,901,251,290,239,2,0,0xF8,0x0000
+540,2024/04/29 11:35:18,1714390518,30001,98531,23509,0,1,0,215,218,224,-2,0,-12,-1129,-1124,-1144,-53,-44,-64,902,902,902,240,244,240,2,0,0xF8,0x0000
+541,2024/04/29 11:35:28,1714390528,40001,98528,23535,0,1,-1,215,218,224,-2,8,-20,-1129,-1120,-1140,-52,-36,-72,902,902,902,240,241,239,2,0,0xF8,0x0000
+542,2024/04/29 11:35:38,1714390538,50004,98528,23535,0,2,0,216,218,224,-2,0,-12,-1130,-1120,-1140,-52,-44,-60,902,902,902,239,241,239,2,0,0xF8,0x0000
+543,2024/04/29 11:35:48,1714390548,60000,98528,23535,0,2,-2,216,218,224,-2,4,-8,-1129,-1124,-1136,-53,-48,-60,906,918,901,161,266,1,2,0,0xD4,0x0000
+544,2024/04/29 11:35:58,1714390558,70001,98528,23535,4,11,-8,218,218,223,-1,0,-4,-1130,-1124,-1136,-53,-44,-64,903,918,901,225,293,1,2,0,0xC0,0x0000
+545,2024/04/29 11:36:08,1714390568,80003,98528,23535,-3,1,-8,220,218,223,-2,0,-8,-1130,-1124,-1136,-53,-48,-60,902,918,901,224,290,1,2,0,0xC2,0x0000
+546,2024/04/29 11:36:18,1714390578,90000,98527,23543,1,5,-1,223,219,223,-1,4,-8,-1129,-1124,-1136,-54,-48,-64,901,903,901,243,264,219,2,0,0xC2,0x0000
+547,2024/04/29 11:36:28,1714390588,100001,98525,23560,0,2,-4,224,219,223,-1,0,-12,-1130,-1124,-1136,-53,-44,-60,902,912,900,230,300,23,2,0,0xC1,0x0000
+548,2024/04/29 11:36:38,1714390598,110000,98526,23552,0,3,-1,223,219,223,-1,4,-8,-1129,-1124,-1136,-53,-44,-64,911,918,901,91,274,0,2,0,0xF8,0x0000
+549,2024/04/29 11:36:48,1714390608,120003,98524,23569,0,1,-1,223,219,223,-1,0,-12,-1130,-1124,-1136,-54,-44,-64,902,905,901,235,290,155,2,0,0xF8,0x0000
+550,2024/04/29 11:36:58,1714390618,130003,98525,23560,0,2,-1,223,219,223,-1,0,-4,-1130,-1124,-1136,-53,-44,-64,901,902,901,241,263,240,2,0,0xF8,0x0000
+551,2024/04/29 11:37:08,1714390628,140000,98524,23569,0,1,-1,223,219,223,-2,4,-12,-1129,-1120,-1140,-52,-32,-60,908,918,902,140,249,0,2,0,0xE0,0x0000
+552,2024/04/29 11:37:18,1714390638,150003,98523,23577,2,10,-1,223,219,223,-1,4,-8,-1129,-1124,-1136,-52,-44,-64,918,918,918,0,1,0,2,0,0xE0,0x0000
+553,2024/04/29 11:37:28,1714390648,160005,98522,23586,-2,1,-8,223,219,223,-2,4,-12,-1130,-1120,-1136,-52,-40,-64,908,918,901,126,268,1,2,0,0xD4,0x0000
+554,2024/04/29 11:37:38,1714390658,170004,98522,23586,0,2,0,224,219,223,-1,4,-4,-1130,-1124,-1136,-53,-44,-64,901,902,900,250,290,241,2,0,0xD4,0x0000
+555,2024/04/29 11:37:48,1714390668,180001,98522,23586,1,8,-1,225,219,223,-1,4,-8,-1130,-1124,-1136,-53,-44,-56,912,918,901,77,251,0,2,0,0xC0,0x0000
+556,2024/04/29 11:37:58,1714390678,190004,98519,23611,0,4,-7,225,219,223,-1,4,-8,-1129,-1124,-1136,-53,-44,-64,913,918,902,56,224,1,2,0,0xC2,0x0000
+557,2024/04/29 11:38:08,1714390688,200004,98520,23603,0,1,-3,227,219,223,-2,20,-44,-1130,-1124,-1136,-52,-40,-64,901,903,900,252,291,203,2,0,0xC2,0x0000
+558,2024/04/29 11:38:18,1714390698,210003,98521,23594,0,1,-2,230,219,224,-1,4,-12,-1130,-1124,-1136,-53,-44,-60,902,902,902,242,246,241,2,0,0xC2,0x0000
+559,2024/04/29 11:38:28,1714390708,220001,98513,23662,2,10,-1,231,219,224,-1,4,-8,-1129,-1124,-1136,-54,-48,-64,907,918,901,154,253,0,2,0,0xC0,0x0000
+560,2024/04/29 11:38:38,1714390718,230003,98521,23594,-2,1,-11,230,219,223,-1,4,-8,-1129,-1124,-1136,-53,-44,-64,917,918,887,0,1,-2,2,0,0xC0,0x0000
+561,2024/04/29 11:42:10,1714390930,10002,98517,23628,0,0,0,221,220,226,-2,4,-16,-1129,-1120,-1136,-51,-36,-64,917,918,917,3,4,3,2,0,0xC0,0x0000
+562,2024/04/29 11:42:20,1714390940,20005,98518,23620,0,1,-1,221,220,226,-2,4,-8,-1129,-1108,-1136,-51,-40,-64,917,918,917,3,3,3,2,0,0xC0,0x0000
+563,2024/04/29 11:42:30,1714390950,30001,98517,23628,0,3,-1,221,220,226,-1,4,-8,-1129,-1124,-1140,-52,-40,-60,916,918,904,25,168,3,2,0,0xC2,0x0000
+564,2024/04/29 11:42:40,1714390960,40005,98515,23645,0,3,-3,222,220,225,-1,4,-8,-1129,-1124,-1136,-53,-44,-64,901,903,900,248,293,196,2,0,0xC2,0x0000
+565,2024/04/29 11:42:50,1714390970,50002,98517,23628,0,2,-2,225,220,226,-2,4,-8,-1130,-1124,-1136,-52,-44,-60,903,917,901,208,253,1,2,0,0xC0,0x0000
+566,2024/04/29 11:43:00,1714390980,60004,98518,23620,0,2,-1,225,220,225,-1,4,-8,-1129,-1120,-1136,-52,-44,-60,917,918,917,0,1,0,2,0,0xC0,0x0000
+567,20106/02/07 06:28:15,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,255,255,0xFF,0xFFFF
+568,2024/04/29 11:50:21,1714391421,10005,98525,23560,0,0,0,219,221,225,0,8,-8,870,876,864,-48,-32,-60,917,918,917,3,4,3,2,0,0xC0,0x0000
+569,2024/04/29 11:50:31,1714391431,20000,98522,23586,0,5,-2,219,221,225,0,8,-4,871,884,864,-48,-24,-56,918,918,918,3,3,3,2,0,0xC0,0x0000
+570,2024/04/29 11:50:41,1714391441,30002,98525,23560,0,1,-3,219,221,225,0,4,-16,871,880,860,-47,-12,-68,918,918,918,3,3,3,2,0,0xC0,0x0000
+571,2024/04/29 11:50:51,1714391451,40000,98524,23569,0,1,-1,219,221,225,0,4,-4,870,880,856,-47,-40,-60,918,918,918,3,3,3,2,0,0xC0,0x0000
+572,2024/04/29 11:51:01,1714391461,50001,98524,23569,0,1,-1,219,221,225,0,4,-8,871,880,836,-48,-40,-64,918,918,918,3,3,3,2,0,0xC0,0x0000
+573,2024/04/29 11:51:11,1714391471,60003,98524,23569,0,2,-1,219,221,225,0,4,-4,871,876,860,-47,-40,-56,915,918,903,35,203,3,2,0,0xF8,0x0000
+574,2024/04/29 11:51:21,1714391481,70001,98523,23577,0,1,-2,219,221,225,0,4,-4,870,880,864,-48,-40,-56,901,903,901,250,289,196,2,0,0xF8,0x0000
+575,2024/04/29 11:51:31,1714391491,80004,98520,23603,0,5,-3,219,221,225,0,4,-4,870,884,864,-49,-36,-64,904,917,902,187,249,1,2,0,0xD4,0x0000
+576,2024/04/29 11:51:41,1714391501,90001,98523,23577,-1,0,-4,220,221,225,0,4,-4,870,876,864,-48,-40,-56,901,904,900,245,285,158,2,0,0xD4,0x0000
+577,2024/04/29 11:51:51,1714391511,100000,98521,23594,1,6,0,221,221,225,0,4,-4,870,876,860,-48,-40,-60,901,902,901,242,246,240,2,0,0xD4,0x0000
+578,2024/04/29 11:52:01,1714391521,110002,98524,23569,0,1,-3,223,221,225,0,4,-4,870,876,864,-49,-44,-56,901,902,901,240,244,240,2,0,0xD4,0x0000
+579,2024/04/29 11:52:11,1714391531,120002,98523,23577,1,5,0,225,221,225,0,4,-4,870,876,864,-48,-40,-56,901,901,901,241,244,240,2,0,0xD4,0x0000
+580,2024/04/29 11:52:21,1714391541,130001,98520,23603,0,2,-3,226,221,224,0,4,-4,870,876,864,-49,-40,-56,901,901,901,241,244,240,2,0,0xD4,0x0000
+581,2024/04/29 11:52:31,1714391551,140000,98521,23594,0,2,-1,226,221,224,0,12,-24,870,880,856,-49,-40,-68,915,917,901,22,250,0,2,0,0xC0,0x0000
+582,2024/04/29 11:52:41,1714391561,150002,98520,23603,0,1,-2,226,221,224,0,4,-4,870,880,860,-48,-36,-60,917,918,917,1,1,1,2,0,0xC0,0x0000
+583,2024/04/29 12:05:31,1714392331,10005,98508,23705,0,0,0,218,226,220,1,12,-8,-1129,-1116,-1140,-40,-16,-52,917,918,917,3,5,3,2,0,0xC0,0x0000
+584,2024/04/29 12:05:41,1714392341,20000,98506,23722,1,4,0,218,225,220,2,8,-4,-1130,-1120,-1140,-38,-28,-48,917,918,917,3,4,3,2,0,0xC0,0x0000
+585,2024/04/29 12:05:51,1714392351,30001,98502,23756,0,3,-3,218,225,220,2,8,-4,-1129,-1124,-1140,-40,-28,-52,904,918,900,193,289,3,2,0,0xF8,0x0000
+586,2024/04/29 12:06:01,1714392361,40003,98506,23722,0,3,-4,218,225,220,1,8,-4,-1130,-1124,-1144,-39,-20,-52,905,917,901,184,264,1,2,0,0xE0,0x0000
+587,2024/04/29 12:06:11,1714392371,50002,98506,23722,0,3,-1,218,225,220,1,8,-4,-1129,-1124,-1136,-38,-24,-48,917,918,917,1,3,1,2,0,0xE0,0x0000
+588,2024/04/29 12:06:21,1714392381,60002,98505,23730,0,3,-4,218,224,220,1,8,-4,-1129,-1124,-1136,-37,-24,-52,917,918,917,2,3,1,0,0,0xE0,0x0000
+589,2024/04/29 12:06:31,1714392391,70003,98505,23730,0,1,-1,218,224,220,2,4,0,-1128,-1120,-1140,-39,-28,-48,917,918,917,3,4,3,0,0,0xE0,0x0000
+590,2024/04/29 12:17:14,1714393034,10003,98498,23790,0,0,0,218,221,238,-1,4,-16,-1129,-1120,-1140,-50,-40,-80,917,918,917,3,5,3,0,0,0xC0,0x0000
+591,2024/04/29 12:17:24,1714393044,20005,98499,23781,0,0,-3,218,221,236,0,4,-8,-1129,-1124,-1136,-51,-40,-64,912,918,901,71,254,3,0,0,0xC1,0x0000
+592,2024/04/29 12:17:34,1714393054,30000,98497,23799,0,2,0,218,221,233,-1,8,-28,-1130,-1116,-1136,-51,-40,-64,901,912,900,255,293,23,0,0,0xC1,0x0000
+593,2024/04/29 12:17:44,1714393064,40001,98497,23799,0,2,0,218,221,231,-2,8,-40,-1129,-1124,-1136,-51,-40,-84,807,918,289,1,23,-1,0,0,0xC0,0x0000
+594,2024/04/29 12:20:56,1714393256,10005,98492,23841,0,0,0,218,221,226,-15,-8,-28,-122,-116,-128,-1041,-1036,-1048,869,918,537,2,4,-1,0,0,0xC0,0x0000
+595,2024/04/29 12:24:05,1714393445,10003,98494,23824,0,0,0,218,220,226,-15,-8,-24,-122,-116,-132,-1042,-1036,-1060,905,918,738,2,4,-1,0,0,0xC0,0x0000
+596,2024/04/29 12:24:22,1714393462,10004,98492,23841,0,0,0,218,220,226,-14,-8,-24,-122,-116,-128,-1042,-1036,-1048,917,918,917,3,4,3,0,0,0xC0,0x0000
+597,2024/04/29 15:17:49,1714403869,10005,98341,25127,0,0,0,231,220,223,-13,-8,-20,-122,-116,-132,-1042,-1036,-1048,1007,1008,1007,3,4,3,0,0,0xC0,0x0000
+598,2024/04/29 15:17:59,1714403879,20004,98340,25136,0,2,0,231,220,223,-13,-8,-20,-122,-116,-128,-1042,-1036,-1048,1007,1008,1007,3,3,3,0,0,0xC0,0x0000
+599,2024/04/29 15:18:09,1714403889,30000,98340,25136,0,1,-2,231,220,223,-12,-4,-24,-122,-112,-128,-1042,-1032,-1048,1007,1007,1007,3,3,3,0,0,0xC0,0x0000
+600,2024/04/29 15:18:19,1714403899,40004,98338,25153,0,1,0,231,220,223,-13,-8,-20,-121,-116,-132,-1042,-1036,-1052,1007,1007,1007,3,3,3,0,0,0xC0,0x0000
+601,2024/04/29 15:18:29,1714403909,50002,98338,25153,3,6,0,231,220,223,-13,-8,-20,-122,-116,-128,-1042,-1036,-1052,1006,1007,1006,3,3,3,0,0,0xC0,0x0000
+602,2024/04/29 15:18:39,1714403919,60002,98337,25161,-3,1,-7,231,220,223,-13,-4,-28,-121,-116,-128,-1042,-1036,-1048,1006,1006,1006,3,3,3,0,0,0xC0,0x0000
+603,2024/04/29 15:19:02,1714403942,83579,98333,25196,4,9,0,231,220,223,-13,-8,-20,-122,-116,-132,-1042,-1036,-1048,1005,1006,1005,3,3,3,0,0,0xC0,0x0000
+604,2024/04/29 15:19:12,1714403952,93003,98337,25161,-2,0,-4,231,220,223,-13,-4,-24,-122,-112,-128,-1042,-1036,-1048,1005,1006,1005,3,3,3,0,0,0xC0,0x0000
+605,2024/04/29 15:19:22,1714403962,103004,98336,25170,-1,1,-3,231,220,223,-13,-4,-24,-121,-116,-128,-1042,-1036,-1048,1005,1005,1005,3,4,3,0,0,0xC0,0x0000
+606,2024/04/29 15:19:32,1714403972,113001,98330,25221,2,9,0,231,220,223,-14,-4,-40,-123,-116,-152,-1042,-1032,-1064,866,1005,306,1,3,-1,0,0,0xC0,0x0000
+607,2024/04/29 15:20:10,1714404010,10002,98335,25178,0,0,0,231,220,223,-13,-4,-20,-122,-116,-128,-1042,-1036,-1048,1003,1004,1003,3,4,3,0,0,0xC0,0x0000
+608,2024/04/30 08:22:25,1714465345,10001,98421,24446,0,0,0,193,196,197,1,4,-4,-134,-128,-144,961,968,952,986,987,986,3,5,3,0,0,0xC0,0x0000
+609,2024/04/30 08:22:35,1714465355,20002,98418,24471,0,2,-1,193,196,197,1,4,-4,-134,-128,-140,961,968,956,987,988,987,3,3,3,0,0,0xC0,0x0000
+610,2024/04/30 08:22:45,1714465365,30004,98421,24446,0,1,-2,193,196,197,1,4,-4,-135,-128,-140,961,968,952,987,988,987,3,3,3,0,0,0xC0,0x0000
+611,2024/04/30 08:22:55,1714465375,40005,98421,24446,0,2,-1,193,196,197,0,4,0,-134,-128,-140,962,968,956,987,988,987,3,3,3,0,0,0xC0,0x0000
+612,2024/04/30 08:23:05,1714465385,50001,98414,24505,0,4,-3,193,196,197,0,4,0,-134,-128,-140,961,968,952,987,988,987,3,3,3,0,0,0xC0,0x0000
+613,2024/04/30 08:23:15,1714465395,60000,98424,24420,-1,3,-12,193,196,198,1,4,-4,-134,-128,-140,962,968,956,987,988,987,3,3,3,0,0,0xC0,0x0000
+614,2024/04/30 08:23:35,1714465415,70001,98422,24437,0,2,-1,193,196,198,1,4,0,-134,-128,-140,961,968,952,987,988,987,3,3,3,0,0,0xC0,0x0000
+615,2024/04/30 08:23:45,1714465425,80001,98422,24437,0,5,-5,193,196,198,1,4,0,-134,-128,-140,961,968,956,987,988,987,3,3,3,0,0,0xC0,0x0000
+616,2024/04/30 08:23:55,1714465435,90001,98422,24437,0,2,-2,193,196,198,1,4,0,-134,-128,-140,961,968,956,987,988,987,3,3,3,0,0,0xC0,0x0000
+617,2024/04/30 08:24:05,1714465445,100003,98422,24437,1,8,0,193,196,210,1,4,0,-135,-132,-140,962,968,956,987,988,987,3,3,3,0,0,0xC0,0x0000
+618,2024/04/30 08:24:15,1714465455,110004,98422,24437,0,1,-3,193,196,214,1,4,0,-134,-128,-140,962,968,956,987,988,987,3,3,3,0,0,0xC0,0x0000
+619,2024/04/30 08:24:25,1714465465,120004,98422,24437,0,0,-1,193,196,210,1,8,-4,-134,-128,-140,962,968,956,987,988,987,3,3,3,0,0,0xC0,0x0000
+620,2024/04/30 08:24:35,1714465475,130002,98425,24412,0,3,0,193,196,206,1,4,0,-134,-128,-144,961,968,956,987,988,987,3,3,3,0,0,0xC0,0x0000
+621,2024/04/30 08:24:45,1714465485,140002,98424,24420,0,1,-1,193,196,203,1,4,-4,-134,-128,-140,962,968,956,987,988,987,3,3,3,0,0,0xC0,0x0000
+622,2024/04/30 08:24:55,1714465495,150000,98426,24403,0,1,-2,193,196,202,1,4,0,-134,-132,-140,961,968,956,987,987,987,3,3,3,0,0,0xC0,0x0000
+623,2024/04/30 08:25:05,1714465505,160000,98424,24420,0,2,-2,193,196,201,1,4,-4,-134,-128,-140,962,968,956,987,987,987,3,3,3,0,0,0xC0,0x0000
+624,2024/04/30 08:25:15,1714465515,170001,98425,24412,0,1,-1,193,196,200,1,4,-4,-134,-128,-140,961,968,952,987,987,987,3,3,3,0,0,0xC0,0x0000
+625,2024/04/30 08:25:25,1714465525,180003,98425,24412,0,0,-2,193,196,200,0,4,-4,-134,-128,-140,961,968,956,987,987,987,3,3,3,0,0,0xC0,0x0000
+626,2024/04/30 08:25:35,1714465535,190004,98425,24412,0,2,-1,193,196,200,0,4,-4,-134,-132,-140,962,972,956,987,987,987,3,3,3,0,0,0xC0,0x0000
+627,2024/04/30 09:15:04,1714468504,10002,98467,24054,0,0,0,197,200,203,1,4,-4,-134,-124,-140,961,968,956,983,984,983,3,5,3,0,0,0xC0,0x0000
+628,2024/04/30 09:15:14,1714468514,20003,98468,24045,0,2,-2,197,200,203,1,4,0,-135,-128,-140,961,968,956,984,984,984,3,3,3,0,0,0xC0,0x0000
+629,2024/04/30 09:15:24,1714468524,30002,98468,24045,0,1,-1,197,201,203,0,4,-4,-135,-128,-140,961,968,956,984,984,984,3,3,3,0,0,0xC0,0x0000
+630,2024/04/30 09:15:34,1714468534,40001,98467,24054,0,1,-1,197,201,203,1,4,-4,-134,-128,-140,961,968,956,984,984,984,3,3,3,0,0,0xC0,0x0000
+631,2024/04/30 09:15:44,1714468544,50000,98468,24045,0,1,-3,197,201,203,1,4,0,-135,-128,-140,962,968,956,984,984,984,3,3,3,0,0,0xC0,0x0000
+632,2024/04/30 09:15:54,1714468554,60001,98469,24037,0,2,-2,197,201,203,1,4,0,-134,-128,-140,961,968,956,984,984,984,3,3,3,0,0,0xC0,0x0000
+633,2024/04/30 09:16:04,1714468564,70005,98469,24037,0,2,-1,197,201,204,1,4,-4,-134,-128,-140,962,972,956,984,984,984,3,3,3,0,0,0xC0,0x0000
+634,2024/04/30 09:16:14,1714468574,80000,98471,24020,0,1,-2,197,201,204,1,4,-4,-134,-128,-140,962,968,956,984,984,984,3,3,3,0,0,0xC0,0x0000
+635,2024/04/30 09:16:24,1714468584,90003,98470,24028,0,2,-1,197,201,204,1,4,0,-135,-132,-140,962,968,956,984,984,984,3,3,3,0,0,0xC0,0x0000
+636,2024/04/30 09:16:34,1714468594,100001,98471,24020,0,2,-2,197,201,204,1,4,-4,-134,-128,-144,961,972,952,984,984,984,3,3,3,0,0,0xC0,0x0000
+637,2024/04/30 09:16:44,1714468604,110004,98469,24037,0,1,-2,197,201,204,1,4,-4,-135,-132,-144,961,968,956,984,984,984,3,3,3,0,0,0xC0,0x0000
+638,2024/04/30 09:16:54,1714468614,120003,98467,24054,0,1,-1,197,201,204,1,4,0,-134,-128,-140,961,968,956,984,984,984,3,3,3,0,0,0xC0,0x0000
+639,2024/04/30 09:17:04,1714468624,130003,98472,24011,0,1,-2,197,201,204,1,4,-4,-135,-128,-140,961,968,956,984,984,984,3,3,3,0,0,0xC0,0x0000
+640,2024/04/30 09:17:14,1714468634,140002,98469,24037,0,1,-2,197,201,204,1,4,-4,-134,-128,-140,961,968,956,984,984,984,3,3,3,0,0,0xC0,0x0000
+641,2024/04/30 09:17:24,1714468644,150005,98471,24020,0,2,-3,197,201,204,1,4,-4,-134,-128,-140,962,968,952,983,984,983,3,3,3,0,0,0xC0,0x0000
+642,2024/04/30 09:17:34,1714468654,160002,98472,24011,0,4,-2,197,201,204,1,4,-4,-134,-128,-140,961,968,956,984,984,984,3,3,3,0,0,0xC0,0x0000
+643,2024/04/30 09:17:44,1714468664,170001,98473,24003,0,1,-3,197,201,203,1,4,0,-134,-132,-140,961,972,956,984,984,984,3,3,3,0,0,0xC0,0x0000
+644,2024/04/30 09:17:54,1714468674,180001,98474,23994,0,1,-2,197,201,203,1,4,-4,-134,-128,-144,961,968,956,984,984,984,3,3,3,0,0,0xC0,0x0000
+645,2024/04/30 09:18:04,1714468684,190000,98470,24028,1,6,0,197,201,203,1,4,-4,-134,-128,-140,962,968,952,984,984,984,3,3,3,0,0,0xC0,0x0000
+646,2024/04/30 09:18:14,1714468694,200005,98473,24003,-1,0,-6,198,201,203,0,4,0,-134,-128,-140,961,968,956,984,984,984,3,3,3,0,0,0xC0,0x0000
+647,2024/04/30 09:18:24,1714468704,210002,98471,24020,0,1,-2,197,201,203,1,4,-4,-134,-128,-144,962,968,956,983,984,983,3,3,3,0,0,0xC0,0x0000
+648,2024/04/30 09:18:34,1714468714,220000,98471,24020,0,4,-5,198,201,203,1,4,0,-134,-128,-144,961,968,956,984,984,984,3,3,3,0,0,0xC0,0x0000
+649,2024/04/30 09:18:44,1714468724,230002,98473,24003,0,4,-2,198,201,204,1,4,0,-134,-128,-140,962,968,956,984,984,984,3,3,3,0,0,0xC0,0x0000
+650,2024/04/30 09:18:54,1714468734,240001,98471,24020,0,2,-1,198,201,204,1,4,0,-134,-128,-140,961,968,956,983,984,983,3,3,3,0,0,0x80,0x0000
+651,2024/04/30 09:19:04,1714468744,250042,98472,24011,0,1,-3,198,201,204,1,4,-4,-134,-132,-140,962,968,956,983,983,983,3,4,3,0,0,0x80,0x0000
+652,2024/04/30 09:19:14,1714468754,260002,98473,24003,0,0,-1,198,201,204,0,4,-4,-134,-128,-140,961,968,956,983,983,983,3,4,3,0,0,0x80,0x0000
+653,2024/04/30 09:19:24,1714468764,270201,98473,24003,0,2,-1,198,201,203,1,8,-4,-134,-128,-140,962,968,956,983,983,983,3,4,3,0,0,0x80,0x0000
+654,2024/04/30 09:19:34,1714468774,280003,98472,24011,0,2,-3,198,201,204,1,4,0,-135,-128,-140,961,968,952,983,983,983,3,4,3,0,0,0x80,0x0000
+655,2024/04/30 09:19:44,1714468784,290002,98473,24003,0,1,-2,198,201,204,0,4,-4,-134,-128,-140,961,968,956,983,983,983,3,3,3,0,0,0x80,0x0000
+656,2024/04/30 09:19:54,1714468794,300001,98475,23986,0,1,-1,198,201,204,1,4,0,-134,-128,-144,961,968,956,983,983,983,3,3,3,0,0,0x80,0x0000
+657,2024/04/30 09:20:04,1714468804,310004,98472,24011,0,3,-1,198,201,205,1,4,0,-134,-128,-140,962,968,956,983,983,983,3,4,3,0,0,0x80,0x0000
+658,2024/04/30 09:20:14,1714468814,320003,98474,23994,0,2,-3,198,201,205,1,4,0,-134,-128,-144,961,968,952,983,983,983,3,3,3,0,0,0x80,0x0000
+659,2024/04/30 09:20:24,1714468824,330003,98473,24003,2,7,-1,198,201,205,1,8,0,-135,-128,-140,962,972,956,983,983,983,3,3,3,0,0,0x80,0x0000
+660,2024/04/30 09:20:34,1714468834,340000,98473,24003,-1,0,-6,198,201,205,0,4,-4,-134,-128,-140,961,968,956,983,983,983,3,3,3,0,0,0x80,0x0000
+661,2024/04/30 09:20:44,1714468844,350005,98473,24003,0,0,-3,198,201,205,1,4,-4,-135,-124,-140,961,968,956,983,983,983,3,3,3,0,0,0x80,0x0000
+662,2024/04/30 09:20:54,1714468854,360002,98472,24011,0,0,-2,198,201,205,1,4,0,-134,-128,-140,961,968,952,983,983,983,3,3,3,0,0,0x80,0x0000
+663,2024/04/30 09:21:04,1714468864,370000,98473,24003,0,2,-2,198,201,205,1,4,-4,-135,-132,-140,961,968,956,983,983,983,3,3,3,0,0,0x80,0x0000
+664,2024/04/30 09:21:14,1714468874,380001,98470,24028,3,10,-1,198,201,205,1,4,-4,-134,-132,-140,962,968,956,983,984,983,3,3,3,0,0,0xC0,0x0000
+665,2024/04/30 09:21:24,1714468884,390000,98479,23952,-4,0,-9,198,201,205,1,4,-4,-134,-128,-140,961,968,952,983,984,983,3,3,3,0,0,0xC0,0x0000
+666,2024/04/30 09:21:34,1714468894,400001,98474,23994,0,3,-1,198,201,205,1,4,0,-135,-128,-144,962,968,956,983,984,983,3,3,3,0,0,0xC0,0x0000
+667,2024/04/30 09:21:44,1714468904,410000,98474,23994,0,1,-1,198,201,205,1,4,-4,-134,-128,-140,962,968,952,983,984,983,3,3,3,0,0,0xC0,0x0000
+668,2024/04/30 09:21:54,1714468914,420162,98476,23977,0,1,-1,198,201,205,0,4,0,-134,-128,-140,961,972,952,983,984,983,3,3,3,0,0,0xC0,0x0000
+669,2024/04/30 09:22:04,1714468924,430000,98475,23986,0,1,-1,198,201,205,1,4,-4,-135,-132,-140,962,972,956,983,984,983,3,3,3,0,0,0xC0,0x0000
+670,2024/04/30 09:22:14,1714468934,440000,98476,23977,0,3,-1,198,201,206,0,4,-4,-134,-128,-140,962,972,956,983,984,983,3,3,3,0,0,0xC0,0x0000
+671,2024/04/30 09:22:24,1714468944,450004,98475,23986,0,2,-1,198,201,205,1,4,-4,-135,-128,-140,962,968,956,983,984,983,3,3,3,0,0,0xC0,0x0000
+672,2024/04/30 09:22:34,1714468954,460017,98474,23994,0,1,-1,198,201,205,1,4,0,-134,-128,-140,962,968,956,983,984,983,3,3,3,0,0,0xC0,0x0000
+673,20106/02/07 06:28:15,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,255,255,0xFF,0xFFFF
+674,20106/02/07 06:28:15,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,255,255,0xFF,0xFFFF
+675,20106/02/07 06:28:15,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,255,255,0xFF,0xFFFF
+676,20106/02/07 06:28:15,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,255,255,0xFF,0xFFFF
+677,20106/02/07 06:28:15,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,255,255,0xFF,0xFFFF
+678,20106/02/07 06:28:15,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,255,255,0xFF,0xFFFF
+679,20106/02/07 06:28:15,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,255,255,0xFF,0xFFFF
+680,20106/02/07 06:28:15,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,255,255,0xFF,0xFFFF
+# [A                                                            # memory read nor tlm 0 680[A                                                            # memory status
+NOR memory status: 
+ * NOR memory is ready
+ * 674 saved telemetry lines. 0.08% used. Last address is 43136
+ * 187 saved events. 0.02% used. Last address is 52431792
+FRAM memory status: 
+ * FRAM memory is ready
+ * 1 saved telemetry. 0.06% used. Last address is 172092
+ * 115 saved events. 45.10% used. Last address is 276268
+# memory read fram tlm 0 10
+address,date,unixtime,uptime,pressure,altitude,verticalSpeedAVG,verticalSpeedMAX,verticalSpeedMIN,temperatures0,temperatures1,temperatures2,accXAxisAVG,accXAxisMAX,accXAxisMIN,accYAxisAVG,accYAxisMAX,accYAxisMIN,accZAxisAVG,accZAxisMAX,accZAxisMIN,voltagesAVG,voltagesMAX,voltagesMIN,currentsAVG,currentsMAX,currentsMIN,state,sub_state,switches_status,errors
+0,2024/04/29 07:18:05,1714375085,600003,98617,22777,0,8,-7,217,206,206,4,36,-16,-1129,-1068,-1176,-47,0,-100,997,1012,993,191,311,0,0,0,0xF8,0x0000
+1,20106/02/07 06:28:15,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,255,255,0xFF,0xFFFF
+2,20106/02/07 06:28:15,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,255,255,0xFF,0xFFFF
+3,20106/02/07 06:28:15,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,255,255,0xFF,0xFFFF
+4,20106/02/07 06:28:15,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,255,255,0xFF,0xFFFF
+5,20106/02/07 06:28:15,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,255,255,0xFF,0xFFFF
+6,20106/02/07 06:28:15,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,255,255,0xFF,0xFFFF
+7,20106/02/07 06:28:15,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,255,255,0xFF,0xFFFF
+8,20106/02/07 06:28:15,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,255,255,0xFF,0xFFFF
+9,20106/02/07 06:28:15,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,255,255,0xFF,0xFFFF
+10,20106/02/07 06:28:15,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,255,255,0xFF,0xFFFF
+# conf
+sim_enabled = 0
+sim_pressure = 0
+sim_sunriseSignal = 0
+flightState = 0
+flightSubState = 0
+fram_tlmSavePeriod = 600
+nor_deviceSelected = 0
+nor_tlmSavePeriod = 10
+baro_readPeriod = 1000
+ina_readPeriod = 100
+acc_readPeriod = 100
+temp_readPeriod = 1000
+leds = 1
+gopro_model[0] = 0
+gopro_model[1] = 0
+gopro_model[2] = 0
+gopro_model[3] = 0
+gopro_beeps = 2
+gopro_leds = 0
+gopro_pictureSleep = 2500
+launch_heightThreshold = 3000
+launch_climbThreshold = 2
+launch_videoDurationLong = 7200
+launch_videoDurationShort = 3600
+launch_camerasLong = 0x03
+launch_camerasShort = 0x0C
+launch_timeClimbMaximum = 7200
+flight_timelapse_period = 120
+flight_camerasFirstLeg = 0x0F
+flight_camerasSecondLeg = 0x0B
+flight_timeSecondLeg = 86400
+landing_heightThreshold = 25000
+landing_heightSecurityThreshold = 32000
+landing_speedThreshold = -15
+landing_videoDurationLong = 3600
+landing_videoDurationShort = 900
+landing_camerasLong = 0x02
+landing_camerasShort = 0x09
+landing_camerasHighSpeed = 0x04
+landing_heightShortStart = 3000
+recovery_videoDuration = 120
+rtcDriftFlag = 1
+rtcDrift = 2426
+# status
+================================
+Uptime:         503.200s
+Time:           2024/04/30 09:23:17
+State:          0
+Substate:       0
+Switches:       0xC0
+Errors:         0x0000
+CPU Temp:       19.8ºC
+Pressure:       984.74mbar
+Altitude:       239.94m
+Current Speed:  0.020m/s
+Sunrise GPIO:   HIGH
+Temp CPU:       19.8ºC
+Temp [1]:       20.2ºC
+Temp [2]:       20.5ºC
+Statistics:
+                Min	Avg	Max
+Speed(m/s):     -0.09	0.00	0.10
+Battery(V):     9.83	9.83	9.84
+Battery(mA):    3	3	5
+AccX(g):        -0.00	0.00	0.01
+AccY(g):        -0.14	-0.13	-0.12
+AccZ(g):        0.95	0.96	0.97
+Altitude History:
+  [0]:	498.793s	 240.03m
+  [1]:	499.798s	 239.86m
+  [2]:	500.800s	 240.03m
+  [3]:	501.805s	 239.69m
+  [4]:	502.808s	 239.94m
+  [5]:	493.780s	 239.69m
+  [6]:	494.782s	 239.77m
+  [7]:	495.783s	 239.86m
+  [8]:	496.788s	 239.86m
+  [9]:	497.789s	 239.77m
+Current Speed:   0.020m/s
+# conf set flightState 1
+Selected parameter 'flightState' has been set to '1'.
+# conf set flightSubState 0
+Selected parameter 'flightSubState' has been set to '0'.
+# conf set sim_enabled 0
+Selected parameter 'sim_enabled' has been set to '0'.
+# conf set sim_sunriseSignal 0
+Selected parameter 'sim_sunriseSignal' has been set to '0'.
+# memory statusconf
+sim_enabled = 0
+sim_pressure = 0
+sim_sunriseSignal = 0
+flightState = 1
+flightSubState = 0
+fram_tlmSavePeriod = 600
+nor_deviceSelected = 0
+nor_tlmSavePeriod = 10
+baro_readPeriod = 1000
+ina_readPeriod = 100
+acc_readPeriod = 100
+temp_readPeriod = 1000
+leds = 1
+gopro_model[0] = 0
+gopro_model[1] = 0
+gopro_model[2] = 0
+gopro_model[3] = 0
+gopro_beeps = 2
+gopro_leds = 0
+gopro_pictureSleep = 2500
+launch_heightThreshold = 3000
+launch_climbThreshold = 2
+launch_videoDurationLong = 7200
+launch_videoDurationShort = 3600
+launch_camerasLong = 0x03
+launch_camerasShort = 0x0C
+launch_timeClimbMaximum = 7200
+flight_timelapse_period = 120
+flight_camerasFirstLeg = 0x0F
+flight_camerasSecondLeg = 0x0B
+flight_timeSecondLeg = 86400
+landing_heightThreshold = 25000
+landing_heightSecurityThreshold = 32000
+landing_speedThreshold = -15
+landing_videoDurationLong = 3600
+landing_videoDurationShort = 900
+landing_camerasLong = 0x02
+landing_camerasShort = 0x09
+landing_camerasHighSpeed = 0x04
+landing_heightShortStart = 3000
+recovery_videoDuration = 120
+rtcDriftFlag = 1
+rtcDrift = 2426
+# memory status
+NOR memory status: 
+ * NOR memory is ready
+ * 684 saved telemetry lines. 0.08% used. Last address is 43776
+ * 191 saved events. 0.02% used. Last address is 52431856
+FRAM memory status: 
+ * FRAM memory is ready
+ * 1 saved telemetry. 0.06% used. Last address is 172092
+ * 119 saved events. 46.67% used. Last address is 276332
+# memory read nor events 0 200
+address,date,unixtime,uptime,state,sub_state,event,payload0,payload1,payload2,payload3,payload4
+0,2024/02/29 11:57:57,1709207877,923623,0,0,200,250,255,111,3,0
+1,2024/02/29 11:57:58,1709207878,924392,0,0,200,251,255,111,3,0
+2,2024/02/29 11:58:00,1709207880,926939,0,0,200,252,255,111,3,0
+3,2024/02/29 11:58:03,1709207883,929639,0,0,200,254,255,111,3,0
+4,2024/02/29 11:58:07,1709207887,933569,0,0,200,255,255,111,3,0
+5,2024/02/29 11:58:12,1709207892,938055,0,0,200,255,255,111,3,0
+6,2024/02/29 11:58:48,1709207928,974889,0,0,200,255,255,79,3,0
+7,2024/03/05 12:53:31,1709643211,11,0,0,69,2,0,0,0,12
+8,2024/03/05 12:53:44,1709643224,11,0,0,69,2,0,0,0,12
+9,2024/03/05 12:54:09,1709643249,13,0,0,69,4,0,0,0,13
+10,2024/03/05 12:54:29,1709643269,13,0,0,69,4,0,0,0,13
+11,2024/03/05 12:55:15,1709643315,13,0,0,69,2,0,0,0,13
+12,2024/03/05 19:40:12,1709667612,116665,0,0,10,0,0,0,0,0
+13,2024/03/05 19:40:30,1709667630,134724,0,0,19,0,0,0,0,0
+14,2024/03/05 19:40:41,1709667641,145019,0,0,14,0,0,0,0,0
+15,2024/03/05 19:40:50,1709667650,154131,0,0,15,0,0,0,0,0
+16,2024/03/05 19:41:09,1709667669,173102,0,0,12,0,1,0,0,10
+17,2024/03/05 19:41:34,1709667694,198115,0,0,13,0,0,0,0,0
+18,2024/03/05 19:41:45,1709667705,209422,0,0,15,0,0,0,0,0
+19,2024/03/05 19:42:07,1709667727,231244,0,0,200,255,255,236,2,0
+20,2024/03/05 19:53:59,1709668439,13,0,0,69,2,0,0,0,13
+21,2024/03/05 19:54:06,1709668446,402,0,0,69,24,0,0,0,13
+22,2024/03/05 19:54:14,1709668454,13,0,0,69,2,0,0,0,13
+23,2024/03/05 19:54:38,1709668478,17,0,0,69,4,0,0,0,14
+24,2024/03/05 19:55:08,1709668508,373,0,0,69,24,0,0,0,14
+25,2024/03/05 19:55:14,1709668514,13,0,0,69,4,0,0,0,14
+26,2024/03/05 19:56:40,1709668600,13,0,0,69,2,0,0,0,14
+27,2024/03/05 19:56:58,1709668618,793,0,0,69,24,0,0,0,14
+28,2024/03/05 19:57:11,1709668631,14252,0,0,10,0,0,0,0,0
+29,2024/03/05 19:57:27,1709668647,30154,0,0,14,0,0,0,0,0
+30,2024/03/05 20:00:53,1709668853,236553,0,0,10,1,0,0,0,0
+31,2024/03/05 20:01:09,1709668869,252347,0,0,14,1,0,0,0,0
+32,2024/03/05 20:17:29,1709669849,1232180,0,0,10,1,0,0,0,0
+33,2024/03/05 20:17:40,1709669860,1243609,0,0,19,1,0,0,0,0
+34,2024/03/05 20:18:00,1709669880,1263210,0,0,14,1,0,0,0,0
+35,2024/03/05 20:18:05,1709669885,1268533,0,0,15,1,0,0,0,0
+36,2024/03/05 20:18:25,1709669905,1288107,0,0,12,1,1,0,0,5
+37,2024/03/05 20:18:45,1709669925,1308124,0,0,13,1,0,0,0,0
+38,2024/03/05 20:21:06,1709670066,1449814,0,0,15,1,0,0,0,0
+39,2024/03/05 20:24:10,1709670250,1633077,0,0,10,2,0,0,0,0
+40,2024/03/05 20:24:25,1709670265,1648623,0,0,19,2,0,0,0,0
+41,2024/03/05 20:24:38,1709670278,1661366,0,0,14,2,0,0,0,0
+42,2024/03/05 20:24:44,1709670284,1667457,0,0,15,2,0,0,0,0
+43,2024/03/05 20:25:05,1709670305,1688589,0,0,12,2,1,0,0,5
+44,2024/03/05 20:25:25,1709670325,1708603,0,0,13,2,0,0,0,0
+45,2024/03/05 20:27:38,1709670458,1841613,0,0,15,2,0,0,0,0
+46,2024/03/05 20:35:36,1709670936,2319341,0,0,10,3,0,0,0,0
+47,2024/03/05 20:35:55,1709670955,2338317,0,0,19,3,0,0,0,0
+48,2024/03/05 20:36:15,1709670975,2358143,0,0,14,3,0,0,0,0
+49,2024/03/05 20:36:20,1709670980,2363483,0,0,15,3,0,0,0,0
+50,2024/03/05 20:36:41,1709671001,2384530,0,0,12,3,1,0,0,5
+51,2024/03/05 20:37:01,1709671021,2404553,0,0,13,3,0,0,0,0
+52,2024/03/05 20:37:58,1709671078,2460484,0,0,10,3,0,0,0,0
+53,2024/03/05 20:38:13,1709671093,2475346,0,0,19,3,0,0,0,0
+54,2024/03/05 20:38:23,1709671103,2485225,0,0,14,3,0,0,0,0
+55,2024/03/05 20:38:39,1709671119,2501631,0,0,15,3,0,0,0,0
+56,2024/03/05 20:43:26,1709671406,668,0,0,69,24,0,0,0,14
+57,2024/03/05 20:43:47,1709671427,22996,0,0,200,255,255,159,2,0
+58,2024/03/06 09:16:55,1709716615,13,0,0,69,2,0,0,0,14
+59,2024/03/06 09:17:36,1709716656,41904,0,0,15,0,0,0,0,0
+60,2024/03/06 09:17:36,1709716656,41987,0,0,15,1,0,0,0,0
+61,2024/03/06 09:17:37,1709716657,42072,0,0,15,2,0,0,0,0
+62,2024/03/06 09:17:39,1709716659,44884,0,0,15,3,0,0,0,0
+63,2024/03/06 09:18:48,1709716728,113410,1,0,1,102,108,105,103,1
+64,2024/03/06 09:19:46,1709716786,171544,1,0,200,255,255,104,3,0
+65,2024/04/29 06:47:52,1714373272,13,0,0,69,2,0,0,0,14
+66,2024/04/29 06:48:50,1714373330,58186,1,0,200,255,255,19,3,0
+67,2024/04/29 06:48:57,1714373337,13,0,0,69,2,0,0,0,14
+68,2024/04/29 06:50:26,1714373426,89186,0,0,1,102,108,105,103,0
+69,2024/04/29 06:55:20,1714373720,383869,0,0,200,255,255,78,3,0
+70,2024/04/29 07:08:05,1714374485,13,0,0,69,2,0,0,0,14
+71,2024/04/29 07:08:52,1714374532,47162,0,0,10,0,0,0,0,0
+72,2024/04/29 07:10:43,1714374643,158710,0,0,14,0,0,0,0,0
+73,2024/04/29 07:10:51,1714374651,166014,0,0,10,1,0,0,0,0
+74,2024/04/29 07:11:21,1714374681,196144,0,0,14,0,0,0,0,0
+75,2024/04/29 07:11:24,1714374684,199080,0,0,14,1,0,0,0,0
+76,2024/04/29 07:11:33,1714374693,208333,0,0,10,1,0,0,0,0
+77,2024/04/29 07:15:01,1714374901,416211,0,0,14,1,0,0,0,0
+78,2024/04/29 07:15:09,1714374909,424331,0,0,10,0,0,0,0,0
+79,2024/04/29 07:16:45,1714375005,520292,0,0,14,0,0,0,0,0
+80,2024/04/29 07:17:11,1714375031,546997,0,0,10,3,0,0,0,0
+81,2024/04/29 07:18:47,1714375127,642873,0,0,14,3,0,0,0,0
+82,2024/04/29 07:19:01,1714375141,656820,0,0,10,2,0,0,0,0
+83,2024/04/29 07:21:08,1714375268,783312,0,0,14,2,0,0,0,0
+84,2024/04/29 07:21:12,1714375272,787827,0,0,200,255,255,243,3,0
+85,2024/04/29 07:26:34,1714375594,1109912,0,0,200,255,255,198,3,0
+86,2024/04/29 07:55:22,1714377322,13,0,0,69,2,0,0,0,14
+87,2024/04/29 07:55:44,1714377344,22773,1,0,1,102,108,105,103,1
+88,2024/04/29 07:56:04,1714377364,42090,1,0,1,115,105,109,95,2
+89,2024/04/29 07:56:04,1714377364,42098,1,0,100,0,0,0,0,0
+90,2024/04/29 07:56:19,1714377379,57002,1,0,101,0,0,0,0,0
+91,2024/04/29 07:56:19,1714377379,57004,1,0,20,2,0,0,1,0
+92,2024/04/29 07:56:19,1714377379,57006,2,0,12,0,1,0,28,32
+93,2024/04/29 07:56:19,1714377379,57008,2,0,12,1,1,0,28,32
+94,2024/04/29 07:56:19,1714377379,57010,2,0,12,2,1,0,14,16
+95,2024/04/29 07:56:19,1714377379,57012,2,0,12,3,1,0,14,16
+96,2024/04/29 07:56:29,1714377389,67220,2,0,1,115,105,109,95,0
+97,2024/04/29 07:56:29,1714377389,67228,2,0,100,1,0,0,0,0
+98,2024/04/29 07:57:00,1714377420,98870,2,0,13,0,0,0,0,0
+99,2024/04/29 07:57:03,1714377423,101840,2,0,13,1,0,0,0,0
+100,2024/04/29 07:57:07,1714377427,105284,2,0,13,2,0,0,0,0
+101,2024/04/29 07:57:10,1714377430,108960,2,0,13,3,0,0,0,0
+102,2024/04/29 07:57:31,1714377451,129681,0,0,1,102,108,105,103,0
+103,2024/04/29 07:57:42,1714377462,140189,0,0,15,0,0,0,0,0
+104,2024/04/29 07:57:44,1714377464,142091,0,0,15,1,0,0,0,0
+105,2024/04/29 07:57:46,1714377466,144186,0,0,15,2,0,0,0,0
+106,2024/04/29 07:57:48,1714377468,146268,0,0,15,3,0,0,0,0
+107,2024/04/29 07:58:14,1714377494,172359,0,0,200,254,255,129,3,0
+108,2024/04/29 07:58:17,1714377497,175511,0,0,200,255,255,62,1,0
+109,2024/04/29 08:40:22,1714380022,13,0,0,69,2,0,0,0,14
+110,2024/04/29 08:41:49,1714380109,87201,0,0,200,255,255,112,3,0
+111,2024/04/29 11:09:17,1714388957,13,0,0,69,2,0,0,0,14
+112,2024/04/29 11:10:36,1714389036,79975,1,0,1,102,108,105,103,1
+113,2024/04/29 11:10:54,1714389054,97737,1,0,1,115,105,109,95,2
+114,2024/04/29 11:10:54,1714389054,97745,1,0,100,0,0,0,0,0
+115,2024/04/29 11:11:09,1714389069,112002,1,0,101,0,0,0,0,0
+116,2024/04/29 11:11:09,1714389069,112004,1,0,20,2,0,0,1,0
+117,2024/04/29 11:11:09,1714389069,112006,2,0,12,0,1,0,28,32
+118,2024/04/29 11:11:09,1714389069,112008,2,0,12,1,1,0,28,32
+119,2024/04/29 11:11:09,1714389069,112010,2,0,12,2,1,0,14,16
+120,2024/04/29 11:11:09,1714389069,112012,2,0,12,3,1,0,14,16
+121,2024/04/29 11:11:11,1714389071,114603,2,0,1,115,105,109,95,0
+122,2024/04/29 11:11:11,1714389071,114610,2,0,100,1,0,0,0,0
+123,2024/04/29 11:12:02,1714389122,165344,2,0,13,0,0,0,0,0
+124,2024/04/29 11:12:06,1714389126,169881,2,0,13,1,0,0,0,0
+125,2024/04/29 11:12:10,1714389130,173084,2,0,13,2,0,0,0,0
+126,2024/04/29 11:12:13,1714389133,176237,2,0,13,3,0,0,0,0
+127,2024/04/29 11:12:25,1714389145,188273,2,0,15,0,0,0,0,0
+128,2024/04/29 11:12:27,1714389147,190821,2,0,15,1,0,0,0,0
+129,2024/04/29 11:12:31,1714389151,194304,2,0,15,2,0,0,0,0
+130,2024/04/29 11:12:34,1714389154,197681,2,0,15,3,0,0,0,0
+131,2024/04/29 11:14:03,1714389243,879,0,0,69,24,0,0,0,14
+132,2024/04/29 11:14:13,1714389253,11919,2,0,200,254,255,98,3,0
+133,2024/04/29 11:14:17,1714389257,15032,2,0,200,255,255,38,1,0
+134,2024/04/29 11:34:48,1714390488,13,0,0,69,2,0,0,0,14
+135,2024/04/29 11:34:52,1714390492,4928,2,0,10,3,0,0,0,0
+136,2024/04/29 11:35:36,1714390536,48698,2,0,14,3,0,0,0,0
+137,2024/04/29 11:35:41,1714390541,53944,2,0,10,2,0,0,0,0
+138,2024/04/29 11:35:53,1714390553,65972,2,0,14,2,0,0,0,0
+139,2024/04/29 11:35:58,1714390558,70184,2,0,10,1,0,0,0,0
+140,2024/04/29 11:36:15,1714390575,87316,2,0,14,1,0,0,0,0
+141,2024/04/29 11:36:18,1714390578,90111,2,0,10,0,0,0,0,0
+142,2024/04/29 11:36:28,1714390588,100563,2,0,14,0,0,0,0,0
+143,2024/04/29 11:36:37,1714390597,109586,2,0,10,3,0,0,0,0
+144,2024/04/29 11:37:00,1714390620,132861,2,0,14,3,0,0,0,0
+145,2024/04/29 11:37:21,1714390641,153938,2,0,10,2,0,0,0,0
+146,2024/04/29 11:37:38,1714390658,170315,2,0,14,2,0,0,0,0
+147,2024/04/29 11:37:54,1714390674,186742,2,0,10,1,0,0,0,0
+148,2024/04/29 11:38:21,1714390701,213537,2,0,14,1,0,0,0,0
+149,2024/04/29 11:38:37,1714390717,229953,2,0,200,254,255,119,3,0
+150,2024/04/29 11:38:39,1714390719,231529,2,0,200,255,255,71,2,0
+151,2024/04/29 11:38:39,1714390719,231842,2,0,200,254,255,14,2,0
+152,2024/04/29 11:38:40,1714390720,232276,2,0,200,255,255,157,1,0
+153,2024/04/29 11:42:00,1714390920,13,0,0,69,2,0,0,0,14
+154,2024/04/29 11:42:28,1714390948,28279,2,0,10,1,0,0,0,0
+155,2024/04/29 11:42:45,1714390965,45718,2,0,14,1,0,0,0,0
+156,2024/04/29 11:43:06,1714390986,66611,2,0,200,255,255,112,3,0
+157,2024/04/29 11:50:11,1714391411,13,0,0,69,2,0,0,0,14
+158,2024/04/29 11:51:08,1714391468,57720,2,0,10,3,0,0,0,0
+159,2024/04/29 11:51:25,1714391485,74199,2,0,14,3,0,0,0,0
+160,2024/04/29 11:51:29,1714391489,78793,2,0,10,2,0,0,0,0
+161,2024/04/29 11:52:18,1714391538,127979,2,0,14,2,0,0,0,0
+162,2024/04/29 11:52:41,1714391561,150599,2,0,200,255,255,134,3,0
+163,2024/04/29 12:05:21,1714392321,13,0,0,69,2,0,0,0,14
+164,2024/04/29 12:05:42,1714392342,21398,2,0,10,3,0,0,0,0
+165,2024/04/29 12:05:55,1714392355,34413,2,0,14,3,0,0,0,0
+166,2024/04/29 12:06:12,1714392372,51887,0,0,1,102,108,105,103,0
+167,2024/04/29 12:06:33,1714392393,72077,0,0,200,255,255,118,3,0
+168,2024/04/29 12:17:04,1714393024,13,0,0,69,2,0,0,0,14
+169,2024/04/29 12:17:20,1714393040,16127,0,0,10,0,0,0,0,0
+170,2024/04/29 12:17:30,1714393050,26827,0,0,14,0,0,0,0,0
+171,2024/04/29 12:17:40,1714393060,36702,0,0,200,255,255,106,3,0
+172,2024/04/29 12:20:46,1714393246,13,0,0,69,2,0,0,0,14
+173,2024/04/29 12:20:54,1714393254,8714,0,0,200,255,255,222,2,0
+174,2024/04/29 12:23:55,1714393435,13,0,0,69,2,0,0,0,14
+175,2024/04/29 12:24:04,1714393444,9708,0,0,200,255,255,226,2,0
+176,2024/04/29 12:24:12,1714393452,13,0,0,69,2,0,0,0,14
+177,2024/04/29 12:24:25,1714393465,13421,0,0,200,255,255,102,3,0
+178,2024/04/29 15:17:39,1714403859,13,0,0,69,2,0,0,0,14
+179,2024/04/29 15:19:28,1714403968,109503,0,0,200,255,255,165,3,0
+180,2024/04/29 15:20:00,1714404000,13,0,0,69,2,0,0,0,14
+181,2024/04/30 08:22:15,1714465335,13,0,0,69,2,0,0,0,14
+182,2024/04/30 08:25:39,1714465539,194556,0,0,200,255,255,170,3,0
+183,2024/04/30 09:14:54,1714468494,13,0,0,69,2,0,0,0,14
+184,2024/04/30 09:18:51,1714468731,237393,0,0,100,0,0,0,0,0
+185,2024/04/30 09:19:06,1714468746,252052,0,0,101,0,0,0,0,0
+186,2024/04/30 09:21:05,1714468865,371298,0,0,100,1,0,0,0,0
+187,2024/04/30 09:23:26,1714469006,512393,1,0,1,102,108,105,103,1
+188,2024/04/30 09:23:32,1714469012,518539,1,0,1,102,108,105,103,0
+189,2024/04/30 09:23:39,1714469019,525491,1,0,1,115,105,109,95,0
+190,2024/04/30 09:23:45,1714469025,531269,1,0,1,115,105,109,95,0
+191,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+192,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+193,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+194,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+195,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+196,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+197,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+198,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+199,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+200,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+# memory read fram events 0 200
+address,date,unixtime,uptime,state,sub_state,event,payload0,payload1,payload2,payload3,payload4
+0,2024/03/06 09:19:46,1709716786,171544,1,0,200,255,255,104,3,0
+1,2024/04/29 06:47:52,1714373272,13,0,0,69,2,0,0,0,14
+2,2024/04/29 06:48:50,1714373330,58186,1,0,200,255,255,19,3,0
+3,2024/04/29 06:48:57,1714373337,13,0,0,69,2,0,0,0,14
+4,2024/04/29 06:50:26,1714373426,89186,0,0,1,102,108,105,103,0
+5,2024/04/29 06:55:20,1714373720,383869,0,0,200,255,255,78,3,0
+6,2024/04/29 07:08:05,1714374485,13,0,0,69,2,0,0,0,14
+7,2024/04/29 07:08:52,1714374532,47162,0,0,10,0,0,0,0,0
+8,2024/04/29 07:10:43,1714374643,158710,0,0,14,0,0,0,0,0
+9,2024/04/29 07:10:51,1714374651,166014,0,0,10,1,0,0,0,0
+10,2024/04/29 07:11:21,1714374681,196144,0,0,14,0,0,0,0,0
+11,2024/04/29 07:11:24,1714374684,199080,0,0,14,1,0,0,0,0
+12,2024/04/29 07:11:33,1714374693,208333,0,0,10,1,0,0,0,0
+13,2024/04/29 07:15:01,1714374901,416211,0,0,14,1,0,0,0,0
+14,2024/04/29 07:15:09,1714374909,424331,0,0,10,0,0,0,0,0
+15,2024/04/29 07:16:45,1714375005,520292,0,0,14,0,0,0,0,0
+16,2024/04/29 07:17:11,1714375031,546997,0,0,10,3,0,0,0,0
+17,2024/04/29 07:18:47,1714375127,642873,0,0,14,3,0,0,0,0
+18,2024/04/29 07:19:01,1714375141,656820,0,0,10,2,0,0,0,0
+19,2024/04/29 07:21:08,1714375268,783312,0,0,14,2,0,0,0,0
+20,2024/04/29 07:21:12,1714375272,787827,0,0,200,255,255,243,3,0
+21,2024/04/29 07:26:34,1714375594,1109912,0,0,200,255,255,198,3,0
+22,2024/04/29 07:55:22,1714377322,13,0,0,69,2,0,0,0,14
+23,2024/04/29 07:55:44,1714377344,22773,1,0,1,102,108,105,103,1
+24,2024/04/29 07:56:04,1714377364,42090,1,0,1,115,105,109,95,2
+25,2024/04/29 07:56:04,1714377364,42098,1,0,100,0,0,0,0,0
+26,2024/04/29 07:56:19,1714377379,57002,1,0,101,0,0,0,0,0
+27,2024/04/29 07:56:19,1714377379,57004,1,0,20,2,0,0,1,0
+28,2024/04/29 07:56:19,1714377379,57006,2,0,12,0,1,0,28,32
+29,2024/04/29 07:56:19,1714377379,57008,2,0,12,1,1,0,28,32
+30,2024/04/29 07:56:19,1714377379,57010,2,0,12,2,1,0,14,16
+31,2024/04/29 07:56:19,1714377379,57012,2,0,12,3,1,0,14,16
+32,2024/04/29 07:56:29,1714377389,67220,2,0,1,115,105,109,95,0
+33,2024/04/29 07:56:29,1714377389,67228,2,0,100,1,0,0,0,0
+34,2024/04/29 07:57:00,1714377420,98870,2,0,13,0,0,0,0,0
+35,2024/04/29 07:57:03,1714377423,101840,2,0,13,1,0,0,0,0
+36,2024/04/29 07:57:07,1714377427,105284,2,0,13,2,0,0,0,0
+37,2024/04/29 07:57:10,1714377430,108960,2,0,13,3,0,0,0,0
+38,2024/04/29 07:57:31,1714377451,129681,0,0,1,102,108,105,103,0
+39,2024/04/29 07:58:14,1714377494,172359,0,0,200,254,255,129,3,0
+40,2024/04/29 07:58:17,1714377497,175511,0,0,200,255,255,62,1,0
+41,2024/04/29 08:40:22,1714380022,13,0,0,69,2,0,0,0,14
+42,2024/04/29 08:41:49,1714380109,87201,0,0,200,255,255,112,3,0
+43,2024/04/29 11:09:17,1714388957,13,0,0,69,2,0,0,0,14
+44,2024/04/29 11:10:36,1714389036,79975,1,0,1,102,108,105,103,1
+45,2024/04/29 11:10:54,1714389054,97737,1,0,1,115,105,109,95,2
+46,2024/04/29 11:10:54,1714389054,97745,1,0,100,0,0,0,0,0
+47,2024/04/29 11:11:09,1714389069,112002,1,0,101,0,0,0,0,0
+48,2024/04/29 11:11:09,1714389069,112004,1,0,20,2,0,0,1,0
+49,2024/04/29 11:11:09,1714389069,112006,2,0,12,0,1,0,28,32
+50,2024/04/29 11:11:09,1714389069,112008,2,0,12,1,1,0,28,32
+51,2024/04/29 11:11:09,1714389069,112010,2,0,12,2,1,0,14,16
+52,2024/04/29 11:11:09,1714389069,112012,2,0,12,3,1,0,14,16
+53,2024/04/29 11:11:11,1714389071,114603,2,0,1,115,105,109,95,0
+54,2024/04/29 11:11:11,1714389071,114610,2,0,100,1,0,0,0,0
+55,2024/04/29 11:12:02,1714389122,165344,2,0,13,0,0,0,0,0
+56,2024/04/29 11:12:06,1714389126,169881,2,0,13,1,0,0,0,0
+57,2024/04/29 11:12:10,1714389130,173084,2,0,13,2,0,0,0,0
+58,2024/04/29 11:12:13,1714389133,176237,2,0,13,3,0,0,0,0
+59,2024/04/29 11:14:03,1714389243,879,0,0,69,24,0,0,0,14
+60,2024/04/29 11:14:13,1714389253,11919,2,0,200,254,255,98,3,0
+61,2024/04/29 11:14:17,1714389257,15032,2,0,200,255,255,38,1,0
+62,2024/04/29 11:34:48,1714390488,13,0,0,69,2,0,0,0,14
+63,2024/04/29 11:34:52,1714390492,4928,2,0,10,3,0,0,0,0
+64,2024/04/29 11:35:36,1714390536,48698,2,0,14,3,0,0,0,0
+65,2024/04/29 11:35:41,1714390541,53944,2,0,10,2,0,0,0,0
+66,2024/04/29 11:35:53,1714390553,65972,2,0,14,2,0,0,0,0
+67,2024/04/29 11:35:58,1714390558,70184,2,0,10,1,0,0,0,0
+68,2024/04/29 11:36:15,1714390575,87316,2,0,14,1,0,0,0,0
+69,2024/04/29 11:36:18,1714390578,90111,2,0,10,0,0,0,0,0
+70,2024/04/29 11:36:28,1714390588,100563,2,0,14,0,0,0,0,0
+71,2024/04/29 11:36:37,1714390597,109586,2,0,10,3,0,0,0,0
+72,2024/04/29 11:37:00,1714390620,132861,2,0,14,3,0,0,0,0
+73,2024/04/29 11:37:21,1714390641,153938,2,0,10,2,0,0,0,0
+74,2024/04/29 11:37:38,1714390658,170315,2,0,14,2,0,0,0,0
+75,2024/04/29 11:37:54,1714390674,186742,2,0,10,1,0,0,0,0
+76,2024/04/29 11:38:21,1714390701,213537,2,0,14,1,0,0,0,0
+77,2024/04/29 11:38:37,1714390717,229953,2,0,200,254,255,119,3,0
+78,2024/04/29 11:38:39,1714390719,231529,2,0,200,255,255,71,2,0
+79,2024/04/29 11:38:39,1714390719,231842,2,0,200,254,255,14,2,0
+80,2024/04/29 11:38:40,1714390720,232276,2,0,200,255,255,157,1,0
+81,2024/04/29 11:42:00,1714390920,13,0,0,69,2,0,0,0,14
+82,2024/04/29 11:42:28,1714390948,28279,2,0,10,1,0,0,0,0
+83,2024/04/29 11:42:45,1714390965,45718,2,0,14,1,0,0,0,0
+84,2024/04/29 11:43:06,1714390986,66611,2,0,200,255,255,112,3,0
+85,2024/04/29 11:50:11,1714391411,13,0,0,69,2,0,0,0,14
+86,2024/04/29 11:51:08,1714391468,57720,2,0,10,3,0,0,0,0
+87,2024/04/29 11:51:25,1714391485,74199,2,0,14,3,0,0,0,0
+88,2024/04/29 11:51:29,1714391489,78793,2,0,10,2,0,0,0,0
+89,2024/04/29 11:52:18,1714391538,127979,2,0,14,2,0,0,0,0
+90,2024/04/29 11:52:41,1714391561,150599,2,0,200,255,255,134,3,0
+91,2024/04/29 12:05:21,1714392321,13,0,0,69,2,0,0,0,14
+92,2024/04/29 12:05:42,1714392342,21398,2,0,10,3,0,0,0,0
+93,2024/04/29 12:05:55,1714392355,34413,2,0,14,3,0,0,0,0
+94,2024/04/29 12:06:12,1714392372,51887,0,0,1,102,108,105,103,0
+95,2024/04/29 12:06:33,1714392393,72077,0,0,200,255,255,118,3,0
+96,2024/04/29 12:17:04,1714393024,13,0,0,69,2,0,0,0,14
+97,2024/04/29 12:17:20,1714393040,16127,0,0,10,0,0,0,0,0
+98,2024/04/29 12:17:30,1714393050,26827,0,0,14,0,0,0,0,0
+99,2024/04/29 12:17:40,1714393060,36702,0,0,200,255,255,106,3,0
+100,2024/04/29 12:20:46,1714393246,13,0,0,69,2,0,0,0,14
+101,2024/04/29 12:20:54,1714393254,8714,0,0,200,255,255,222,2,0
+102,2024/04/29 12:23:55,1714393435,13,0,0,69,2,0,0,0,14
+103,2024/04/29 12:24:04,1714393444,9708,0,0,200,255,255,226,2,0
+104,2024/04/29 12:24:12,1714393452,13,0,0,69,2,0,0,0,14
+105,2024/04/29 12:24:25,1714393465,13421,0,0,200,255,255,102,3,0
+106,2024/04/29 15:17:39,1714403859,13,0,0,69,2,0,0,0,14
+107,2024/04/29 15:19:28,1714403968,109503,0,0,200,255,255,165,3,0
+108,2024/04/29 15:20:00,1714404000,13,0,0,69,2,0,0,0,14
+109,2024/04/30 08:22:15,1714465335,13,0,0,69,2,0,0,0,14
+110,2024/04/30 08:25:39,1714465539,194556,0,0,200,255,255,170,3,0
+111,2024/04/30 09:14:54,1714468494,13,0,0,69,2,0,0,0,14
+112,2024/04/30 09:18:51,1714468731,237393,0,0,100,0,0,0,0,0
+113,2024/04/30 09:19:06,1714468746,252052,0,0,101,0,0,0,0,0
+114,2024/04/30 09:21:05,1714468865,371298,0,0,100,1,0,0,0,0
+115,2024/04/30 09:23:26,1714469006,512393,1,0,1,102,108,105,103,1
+116,2024/04/30 09:23:32,1714469012,518539,1,0,1,102,108,105,103,0
+117,2024/04/30 09:23:39,1714469019,525491,1,0,1,115,105,109,95,0
+118,2024/04/30 09:23:45,1714469025,531269,1,0,1,115,105,109,95,0
+119,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+120,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+121,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+122,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+123,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+124,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+125,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+126,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+127,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+128,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+129,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+130,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+131,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+132,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+133,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+134,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+135,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+136,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+137,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+138,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+139,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+140,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+141,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+142,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+143,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+144,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+145,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+146,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+147,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+148,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+149,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+150,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+151,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+152,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+153,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+154,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+155,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+156,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+157,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+158,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+159,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+160,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+161,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+162,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+163,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+164,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+165,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+166,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+167,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+168,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+169,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+170,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+171,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+172,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+173,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+174,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+175,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+176,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+177,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+178,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+179,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+180,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+181,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+182,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+183,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+184,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+185,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+186,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+187,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+188,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+189,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+190,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+191,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+192,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+193,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+194,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+195,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+196,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+197,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+198,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+199,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+200,20106/02/07 06:28:15,-1,-1,255,255,255,255,255,255,255,255
+# memory status
+NOR memory status: 
+ * NOR memory is ready
+ * 688 saved telemetry lines. 0.08% used. Last address is 44032
+ * 191 saved events. 0.02% used. Last address is 52431856
+FRAM memory status: 
+ * FRAM memory is ready
+ * 2 saved telemetry. 0.13% used. Last address is 172156
+ * 119 saved events. 46.67% used. Last address is 276332
+# memory erase fram bulk
+FRAM memory bulk erasing completed.
+# memory status
+NOR memory status: 
+ * NOR memory is ready
+ * 690 saved telemetry lines. 0.08% used. Last address is 44160
+ * 191 saved events. 0.02% used. Last address is 52431856
+FRAM memory status: 
+ * FRAM memory is ready
+ * 0 saved telemetry. 0.00% used. Last address is 172028
+ * 0 saved events. 0.00% used. Last address is 274428
+# status
+================================
+Uptime:         645.983s
+Time:           2024/04/30 09:25:39
+State:          1
+Substate:       0
+Switches:       0xC0
+Errors:         0x0000
+CPU Temp:       19.9ºC
+Pressure:       984.77mbar
+Altitude:       239.69m
+Current Speed:  -0.010m/s
+Sunrise GPIO:   HIGH
+Temp CPU:       19.9ºC
+Temp [1]:       20.3ºC
+Temp [2]:       20.6ºC
+Statistics:
+                Min	Avg	Max
+Speed(m/s):     -0.06	0.00	0.08
+Battery(V):     9.83	9.83	9.83
+Battery(mA):    3	3	3
+AccX(g):        -0.00	0.00	0.00
+AccY(g):        -0.14	-0.13	-0.13
+AccZ(g):        0.96	0.96	0.97
+Altitude History:
+  [0]:	643.029s	 239.86m
+  [1]:	644.035s	 240.03m
+  [2]:	645.038s	 239.69m
+  [3]:	635.690s	 239.86m
+  [4]:	637.006s	 239.77m
+  [5]:	638.011s	 239.94m
+  [6]:	639.016s	 239.77m
+  [7]:	640.020s	 239.86m
+  [8]:	641.024s	 239.69m
+  [9]:	642.026s	 239.69m
+Current Speed:   -0.010m/s
+# status
+================================
+Uptime:         653.356s
+Time:           2024/04/30 09:25:47
+State:          1
+Substate:       0
+Switches:       0xC0
+Errors:         0x0000
+CPU Temp:       19.9ºC
+Pressure:       984.74mbar
+Altitude:       239.94m
+Current Speed:  -0.010m/s
+Sunrise GPIO:   HIGH
+Temp CPU:       19.9ºC
+Temp [1]:       20.3ºC
+Temp [2]:       20.6ºC
+Statistics:
+                Min	Avg	Max
+Speed(m/s):     -0.06	0.00	0.08
+Battery(V):     9.83	9.83	9.83
+Battery(mA):    3	3	3
+AccX(g):        -0.00	0.00	0.00
+AccY(g):        -0.14	-0.13	-0.13
+AccZ(g):        0.96	0.96	0.97
+Altitude History:
+  [0]:	653.205s	 239.94m
+  [1]:	644.035s	 240.03m
+  [2]:	645.038s	 239.69m
+  [3]:	646.177s	 239.77m
+  [4]:	647.181s	 239.60m
+  [5]:	648.182s	 239.69m
+  [6]:	649.188s	 239.77m
+  [7]:	650.190s	 239.77m
+  [8]:	651.195s	 239.77m
+  [9]:	652.201s	 239.69m
+Current Speed:   -0.010m/s
+# conf
+sim_enabled = 0
+sim_pressure = 0
+sim_sunriseSignal = 0
+flightState = 1
+flightSubState = 0
+fram_tlmSavePeriod = 600
+nor_deviceSelected = 0
+nor_tlmSavePeriod = 10
+baro_readPeriod = 1000
+ina_readPeriod = 100
+acc_readPeriod = 100
+temp_readPeriod = 1000
+leds = 1
+gopro_model[0] = 0
+gopro_model[1] = 0
+gopro_model[2] = 0
+gopro_model[3] = 0
+gopro_beeps = 2
+gopro_leds = 0
+gopro_pictureSleep = 2500
+launch_heightThreshold = 3000
+launch_climbThreshold = 2
+launch_videoDurationLong = 7200
+launch_videoDurationShort = 3600
+launch_camerasLong = 0x03
+launch_camerasShort = 0x0C
+launch_timeClimbMaximum = 7200
+flight_timelapse_period = 120
+flight_camerasFirstLeg = 0x0F
+flight_camerasSecondLeg = 0x0B
+flight_timeSecondLeg = 86400
+landing_heightThreshold = 25000
+landing_heightSecurityThreshold = 32000
+landing_speedThreshold = -15
+landing_videoDurationLong = 3600
+landing_videoDurationShort = 900
+landing_camerasLong = 0x02
+landing_camerasShort = 0x09
+landing_camerasHighSpeed = 0x04
+landing_heightShortStart = 3000
+recovery_videoDuration = 120
+rtcDriftFlag = 1
+rtcDrift = 2426
+# reboot
+System will reboot...
+
+IRIS2 is booting up...
+IRIS 2 (Image Recorder Instrument for Sunrise) terminal.
+IRIS 2 Firmware version is '14', compiled on Mar  5 2024 at 20:53:54.
+Made with passion and hard work by:
+  * Aitor Conde <aitorconde@gmail.com>. Senior Engineer. Electronics. Software.
+  * Ramon Garcia <ramongarciaalarcia@gmail.com>. Project Management. Software.
+  * David Mayo <mayo@sondasespaciales.com>. Electronics.
+  * Miguel Angel Gomez <haplo@sondasespaciales.com>. Structure.
+IRIS 2 last booted 0 seconds ago.
+Reboot counter is 27.
+Last Reboot reason was 0x18, 'WDTPW password violation (PUC)'.
+# status
+================================
+Uptime:         6.425s
+Time:           2024/04/30 09:26:03
+State:          1
+Substate:       0
+Switches:       0xC0
+Errors:         0x0000
+CPU Temp:       19.9ºC
+Pressure:       984.77mbar
+Altitude:       239.69m
+Current Speed:  0.000m/s
+Sunrise GPIO:   HIGH
+Temp CPU:       19.9ºC
+Temp [1]:       20.3ºC
+Temp [2]:       20.6ºC
+Statistics:
+                Min	Avg	Max
+Speed(m/s):     0.00	0.00	0.00
+Battery(V):     9.83	9.83	9.83
+Battery(mA):    3	3	3
+AccX(g):        0.00	0.00	0.00
+AccY(g):        -0.14	-0.13	-0.13
+AccZ(g):        0.96	0.96	0.97
+Altitude History:
+  [0]:	1.008s	 239.69m
+  [1]:	2.015s	 239.69m
+  [2]:	3.016s	 239.77m
+  [3]:	4.019s	 239.86m
+  [4]:	5.020s	 239.69m
+  [5]:	6.024s	 239.69m
+  [6]:	0.000s	 0.00m
+  [7]:	0.000s	 0.00m
+  [8]:	0.000s	 0.00m
+  [9]:	0.000s	 0.00m
+Current Speed:   0.000m/s
+# conf
+sim_enabled = 0
+sim_pressure = 0
+sim_sunriseSignal = 0
+flightState = 1
+flightSubState = 0
+fram_tlmSavePeriod = 600
+nor_deviceSelected = 0
+nor_tlmSavePeriod = 10
+baro_readPeriod = 1000
+ina_readPeriod = 100
+acc_readPeriod = 100
+temp_readPeriod = 1000
+leds = 1
+gopro_model[0] = 0
+gopro_model[1] = 0
+gopro_model[2] = 0
+gopro_model[3] = 0
+gopro_beeps = 2
+gopro_leds = 0
+gopro_pictureSleep = 2500
+launch_heightThreshold = 3000
+launch_climbThreshold = 2
+launch_videoDurationLong = 7200
+launch_videoDurationShort = 3600
+launch_camerasLong = 0x03
+launch_camerasShort = 0x0C
+launch_timeClimbMaximum = 7200
+flight_timelapse_period = 120
+flight_camerasFirstLeg = 0x0F
+flight_camerasSecondLeg = 0x0B
+flight_timeSecondLeg = 86400
+landing_heightThreshold = 25000
+landing_heightSecurityThreshold = 32000
+landing_speedThreshold = -15
+landing_videoDurationLong = 3600
+landing_videoDurationShort = 900
+landing_camerasLong = 0x02
+landing_camerasShort = 0x09
+landing_camerasHighSpeed = 0x04
+landing_heightShortStart = 3000
+recovery_videoDuration = 120
+rtcDriftFlag = 1
+rtcDrift = 2426
+# date
+Date is: 2024/04/30 09:26:18
+# 
