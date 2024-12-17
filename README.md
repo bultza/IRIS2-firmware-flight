@@ -311,6 +311,11 @@ On the folder [telemetry](telemetry) you find the needed scripts to visualize th
 <img src="docs/IRIS2_telemetry.png" alt="Vertical Speed of IRIS2 in grafana"/>
 </div>
 
+## Videos of the Flight
+Here you can find a set of videos taken by the instrument, including the timelapses:
+* [Main video covering the full mission](https://youtu.be/CKWAjiNBPxo)
+* [The playlist with all the timelapses](https://www.youtube.com/watch?v=dQEWQV9Ofiw&list=PLlCuSjIHDIh0sF5nbLt4HJ0wI6yLDL5Xi)
+
 ## Authors
 * Aitor Conde <aitorconde@gmail.com>
 * Ramón García <ramongarciaalarcia@gmail.com>
