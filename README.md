@@ -1,5 +1,9 @@
 # IRIS2-firmware-flight
-Firmware for the IRIS2 CPU, that will fly as an instrument on the mission Sunrise III
+In this repository you can find the Firmware for the IRIS2 instrument, an science outreach instrument onboard the balloon borne Sunrise III solar telescope that has flown into near space during the summer of 2024. 
+* For the hardware design, we have another repository here: https://github.com/bultza/IRIS2-hardware
+* For more information about the Sunrise III mission, you can follow this link: https://www.mps.mpg.de/solar-physics/sunrise
+* You can see the videos made by this instrument in [youtube](https://www.youtube.com/watch?v=dQEWQV9Ofiw&list=PLlCuSjIHDIh0sF5nbLt4HJ0wI6yLDL5Xi)
+* This instrument is Open-hardware and Open-source. Use it, share it :-D
 
 ## Prerequisites
 You should install Code Composer Studio (Version 10 or higher preffered) https://www.ti.com/tool/CCSTUDIO
